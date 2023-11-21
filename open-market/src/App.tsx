@@ -6,7 +6,7 @@ function App() {
 		<RecoilRoot>
 			<div className="App">
 				<Helmet>
-					<title>모디</title>
+					<title>모두의 오디오 : 모디</title>
 				</Helmet>
 			</div>
 		</RecoilRoot>
