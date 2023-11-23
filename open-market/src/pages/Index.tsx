@@ -7,7 +7,8 @@ function Index() {
 			<Helmet>
 				<title>Home - 모두의 오디오 MODI</title>
 			</Helmet>
-			<Link to="/registration">삼풍등록</Link>
+			<Link to="/registration">상품등록</Link>
+			<Link to="/update/:productId">상품 업데이트</Link>
 			<main>
 				<h2>메인페이지</h2>
 				<img src="/vite.svg" alt="hero" />

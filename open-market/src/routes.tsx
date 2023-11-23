@@ -1,4 +1,5 @@
 import RootLayout from "@/layout/RootLayout";
+import Detail from "@/pages/Detail";
 import Index from "@/pages/Index";
 import ProductRegistration from "@/pages/ProductRegistration";
 import SignIn from "@/pages/SignIn";
@@ -8,6 +9,7 @@ import {
 	createBrowserRouter,
 	createRoutesFromElements,
 } from "react-router-dom";
+import ProductUpdate from "./pages/ProductUpdate";
 import UserUpdate from "./pages/UserUpdate";
 
 const router = createBrowserRouter(
@@ -17,6 +19,8 @@ const router = createBrowserRouter(
 			<Route path="signin" element={<SignIn />} />
 			<Route path="registration" element={<ProductRegistration />} />
 			<Route path="signup" element={<SignUp />} />
+			<Route path="update/:productId" element={<ProductUpdate />} />
+			<Route path="detail" element={<Detail />} />
 			<Route path="userUpdate" element={<UserUpdate />} />
 		</Route>,
 	),
