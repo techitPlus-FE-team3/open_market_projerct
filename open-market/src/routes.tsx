@@ -5,10 +5,11 @@ import ProductRegistration from "@/pages/ProductRegistration";
 import SignIn from "@/pages/SignIn";
 import SignUp from "@/pages/SignUp";
 import {
-    Route,
-    createBrowserRouter,
-    createRoutesFromElements,
+	Route,
+	createBrowserRouter,
+	createRoutesFromElements,
 } from "react-router-dom";
+import ProductUpdate from "./pages/ProductUpdate";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -17,6 +18,7 @@ const router = createBrowserRouter(
 			<Route path="signin" element={<SignIn />} />
 			<Route path="registration" element={<ProductRegistration />} />
 			<Route path="signup" element={<SignUp />} />
+			<Route path="update/:productId" element={<ProductUpdate />} />
 			<Route path="detail" element={<Detail />} />
 		</Route>,
 	),
