@@ -1,5 +1,7 @@
-import { Helmet, HelmetProvider, HelmetServerState } from "react-helmet-async";
+import { HelmetProvider, HelmetServerState } from "react-helmet-async";
+import { RouterProvider } from "react-router-dom";
 import { RecoilRoot } from "recoil";
+import router from "./routes";
 function App() {
 	const helmetContext: { helmet: HelmetServerState } = {
 		helmet: {} as HelmetServerState,
@@ -8,11 +10,7 @@ function App() {
 	return (
 		<HelmetProvider context={helmetContext}>
 			<RecoilRoot>
-				<div className="App">
-					<Helmet>
-						<title>모두의 오디오 : 모디</title>
-					</Helmet>
-				</div>
+				<RouterProvider router={router} />
 			</RecoilRoot>
 		</HelmetProvider>
 	);
