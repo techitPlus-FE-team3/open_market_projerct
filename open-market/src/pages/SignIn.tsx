@@ -1,11 +1,11 @@
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
-function Login() {
+function SignIn() {
 	return (
 		<section>
 			<Helmet>
-				<title>LOGIN - 모두의 오디오 MODI</title>
+				<title>SIGNIN - 모두의 오디오 MODI</title>
 			</Helmet>
 			<h2>로그인</h2>
 			<form>
@@ -33,4 +33,4 @@ function Login() {
 	);
 }
 
-export default Login;
+export default SignIn;
