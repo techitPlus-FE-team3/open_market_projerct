@@ -1,7 +1,7 @@
 import RootLayout from "@/layout/RootLayout";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
-import ProductRegistration from "@/pages/ProductRegistration";
+// import ProductRegistration from "@/pages/ProductRegistration";
 import SignUp from "@/pages/SignUp";
 import Detail from "@/pages/Detail";
 import {
@@ -15,7 +15,7 @@ const router = createBrowserRouter(
 		<Route path="/" element={<RootLayout />}>
 			<Route index element={<Index />} />
 			<Route path="login" element={<Login />} />
-			<Route path="registration" element={<ProductRegistration />} />
+			{/* <Route path="registration" element={<ProductRegistration />} /> */}
 			<Route path="signup" element={<SignUp />} />
 			<Route path="detail" element={<Detail />} />
 		</Route>,
