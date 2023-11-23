@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 
-function ProductUpdate() {
+function ProductEdit() {
 	return (
 		<>
 			<Helmet>
@@ -90,4 +90,4 @@ function ProductUpdate() {
 	);
 }
 
-export default ProductUpdate;
+export default ProductEdit;
