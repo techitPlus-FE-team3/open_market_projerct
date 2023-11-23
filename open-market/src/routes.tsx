@@ -9,7 +9,7 @@ import {
 	createBrowserRouter,
 	createRoutesFromElements,
 } from "react-router-dom";
-import ProductUpdate from "./pages/ProductUpdate";
+import ProductEdit from "./pages/ProductEdit";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -18,7 +18,7 @@ const router = createBrowserRouter(
 			<Route path="signin" element={<SignIn />} />
 			<Route path="registration" element={<ProductRegistration />} />
 			<Route path="signup" element={<SignUp />} />
-			<Route path="update/:productId" element={<ProductUpdate />} />
+			<Route path="edit/:productId" element={<ProductEdit />} />
 			<Route path="detail" element={<Detail />} />
 		</Route>,
 	),
