@@ -9,7 +9,8 @@ import {
 	createBrowserRouter,
 	createRoutesFromElements,
 } from "react-router-dom";
-import ProductEdit from "./pages/ProductEdit";
+import ProductEdit from "@/pages/ProductEdit";
+import UserUpdate from "@/pages/UserUpdate";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
 			<Route path="signup" element={<SignUp />} />
 			<Route path="edit/:productId" element={<ProductEdit />} />
 			<Route path="detail" element={<Detail />} />
+			<Route path="update/userId" element={<UserUpdate />} />
 		</Route>,
 	),
 );
