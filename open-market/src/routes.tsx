@@ -14,8 +14,8 @@ const router = createBrowserRouter(
 		<Route path="/" element={<RootLayout />}>
 			<Route index element={<Index />} />
 			<Route path="login" element={<Login />} />
-			<Route path="registration" element={<ProductRegistration />} />
 			<Route path="signup" element={<SignUp />} />
+			<Route path="registration" element={<ProductRegistration />} />
 		</Route>,
 	),
 );
