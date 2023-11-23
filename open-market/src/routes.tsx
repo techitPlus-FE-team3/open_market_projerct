@@ -1,13 +1,13 @@
 import RootLayout from "@/layout/RootLayout";
-import Index from "@/pages/Index";
-import SignIn from "@/pages/SignIn";
-import ProductRegistration from "@/pages/ProductRegistration";
-import SignUp from "@/pages/SignUp";
 import Detail from "@/pages/Detail";
+import Index from "@/pages/Index";
+import ProductRegistration from "@/pages/ProductRegistration";
+import SignIn from "@/pages/SignIn";
+import SignUp from "@/pages/SignUp";
 import {
-	Route,
-	createBrowserRouter,
-	createRoutesFromElements,
+    Route,
+    createBrowserRouter,
+    createRoutesFromElements,
 } from "react-router-dom";
 
 const router = createBrowserRouter(
