@@ -27,7 +27,7 @@ function Login() {
 				<button type="submit">로그인</button>
 			</form>
 			<span>
-				아직 가입하지 않으셨나요? <Link to="/">회원가입</Link>
+				아직 가입하지 않으셨나요? <Link to="/signup">회원가입</Link>
 			</span>
 		</section>
 	);
