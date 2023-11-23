@@ -1,4 +1,5 @@
 import RootLayout from "@/layout/RootLayout";
+import Detail from "@/pages/Detail";
 import Index from "@/pages/Index";
 import ProductRegistration from "@/pages/ProductRegistration";
 import SignIn from "@/pages/SignIn";
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
 			<Route path="registration" element={<ProductRegistration />} />
 			<Route path="signup" element={<SignUp />} />
 			<Route path="update/:productId" element={<ProductUpdate />} />
+			<Route path="detail" element={<Detail />} />
 		</Route>,
 	),
 );
