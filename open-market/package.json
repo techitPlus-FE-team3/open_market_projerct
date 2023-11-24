@@ -16,6 +16,7 @@
     "@mui/material": "^5.14.18",
     "@types/react-helmet-async": "^1.0.3",
     "axios": "^1.6.2",
+    "emotion-reset": "^3.0.1",
     "imagemin-gifsicle": "^7.0.0",
     "imagemin-mozjpeg": "^10.0.0",
     "imagemin-pngquant": "^9.0.2",
