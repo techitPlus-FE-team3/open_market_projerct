@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 const MyPage = () => {
 	return (
 		<section>
+			<Helmet>
+				<title>마이페이지 - 모두의 오디오 MODI</title>
+			</Helmet>
 			<h2>마이페이지</h2>
 			<article>
 				<h3>내 정보</h3>
