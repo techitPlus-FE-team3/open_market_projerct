@@ -15,6 +15,7 @@ import {
 } from "react-router-dom";
 import ProductManage from "./pages/ProductManage";
 import UserProducts from "./pages/UserProducts";
+import UserOrders from "./pages/UserOrders";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
 			<Route path="productpurchase/:productId" element={<Purchase />} />
 			<Route path="productmanage/:productId" element={<ProductManage />} />
 			<Route path="user/userId/products" element={<UserProducts />} />
+			<Route path="user/userId/orders" element={<UserOrders />} />
 		</Route>,
 	),
 );
