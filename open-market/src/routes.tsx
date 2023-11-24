@@ -1,16 +1,18 @@
 import RootLayout from "@/layout/RootLayout";
 import Detail from "@/pages/Detail";
 import Index from "@/pages/Index";
+import ProductEdit from "@/pages/ProductEdit";
 import ProductRegistration from "@/pages/ProductRegistration";
+import Purchase from "@/pages/Purchase";
 import SignIn from "@/pages/SignIn";
 import SignUp from "@/pages/SignUp";
+import UserUpdate from "@/pages/UserUpdate";
 import {
 	Route,
 	createBrowserRouter,
 	createRoutesFromElements,
 } from "react-router-dom";
-import ProductEdit from "@/pages/ProductEdit";
-import UserUpdate from "@/pages/UserUpdate";
+import ProductManage from "./pages/ProductManage";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -22,6 +24,8 @@ const router = createBrowserRouter(
 			<Route path="edit/:productId" element={<ProductEdit />} />
 			<Route path="detail" element={<Detail />} />
 			<Route path="update/userId" element={<UserUpdate />} />
+			<Route path="productpurchase/:productId" element={<Purchase />} />
+			<Route path="productmanage/:productId" element={<ProductManage />} />
 		</Route>,
 	),
 );
