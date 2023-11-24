@@ -7,6 +7,7 @@ import Purchase from "@/pages/Purchase";
 import SignIn from "@/pages/SignIn";
 import SignUp from "@/pages/SignUp";
 import UserUpdate from "@/pages/UserUpdate";
+import MyPage from "@/pages/MyPage";
 import {
 	Route,
 	createBrowserRouter,
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
 			<Route path="signup" element={<SignUp />} />
 			<Route path="edit/:productId" element={<ProductEdit />} />
 			<Route path="detail" element={<Detail />} />
+			<Route path="mypage" element={<MyPage />} />
 			<Route path="update/userId" element={<UserUpdate />} />
 			<Route path="productpurchase/:productId" element={<Purchase />} />
 			<Route path="productmanage/:productId" element={<ProductManage />} />
