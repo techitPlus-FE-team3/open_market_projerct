@@ -7,6 +7,8 @@ import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ModeCommentIcon from "@mui/icons-material/ModeComment";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Helmet } from "react-helmet-async";
 
 function Detail() {
@@ -57,17 +59,24 @@ function Detail() {
 				<div>
 					<button>
 						<BookmarkOutlinedIcon />
-						북마크
+						북마크 북마크 횟수
 					</button>
 					<button>
 						<CheckIcon />
-						구매하기
+						구매하기 구매 횟수
 					</button>
 				</div>
 			</article>
 			<article>
+				<h3>
+					<ModeCommentIcon />
+					댓글
+				</h3>
 				<form action="submit">
-					<span>유저정보</span>
+					<div>
+						<AccountCircleIcon />
+						<span>유저정보</span>
+					</div>
 					<div>
 						<StarIcon />
 						<StarIcon />
@@ -82,7 +91,10 @@ function Detail() {
 				</form>
 				<ul>
 					<li>
-						<span>유저 정보</span>
+						<div>
+							<AccountCircleIcon />
+							<span>유저정보</span>
+						</div>
 						<div>
 							<p>댓글 내용</p>
 							<div>
@@ -95,7 +107,10 @@ function Detail() {
 						</div>
 					</li>
 					<li>
-						<span>유저 정보</span>
+						<div>
+							<AccountCircleIcon />
+							<span>유저정보</span>
+						</div>
 						<div>
 							<p>댓글 내용</p>
 							<div>
@@ -108,7 +123,10 @@ function Detail() {
 						</div>
 					</li>
 					<li>
-						<span>유저 정보</span>
+						<div>
+							<AccountCircleIcon />
+							<span>유저정보</span>
+						</div>
 						<div>
 							<p>댓글 내용</p>
 							<div>
