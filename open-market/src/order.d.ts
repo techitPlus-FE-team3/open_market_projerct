@@ -4,7 +4,7 @@ interface Order {
 	createdAt: string;
 	product: {
 		productId: number;
-		count: 1;
+		quantity: 1;
 	};
 	cost: {
 		total: number;
