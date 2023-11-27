@@ -2,6 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
+import styled from "@emotion/styled";
+
+const ProductImage = styled("img")`
+	width: 42px;
+	height: 42px;
+	border-radius: 50%;
+`;
 
 function Index() {
 	const [productList, setProductList] = useState<Product[]>([]);
@@ -48,7 +55,7 @@ function Index() {
 						return (
 							<li key={String(product._id)} className="musicItem">
 								<Link to={`/products?_id=${product._id}`}>
-									<img
+									<ProductImage
 										src={product.mainImages[0]}
 										alt={`${product.name} 사진`}
 									/>
