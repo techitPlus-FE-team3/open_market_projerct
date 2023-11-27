@@ -9,22 +9,22 @@ import Purchase from "@/pages/Purchase";
 import SignIn from "@/pages/SignIn";
 import SignUp from "@/pages/SignUp";
 import UserOrders from "@/pages/UserOrders";
+import UserProducts from "@/pages/UserProducts";
 import UserUpdate from "@/pages/UserUpdate";
 import {
-	Route,
-	createBrowserRouter,
-	createRoutesFromElements,
+    Route,
+    createBrowserRouter,
+    createRoutesFromElements,
 } from "react-router-dom";
-import UserProducts from "./pages/UserProducts";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route path="/" element={<RootLayout />}>
 			<Route index element={<Index />} />
 			<Route path="signin" element={<SignIn />} />
-			<Route path="registration" element={<ProductRegistration />} />
+			<Route path="productregistration" element={<ProductRegistration />} />
 			<Route path="signup" element={<SignUp />} />
-			<Route path="edit/:productId" element={<ProductEdit />} />
+			<Route path="productedit/:productId" element={<ProductEdit />} />
 			<Route path="detail" element={<Detail />} />
 			<Route path="mypage" element={<MyPage />} />
 			<Route path="update/userId" element={<UserUpdate />} />
