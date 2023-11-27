@@ -12,23 +12,21 @@ function SignIn() {
 				<fieldset>
 					<legend>로그인 폼</legend>
 					<label htmlFor="email">이메일</label>
-					<input type="text" id="email" placeholder="modi@modi.com" />
+					<input type="text" id="email" placeholder="이메일" />
 					<label htmlFor="password">비밀번호</label>
-					<input type="password" id="password" />
+					<input type="password" id="password" placeholder="비밀번호" />
 				</fieldset>
-				<ul>
-					<li>
-						<Link to="/">아이디 찾기</Link>
-					</li>
-					<li>
-						<Link to="/">비밀번호 찾기</Link>
-					</li>
-				</ul>
+
 				<button type="submit">로그인</button>
 			</form>
-			<span>
-				아직 가입하지 않으셨나요? <Link to="/signup">회원가입</Link>
-			</span>
+			<ul>
+				<li>
+					<Link to="/signup">회원가입</Link>
+				</li>
+				<li>
+					<Link to="/">아이디/비밀번호 찾기</Link>
+				</li>
+			</ul>
 		</section>
 	);
 }
