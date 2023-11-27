@@ -1,13 +1,13 @@
 import { Helmet } from "react-helmet-async";
 
-function ProductRegistration() {
+function ProductEdit() {
 	return (
 		<>
 			<Helmet>
-				<title>Register Product - 모두의 오디오 MODI</title>
+				<title>Update Product - 모두의 오디오 MODI</title>
 			</Helmet>
 			<section>
-				<h2>상품 등록</h2>
+				<h2>상품 수정</h2>
 				<form encType="multipart/form-data">
 					<div>
 						<div>
@@ -90,4 +90,4 @@ function ProductRegistration() {
 	);
 }
 
-export default ProductRegistration;
+export default ProductEdit;
