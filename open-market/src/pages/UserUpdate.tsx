@@ -1,10 +1,11 @@
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 
 function UserUpdate() {
 	return (
 		<section>
 			<Helmet>
-				<title>회원정보 수정 - 모두의 오디오 MODI</title>
+				<title>EDIT USER - 모두의 오디오 MODI</title>
 			</Helmet>
 			<h2>회원정보 수정</h2>
 			<form>
@@ -44,7 +45,7 @@ function UserUpdate() {
 						<button type="button">약관보기</button>
 					</li>
 				</ul>
-				<button type="button">수정취소</button>
+				<Link to="/">수정취소</Link>
 				<button type="submit">수정하기</button>
 			</form>
 		</section>
