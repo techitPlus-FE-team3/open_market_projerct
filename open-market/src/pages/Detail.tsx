@@ -1,14 +1,12 @@
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
-import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import CheckIcon from "@mui/icons-material/Check";
+import ModeCommentIcon from "@mui/icons-material/ModeComment";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ModeCommentIcon from "@mui/icons-material/ModeComment";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Helmet } from "react-helmet-async";
 
 function Detail() {
