@@ -8,6 +8,7 @@ interface User {
 	createdAt: string;
 	updatedAt: string;
 	extra?: {
+		profileImage: string;
 		bookmarks?: number[];
 		terms: {
 			termsOfUse: boolean;
@@ -15,6 +16,10 @@ interface User {
 			recievingMarketingInformation: boolean;
 			cofirmAge: boolean;
 		};
+	};
+	token: {
+		accessToken: string;
+		refreshToken: string;
 	};
 }
 
