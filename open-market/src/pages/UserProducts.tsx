@@ -1,12 +1,12 @@
 import { Helmet } from "react-helmet-async";
-import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { Link } from "react-router-dom";
 
 function UserProducts() {
 	return (
 		<section>
 			<Helmet>
-				<title>판매상품관리 - 모두의 오디오 MODI</title>
+				<title>MY PRODUCTS - 모두의 오디오 MODI</title>
 			</Helmet>
 			<h2>상품관리</h2>
 			<div>
@@ -28,16 +28,16 @@ function UserProducts() {
 					<img src="../../public/vite.svg" alt="앨범 이름 이미지" />
 					<p>앨범이름</p>
 					<button type="button">
-						<PlayCircleIcon />
+						<PlayArrowIcon />
 					</button>
 					<p>
-						판매개수<span>30</span>
+						판매 개수: <span>30</span>
 					</p>
 					<p>
-						총 수익<span>15,000원</span>
+						총 수익: <span>15,000원</span>
 					</p>
 					<p>
-						북마크 수<span>45</span>
+						북마크 수: <span>45</span>
 					</p>
 					<Link to="detail">상세보기</Link>
 				</li>
@@ -45,16 +45,16 @@ function UserProducts() {
 					<img src="../../public/vite.svg" alt="앨범 이름 이미지" />
 					<p>앨범이름</p>
 					<button type="button">
-						<PlayCircleIcon />
+						<PlayArrowIcon />
 					</button>
 					<p>
-						판매개수<span>30</span>
+						판매 개수: <span>30</span>
 					</p>
 					<p>
-						총 수익<span>15,000원</span>
+						총 수익: <span>15,000원</span>
 					</p>
 					<p>
-						북마크 수<span>45</span>
+						북마크 수: <span>45</span>
 					</p>
 					<Link to="detail">상세보기</Link>
 				</li>
@@ -62,7 +62,7 @@ function UserProducts() {
 					<img src="../../public/vite.svg" alt="앨범 이름 이미지" />
 					<p>앨범이름</p>
 					<button type="button">
-						<PlayCircleIcon />
+						<PlayArrowIcon />
 					</button>
 					<p>
 						판매개수<span>30</span>

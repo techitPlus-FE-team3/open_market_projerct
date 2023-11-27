@@ -1,73 +1,38 @@
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 
 function Purchase() {
 	return (
-		<>
+		<section>
 			<Helmet>
 				<title>Purchase Product - 모두의 오디오 MODI</title>
 			</Helmet>
-			<section>
-				<h2>상품 구매</h2>
-				<form encType="multipart/form-data">
+			<h2>상품 구매</h2>
+			<div>
+				<div>
+					<img src="/vite.svg" alt="앨범아트" />
 					<div>
+						<span>타이틀 | {`스타보이`}</span>
 						<div>
-							<label htmlFor="photo">앨범아트</label>
-							<input
-								type="file"
-								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
-								name="photo"
-								id="photo"
-							/>
+							<span>아티스트 | {`pearl kinn`}</span>
+							<span>장르 | {`힙합`}</span>
 						</div>
 						<div>
-							<div>
-								<label htmlFor="title">제목</label>
-								<input
-									type="text"
-									name="title"
-									id="title"
-									placeholder="제목을 입력해주세요"
-								/>
-							</div>
-							<div>
-								<div>
-									<label htmlFor="genre">장르</label>
-									<select name="genre" id="genre" defaultValue="none">
-										<option value="none" disabled hidden>
-											장르를 선택해주세요
-										</option>
-										<option value="dance">dance</option>
-										<option value="pop">pop</option>
-										<option value="k-pop">k-pop</option>
-										<option value="indie">indie</option>
-									</select>
-								</div>
-								<div>
-									<label htmlFor="hashTag">해시태그</label>
-									<input
-										type="text"
-										name="hashTag"
-										id="hashTag"
-										placeholder="해시태그를 입력해주세요"
-									/>
-								</div>
-							</div>
-							<div>
-								<label htmlFor="price">가격</label>
-								<input type="number" name="price" id="price" />
-							</div>
+							<span>설명</span>
+							<span>{`스타 보이가 된 pearlkinn의 노래입니다`}</span>
 						</div>
 					</div>
-					<div>
-						<div>결제 정보</div>
-					</div>
-					<div>
-						<button type="reset">취소</button>
-						<button type="submit">확인</button>
-					</div>
-				</form>
-			</section>
-		</>
+				</div>
+				<div>
+					<span>결제 정보</span>
+					<span>{`10,000`}₩</span>
+				</div>
+				<div>
+					<Link to="/">취소</Link>
+					<button type="submit">구매</button>
+				</div>
+			</div>
+		</section>
 	);
 }
 
