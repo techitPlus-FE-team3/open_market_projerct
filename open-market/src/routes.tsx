@@ -24,7 +24,7 @@ const router = createBrowserRouter(
 			<Route path="signin" element={<SignIn />} />
 			<Route path="productregistration" element={<ProductRegistration />} />
 			<Route path="signup" element={<SignUp />} />
-			<Route path="edit/:productId" element={<ProductEdit />} />
+			<Route path="productedit/:productId" element={<ProductEdit />} />
 			<Route path="detail" element={<Detail />} />
 			<Route path="mypage" element={<MyPage />} />
 			<Route path="update/userId" element={<UserUpdate />} />
