@@ -9,13 +9,13 @@ import Purchase from "@/pages/Purchase";
 import SignIn from "@/pages/SignIn";
 import SignUp from "@/pages/SignUp";
 import UserOrders from "@/pages/UserOrders";
-import UserProducts from "@/pages/UserProducts";
 import UserUpdate from "@/pages/UserUpdate";
 import {
     Route,
     createBrowserRouter,
     createRoutesFromElements,
 } from "react-router-dom";
+import UserProducts from "./pages/UserProducts";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
