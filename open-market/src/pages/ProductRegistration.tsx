@@ -2,16 +2,16 @@ import { Helmet } from "react-helmet-async";
 
 function ProductRegistration() {
 	return (
-		<>
+		<section>
 			<Helmet>
 				<title>Register Product - 모두의 오디오 MODI</title>
 			</Helmet>
-			<section>
+			<div>
 				<h2>상품 등록</h2>
 				<form encType="multipart/form-data">
 					<div>
 						<div>
-							<label htmlFor="photo">앨범아트</label>
+							<label htmlFor="photo">앨범아트 업로드</label>
 							<input
 								type="file"
 								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
@@ -53,20 +53,26 @@ function ProductRegistration() {
 								</div>
 							</div>
 							<div>
-								<label htmlFor="price">가격</label>
-								<input type="number" name="price" id="price" />
+								<div>
+									<label htmlFor="description">설명</label>
+									<textarea
+										name="description"
+										id="description"
+										cols={30}
+										rows={10}
+									/>
+								</div>
+								<div>
+									<label htmlFor="mp3">음원 업로드</label>
+									<input type="file" accept="audio/*" name="mp3" id="mp3" />
+								</div>
 							</div>
 						</div>
 					</div>
 					<div>
 						<div>
-							<label htmlFor="description">설명</label>
-							<textarea
-								name="description"
-								id="description"
-								cols={30}
-								rows={10}
-							/>
+							<label htmlFor="price">가격</label>
+							<input type="number" name="price" id="price" />
 						</div>
 						<div>
 							<span>공개여부</span>
@@ -85,8 +91,8 @@ function ProductRegistration() {
 						<button type="submit">등록</button>
 					</div>
 				</form>
-			</section>
-		</>
+			</div>
+		</section>
 	);
 }
 
