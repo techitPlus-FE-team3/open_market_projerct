@@ -5,6 +5,8 @@ import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlin
 import CheckIcon from "@mui/icons-material/Check";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Helmet } from "react-helmet-async";
 
 function Login() {
@@ -28,8 +30,24 @@ function Login() {
 					<span>상품 설명</span>
 				</div>
 				<div>
-					<div>isNew</div>
-					<div>isBest</div>
+					<div>
+						<StarIcon />
+						isNew
+					</div>
+					<div>
+						<ThumbUpIcon />
+						isBest
+					</div>
+				</div>
+				<div>
+					<div>
+						<StarIcon />
+						<StarIcon />
+						<StarIcon />
+						<StarBorderIcon />
+						<StarBorderIcon />
+					</div>
+					<span>3.5</span>
 				</div>
 				<div>
 					<img src="https://svgsilh.com/svg/2028515.svg" alt="음파" />
@@ -51,53 +69,62 @@ function Login() {
 				<form action="submit">
 					<span>유저정보</span>
 					<div>
-						<input type="text" />
-						<div>
-							<StarIcon />
-							<StarIcon />
-							<StarIcon />
-							<StarBorderIcon />
-							<StarBorderIcon />
-						</div>
+						<StarIcon />
+						<StarIcon />
+						<StarIcon />
+						<StarBorderIcon />
+						<StarBorderIcon />
 					</div>
-					<button type="submit">제출하기</button>
+					<div>
+						<input type="text" />
+						<button type="submit">제출하기</button>
+					</div>
 				</form>
 				<ul>
 					<li>
 						<span>유저 정보</span>
-						<p>댓글 내용</p>
 						<div>
-							<StarIcon />
-							<StarIcon />
-							<StarIcon />
-							<StarBorderIcon />
-							<StarBorderIcon />
+							<p>댓글 내용</p>
+							<div>
+								<StarIcon />
+								<StarIcon />
+								<StarIcon />
+								<StarBorderIcon />
+								<StarBorderIcon />
+							</div>
 						</div>
 					</li>
 					<li>
 						<span>유저 정보</span>
-						<p>댓글 내용</p>
 						<div>
-							<StarIcon />
-							<StarIcon />
-							<StarIcon />
-							<StarBorderIcon />
-							<StarBorderIcon />
+							<p>댓글 내용</p>
+							<div>
+								<StarIcon />
+								<StarIcon />
+								<StarIcon />
+								<StarBorderIcon />
+								<StarBorderIcon />
+							</div>
 						</div>
 					</li>
 					<li>
 						<span>유저 정보</span>
-						<p>댓글 내용</p>
 						<div>
-							<StarIcon />
-							<StarIcon />
-							<StarIcon />
-							<StarBorderIcon />
-							<StarBorderIcon />
+							<p>댓글 내용</p>
+							<div>
+								<StarIcon />
+								<StarIcon />
+								<StarIcon />
+								<StarBorderIcon />
+								<StarBorderIcon />
+							</div>
 						</div>
 					</li>
 				</ul>
-				<button>더보기</button>
+				<button>
+					더보기
+					<ArrowDropDownIcon />
+				</button>
 			</article>
 		</section>
 	);
