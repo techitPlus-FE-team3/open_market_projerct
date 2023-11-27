@@ -12,9 +12,9 @@ import UserOrders from "@/pages/UserOrders";
 import UserProducts from "@/pages/UserProducts";
 import UserUpdate from "@/pages/UserUpdate";
 import {
-    Route,
-    createBrowserRouter,
-    createRoutesFromElements,
+	Route,
+	createBrowserRouter,
+	createRoutesFromElements,
 } from "react-router-dom";
 
 const router = createBrowserRouter(
