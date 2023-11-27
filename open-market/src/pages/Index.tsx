@@ -1,7 +1,27 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
 function Index() {
+	const [productList, setProductList] = useState<Product[]>([]);
+
+	async function getProductList() {
+		try {
+			const response = await axios.get<ProductListResponse>(
+				"https://localhost/api/products",
+			);
+			setProductList(response.data.item);
+			console.log(productList);
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
+	useEffect(() => {
+		getProductList();
+	}, []);
+
 	return (
 		<>
 			<Helmet>
@@ -9,7 +29,7 @@ function Index() {
 			</Helmet>
 			<Link to="/registration">상품등록</Link>
 			<Link to="/edit/:productId">상품 업데이트</Link>
-			<main>
+			<section>
 				<h2>메인페이지</h2>
 				<img src="/vite.svg" alt="hero" />
 				<div className="searchInputWrapper">
@@ -24,33 +44,24 @@ function Index() {
 					<button type="submit">최신순</button>
 				</div>
 				<ol className="musicList">
-					<li className="musicItem">
-						<Link to="/">
-							<img src="/vite.svg" alt="음원 사진" />
-							<span>타이틀</span>
-						</Link>
-						<audio src="/" controls />
-						<button type="submit">북마크</button>
-					</li>
-					<li className="musicItem">
-						<Link to="/">
-							<img src="/vite.svg" alt="음원 사진" />
-							<span>타이틀</span>
-						</Link>
-						<audio src="/" controls />
-						<button type="submit">북마크</button>
-					</li>
-					<li className="musicItem">
-						<Link to="/">
-							<img src="/vite.svg" alt="음원 사진" />
-							<span>타이틀</span>
-						</Link>
-						<audio src="/" controls />
-						<button type="submit">북마크</button>
-					</li>
+					{productList?.slice(0, 4).map((product) => {
+						return (
+							<li key={String(product._id)} className="musicItem">
+								<Link to="/">
+									<img
+										src={product.mainImages[0]}
+										alt={`${product.name} 사진`}
+									/>
+									<span>{product.name}</span>
+								</Link>
+								<audio src="/" controls />
+								<button type="submit">북마크</button>
+							</li>
+						);
+					})}
 				</ol>
 				<button type="submit">더보기</button>
-			</main>
+			</section>
 		</>
 	);
 }
