@@ -1,17 +1,17 @@
 import { Helmet } from "react-helmet-async";
 
-function ProductRegistration() {
+function ProductEdit() {
 	return (
-		<section>
+		<>
 			<Helmet>
-				<title>Register Product - 모두의 오디오 MODI</title>
+				<title>Update Product - 모두의 오디오 MODI</title>
 			</Helmet>
-			<div>
-				<h2>상품 등록</h2>
+			<section>
+				<h2>상품 수정</h2>
 				<form encType="multipart/form-data">
 					<div>
 						<div>
-							<label htmlFor="photo">앨범아트 업로드</label>
+							<label htmlFor="photo">앨범아트</label>
 							<input
 								type="file"
 								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
@@ -53,26 +53,20 @@ function ProductRegistration() {
 								</div>
 							</div>
 							<div>
-								<div>
-									<label htmlFor="description">설명</label>
-									<textarea
-										name="description"
-										id="description"
-										cols={30}
-										rows={10}
-									/>
-								</div>
-								<div>
-									<label htmlFor="mp3">음원 업로드</label>
-									<input type="file" accept="audio/*" name="mp3" id="mp3" />
-								</div>
+								<label htmlFor="price">가격</label>
+								<input type="number" name="price" id="price" />
 							</div>
 						</div>
 					</div>
 					<div>
 						<div>
-							<label htmlFor="price">가격</label>
-							<input type="number" name="price" id="price" />
+							<label htmlFor="description">설명</label>
+							<textarea
+								name="description"
+								id="description"
+								cols={30}
+								rows={10}
+							/>
 						</div>
 						<div>
 							<span>공개여부</span>
@@ -91,9 +85,9 @@ function ProductRegistration() {
 						<button type="submit">등록</button>
 					</div>
 				</form>
-			</div>
-		</section>
+			</section>
+		</>
 	);
 }
 
-export default ProductRegistration;
+export default ProductEdit;
