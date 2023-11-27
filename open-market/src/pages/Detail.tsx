@@ -9,7 +9,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Helmet } from "react-helmet-async";
 
-function Login() {
+function Detail() {
 	return (
 		<section>
 			<Helmet>
@@ -130,4 +130,4 @@ function Login() {
 	);
 }
 
-export default Login;
+export default Detail;
