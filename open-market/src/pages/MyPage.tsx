@@ -27,6 +27,7 @@ const MyPage = () => {
 							<h5>휴대폰 번호</h5>
 							<p>010-8642-****</p>
 						</div>
+						<button>회원정보 수정</button>
 					</div>
 					<div>
 						<h4>내가 쓴 댓글</h4>
@@ -42,7 +43,7 @@ const MyPage = () => {
 							<h5>게시글 제목</h5>
 							<p>내용</p>
 						</div>
-						<button>회원정보 수정</button>
+						<button>전체 보기</button>
 					</div>
 				</div>
 			</article>
