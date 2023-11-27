@@ -47,7 +47,7 @@ function Index() {
 					{productList?.slice(0, 4).map((product) => {
 						return (
 							<li key={String(product._id)} className="musicItem">
-								<Link to="/">
+								<Link to={`/products?_id=${product._id}`}>
 									<img
 										src={product.mainImages[0]}
 										alt={`${product.name} 사진`}
