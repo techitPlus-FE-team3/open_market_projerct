@@ -1,6 +1,6 @@
-import { Helmet } from "react-helmet-async";
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { useMutation } from "react-query";
 
 interface SignUpForm {
@@ -47,7 +47,7 @@ function SignUp() {
 		useState(false);
 	const [confirmAge, setConfirmAge] = useState(false);
 
-	const handleAgreeAllChange = (e) => {
+	const handleAgreeAllChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const isChecked = e.target.checked;
 		setAgreeAll(isChecked);
 		setTermsOfUse(isChecked);
@@ -129,14 +129,17 @@ function SignUp() {
 		{
 			onSuccess: (data) => {
 				console.log(data);
+				alert("회원가입이 완료되었습니다.");
+				window.location.href = "/signin";
 			},
-			onError: (error) => {
+			onError: (error: any) => {
 				console.error(error);
+				alert(error.response.data.message);
 			},
 		},
 	);
 	// 폼 제출 처리
-	const handleSubmit = (e) => {
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (form.password !== form.confirmPassword) {
 			alert("비밀번호가 일치하지 않습니다.");
@@ -267,7 +270,7 @@ function SignUp() {
 							마케팅 정보 수신 동의 (선택)
 						</label>
 					</li>
-					<li> 
+					<li>
 						<input
 							type="checkbox"
 							id="confirmAge"
