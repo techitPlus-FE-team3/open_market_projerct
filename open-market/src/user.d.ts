@@ -1,4 +1,4 @@
-interface User {
+export interface User {
 	_id: number;
 	email: string;
 	password: string;
@@ -23,7 +23,7 @@ interface User {
 	};
 }
 
-interface UserResponse {
+export interface UserResponse {
 	ok: number;
 	user: User;
 }
