@@ -1,8 +1,8 @@
+import styled from "@emotion/styled";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import styled from "@emotion/styled";
 
 const ProductImage = styled("img")`
 	width: 42px;
