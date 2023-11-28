@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useMutation } from "react-query";
 
@@ -16,8 +16,6 @@ interface SignUpForm {
 		confirmAge: boolean;
 	};
 }
-
-// 회원가입 요청에 필요한 타입
 interface SignUpRequest {
 	email: string;
 	password: string;
@@ -58,39 +56,45 @@ function SignUp() {
 		setConfirmAge(isChecked);
 	};
 
-	const handleCheckboxChange = (setter) => (e) => {
-		const checked = e.target.checked;
-		setter(checked);
+	useEffect(() => {
+		// 모든 체크박스의 현재 상태를 확인
+		const allChecked =
+			termsOfUse &&
+			providingPersonalInformation &&
+			recievingMarketingInformation &&
+			confirmAge;
+		setAgreeAll(allChecked);
+	}, [
+		termsOfUse,
+		providingPersonalInformation,
+		recievingMarketingInformation,
+		confirmAge,
+	]);
 
-		// 상태 업데이트 후 다음 렌더링 사이클에서 모든 체크박스의 상태를 확인
-		setTimeout(() => {
-			const allChecked =
-				termsOfUse &&
-				providingPersonalInformation &&
-				confirmAge &&
-				recievingMarketingInformation &&
-				checked;
+	// 개별 체크박스 변경 처리
+	const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { id, checked } = event.target;
 
-			setAgreeAll(allChecked);
-		}, 0);
+		switch (id) {
+			case "termsOfUse":
+				setTermsOfUse(checked);
+				break;
+			case "providingPersonalInformation":
+				setProvidingPersonalInformation(checked);
+				break;
+			case "recievingMarketingInformation":
+				setRecievingMarketingInformation(checked);
+				break;
+			case "confirmAge":
+				setConfirmAge(checked);
+				break;
+			default:
+				break;
+		}
 	};
 
 	// 회원 정보 객체 생성
 	const createUserObject = () => {
-		const [form, setForm] = useState<SignUpForm>({
-			email: "",
-			password: "",
-			confirmPassword: "",
-			name: "",
-			phone: "",
-			extra: {
-				termsOfUse: false,
-				providingPersonalInformation: false,
-				recievingMarketingInformation: false,
-				confirmAge: false,
-			},
-		});
-
 		const { email, password, name, phone, extra } = form;
 		const {
 			termsOfUse,
@@ -99,19 +103,21 @@ function SignUp() {
 			confirmAge,
 		} = extra;
 		return {
-			email: email,
-			password: password,
-			name: name,
-			phone: phone,
+			email,
+			password,
+			name,
+			phone,
+			type: "seller", // 회원 유형은 "seller"로 고정
 			extra: {
-				termsOfUse: termsOfUse,
-				providingPersonalInformation: providingPersonalInformation,
-				recievingMarketingInformation: recievingMarketingInformation,
-				confirmAge: confirmAge,
+				termsOfUse,
+				providingPersonalInformation,
+				recievingMarketingInformation,
+				confirmAge,
 			},
 		};
 	};
 
+	// 회원가입 요청 처리
 	const signUpMutation = useMutation(
 		async (newUser: SignUpRequest) => {
 			const response = await axios.post(
@@ -122,34 +128,25 @@ function SignUp() {
 		},
 		{
 			onSuccess: (data) => {
-				// 회원가입 성공 후 처리
 				console.log(data);
 			},
 			onError: (error) => {
-				// 에러 처리
 				console.error(error);
 			},
 		},
 	);
-
-	// 폼 제출 핸들러
-	const handleSubmit = async (e) => {
+	// 폼 제출 처리
+	const handleSubmit = (e) => {
 		e.preventDefault();
-		const userObject = createUserObject();
-
-		try {
-			const response = await axios.post(
-				"https://localhost/api/users/",
-				userObject,
-			);
-			console.log(response.data);
-			// 성공적인 응답 처리 (예: 리디렉션, 알림 등)
-		} catch (error) {
-			console.error("회원 가입 실패:", error);
-			// 오류 처리 (예: 오류 메시지 표시)
+		if (form.password !== form.confirmPassword) {
+			alert("비밀번호가 일치하지 않습니다.");
+			return;
 		}
+		const userObject = createUserObject();
+		signUpMutation.mutate(userObject);
 	};
 
+	// 입력 필드 변경 처리
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
 		setForm({ ...form, [name]: value });
@@ -241,6 +238,7 @@ function SignUp() {
 							onChange={handleCheckboxChange}
 							required
 						/>
+
 						<label htmlFor="termsOfUse">이용약관 동의 (필수)</label>
 					</li>
 					<li>
@@ -263,12 +261,13 @@ function SignUp() {
 							id="recievingMarketingInformation"
 							checked={recievingMarketingInformation}
 							onChange={handleCheckboxChange}
+							required
 						/>
-						<label htmlFor="providingPersonalInformation">
+						<label htmlFor="recievingMarketingInformation">
 							마케팅 정보 수신 동의 (선택)
 						</label>
 					</li>
-					<li>
+					<li> 
 						<input
 							type="checkbox"
 							id="confirmAge"
