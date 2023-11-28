@@ -146,7 +146,7 @@ function SignUp() {
 			onSuccess: (data) => {
 				console.log(data);
 				alert("회원가입이 완료되었습니다.");
-				// window.location.href = "/signin";
+				window.location.href = "/signin";
 			},
 			onError: (error: any) => {
 				console.error(error);
