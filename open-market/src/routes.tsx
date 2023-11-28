@@ -26,7 +26,7 @@ const router = createBrowserRouter(
 			<Route path="productedit/:productId" element={<ProductEdit />} />
 			<Route path="productmanage/:productId" element={<ProductManage />} />
 			{/* buy */}
-			<Route path="detail" element={<Detail />} />
+			<Route path="/products" element={<Detail />} />
 			<Route path="productpurchase/:productId" element={<Purchase />} />
 			{/* user */}
 			<Route path="mypage" element={<MyPage />} />
