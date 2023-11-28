@@ -34,8 +34,6 @@ function Index() {
 			<Helmet>
 				<title>Home - 모두의 오디오 MODI</title>
 			</Helmet>
-			<Link to="/registration">상품등록</Link>
-			<Link to="/edit/:productId">상품 업데이트</Link>
 			<section>
 				<h2>메인페이지</h2>
 				<img src="/vite.svg" alt="hero" />
