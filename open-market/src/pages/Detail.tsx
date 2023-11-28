@@ -7,6 +7,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { Rating } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
@@ -46,7 +47,9 @@ function Detail() {
 		}
 	}
 
-	// function setStar() {}
+	const StarRating = ({ rating }: { rating: number }) => {
+		return <Rating value={rating} precision={0.5} />;
+	};
 
 	useEffect(() => {
 		if (_id === null || _id === "") {
@@ -100,11 +103,7 @@ function Detail() {
 				</div>
 				<div>
 					<div>
-						<StarIcon />
-						<StarIcon />
-						<StarIcon />
-						<StarBorderIcon />
-						<StarBorderIcon />
+						<StarRating rating={rating} />
 					</div>
 					<span>{rating}</span>
 				</div>
@@ -160,12 +159,8 @@ function Detail() {
 									<div>
 										<p>{reply.content}</p>
 										<div>
+											<StarRating rating={reply.rating} />
 											{reply.rating}
-											{/* <StarIcon />
-											<StarIcon />
-											<StarIcon />
-											<StarBorderIcon />
-											<StarBorderIcon /> */}
 										</div>
 									</div>
 								</li>
