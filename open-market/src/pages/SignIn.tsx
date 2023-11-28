@@ -57,7 +57,7 @@ function SignIn() {
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						placeholder="이메일"
-					/>{" "}
+					/>
 					<label htmlFor="password">비밀번호</label>
 					<input
 						type="password"
@@ -65,7 +65,7 @@ function SignIn() {
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 						placeholder="비밀번호"
-					/>{" "}
+					/>
 				</fieldset>
 
 				<button type="submit">로그인</button>
