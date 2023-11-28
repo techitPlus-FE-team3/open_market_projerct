@@ -54,6 +54,17 @@ function SignUp() {
 		setProvidingPersonalInformation(isChecked);
 		setRecievingMarketingInformation(isChecked);
 		setConfirmAge(isChecked);
+
+		// form 상태의 extra 부분도 업데이트
+		setForm((prevForm) => ({
+			...prevForm,
+			extra: {
+				termsOfUse: isChecked,
+				providingPersonalInformation: isChecked,
+				recievingMarketingInformation: isChecked,
+				confirmAge: isChecked,
+			},
+		}));
 	};
 
 	useEffect(() => {
@@ -78,15 +89,31 @@ function SignUp() {
 		switch (id) {
 			case "termsOfUse":
 				setTermsOfUse(checked);
+				setForm((prevForm) => ({
+					...prevForm,
+					extra: { ...prevForm.extra, termsOfUse: checked },
+				}));
 				break;
 			case "providingPersonalInformation":
 				setProvidingPersonalInformation(checked);
+				setForm((prevForm) => ({
+					...prevForm,
+					extra: { ...prevForm.extra, providingPersonalInformation: checked },
+				}));
 				break;
 			case "recievingMarketingInformation":
 				setRecievingMarketingInformation(checked);
+				setForm((prevForm) => ({
+					...prevForm,
+					extra: { ...prevForm.extra, recievingMarketingInformation: checked },
+				}));
 				break;
 			case "confirmAge":
 				setConfirmAge(checked);
+				setForm((prevForm) => ({
+					...prevForm,
+					extra: { ...prevForm.extra, confirmAge: checked },
+				}));
 				break;
 			default:
 				break;
@@ -96,24 +123,13 @@ function SignUp() {
 	// 회원 정보 객체 생성
 	const createUserObject = () => {
 		const { email, password, name, phone, extra } = form;
-		const {
-			termsOfUse,
-			providingPersonalInformation,
-			recievingMarketingInformation,
-			confirmAge,
-		} = extra;
 		return {
 			email,
 			password,
 			name,
 			phone,
-			type: "seller", // 회원 유형은 "seller"로 고정
-			extra: {
-				termsOfUse,
-				providingPersonalInformation,
-				recievingMarketingInformation,
-				confirmAge,
-			},
+			type: "seller", // 회원 유형은 "user"로 고정
+			extra,
 		};
 	};
 
