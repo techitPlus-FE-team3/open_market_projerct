@@ -12,7 +12,6 @@ const StyledHeader = styled.header`
 `;
 
 const Logo = styled.h1`
-	font-size: 1.5rem;
 	a {
 		text-decoration: none;
 		color: inherit;
@@ -95,7 +94,7 @@ const Header = () => {
 		<StyledHeader>
 			<Logo>
 				<Link to="/">
-					<img src="/logo.png" alt="모디 로고" />
+					<img src="public/logo/logo2.svg" alt="모디 로고" />
 				</Link>
 			</Logo>
 			<SearchForm action="">
