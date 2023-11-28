@@ -7,37 +7,77 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function Detail() {
+	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const _id = searchParams.get("_id");
+	const [product, setProduct] = useState<Product>();
+
+	async function getProduct(_id: string) {
+		try {
+			const response = await axios.get<ProductResponse>(
+				`https://localhost/api/products/${_id}`,
+			);
+			setProduct(response.data.item);
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
+	useEffect(() => {
+		if (_id === null || _id === "") {
+			return navigate("/err", { replace: true });
+		}
+		getProduct(_id);
+	}, []);
+
 	return (
 		<section>
 			<Helmet>
-				<title>DETAIL - 모두의 오디오 MODI</title>
+				<title>Product Detail - 모두의 오디오 MODI</title>
 			</Helmet>
 			<h2>상세 페이지</h2>
 			<article>
 				<div>
-					<img src="" alt="앨범아트" />
+					<img
+						src={
+							product?.mainImages[0] ? product?.mainImages[0] : "/noImage.svg"
+						}
+						alt={`${product?.name} 앨범 아트`}
+					/>
 					<button>
 						<PlayArrowIcon />
 					</button>
 				</div>
 				<div>
-					<span>타이틀</span>
-					<span>아티스트</span>
-					<span>업로드 날짜</span>
-					<span>상품 설명</span>
+					<span>{product?.name}</span>
+					<span>{product?.sellerId}</span>
+					<span>{product?.createdAt}</span>
+					<span>{product?.content}</span>
+					<span>{product?.price}</span>
 				</div>
 				<div>
-					<div>
-						<StarIcon />
-						isNew
-					</div>
-					<div>
-						<ThumbUpIcon />
-						isBest
-					</div>
+					{product?.extra?.isNew ? (
+						<div>
+							<StarIcon />
+							New!
+						</div>
+					) : (
+						<></>
+					)}
+					{product?.extra?.isBest ? (
+						<div>
+							<ThumbUpIcon />
+							Best!
+						</div>
+					) : (
+						<></>
+					)}
 				</div>
 				<div>
 					<div>
@@ -57,11 +97,11 @@ function Detail() {
 				<div>
 					<button>
 						<BookmarkOutlinedIcon />
-						북마크 북마크 횟수
+						{product?.extra?.bookmark ? product?.extra?.bookmark : 0}
 					</button>
 					<button>
 						<CheckIcon />
-						구매하기 구매 횟수
+						{product?.extra?.order ? product?.extra?.order : 0}
 					</button>
 				</div>
 			</article>
@@ -88,54 +128,31 @@ function Detail() {
 					</div>
 				</form>
 				<ul>
-					<li>
-						<div>
-							<AccountCircleIcon />
-							<span>유저정보</span>
-						</div>
-						<div>
-							<p>댓글 내용</p>
-							<div>
-								<StarIcon />
-								<StarIcon />
-								<StarIcon />
-								<StarBorderIcon />
-								<StarBorderIcon />
-							</div>
-						</div>
-					</li>
-					<li>
-						<div>
-							<AccountCircleIcon />
-							<span>유저정보</span>
-						</div>
-						<div>
-							<p>댓글 내용</p>
-							<div>
-								<StarIcon />
-								<StarIcon />
-								<StarIcon />
-								<StarBorderIcon />
-								<StarBorderIcon />
-							</div>
-						</div>
-					</li>
-					<li>
-						<div>
-							<AccountCircleIcon />
-							<span>유저정보</span>
-						</div>
-						<div>
-							<p>댓글 내용</p>
-							<div>
-								<StarIcon />
-								<StarIcon />
-								<StarIcon />
-								<StarBorderIcon />
-								<StarBorderIcon />
-							</div>
-						</div>
-					</li>
+					{product?.replies?.length === 0 ? (
+						<p>댓글이 없습니다.</p>
+					) : (
+						product?.replies?.map((reply) => {
+							return (
+								<li key={reply._id}>
+									<div>
+										<AccountCircleIcon />
+										<span>{reply.userName}</span>
+									</div>
+									<div>
+										<p>{reply.content}</p>
+										<div>
+											{reply.rating}
+											{/* <StarIcon />
+											<StarIcon />
+											<StarIcon />
+											<StarBorderIcon />
+											<StarBorderIcon /> */}
+										</div>
+									</div>
+								</li>
+							);
+						})
+					)}
 				</ul>
 				<button>
 					더보기
