@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
 const MyPage = () => {
-	const [userInfo, setUserInfo] = useState(null);
+	const [userInfo, setUserInfo] = useState<User | null>(null);
 
 	useEffect(() => {
 		const userId = localStorage.getItem("_id");
@@ -12,7 +12,7 @@ const MyPage = () => {
 
 		const fetchUserInfo = async () => {
 			try {
-				const response = await axios.get(
+				const response = await axios.get<UserResponse>(
 					`https://localhost/api/users/${userId}`,
 					{
 						headers: {
