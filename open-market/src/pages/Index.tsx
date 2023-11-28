@@ -55,10 +55,17 @@ function Index() {
 						return (
 							<li key={String(product._id)} className="musicItem">
 								<Link to={`/products?_id=${product._id}`}>
-									<ProductImage
-										src={product.mainImages[0]}
-										alt={`${product.name} 사진`}
-									/>
+									{product.mainImages[0] ? (
+										<ProductImage
+											src={product.mainImages[0]}
+											alt={`${product.name} 사진`}
+										/>
+									) : (
+										<ProductImage
+											src="/noImage.svg"
+											alt={`${product.name} 사진 없음`}
+										/>
+									)}
 									<span>{product.name}</span>
 								</Link>
 								<audio src="/" controls />
