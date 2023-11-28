@@ -128,7 +128,7 @@ function SignUp() {
 			password,
 			name,
 			phone,
-			type: "seller", // 회원 유형은 "user"로 고정
+			type: "seller", // 회원 유형은 "seller"로 고정
 			extra,
 		};
 	};
