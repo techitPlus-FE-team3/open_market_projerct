@@ -35,10 +35,18 @@ function Detail() {
 		if (product.replies?.length === 0) {
 			return 0;
 		} else {
-			const sum = product.replies?.reduce((acc, cur) => acc + cur.rating, 0)!;
-			return sum / product.replies?.length!;
+			const ratingSum = product.replies?.reduce(
+				(acc, cur) => acc + cur.rating,
+				0,
+			)!;
+			const ratingAvg = Number(
+				(ratingSum / product.replies?.length!).toFixed(2),
+			);
+			return ratingAvg;
 		}
 	}
+
+	// function setStar() {}
 
 	useEffect(() => {
 		if (_id === null || _id === "") {
