@@ -12,26 +12,30 @@ import UserOrders from "@/pages/UserOrders";
 import UserProducts from "@/pages/UserProducts";
 import UserUpdate from "@/pages/UserUpdate";
 import {
-    Route,
-    createBrowserRouter,
-    createRoutesFromElements,
+	Route,
+	createBrowserRouter,
+	createRoutesFromElements,
 } from "react-router-dom";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route path="/" element={<RootLayout />}>
 			<Route index element={<Index />} />
-			<Route path="signin" element={<SignIn />} />
+			{/* sell */}
 			<Route path="productregistration" element={<ProductRegistration />} />
-			<Route path="signup" element={<SignUp />} />
 			<Route path="productedit/:productId" element={<ProductEdit />} />
+			<Route path="productmanage/:productId" element={<ProductManage />} />
+			{/* buy */}
 			<Route path="detail" element={<Detail />} />
+			<Route path="productpurchase/:productId" element={<Purchase />} />
+			{/* user */}
 			<Route path="mypage" element={<MyPage />} />
 			<Route path="update/userId" element={<UserUpdate />} />
-			<Route path="productpurchase/:productId" element={<Purchase />} />
-			<Route path="productmanage/:productId" element={<ProductManage />} />
 			<Route path="user/userId/products" element={<UserProducts />} />
 			<Route path="user/userId/orders" element={<UserOrders />} />
+			{/* signin, signup */}
+			<Route path="signin" element={<SignIn />} />
+			<Route path="signup" element={<SignUp />} />
 		</Route>,
 	),
 );
