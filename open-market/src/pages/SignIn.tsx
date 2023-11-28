@@ -27,6 +27,7 @@ function SignIn() {
 					"refreshToken",
 					response.data.item.token.refreshToken,
 				);
+				localStorage.setItem("_id", response.data.item._id);
 
 				// 로그인 성공 이후 홈 페이지로 이동.
 				navigate("/");
