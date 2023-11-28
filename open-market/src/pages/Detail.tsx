@@ -17,6 +17,7 @@ function Detail() {
 	const [searchParams] = useSearchParams();
 	const _id = searchParams.get("_id");
 	const [product, setProduct] = useState<Product>();
+	const [rating, setRating] = useState(0);
 
 	async function getProduct(_id: string) {
 		try {
@@ -24,8 +25,18 @@ function Detail() {
 				`https://localhost/api/products/${_id}`,
 			);
 			setProduct(response.data.item);
+			setRating(getRating(response.data.item));
 		} catch (err) {
 			console.error(err);
+		}
+	}
+
+	function getRating(product: Product) {
+		if (product.replies?.length === 0) {
+			return 0;
+		} else {
+			const sum = product.replies?.reduce((acc, cur) => acc + cur.rating, 0)!;
+			return sum / product.replies?.length!;
 		}
 	}
 
@@ -87,7 +98,7 @@ function Detail() {
 						<StarBorderIcon />
 						<StarBorderIcon />
 					</div>
-					<span>3.5</span>
+					<span>{rating}</span>
 				</div>
 				<div>
 					<img src="https://svgsilh.com/svg/2028515.svg" alt="음파" />
