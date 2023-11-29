@@ -181,9 +181,15 @@ function SignUp() {
 	// 입력 필드 변경 처리
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
-		setForm({ ...form, [name]: value });
-	};
 
+		// 전화번호 필드의 경우 숫자만 허용
+		if (name === "phone") {
+			const numbersOnly = value.replace(/[^0-9]/g, "");
+			setForm({ ...form, [name]: numbersOnly });
+		} else {
+			setForm({ ...form, [name]: value });
+		}
+	};
 	return (
 		<section>
 			<Helmet>
