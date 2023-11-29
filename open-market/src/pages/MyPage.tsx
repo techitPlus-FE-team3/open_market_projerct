@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 function MyPage() {
 	const [userInfo, setUserInfo] = useState<User | null>(null);
 	const [bookmarks, setBookmarks] = useState<number[]>([]);
+	const [bookmarkDetails, setBookmarkDetails] = useState<any[]>([]);
 
 	useEffect(() => {
 		const userId = localStorage.getItem("_id");
@@ -21,35 +22,45 @@ function MyPage() {
 						},
 					},
 				);
-				// console.log(response.data);
 				setUserInfo(response.data.item);
+				if (response.data.item.extra && response.data.item.extra.bookmarks) {
+					setBookmarks(response.data.item.extra.bookmarks);
+				} else {
+					setBookmarks([]);
+				}
 			} catch (error) {
-				// 에러 처리
 				console.error("회원 정보 조회 실패:", error);
 			}
 		};
 
-		const fetchBookmarks = async () => {
-			try {
-				const response = await axios.get(
-					`https://localhost/api/users/${userId}/extra/bookmarks`,
-					{
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
+		fetchUserInfo();
+	}, []);
+
+	useEffect(() => {
+		const fetchBookmarkDetails = async () => {
+			const bookmarkInfo = [];
+			for (const bookmarkId of bookmarks) {
+				try {
+					const response = await axios.get(
+						`https://localhost/api/products/${bookmarkId}`,
+						{
+							headers: {
+								Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+							},
 						},
-					},
-				);
-				if (response.data.ok) {
-					setBookmarks(response.data.item.extra.bookmarks);
+					);
+					bookmarkInfo.push(response.data.item);
+				} catch (error) {
+					console.error(`북마크 ${bookmarkId} 정보 조회 실패:`, error);
 				}
-			} catch (error) {
-				console.error("북마크 정보 조회 실패:", error);
 			}
+			setBookmarkDetails(bookmarkInfo);
 		};
 
-		fetchUserInfo();
-		fetchBookmarks();
-	}, []);
+		if (bookmarks.length > 0) {
+			fetchBookmarkDetails();
+		}
+	}, [bookmarks]);
 
 	if (!userInfo) {
 		return <div>Loading...</div>; // 로딩 처리
@@ -102,11 +113,10 @@ function MyPage() {
 			<article>
 				<h3>북마크</h3>
 				<ul>
-					{bookmarks.map((bookmarkId) => (
-						<li key={bookmarkId}>
-							{/* 예시: 북마크 ID를 사용하여 링크 또는 이미지 표시 */}
-							<Link to={`/products?_id=${bookmarkId}`}>
-								<img src="/" alt={`앨범 ${bookmarkId}`} />
+					{bookmarkDetails.map((product) => (
+						<li key={product._id}>
+							<Link to={`/products?_id=${product._id}`}>
+								<img src={product.mainImages[0]} alt={`앨범 ${product.name}`} />
 							</Link>
 						</li>
 					))}
