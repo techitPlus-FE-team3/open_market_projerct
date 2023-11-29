@@ -20,11 +20,11 @@ function Detail() {
 	const _id = searchParams.get("_id");
 	const [product, setProduct] = useState<Product>();
 	const [rating, setRating] = useState(0);
-	const [logState, setLogState] = useState<User | undefined>();
+	const [logState, setLogState] = useState<number | undefined>();
 
-	const data = localStorage.getItem("user")
-		? JSON.parse(localStorage.getItem("user")!)
-		: [];
+	const data = localStorage.getItem("_id")
+		? Number(localStorage.getItem("_id"))
+		: undefined;
 
 	async function getProduct(_id: string) {
 		try {
@@ -70,6 +70,7 @@ function Detail() {
 
 	useEffect(() => {
 		setLogState(data);
+		console.log(logState);
 	}, []);
 
 	return (
@@ -132,9 +133,9 @@ function Detail() {
 						{product?.extra?.bookmark ? product?.extra?.bookmark : 0}
 					</button>
 					{
-						logState && logState._id === product?.seller_id ? (
+						logState && logState === product?.seller_id ? (
 							<Link to={`/productmanage?_id=${product?._id}`}>상품 관리</Link>
-						) : logState && logState._id ? (
+						) : logState ? (
 							<Link to={`/productpurchase?_id=${product?._id}`}>
 								<CheckIcon />
 								구매하기
@@ -147,10 +148,7 @@ function Detail() {
 								{product?.extra?.order ? product?.extra?.order : 0}
 							</Link>
 						)
-						// 유저 id === seller id 인 경우 상품 관리 페이지로
 						// 유저가 구매한 경우 > 다운로드 버튼
-						// 유저가 구매를 안 한 경우 > 구매버튼
-						// 로그인을 안 한 경우 > 구매버튼 클릭 시 알럿 & 로그인 페이지로 이동
 					}
 				</div>
 			</article>
