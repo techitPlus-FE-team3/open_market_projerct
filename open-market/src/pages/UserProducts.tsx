@@ -1,8 +1,10 @@
-import { Helmet } from "react-helmet-async";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { Link, useParams } from "react-router-dom";
 
 function UserProducts() {
+	const { userId } = useParams();
+
 	return (
 		<section>
 			<Helmet>
@@ -76,7 +78,7 @@ function UserProducts() {
 					<Link to="detail">상세보기</Link>
 				</li>
 			</ul>
-			<button type="button">더보기</button>
+			<Link to={`user/${userId}/products`}>더보기</Link>
 		</section>
 	);
 }
