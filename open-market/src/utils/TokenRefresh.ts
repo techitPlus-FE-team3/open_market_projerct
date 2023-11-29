@@ -4,7 +4,7 @@ import axios from "axios";
 const API_ENDPOINT = "https://localhost/api/users/refresh";
 
 // 토큰 갱신 함수
-export const refreshToken = async () => {
+async function refreshToken() {
 	try {
 		const refreshToken = localStorage.getItem("refreshToken");
 		if (!refreshToken) {
@@ -31,4 +31,6 @@ export const refreshToken = async () => {
 		alert("토큰이 만료되었습니다. 다시 로그인해주세요.");
 		throw error;
 	}
-};
+}
+
+export default refreshToken;

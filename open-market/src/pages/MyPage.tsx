@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
-const MyPage = () => {
+function MyPage() {
 	const [userInfo, setUserInfo] = useState<User | null>(null);
 
 	useEffect(() => {
@@ -205,6 +205,6 @@ const MyPage = () => {
 			</article>
 		</section>
 	);
-};
+}
 
 export default MyPage;
