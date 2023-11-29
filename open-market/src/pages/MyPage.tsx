@@ -20,7 +20,7 @@ const MyPage = () => {
 						},
 					},
 				);
-				console.log(response.data);
+				// console.log(response.data);
 				setUserInfo(response.data.item);
 			} catch (error) {
 				// 에러 처리
