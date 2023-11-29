@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 
 function MyPage() {
 	const [userInfo, setUserInfo] = useState<User | null>(null);
+	const [bookmarks, setBookmarks] = useState<number[]>([]);
+	const [bookmarkDetails, setBookmarkDetails] = useState<any[]>([]);
 
 	useEffect(() => {
 		const userId = localStorage.getItem("_id");
@@ -20,16 +22,45 @@ function MyPage() {
 						},
 					},
 				);
-				// console.log(response.data);
 				setUserInfo(response.data.item);
+				if (response.data.item.extra && response.data.item.extra.bookmarks) {
+					setBookmarks(response.data.item.extra.bookmarks);
+				} else {
+					setBookmarks([]);
+				}
 			} catch (error) {
-				// 에러 처리
 				console.error("회원 정보 조회 실패:", error);
 			}
 		};
 
 		fetchUserInfo();
 	}, []);
+
+	useEffect(() => {
+		const fetchBookmarkDetails = async () => {
+			const bookmarkInfo = [];
+			for (const bookmarkId of bookmarks) {
+				try {
+					const response = await axios.get(
+						`https://localhost/api/products/${bookmarkId}`,
+						{
+							headers: {
+								Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+							},
+						},
+					);
+					bookmarkInfo.push(response.data.item);
+				} catch (error) {
+					console.error(`북마크 ${bookmarkId} 정보 조회 실패:`, error);
+				}
+			}
+			setBookmarkDetails(bookmarkInfo);
+		};
+
+		if (bookmarks.length > 0) {
+			fetchBookmarkDetails();
+		}
+	}, [bookmarks]);
 
 	if (!userInfo) {
 		return <div>Loading...</div>; // 로딩 처리
@@ -82,31 +113,13 @@ function MyPage() {
 			<article>
 				<h3>북마크</h3>
 				<ul>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
+					{bookmarkDetails.map((product) => (
+						<li key={product._id}>
+							<Link to={`/products?_id=${product._id}`}>
+								<img src={product.mainImages[0]} alt={`앨범 ${product.name}`} />
+							</Link>
+						</li>
+					))}
 				</ul>
 				<Link to="/">전체보기</Link>
 			</article>
