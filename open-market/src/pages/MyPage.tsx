@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 function MyPage() {
 	const [userInfo, setUserInfo] = useState<User | null>(null);
+	const [bookmarks, setBookmarks] = useState<number[]>([]);
 
 	useEffect(() => {
 		const userId = localStorage.getItem("_id");
@@ -28,7 +29,26 @@ function MyPage() {
 			}
 		};
 
+		const fetchBookmarks = async () => {
+			try {
+				const response = await axios.get(
+					`https://localhost/api/users/${userId}/extra/bookmarks`,
+					{
+						headers: {
+							Authorization: `Bearer ${accessToken}`,
+						},
+					},
+				);
+				if (response.data.ok) {
+					setBookmarks(response.data.item.extra.bookmarks);
+				}
+			} catch (error) {
+				console.error("북마크 정보 조회 실패:", error);
+			}
+		};
+
 		fetchUserInfo();
+		fetchBookmarks();
 	}, []);
 
 	if (!userInfo) {
@@ -82,31 +102,14 @@ function MyPage() {
 			<article>
 				<h3>북마크</h3>
 				<ul>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
+					{bookmarks.map((bookmarkId) => (
+						<li key={bookmarkId}>
+							{/* 예시: 북마크 ID를 사용하여 링크 또는 이미지 표시 */}
+							<Link to={`/products?_id=${bookmarkId}`}>
+								<img src="/" alt={`앨범 ${bookmarkId}`} />
+							</Link>
+						</li>
+					))}
 				</ul>
 				<Link to="/">전체보기</Link>
 			</article>
