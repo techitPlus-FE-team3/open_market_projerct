@@ -150,7 +150,20 @@ function SignUp() {
 			},
 			onError: (error: any) => {
 				console.error(error);
-				alert(error.response.data.message);
+
+				// 에러 메시지들을 모아서 표시
+				if (
+					error.response &&
+					error.response.data &&
+					error.response.data.errors
+				) {
+					const errorMessages = error.response.data.errors
+						.map((err: { msg: string }) => `${err.msg}`)
+						.join("\n");
+					alert(`회원가입 실패:\n${errorMessages}`);
+				} else {
+					alert("회원가입 중 알 수 없는 오류가 발생했습니다.");
+				}
 			},
 		},
 	);
@@ -168,9 +181,15 @@ function SignUp() {
 	// 입력 필드 변경 처리
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
-		setForm({ ...form, [name]: value });
-	};
 
+		// 전화번호 필드의 경우 숫자만 허용
+		if (name === "phone") {
+			const numbersOnly = value.replace(/[^0-9]/g, "");
+			setForm({ ...form, [name]: numbersOnly });
+		} else {
+			setForm({ ...form, [name]: value });
+		}
+	};
 	return (
 		<section>
 			<Helmet>
