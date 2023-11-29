@@ -1,3 +1,4 @@
+import genres from "@/data/genres";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import axios from "axios";
@@ -134,9 +135,10 @@ function ProductRegistration() {
 										id="genre"
 										ref={genreRef}
 										onChange={(e) => {
+											const tagsArray = e.target.value.split(" ");
 											setPostItem({
 												...postItem,
-												extra: { ...postItem.extra, category: e.target.value },
+												extra: { ...postItem.extra, tags: tagsArray },
 											});
 										}}
 										defaultValue="none"
@@ -144,10 +146,11 @@ function ProductRegistration() {
 										<option value="none" disabled hidden>
 											장르를 선택해주세요
 										</option>
-										<option value="dance">dance</option>
-										<option value="pop">pop</option>
-										<option value="k-pop">k-pop</option>
-										<option value="indie">indie</option>
+										{genres.map((item) => (
+											<option key={item} value={item}>
+												{item}
+											</option>
+										))}
 									</select>
 								</div>
 								<div>
@@ -155,14 +158,15 @@ function ProductRegistration() {
 									<input
 										type="text"
 										name="hashTag"
-										onChange={(e) =>
+										onChange={(e) => {
+											const tagsArray = e.target.value.split(" ");
 											setPostItem({
 												...postItem,
-												extra: { ...postItem.extra, tags: [e.target.value] },
-											})
-										}
+												extra: { ...postItem.extra, tags: tagsArray },
+											});
+										}}
 										id="hashTag"
-										placeholder="해시태그를 입력해주세요"
+										placeholder="해시태그를 띄어쓰기로 구분해주세요"
 									/>
 								</div>
 							</div>
