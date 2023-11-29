@@ -150,7 +150,20 @@ function SignUp() {
 			},
 			onError: (error: any) => {
 				console.error(error);
-				alert(error.response.data.message);
+
+				// 에러 메시지들을 모아서 표시
+				if (
+					error.response &&
+					error.response.data &&
+					error.response.data.errors
+				) {
+					const errorMessages = error.response.data.errors
+						.map((err: { msg: string }) => `${err.msg}`)
+						.join("\n");
+					alert(`회원가입 실패:\n${errorMessages}`);
+				} else {
+					alert("회원가입 중 알 수 없는 오류가 발생했습니다.");
+				}
 			},
 		},
 	);
