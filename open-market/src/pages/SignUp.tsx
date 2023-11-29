@@ -47,6 +47,13 @@ function SignUp() {
 		useState(false);
 	const [confirmAge, setConfirmAge] = useState(false);
 
+	// 이메일 중복 확인 상태
+	const [emailCheck, setEmailCheck] = useState({
+		checked: false,
+		valid: false,
+		message: "",
+	});
+
 	const handleAgreeAllChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const isChecked = e.target.checked;
 		setAgreeAll(isChecked);
@@ -133,6 +140,37 @@ function SignUp() {
 		};
 	};
 
+	// 중복 확인 함수
+	const checkEmailDuplication = async () => {
+		try {
+			const response = await axios.get(
+				`https://localhost/api/users/email?email=${form.email}`,
+			);
+			if (response.data.ok) {
+				setEmailCheck({
+					checked: true,
+					valid: true,
+					message: "사용 가능한 이메일입니다.",
+				});
+			}
+		} catch (error) {
+			if (axios.isAxiosError(error) && error.response) {
+				setEmailCheck({
+					checked: true,
+					valid: false,
+					message: error.response.data.message,
+				});
+			} else {
+				console.error("이메일 중복 확인 중 오류가 발생했습니다.", error);
+				setEmailCheck({
+					checked: true,
+					valid: false,
+					message: "중복 확인 중 오류가 발생했습니다.",
+				});
+			}
+		}
+	};
+
 	// 회원가입 요청 처리
 	const signUpMutation = useMutation(
 		async (newUser: SignUpRequest) => {
@@ -209,6 +247,10 @@ function SignUp() {
 							placeholder="이메일"
 							required
 						/>
+						<button type="button" onClick={checkEmailDuplication}>
+							중복 확인
+						</button>
+						{emailCheck.checked && <p>{emailCheck.message}</p>}
 					</li>
 					<li>
 						<label htmlFor="password">비밀번호</label>
