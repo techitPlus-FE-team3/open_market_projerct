@@ -27,13 +27,27 @@ function SignIn() {
 					"refreshToken",
 					response.data.item.token.refreshToken,
 				);
+				localStorage.setItem("_id", response.data.item._id);
 
 				// 로그인 성공 이후 홈 페이지로 이동.
 				navigate("/");
 			}
 		} catch (error: any) {
 			if (axios.isAxiosError(error) && error.response) {
-				alert(error.response.data.message);
+				const errorMessage = error.response.data.message;
+
+				if (
+					error.response.data.errors &&
+					error.response.data.errors.length > 0
+				) {
+					const detailedMessages = error.response.data.errors
+						.map((err: any) => `${err.msg} (${err.path})`)
+						.join("\n");
+					alert(`${errorMessage}\n\n${detailedMessages}`);
+					console.log(detailedMessages);
+				} else {
+					alert(errorMessage);
+				}
 			} else {
 				console.error("예상치 못한 오류가 발생했습니다.:", error);
 				alert("알 수 없는 오류가 발생했습니다.");
