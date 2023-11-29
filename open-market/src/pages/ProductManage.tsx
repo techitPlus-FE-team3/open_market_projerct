@@ -8,9 +8,15 @@ function ProductManage() {
 	const productId = useParams();
 	function handleProductDelete(e: { preventDefault: () => void }) {
 		e.preventDefault();
+		const accessToken = localStorage.getItem("accessToken");
+
 		try {
 			axios
-				.delete(`https://localhost/api/seller/products/${productId}`)
+				.delete(`https://localhost/api/seller/products/${productId}`, {
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				})
 				.then(() => {
 					toast.success("상품이 성공적으로 삭제되었습니다", {
 						ariaProps: {
