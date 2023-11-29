@@ -22,7 +22,7 @@ interface Product {
 
 interface ProductListResponse {
 	ok: number;
-	items: Product[];
+	item: Product[];
 }
 
 interface ProductResponse {
