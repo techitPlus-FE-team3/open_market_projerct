@@ -1,6 +1,6 @@
 interface Product {
 	_id: number;
-	sellerId: number;
+	seller_id: number;
 	active: boolean;
 	name: string;
 	mainImages: string[];
