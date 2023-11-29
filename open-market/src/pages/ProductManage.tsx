@@ -1,8 +1,32 @@
+import axios from "axios";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
-import styled from "@emotion/styled";
+import toast from "react-hot-toast";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 function ProductManage() {
+	const navigate = useNavigate();
+	const productId = useParams();
+	function handleProductDelete(e: { preventDefault: () => void }) {
+		e.preventDefault();
+		try {
+			axios
+				.delete(`https://localhost/api/seller/products/${productId}`)
+				.then(() => {
+					toast.success("상품이 성공적으로 삭제되었습니다", {
+						ariaProps: {
+							role: "status",
+							"aria-live": "polite",
+						},
+					});
+					navigate("/");
+				})
+				.catch((error) => {
+					console.error("에러 발생:", error);
+				});
+		} catch (error) {
+			console.error(error);
+		}
+	}
 	return (
 		<>
 			<Helmet>
@@ -36,7 +60,9 @@ function ProductManage() {
 					<span>공개여부: 공개</span>
 				</div>
 				<div>
-					<button type="submit">삭제</button>
+					<button type="submit" onClick={handleProductDelete}>
+						삭제
+					</button>
 					<Link to="/edit/:productId">수정</Link>
 				</div>
 			</section>
