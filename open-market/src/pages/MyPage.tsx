@@ -5,13 +5,14 @@ import { Link } from "react-router-dom";
 
 function MyPage() {
 	const [userInfo, setUserInfo] = useState<User | null>(null);
+	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
+
+	const userId = localStorage.getItem("_id");
+	const accessToken = localStorage.getItem("accessToken");
 	const [bookmarks, setBookmarks] = useState<number[]>([]);
 	const [bookmarkDetails, setBookmarkDetails] = useState<any[]>([]);
 
 	useEffect(() => {
-		const userId = localStorage.getItem("_id");
-		const accessToken = localStorage.getItem("accessToken");
-
 		const fetchUserInfo = async () => {
 			try {
 				const response = await axios.get<UserResponse>(
@@ -33,7 +34,25 @@ function MyPage() {
 			}
 		};
 
+		const fetchUserProductsInfo = async () => {
+			try {
+				const response = await axios.get<ProductListResponse>(
+					`https://localhost/api/seller/products/`,
+					{
+						headers: {
+							Authorization: `Bearer ${accessToken}`,
+						},
+					},
+				);
+				setUserProductsInfo(response.data.item);
+			} catch (error) {
+				// 에러 처리
+				console.error("회원 정보 조회 실패:", error);
+			}
+		};
+
 		fetchUserInfo();
+		fetchUserProductsInfo();
 	}, []);
 
 	useEffect(() => {
@@ -186,35 +205,21 @@ function MyPage() {
 				<Link to="/">전체보기</Link>
 			</article>
 			<article>
-				<h3>판매내역</h3>
+				<h3>판매상품관리</h3>
 				<ul>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
+					{Array.isArray(userProductsInfo) ? (
+						userProductsInfo.slice(0, 4).map((item) => (
+							<li key={item._id}>
+								<Link to={`/productedit/${item._id}`}>
+									<img src={`${item.mainImages[0]}`} alt="앨범아트" />
+								</Link>
+							</li>
+						))
+					) : (
+						<span>데이터가 없습니다.</span>
+					)}
 				</ul>
-				<Link to="/">전체보기</Link>
+				<Link to={`/user/${userId}/products`}>전체보기</Link>
 			</article>
 		</section>
 	);
