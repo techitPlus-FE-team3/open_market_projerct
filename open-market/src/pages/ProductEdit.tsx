@@ -43,7 +43,7 @@ function ProductEdit() {
 			bookmark: 0,
 		},
 	});
-	console.log(postItem, "postItem");
+
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");
 
@@ -109,169 +109,167 @@ function ProductEdit() {
 			console.error(error);
 		}
 	}
-	console.log(postItem);
+
 	return (
-		<>
+		<section>
 			<Helmet>
 				<title>Edit Product - 모두의 오디오 MODI</title>
 			</Helmet>
-			<section>
-				<h2>상품 수정</h2>
-				<form encType="multipart/form-data">
+			<h2>상품 수정</h2>
+			<form encType="multipart/form-data">
+				<div>
 					<div>
 						<div>
-							<div>
-								<FileUploadIcon fontSize="large" />
-								<label htmlFor="photo">앨범아트 업로드</label>
-							</div>
+							<FileUploadIcon fontSize="large" />
+							<label htmlFor="photo">앨범아트 업로드</label>
+						</div>
+						<input
+							type="file"
+							accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
+							name="photo"
+							id="photo"
+							onChange={(e: { target: { files: any } }) => {
+								uploadFile(e.target.files[0], setPostItem, "image");
+							}}
+						/>
+						<img
+							src={postItem?.mainImages[0]}
+							alt={`${userProductInfo?.name}앨범아트`}
+						/>
+					</div>
+					<div>
+						<div>
+							<label htmlFor="title">타이틀 | </label>
 							<input
-								type="file"
-								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
-								name="photo"
-								id="photo"
-								onChange={(e: { target: { files: any } }) => {
-									uploadFile(e.target.files[0], setPostItem, "image");
-								}}
-							/>
-							<img
-								src={userProductInfo?.mainImages[0]}
-								alt={`${userProductInfo?.name}앨범아트`}
+								type="text"
+								name="title"
+								id="title"
+								placeholder="제목을 입력해주세요"
+								defaultValue={userProductInfo?.name}
+								onChange={(e) =>
+									setPostItem({ ...postItem, name: e.target.value })
+								}
 							/>
 						</div>
 						<div>
 							<div>
-								<label htmlFor="title">타이틀 | </label>
+								<label htmlFor="genre">장르 | </label>
+								<select
+									name="genre"
+									id="genre"
+									defaultValue={userProductInfo?.extra?.category}
+									onChange={(e) => {
+										setPostItem({
+											...postItem,
+											extra: { ...postItem.extra, category: e.target.value },
+										});
+									}}
+								>
+									{genres.map((genre) => (
+										<option key={genre} value={genre}>
+											{genre}
+										</option>
+									))}
+								</select>
+							</div>
+							<div>
+								<label htmlFor="hashTag">해시태그 | </label>
 								<input
 									type="text"
-									name="title"
-									id="title"
-									placeholder="제목을 입력해주세요"
-									defaultValue={userProductInfo?.name}
+									name="hashTag"
+									id="hashTag"
+									placeholder="해시태그를 입력해주세요"
+									defaultValue={userProductInfo?.extra?.tags}
+									onChange={(e) => {
+										const tagsArray = e.target.value.split(" ");
+										setPostItem({
+											...postItem,
+											extra: { ...postItem.extra, tags: tagsArray },
+										});
+									}}
+								/>
+							</div>
+						</div>
+						<div>
+							<div>
+								<label htmlFor="description">설명</label>
+								<textarea
+									name="description"
+									id="description"
+									cols={30}
+									rows={3}
+									defaultValue={userProductInfo?.content}
 									onChange={(e) =>
-										setPostItem({ ...postItem, name: e.target.value })
+										setPostItem({ ...postItem, content: e.target.value })
 									}
 								/>
 							</div>
 							<div>
 								<div>
-									<label htmlFor="genre">장르 | </label>
-									<select
-										name="genre"
-										id="genre"
-										defaultValue={userProductInfo?.extra?.category}
-										onChange={(e) => {
-											setPostItem({
-												...postItem,
-												extra: { ...postItem.extra, category: e.target.value },
-											});
-										}}
-									>
-										{genres.map((genre) => (
-											<option key={genre} value={genre}>
-												{genre}
-											</option>
-										))}
-									</select>
+									<FileUploadIcon fontSize="small" />
+									<label htmlFor="mp3">음원 업로드</label>
 								</div>
-								<div>
-									<label htmlFor="hashTag">해시태그 | </label>
-									<input
-										type="text"
-										name="hashTag"
-										id="hashTag"
-										placeholder="해시태그를 입력해주세요"
-										defaultValue={userProductInfo?.extra?.tags}
-										onChange={(e) => {
-											const tagsArray = e.target.value.split(" ");
-											setPostItem({
-												...postItem,
-												extra: { ...postItem.extra, tags: tagsArray },
-											});
-										}}
-									/>
-								</div>
-							</div>
-							<div>
-								<div>
-									<label htmlFor="description">설명</label>
-									<textarea
-										name="description"
-										id="description"
-										cols={30}
-										rows={3}
-										defaultValue={userProductInfo?.content}
-										onChange={(e) =>
-											setPostItem({ ...postItem, content: e.target.value })
-										}
-									/>
-								</div>
-								<div>
-									<div>
-										<FileUploadIcon fontSize="small" />
-										<label htmlFor="mp3">음원 업로드</label>
-									</div>
-									<input
-										type="file"
-										accept="audio/*"
-										name="mp3"
-										id="mp3"
-										onChange={(e: { target: { files: any } }) =>
-											uploadFile(e.target.files[0], setPostItem, "soundFile")
-										}
-									/>
-								</div>
+								<input
+									type="file"
+									accept="audio/*"
+									name="mp3"
+									id="mp3"
+									onChange={(e: { target: { files: any } }) =>
+										uploadFile(e.target.files[0], setPostItem, "soundFile")
+									}
+								/>
 							</div>
 						</div>
 					</div>
+				</div>
+				<div>
 					<div>
+						<label htmlFor="price">가격</label>
+						<input
+							type="number"
+							name="price"
+							id="price"
+							defaultValue={userProductInfo?.price}
+							onChange={(e) =>
+								setPostItem({ ...postItem, price: +e.target.value })
+							}
+						/>
+					</div>
+					<div>
+						<span>공개여부</span>
 						<div>
-							<label htmlFor="price">가격</label>
 							<input
-								type="number"
-								name="price"
-								id="price"
-								defaultValue={userProductInfo?.price}
-								onChange={(e) =>
-									setPostItem({ ...postItem, price: +e.target.value })
-								}
+								type="radio"
+								value="true"
+								name="public"
+								onChange={() => setPostItem({ ...postItem, show: true })}
 							/>
+							<span>공개</span>
 						</div>
 						<div>
-							<span>공개여부</span>
-							<div>
-								<input
-									type="radio"
-									value="true"
-									name="public"
-									onChange={() => setPostItem({ ...postItem, show: true })}
-								/>
-								<span>공개</span>
-							</div>
-							<div>
-								<input
-									type="radio"
-									value="false"
-									name="public"
-									onChange={() => setPostItem({ ...postItem, show: false })}
-								/>
-								<span>비공개</span>
-							</div>
+							<input
+								type="radio"
+								value="false"
+								name="public"
+								onChange={() => setPostItem({ ...postItem, show: false })}
+							/>
+							<span>비공개</span>
 						</div>
 					</div>
-					<div>
-						<Link
-							to={"/"}
-							onClick={() => confirm("정말로 수정을 취소하시겠습니까?")}
-						>
-							취소
-						</Link>
-						<button type="submit" onClick={handleEditProduct}>
-							수정
-						</button>
-					</div>
-				</form>
-			</section>
-		</>
+				</div>
+				<div>
+					<Link
+						to={"/"}
+						onClick={() => confirm("정말로 수정을 취소하시겠습니까?")}
+					>
+						취소
+					</Link>
+					<button type="submit" onClick={handleEditProduct}>
+						수정
+					</button>
+				</div>
+			</form>
+		</section>
 	);
 }
 
