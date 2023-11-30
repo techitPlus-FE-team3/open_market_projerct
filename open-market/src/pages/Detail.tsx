@@ -89,9 +89,9 @@ function Detail() {
 		toast.error("로그인 후 이용 가능합니다");
 	}
 
-	const StarRating = ({ rating }: { rating: number }) => {
-		return <Rating value={rating} precision={0.5} />;
-	};
+	function ShowStarRating({ rating }: { rating: number }) {
+		return <Rating value={rating} precision={0.5} readOnly />;
+	}
 
 	useEffect(() => {
 		if (_id === null || _id === "") {
@@ -145,7 +145,7 @@ function Detail() {
 				</div>
 				<div>
 					<div>
-						<StarRating rating={rating} />
+						<ShowStarRating rating={rating} />
 					</div>
 					<span>{rating}</span>
 				</div>
@@ -229,7 +229,7 @@ function Detail() {
 									<div>
 										<p>{reply.content}</p>
 										<div>
-											<StarRating rating={reply.rating} />
+											<ShowStarRating rating={reply.rating} />
 											{reply.rating}
 										</div>
 									</div>
