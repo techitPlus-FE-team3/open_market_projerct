@@ -11,7 +11,8 @@ import { Rating } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 function Detail() {
 	const navigate = useNavigate();
@@ -19,6 +20,11 @@ function Detail() {
 	const _id = searchParams.get("_id");
 	const [product, setProduct] = useState<Product>();
 	const [rating, setRating] = useState(0);
+	const [logState, setLogState] = useState<number | undefined>();
+
+	const data = localStorage.getItem("_id")
+		? Number(localStorage.getItem("_id"))
+		: undefined;
 
 	async function getProduct(_id: string) {
 		try {
@@ -47,6 +53,10 @@ function Detail() {
 		}
 	}
 
+	function handelSignIn() {
+		toast.error("로그인 후 이용 가능합니다");
+	}
+
 	const StarRating = ({ rating }: { rating: number }) => {
 		return <Rating value={rating} precision={0.5} />;
 	};
@@ -56,6 +66,11 @@ function Detail() {
 			return navigate("/err", { replace: true });
 		}
 		getProduct(_id);
+	}, []);
+
+	useEffect(() => {
+		setLogState(data);
+		console.log(logState);
 	}, []);
 
 	return (
@@ -78,7 +93,7 @@ function Detail() {
 				</div>
 				<div>
 					<span>{product?.name}</span>
-					<span>{product?.sellerId}</span>
+					<span>{product?.seller_id}</span>
 					<span>{product?.createdAt}</span>
 					<span>{product?.content}</span>
 					<span>{product?.price}</span>
@@ -117,10 +132,24 @@ function Detail() {
 						<BookmarkOutlinedIcon />
 						{product?.extra?.bookmark ? product?.extra?.bookmark : 0}
 					</button>
-					<button>
-						<CheckIcon />
-						{product?.extra?.order ? product?.extra?.order : 0}
-					</button>
+					{
+						logState && logState === product?.seller_id ? (
+							<Link to={`/productmanage?_id=${product?._id}`}>상품 관리</Link>
+						) : logState ? (
+							<Link to={`/productpurchase?_id=${product?._id}`}>
+								<CheckIcon />
+								구매하기
+								{product?.extra?.order ? product?.extra?.order : 0}
+							</Link>
+						) : (
+							<Link to={"/signin"} onClick={handelSignIn}>
+								<CheckIcon />
+								구매하기
+								{product?.extra?.order ? product?.extra?.order : 0}
+							</Link>
+						)
+						// 유저가 구매한 경우 > 다운로드 버튼
+					}
 				</div>
 			</article>
 			<article>
