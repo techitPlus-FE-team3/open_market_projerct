@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { loggedInState } from "../states/authState";
+import toast from "react-hot-toast";
 
 const StyledHeader = styled.header`
 	display: flex;
@@ -130,6 +131,7 @@ const Header = () => {
 		setLoggedIn(false);
 
 		// 로그인 페이지로 리디렉션
+		toast.success(`로그아웃 되었습니다.`);
 		navigate("/");
 	};
 
