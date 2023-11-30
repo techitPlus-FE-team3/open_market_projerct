@@ -154,7 +154,7 @@ function ProductRegistration() {
 									</select>
 								</div>
 								<div>
-									<label htmlFor="hashTag">해시태그</label>
+									<label htmlFor="hashTag">해시태그 | </label>
 									<input
 										type="text"
 										name="hashTag"
