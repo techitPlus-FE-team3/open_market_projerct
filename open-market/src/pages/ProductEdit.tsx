@@ -1,17 +1,22 @@
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 
 function ProductEdit() {
 	return (
 		<>
 			<Helmet>
-				<title>Update Product - 모두의 오디오 MODI</title>
+				<title>Edit Product - 모두의 오디오 MODI</title>
 			</Helmet>
 			<section>
 				<h2>상품 수정</h2>
 				<form encType="multipart/form-data">
 					<div>
 						<div>
-							<label htmlFor="photo">앨범아트</label>
+							<div>
+								<FileUploadIcon fontSize="large" />
+								<label htmlFor="photo">앨범아트 업로드</label>
+							</div>
 							<input
 								type="file"
 								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
@@ -21,7 +26,7 @@ function ProductEdit() {
 						</div>
 						<div>
 							<div>
-								<label htmlFor="title">제목</label>
+								<label htmlFor="title">타이틀 | </label>
 								<input
 									type="text"
 									name="title"
@@ -31,7 +36,7 @@ function ProductEdit() {
 							</div>
 							<div>
 								<div>
-									<label htmlFor="genre">장르</label>
+									<label htmlFor="genre">장르 | </label>
 									<select name="genre" id="genre" defaultValue="none">
 										<option value="none" disabled hidden>
 											장르를 선택해주세요
@@ -43,7 +48,7 @@ function ProductEdit() {
 									</select>
 								</div>
 								<div>
-									<label htmlFor="hashTag">해시태그</label>
+									<label htmlFor="hashTag">해시태그 | </label>
 									<input
 										type="text"
 										name="hashTag"
@@ -53,20 +58,29 @@ function ProductEdit() {
 								</div>
 							</div>
 							<div>
-								<label htmlFor="price">가격</label>
-								<input type="number" name="price" id="price" />
+								<div>
+									<label htmlFor="description">설명</label>
+									<textarea
+										name="description"
+										id="description"
+										cols={30}
+										rows={3}
+									/>
+								</div>
+								<div>
+									<div>
+										<FileUploadIcon fontSize="small" />
+										<label htmlFor="mp3">음원 업로드</label>
+									</div>
+									<input type="file" accept="audio/*" name="mp3" id="mp3" />
+								</div>
 							</div>
 						</div>
 					</div>
 					<div>
 						<div>
-							<label htmlFor="description">설명</label>
-							<textarea
-								name="description"
-								id="description"
-								cols={30}
-								rows={10}
-							/>
+							<label htmlFor="price">가격</label>
+							<input type="number" name="price" id="price" />
 						</div>
 						<div>
 							<span>공개여부</span>
@@ -81,8 +95,8 @@ function ProductEdit() {
 						</div>
 					</div>
 					<div>
-						<button type="reset">취소</button>
-						<button type="submit">등록</button>
+						<Link to={"/"}>취소</Link>
+						<button type="submit">수정</button>
 					</div>
 				</form>
 			</section>

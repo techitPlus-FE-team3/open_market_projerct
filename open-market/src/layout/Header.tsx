@@ -1,6 +1,6 @@
-import React from "react";
 import styled from "@emotion/styled";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import { Link } from "react-router-dom";
 
 const StyledHeader = styled.header`
 	display: flex;
@@ -12,7 +12,6 @@ const StyledHeader = styled.header`
 `;
 
 const Logo = styled.h1`
-	font-size: 1.5rem;
 	a {
 		text-decoration: none;
 		color: inherit;
@@ -58,7 +57,7 @@ const ActionGroup = styled.div`
 	gap: 1rem;
 `;
 
-const UploadButton = styled.button`
+const UploadButton = styled(Link)`
 	display: flex;
 	align-items: center;
 	padding: 0.5rem 1rem;
@@ -77,7 +76,7 @@ const UploadButton = styled.button`
 	}
 `;
 
-const LoginButton = styled.button`
+const LoginButton = styled(Link)`
 	padding: 0.5rem 1rem;
 	background-color: #6c757d;
 	border: none;
@@ -94,20 +93,20 @@ const Header = () => {
 	return (
 		<StyledHeader>
 			<Logo>
-				<a href="/">
-					<img src="/logo.png" alt="모디 로고" />
-				</a>
+				<Link to="/">
+					<img src="public/logo/logo2.svg" alt="모디 로고" />
+				</Link>
 			</Logo>
 			<SearchForm action="">
 				<input type="text" placeholder="검색어를 입력하세요" />
 				<button type="submit">검색</button>
 			</SearchForm>
 			<ActionGroup>
-				<UploadButton>
+				<UploadButton to="/productregistration">
 					<FileUploadIcon fontSize="small" />
 					업로드
 				</UploadButton>
-				<LoginButton>로그인 / 회원가입</LoginButton>
+				<LoginButton to="/signin">로그인 / 회원가입</LoginButton>
 			</ActionGroup>
 		</StyledHeader>
 	);

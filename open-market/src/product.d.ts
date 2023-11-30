@@ -1,6 +1,6 @@
 interface Product {
 	_id: number;
-	sellerId: number;
+	seller_id: number;
 	active: boolean;
 	name: string;
 	mainImages: string[];
@@ -22,7 +22,7 @@ interface Product {
 
 interface ProductListResponse {
 	ok: number;
-	items: Product[];
+	item: Product[];
 }
 
 interface ProductResponse {
