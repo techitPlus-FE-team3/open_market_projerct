@@ -66,7 +66,7 @@ function Index() {
 									)}
 									<span>{product.name}</span>
 								</Link>
-								<audio src="/" controls />
+								<audio src={product?.extra?.soundFile} controls />
 								<button type="submit">북마크</button>
 							</li>
 						);
