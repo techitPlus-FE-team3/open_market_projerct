@@ -2,7 +2,7 @@ import genres from "@/data/genres";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -32,8 +32,6 @@ function ProductRegistration() {
 	const genreRef = useRef(null);
 	const soundFileRef = useRef(null);
 
-	const [album, setAlbum] = useState("");
-	const [soundFile, setSoundFile] = useState("");
 	const [postItem, setPostItem] = useState<ProductRegistForm>({
 		show: true,
 		name: "",
@@ -51,15 +49,6 @@ function ProductRegistration() {
 			bookmark: 0,
 		},
 	});
-
-	useEffect(() => {
-		if (album) {
-			uploadFile(album, setPostItem, "image");
-		}
-		if (soundFile) {
-			uploadFile(soundFile, setPostItem, "soundFile");
-		}
-	}, [album, soundFile]);
 
 	function handlePostProductRegist(e: { preventDefault: () => void }) {
 		e.preventDefault();
@@ -107,7 +96,7 @@ function ProductRegistration() {
 								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
 								ref={albumRef}
 								onChange={(e: { target: { files: any } }) =>
-									setAlbum(e.target.files[0])
+									uploadFile(e.target.files[0], setPostItem, "image")
 								}
 								name="photo"
 								id="photo"
@@ -135,10 +124,9 @@ function ProductRegistration() {
 										id="genre"
 										ref={genreRef}
 										onChange={(e) => {
-											const tagsArray = e.target.value.split(" ");
 											setPostItem({
 												...postItem,
-												extra: { ...postItem.extra, tags: tagsArray },
+												extra: { ...postItem.extra, category: e.target.value },
 											});
 										}}
 										defaultValue="none"
@@ -195,7 +183,7 @@ function ProductRegistration() {
 										id="mp3"
 										ref={soundFileRef}
 										onChange={(e: { target: { files: any } }) =>
-											setSoundFile(e.target.files[0])
+											uploadFile(e.target.files[0], setPostItem, "soundFile")
 										}
 									/>
 								</div>
@@ -223,7 +211,7 @@ function ProductRegistration() {
 										type="radio"
 										value="true"
 										name="public"
-										onChange={(e) => setPostItem({ ...postItem, show: true })}
+										onChange={() => setPostItem({ ...postItem, show: true })}
 									/>
 								</div>
 								<div>
@@ -232,7 +220,7 @@ function ProductRegistration() {
 										type="radio"
 										value="false"
 										name="public"
-										onChange={(e) => setPostItem({ ...postItem, show: false })}
+										onChange={() => setPostItem({ ...postItem, show: false })}
 									/>
 								</div>
 							</div>
