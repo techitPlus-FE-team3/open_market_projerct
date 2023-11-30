@@ -70,7 +70,6 @@ function Detail() {
 
 	useEffect(() => {
 		setLogState(data);
-		console.log(logState);
 	}, []);
 
 	return (

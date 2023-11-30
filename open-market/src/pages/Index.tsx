@@ -19,7 +19,6 @@ function Index() {
 				"https://localhost/api/products",
 			);
 			setProductList(response.data.item);
-			console.log(productList);
 		} catch (err) {
 			console.error(err);
 		}
