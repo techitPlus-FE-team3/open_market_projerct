@@ -75,7 +75,7 @@ function UserProducts() {
 									<p>
 										북마크 수: <span>{item.extra?.bookmark}</span>
 									</p>
-									<Link to="detail">상세보기</Link>
+									<Link to={`/productmanage/${item._id}`}>상세보기</Link>
 								</li>
 							))
 						) : (
