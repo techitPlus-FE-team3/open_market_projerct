@@ -64,6 +64,7 @@ function Detail() {
 			const userOrder = response.data.item.extra?.orders?.filter(
 				(order) => order.products[0]._id === productId,
 			);
+			console.log(userOrder);
 			setOrder(userOrder);
 		} catch (err) {
 			console.error(err);
@@ -164,7 +165,7 @@ function Detail() {
 							<CheckIcon />
 							상품 관리
 						</Link>
-					) : logState && order ? (
+					) : logState && order?.length !== 0 ? (
 						<button type="button">
 							<DownloadIcon />
 							다운로드
@@ -193,7 +194,7 @@ function Detail() {
 					<p>로그인 후 댓글을 작성할 수 있습니다.</p>
 				) : logState && logState === product?.seller_id ? (
 					<p>내 상품에는 댓글을 작성할 수 없습니다.</p>
-				) : logState && !order ? (
+				) : logState && order?.length === 0 ? (
 					<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
 				) : (
 					<form action="submit">
