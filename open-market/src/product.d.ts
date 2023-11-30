@@ -5,6 +5,7 @@ interface Product {
 	active: boolean;
 	name: string;
 	mainImages: string[];
+	image?: string;
 	content: string;
 	price: number;
 	createdAt: string;
