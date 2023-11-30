@@ -19,8 +19,10 @@ function Detail() {
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const _id = searchParams.get("_id");
+
 	const [product, setProduct] = useState<Product>();
 	const [rating, setRating] = useState(0);
+	const [currentUser, setCurrentUser] = useState<User | undefined>();
 	const [logState, setLogState] = useState<number | undefined>();
 	const [order, setOrder] = useState<Order[]>();
 
@@ -37,6 +39,7 @@ function Detail() {
 			setRating(getRating(response.data.item));
 			setLogState(data);
 			if (data) {
+				getUser(data);
 				getOrder({ userId: data, productId: Number(_id)! });
 			}
 		} catch (err) {
@@ -64,8 +67,24 @@ function Detail() {
 			const userOrder = response.data.item.extra?.orders?.filter(
 				(order) => order.products[0]._id === productId,
 			);
-			console.log(userOrder);
 			setOrder(userOrder);
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
+	async function getUser(id: number) {
+		const accessToken = localStorage.getItem("accessToken");
+		try {
+			const response = await axios.get<UserResponse>(
+				`https://localhost/api/users/${id}`,
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				},
+			);
+			setCurrentUser(response.data.item);
 		} catch (err) {
 			console.error(err);
 		}
@@ -76,7 +95,7 @@ function Detail() {
 			return 0;
 		} else {
 			const ratingSum = product.replies?.reduce(
-				(acc, cur) => acc + cur.rating,
+				(acc, cur) => acc + Number(cur.rating),
 				0,
 			)!;
 			const ratingAvg = Number(
@@ -91,7 +110,14 @@ function Detail() {
 	}
 
 	function ShowStarRating({ rating }: { rating: number }) {
-		return <Rating value={rating} precision={0.5} readOnly />;
+		return (
+			<Rating
+				name="showRating"
+				value={Number(rating)}
+				precision={0.5}
+				readOnly
+			/>
+		);
 	}
 
 	useEffect(() => {
@@ -199,8 +225,14 @@ function Detail() {
 				) : (
 					<form action="submit">
 						<div>
-							<AccountCircleIcon />
-							<span>유저정보</span>
+							<span>
+								{currentUser?.extra?.profileImage ? (
+									currentUser?.extra?.profileImage
+								) : (
+									<AccountCircleIcon />
+								)}
+							</span>
+							<span>{currentUser?.email}</span>
 						</div>
 						<div>
 							<StarIcon />
@@ -210,8 +242,9 @@ function Detail() {
 							<StarBorderIcon />
 						</div>
 						<div>
-							<input type="text" />
-							<button type="submit">제출하기</button>
+							<label htmlFor="content">댓글 내용</label>
+							<input id="content" name="content" type="text" required />
+							<button type="submit">작성하기</button>
 						</div>
 					</form>
 				)}
