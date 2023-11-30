@@ -1,11 +1,8 @@
 interface Order {
 	_id: number;
-	userId: number;
+	user_id: number;
 	createdAt: string;
-	product: {
-		productId: number;
-		quantity: 1;
-	};
+	product: object[];
 	cost: {
 		total: number;
 	};
