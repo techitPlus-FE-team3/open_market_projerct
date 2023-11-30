@@ -5,8 +5,8 @@ import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 function ProductManage() {
-	const { productId } = useParams();
 	const navigate = useNavigate();
+	const { productId } = useParams();
 	const [userProductInfo, setUserProductInfo] = useState<Product>();
 
 	useEffect(() => {
@@ -24,7 +24,7 @@ function ProductManage() {
 				);
 				setUserProductInfo(response.data.item);
 			} catch (error) {
-				console.error("회원 정보 조회 실패:", error);
+				console.error("상품 정보 조회 실패:", error);
 			}
 		};
 
@@ -85,7 +85,7 @@ function ProductManage() {
 			</div>
 			<div>
 				<span>설명: {userProductInfo?.content}</span>
-				<span>공개여부: {userProductInfo?.active}</span>
+				<span>공개여부: {userProductInfo?.show}</span>
 			</div>
 			<div>
 				<button type="submit" onClick={handleProductDelete}>
