@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function SignIn() {
 	const [email, setEmail] = useState("");
@@ -30,6 +31,7 @@ function SignIn() {
 				localStorage.setItem("_id", response.data.item._id);
 
 				// 로그인 성공 이후 홈 페이지로 이동.
+				toast.success("로그인 성공!");
 				navigate("/");
 			}
 		} catch (error: any) {
@@ -43,14 +45,15 @@ function SignIn() {
 					const detailedMessages = error.response.data.errors
 						.map((err: any) => `${err.msg} (${err.path})`)
 						.join("\n");
-					alert(`${errorMessage}\n\n${detailedMessages}`);
+					// alert(`${errorMessage}\n\n${detailedMessages}`);
+					toast.error(`${detailedMessages}`);
 					console.log(detailedMessages);
 				} else {
-					alert(errorMessage);
+					toast.error(errorMessage);
 				}
 			} else {
 				console.error("예상치 못한 오류가 발생했습니다.:", error);
-				alert("알 수 없는 오류가 발생했습니다.");
+				toast.error("알 수 없는 오류가 발생했습니다.");
 			}
 		}
 	};
