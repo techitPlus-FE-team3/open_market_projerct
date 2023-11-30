@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { Link, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import { loggedInState } from "../states/authState";
 
 const StyledHeader = styled.header`
@@ -105,8 +106,32 @@ const MyPageButton = styled(Link)`
 	}
 `;
 
+const LogoutButton = styled.button`
+	border: none;
+	color: #ffb258;
+	cursor: pointer;
+	background-color: transparent;
+
+	&:hover {
+		color: #bd2130;
+	}
+`;
+
 const Header = () => {
-	const loggedIn = useRecoilValue(loggedInState);
+	const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
+
+	const navigate = useNavigate();
+
+	const handleLogout = () => {
+		// 토큰 제거 및 상태 업데이트
+		localStorage.removeItem("accessToken");
+		localStorage.removeItem("refreshToken");
+		localStorage.removeItem("_id");
+		setLoggedIn(false);
+
+		// 로그인 페이지로 리디렉션
+		navigate("/");
+	};
 
 	return (
 		<StyledHeader>
@@ -125,7 +150,12 @@ const Header = () => {
 					업로드
 				</UploadButton>
 				{loggedIn ? (
-					<MyPageButton to="/mypage">마이페이지</MyPageButton>
+					<>
+						<MyPageButton to="/mypage">마이페이지</MyPageButton>
+						<LogoutButton onClick={handleLogout}>
+							<LogoutIcon />
+						</LogoutButton>
+					</>
 				) : (
 					<LoginButton to="/signin">로그인 / 회원가입</LoginButton>
 				)}
