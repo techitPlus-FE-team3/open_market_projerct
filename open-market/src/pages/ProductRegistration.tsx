@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
 interface ProductRegistForm {
-	active: boolean;
+	show: boolean;
 	name: string;
 	mainImages: string[];
 	content: string;
@@ -35,7 +35,7 @@ function ProductRegistration() {
 	const [album, setAlbum] = useState("");
 	const [soundFile, setSoundFile] = useState("");
 	const [postItem, setPostItem] = useState<ProductRegistForm>({
-		active: true,
+		show: true,
 		name: "",
 		mainImages: [],
 		content: "",
@@ -223,7 +223,7 @@ function ProductRegistration() {
 										type="radio"
 										value="true"
 										name="public"
-										onChange={(e) => setPostItem({ ...postItem, active: true })}
+										onChange={(e) => setPostItem({ ...postItem, show: true })}
 									/>
 								</div>
 								<div>
@@ -232,9 +232,7 @@ function ProductRegistration() {
 										type="radio"
 										value="false"
 										name="public"
-										onChange={(e) =>
-											setPostItem({ ...postItem, active: false })
-										}
+										onChange={(e) => setPostItem({ ...postItem, show: false })}
 									/>
 								</div>
 							</div>
