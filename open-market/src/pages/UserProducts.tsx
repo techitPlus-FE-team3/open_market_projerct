@@ -30,60 +30,64 @@ function UserProducts() {
 		fetchUserProductsInfo();
 	}, []);
 
-	return userProductsInfo ? (
+	return (
 		<section>
 			<Helmet>
 				<title>My Products - 모두의 오디오 MODI</title>
 			</Helmet>
 			<h2>상품관리</h2>
-			<div>
-				<form>
-					<input type="text" placeholder="판매내역 검색" />
-					<button type="submit">검색</button>
-				</form>
-			</div>
-			<ul>
-				<li>
-					<button type="button">인기순</button>
-				</li>
-				<li>
-					<button type="button">최신순</button>
-				</li>
-			</ul>
-			<ul>
-				{Array.isArray(userProductsInfo) ? (
-					userProductsInfo.map((item) => (
-						<li key={item._id}>
-							<img src={item.mainImages[0]} alt="앨범 이름 이미지" />
-							<p>{item.name}</p>
-							<button type="button">
-								<PlayArrowIcon />
-							</button>
-							<p>
-								판매 개수: <span>{item.extra?.order}</span>
-							</p>
-							<p>
-								총 수익:{" "}
-								<span>
-									{typeof item.extra?.order !== "undefined"
-										? item.extra?.order * item.price
-										: "0"}
-								</span>
-							</p>
-							<p>
-								북마크 수: <span>{item.extra?.bookmark}</span>
-							</p>
-							<Link to="detail">상세보기</Link>
+			{userProductsInfo ? (
+				<>
+					<div>
+						<form>
+							<input type="text" placeholder="판매내역 검색" />
+							<button type="submit">검색</button>
+						</form>
+					</div>
+					<ul>
+						<li>
+							<button type="button">인기순</button>
 						</li>
-					))
-				) : (
-					<span>데이터가 없습니다.</span>
-				)}
-			</ul>
-			<button type="submit">더보기</button>
+						<li>
+							<button type="button">최신순</button>
+						</li>
+					</ul>
+					<ul>
+						{Array.isArray(userProductsInfo) ? (
+							userProductsInfo.map((item) => (
+								<li key={item._id}>
+									<img src={item.mainImages[0]} alt="앨범 이름 이미지" />
+									<p>{item.name}</p>
+									<button type="button">
+										<PlayArrowIcon />
+									</button>
+									<p>
+										판매 개수: <span>{item.extra?.order}</span>
+									</p>
+									<p>
+										총 수익:{" "}
+										<span>
+											{typeof item.extra?.order !== "undefined"
+												? item.extra?.order * item.price
+												: "0"}
+										</span>
+									</p>
+									<p>
+										북마크 수: <span>{item.extra?.bookmark}</span>
+									</p>
+									<Link to="detail">상세보기</Link>
+								</li>
+							))
+						) : (
+							<span>데이터가 없습니다.</span>
+						)}
+					</ul>
+					<button type="submit">더보기</button>
+				</>
+			) : (
+				<span>현재 회원님이 판매하고 있는 상품이 없습니다</span>
+			)}
 		</section>
-	) : (
-		<span>현재 회원님이 판매하고 있는 상품이 없습니다</span>
 	);
 }
 
