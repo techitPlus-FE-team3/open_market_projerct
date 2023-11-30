@@ -2,7 +2,7 @@ interface Order {
 	_id: number;
 	user_id: number;
 	createdAt: string;
-	product: object[];
+	products: Product[];
 	cost: {
 		total: number;
 	};
@@ -10,7 +10,7 @@ interface Order {
 
 interface OrderListResponse {
 	ok: number;
-	items: Order[];
+	item: Order[];
 }
 
 interface OrderResponse {
