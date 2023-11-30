@@ -3,8 +3,12 @@ import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useRecoilState } from "recoil";
+import { loggedInState } from "../states/authState";
 
 function SignIn() {
+	const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
+
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const navigate = useNavigate();
@@ -32,6 +36,7 @@ function SignIn() {
 
 				// 로그인 성공 이후 홈 페이지로 이동.
 				toast.success("로그인 성공!");
+				setLoggedIn(true);
 				navigate("/");
 			}
 		} catch (error: any) {

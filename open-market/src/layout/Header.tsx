@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { loggedInState } from "../states/authState";
 
 const StyledHeader = styled.header`
 	display: flex;
@@ -104,12 +106,7 @@ const MyPageButton = styled(Link)`
 `;
 
 const Header = () => {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-	useEffect(() => {
-		const token = localStorage.getItem("accessToken"); // 예시로 accessToken 사용
-		setIsLoggedIn(!!token);
-	}, []);
+	const loggedIn = useRecoilValue(loggedInState);
 
 	return (
 		<StyledHeader>
@@ -127,7 +124,7 @@ const Header = () => {
 					<FileUploadIcon fontSize="small" />
 					업로드
 				</UploadButton>
-				{isLoggedIn ? (
+				{loggedIn ? (
 					<MyPageButton to="/mypage">마이페이지</MyPageButton>
 				) : (
 					<LoginButton to="/signin">로그인 / 회원가입</LoginButton>
