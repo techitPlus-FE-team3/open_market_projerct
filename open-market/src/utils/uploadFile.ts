@@ -19,7 +19,7 @@ export async function uploadFile(
 			},
 		});
 
-		const filePath = response.data.file.path;
+		const filePath = `https://localhost${response.data.file.path}`;
 		// 상태 업데이트
 		setItemCallback((prevItem) => {
 			if (itemType === "image") {
