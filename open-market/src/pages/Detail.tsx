@@ -127,6 +127,10 @@ function Detail() {
 		getProduct(_id);
 	}, []);
 
+	useEffect(() => {
+		setLogState(data);
+	}, []);
+
 	return (
 		<section>
 			<Helmet>

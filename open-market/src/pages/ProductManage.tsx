@@ -58,6 +58,7 @@ function ProductManage() {
 			console.error(error);
 		}
 	}
+
 	return (
 		<section>
 			<Helmet>
@@ -85,7 +86,7 @@ function ProductManage() {
 			</div>
 			<div>
 				<span>설명: {userProductInfo?.content}</span>
-				<span>공개여부: {userProductInfo?.show}</span>
+				<span>공개여부: {userProductInfo?.show.toString()}</span>
 			</div>
 			<div>
 				<button type="submit" onClick={handleProductDelete}>

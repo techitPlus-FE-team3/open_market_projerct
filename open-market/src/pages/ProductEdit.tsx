@@ -86,7 +86,6 @@ function ProductEdit() {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
 		try {
-			console.log(postItem);
 			axios
 				.patch(`https://localhost/api/seller/products/${productId}`, postItem, {
 					headers: {
