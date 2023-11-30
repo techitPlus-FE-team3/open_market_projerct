@@ -224,7 +224,7 @@ function Detail() {
 					<p>로그인 후 댓글을 작성할 수 있습니다.</p>
 				) : logState && logState === product?.seller_id ? (
 					<p>내 상품에는 댓글을 작성할 수 없습니다.</p>
-				) : logState && order?.length === 0 ? (
+				) : (logState && order?.length === 0) || order === undefined ? (
 					<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
 				) : (
 					<form action="submit">
