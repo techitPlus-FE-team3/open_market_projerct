@@ -210,7 +210,7 @@ function MyPage() {
 					{Array.isArray(userProductsInfo) ? (
 						userProductsInfo.slice(0, 4).map((item) => (
 							<li key={item._id}>
-								<Link to={`/productedit/${item._id}`}>
+								<Link to={`/productmanage/${item._id}`}>
 									<img src={`${item.mainImages[0]}`} alt="앨범아트" />
 								</Link>
 							</li>
