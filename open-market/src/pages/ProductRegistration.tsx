@@ -1,3 +1,4 @@
+import genres from "@/data/genres";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import axios from "axios";
@@ -7,7 +8,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
 interface ProductRegistForm {
-	active: boolean;
+	show: boolean;
 	name: string;
 	mainImages: string[];
 	content: string;
@@ -34,7 +35,7 @@ function ProductRegistration() {
 	const [album, setAlbum] = useState("");
 	const [soundFile, setSoundFile] = useState("");
 	const [postItem, setPostItem] = useState<ProductRegistForm>({
-		active: true,
+		show: true,
 		name: "",
 		mainImages: [],
 		content: "",
@@ -134,9 +135,10 @@ function ProductRegistration() {
 										id="genre"
 										ref={genreRef}
 										onChange={(e) => {
+											const tagsArray = e.target.value.split(" ");
 											setPostItem({
 												...postItem,
-												extra: { ...postItem.extra, category: e.target.value },
+												extra: { ...postItem.extra, tags: tagsArray },
 											});
 										}}
 										defaultValue="none"
@@ -144,25 +146,27 @@ function ProductRegistration() {
 										<option value="none" disabled hidden>
 											장르를 선택해주세요
 										</option>
-										<option value="dance">dance</option>
-										<option value="pop">pop</option>
-										<option value="k-pop">k-pop</option>
-										<option value="indie">indie</option>
+										{genres.map((item) => (
+											<option key={item} value={item}>
+												{item}
+											</option>
+										))}
 									</select>
 								</div>
 								<div>
-									<label htmlFor="hashTag">해시태그</label>
+									<label htmlFor="hashTag">해시태그 | </label>
 									<input
 										type="text"
 										name="hashTag"
-										onChange={(e) =>
+										onChange={(e) => {
+											const tagsArray = e.target.value.split(" ");
 											setPostItem({
 												...postItem,
-												extra: { ...postItem.extra, tags: [e.target.value] },
-											})
-										}
+												extra: { ...postItem.extra, tags: tagsArray },
+											});
+										}}
 										id="hashTag"
-										placeholder="해시태그를 입력해주세요"
+										placeholder="해시태그를 띄어쓰기로 구분해주세요"
 									/>
 								</div>
 							</div>
@@ -219,7 +223,7 @@ function ProductRegistration() {
 										type="radio"
 										value="true"
 										name="public"
-										onChange={(e) => setPostItem({ ...postItem, active: true })}
+										onChange={(e) => setPostItem({ ...postItem, show: true })}
 									/>
 								</div>
 								<div>
@@ -228,9 +232,7 @@ function ProductRegistration() {
 										type="radio"
 										value="false"
 										name="public"
-										onChange={(e) =>
-											setPostItem({ ...postItem, active: false })
-										}
+										onChange={(e) => setPostItem({ ...postItem, show: false })}
 									/>
 								</div>
 							</div>

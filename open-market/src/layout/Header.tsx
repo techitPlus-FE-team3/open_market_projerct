@@ -1,6 +1,9 @@
 import styled from "@emotion/styled";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { loggedInState } from "../states/authState";
 
 const StyledHeader = styled.header`
 	display: flex;
@@ -89,7 +92,22 @@ const LoginButton = styled(Link)`
 	}
 `;
 
+const MyPageButton = styled(Link)`
+	padding: 0.5rem 1rem;
+	background-color: #6c757d;
+	border: none;
+	border-radius: 20px;
+	color: white;
+	cursor: pointer;
+
+	&:hover {
+		background-color: #5a6268;
+	}
+`;
+
 const Header = () => {
+	const loggedIn = useRecoilValue(loggedInState);
+
 	return (
 		<StyledHeader>
 			<Logo>
@@ -106,7 +124,11 @@ const Header = () => {
 					<FileUploadIcon fontSize="small" />
 					업로드
 				</UploadButton>
-				<LoginButton to="/signin">로그인 / 회원가입</LoginButton>
+				{loggedIn ? (
+					<MyPageButton to="/mypage">마이페이지</MyPageButton>
+				) : (
+					<LoginButton to="/signin">로그인 / 회원가입</LoginButton>
+				)}
 			</ActionGroup>
 		</StyledHeader>
 	);
