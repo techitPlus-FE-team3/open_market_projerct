@@ -153,6 +153,7 @@ function Detail() {
 					<span>{product?.name}</span>
 					<span>{product?.seller_id}</span>
 					<span>{product?.createdAt}</span>
+					<span>{product?.extra?.category}</span>
 					<span>{product?.content}</span>
 					<span>{product?.price}</span>
 				</div>
@@ -191,7 +192,7 @@ function Detail() {
 						{product?.extra?.bookmark ? product?.extra?.bookmark : 0}
 					</button>
 					{logState && logState === product?.seller_id ? (
-						<Link to={`/productmanage?_id=${product?._id}`}>
+						<Link to={`/productmanage/${product?._id}`}>
 							<CheckIcon />
 							상품 관리
 						</Link>
