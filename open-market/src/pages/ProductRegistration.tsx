@@ -2,9 +2,9 @@ import genres from "@/data/genres";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import toast from "react-hot-toast";
+import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
 interface ProductRegistForm {
@@ -32,8 +32,6 @@ function ProductRegistration() {
 	const genreRef = useRef(null);
 	const soundFileRef = useRef(null);
 
-	const [album, setAlbum] = useState("");
-	const [soundFile, setSoundFile] = useState("");
 	const [postItem, setPostItem] = useState<ProductRegistForm>({
 		show: true,
 		name: "",
@@ -52,18 +50,19 @@ function ProductRegistration() {
 		},
 	});
 
-	useEffect(() => {
-		if (album) {
-			uploadFile(album, setPostItem, "image");
-		}
-		if (soundFile) {
-			uploadFile(soundFile, setPostItem, "soundFile");
-		}
-	}, [album, soundFile]);
-
 	function handlePostProductRegist(e: { preventDefault: () => void }) {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
+
+		if (postItem.extra.soundFile === "") {
+			toast.error("음원을 업로드해야 합니다", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+			return;
+		}
 		try {
 			axios
 				.post("https://localhost/api/seller/products", postItem, {
@@ -71,17 +70,24 @@ function ProductRegistration() {
 						Authorization: `Bearer ${accessToken}`,
 					},
 				})
-				.then(() => {
+				.then((response) => {
 					toast.success("상품이 성공적으로 올라갔습니다", {
 						ariaProps: {
 							role: "status",
 							"aria-live": "polite",
 						},
 					});
-					navigate("/");
+
+					if (response.status === 200) {
+						const productId = response.data.item._id;
+						navigate(`/products?_id=${productId}`);
+					}
 				})
 				.catch((error) => {
-					console.error("에러 발생:", error);
+					error.response.data.errors.forEach(
+						(err: { msg: Renderable | ValueFunction<Renderable, Toast> }) =>
+							toast.error(err.msg),
+					);
 				});
 		} catch (error) {
 			console.error(error);
@@ -107,7 +113,7 @@ function ProductRegistration() {
 								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
 								ref={albumRef}
 								onChange={(e: { target: { files: any } }) =>
-									setAlbum(e.target.files[0])
+									uploadFile(e.target.files[0], setPostItem, "image")
 								}
 								name="photo"
 								id="photo"
@@ -135,10 +141,9 @@ function ProductRegistration() {
 										id="genre"
 										ref={genreRef}
 										onChange={(e) => {
-											const tagsArray = e.target.value.split(" ");
 											setPostItem({
 												...postItem,
-												extra: { ...postItem.extra, tags: tagsArray },
+												extra: { ...postItem.extra, category: e.target.value },
 											});
 										}}
 										defaultValue="none"
@@ -195,7 +200,7 @@ function ProductRegistration() {
 										id="mp3"
 										ref={soundFileRef}
 										onChange={(e: { target: { files: any } }) =>
-											setSoundFile(e.target.files[0])
+											uploadFile(e.target.files[0], setPostItem, "soundFile")
 										}
 									/>
 								</div>
@@ -223,7 +228,7 @@ function ProductRegistration() {
 										type="radio"
 										value="true"
 										name="public"
-										onChange={(e) => setPostItem({ ...postItem, show: true })}
+										onChange={() => setPostItem({ ...postItem, show: true })}
 									/>
 								</div>
 								<div>
@@ -232,7 +237,7 @@ function ProductRegistration() {
 										type="radio"
 										value="false"
 										name="public"
-										onChange={(e) => setPostItem({ ...postItem, show: false })}
+										onChange={() => setPostItem({ ...postItem, show: false })}
 									/>
 								</div>
 							</div>
