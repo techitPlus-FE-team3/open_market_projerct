@@ -202,7 +202,7 @@ async function registProduct() {
       active: true,
       name: "캥거루 스턴트 독 로봇완구",
       quantity: 320,
-      order: 310,
+      buyQuantity: 310,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-dog.jpg`,
       ],
@@ -229,7 +229,7 @@ async function registProduct() {
       active: true,
       name: "헬로카봇 스톰다이버",
       quantity: 200,
-      order: 198,
+      buyQuantity: 198,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-diver.jpg`,
       ],
@@ -258,7 +258,7 @@ async function registProduct() {
       active: true,
       name: "레고 클래식 라지 조립 박스 10698",
       quantity: 100,
-      order: 99,
+      buyQuantity: 99,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-classic.jpg`,
       ],
@@ -287,7 +287,7 @@ async function registProduct() {
       active: true,
       name: "레고 테크닉 42151 부가티 볼리드",
       quantity: 100,
-      order: 89,
+      buyQuantity: 89,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-bugatti.png`,
       ],
@@ -317,7 +317,7 @@ async function registProduct() {
       active: true,
       name: "레고 마인크래프트 21246 깊고 어두운 전장",
       quantity: 100,
-      order: 98,
+      buyQuantity: 98,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-minecraft.png`,
       ],
@@ -348,7 +348,7 @@ async function registProduct() {
       active: true,
       name: "레고 마블 76247 헐크버스터: 와칸다의 전투",
       quantity: 100,
-      order: 99,
+      buyQuantity: 99,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-hulk.png`,
       ],
@@ -375,7 +375,7 @@ async function registProduct() {
       active: true,
       name: "할리갈리 보드게임",
       quantity: 100,
-      order: 98,
+      buyQuantity: 98,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-halligalli.jpg`,
       ],
@@ -402,7 +402,7 @@ async function registProduct() {
       active: true,
       name: "루미큐브 클래식",
       quantity: 100,
-      order: 97,
+      buyQuantity: 97,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-rummikub.png`,
       ],
@@ -432,7 +432,7 @@ async function registProduct() {
       active: true,
       name: "짱구는 못말려 숲속 산책 직소퍼즐",
       quantity: 100,
-      order: 96,
+      buyQuantity: 96,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-jjangu.jpg`,
       ],
@@ -463,7 +463,7 @@ async function registProduct() {
       active: true,
       name: "라푼젤 그녀의 꿈 직소퍼즐 KD-1000-001 + 그림 엽서(랜덤) + 품질보증서",
       quantity: 100,
-      order: 95,
+      buyQuantity: 95,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-rapunzel.jpg`,
       ],
@@ -493,7 +493,7 @@ async function registProduct() {
       active: true,
       name: "KC인증 스키비디 토일렛 피규어 블럭 8종 중국 호환 레고 블록 장난감 어린이 선물",
       quantity: 100,
-      order: 94,
+      buyQuantity: 94,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-skibidi01.jpg`,
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-skibidi02.jpg`,
@@ -523,7 +523,7 @@ async function registProduct() {
       active: true,
       name: "스키비디 토일렛 봉제 인형 (25cm-30cm) 시리즈 크리스마스 선물",
       quantity: 999,
-      order: 800,
+      buyQuantity: 800,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-skibidi11.jpg`,
       ],
@@ -551,7 +551,7 @@ async function registProduct() {
       active: true,
       name: "KC인증 스키비디 토일렛 피규어 블럭 4종 중국 호환 레고 블록 장난감 어린이 선물",
       quantity: 99,
-      order: 94,
+      buyQuantity: 94,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-skibidi21.jpg`,
       ],
@@ -578,7 +578,7 @@ async function registProduct() {
       active: true,
       name: "푸쉬팝게임기 팝잇 푸시팝 게임기 두더지게임 핑거 뽁뽁이 애니멀 1+1",
       quantity: 300,
-      order: 298,
+      buyQuantity: 298,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-pushpop01.jpg`,
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-pushpop02.jpg`,
