@@ -70,7 +70,7 @@ function ProductRegistration() {
 					navigate("/");
 				})
 				.catch((error) => {
-					console.error("에러 발생:", error);
+					error.response.data.errors.forEach((err) => toast.error(err.msg));
 				});
 		} catch (error) {
 			console.error(error);
