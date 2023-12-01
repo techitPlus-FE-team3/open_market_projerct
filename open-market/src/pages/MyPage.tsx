@@ -1,23 +1,25 @@
-import axios from "axios";
+import axiosInstance from "@/utils/TokenRefresh";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function MyPage() {
 	const [userInfo, setUserInfo] = useState<User | null>(null);
 	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
 	const [userOrdersInfo, setUserOrdersInfo] = useState<Order[]>([]);
 
-	const userId = localStorage.getItem("_id");
-	const accessToken = localStorage.getItem("accessToken");
 	const [bookmarks, setBookmarks] = useState<number[]>([]);
 	const [bookmarkDetails, setBookmarkDetails] = useState<any[]>([]);
+
+	const userId = localStorage.getItem("_id");
+	const accessToken = localStorage.getItem("accessToken");
 
 	useEffect(() => {
 		const fetchUserInfo = async () => {
 			try {
-				const response = await axios.get<UserResponse>(
-					`https://localhost/api/users/${userId}`,
+				const response = await axiosInstance.get<UserResponse>(
+					`/users/${userId}`,
 					{
 						headers: {
 							Authorization: `Bearer ${accessToken}`,
@@ -37,8 +39,8 @@ function MyPage() {
 
 		const fetchUserProductsInfo = async () => {
 			try {
-				const response = await axios.get<ProductListResponse>(
-					`https://localhost/api/seller/products/`,
+				const response = await axiosInstance.get<ProductListResponse>(
+					`/seller/products/`,
 					{
 						headers: {
 							Authorization: `Bearer ${accessToken}`,
@@ -52,16 +54,12 @@ function MyPage() {
 		};
 
 		async function fetchUserOrderInfo() {
-			const accessToken = localStorage.getItem("accessToken");
 			try {
-				const response = await axios.get<OrderListResponse>(
-					"https://localhost/api/orders",
-					{
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
-						},
+				const response = await axiosInstance.get<OrderListResponse>("/orders", {
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
 					},
-				);
+				});
 				setUserOrdersInfo(response.data.item);
 			} catch (err) {
 				console.error(err);
@@ -78,14 +76,11 @@ function MyPage() {
 			const bookmarkInfo = [];
 			for (const bookmarkId of bookmarks) {
 				try {
-					const response = await axios.get(
-						`https://localhost/api/products/${bookmarkId}`,
-						{
-							headers: {
-								Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-							},
+					const response = await axiosInstance.get(`/products/${bookmarkId}`, {
+						headers: {
+							Authorization: `Bearer ${accessToken}`,
 						},
-					);
+					});
 					bookmarkInfo.push(response.data.item);
 				} catch (error) {
 					console.error(`북마크 ${bookmarkId} 정보 조회 실패:`, error);
