@@ -10,7 +10,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { Rating } from "@mui/material";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -20,6 +20,8 @@ function Detail() {
 	const [searchParams] = useSearchParams();
 	const _id = searchParams.get("_id");
 
+	const replyRef = useRef<HTMLInputElement>("");
+
 	const [product, setProduct] = useState<Product>();
 	const [rating, setRating] = useState(0);
 	const [currentUser, setCurrentUser] = useState<User | undefined>();
@@ -27,6 +29,7 @@ function Detail() {
 	const [order, setOrder] = useState<Order[]>();
 	const [ratingValue, setRatingValue] = useState<number>(3);
 	const [hover, setHover] = useState(-1);
+	const [replyContent, setReplyContent] = useState<string>();
 
 	const data = localStorage.getItem("_id")
 		? Number(localStorage.getItem("_id"))
@@ -92,6 +95,34 @@ function Detail() {
 		}
 	}
 
+	async function handleReplySubmit(e: { preventDefault: () => void }) {
+		e.preventDefault();
+		const accessToken = localStorage.getItem("accessToken");
+		try {
+			const response = await axios.post<ReplyResponse>(
+				`https://localhost/api/replies`,
+				{
+					order_id: order![0]._id,
+					product_id: Number(_id),
+					rating: ratingValue,
+					content: replyContent,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				},
+			);
+			if (response.data.ok) {
+				toast.success("댓글을 작성했습니다.");
+				replyRef.current.value = "";
+				setRatingValue(3);
+			}
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
 	function getRating(product: Product) {
 		if (product.replies?.length === 0) {
 			return 0;
@@ -132,6 +163,10 @@ function Detail() {
 	useEffect(() => {
 		setLogState(data);
 	}, []);
+
+	useEffect(() => {
+		getProduct(_id!);
+	}, [product]);
 
 	return (
 		<section>
@@ -259,8 +294,17 @@ function Detail() {
 						</div>
 						<div>
 							<label htmlFor="content">댓글 내용</label>
-							<input id="content" name="content" type="text" required />
-							<button type="submit">작성하기</button>
+							<input
+								id="content"
+								name="content"
+								type="text"
+								ref={replyRef}
+								onChange={(e) => setReplyContent(e.target.value)}
+								required
+							/>
+							<button type="submit" onClick={handleReplySubmit}>
+								작성하기
+							</button>
 						</div>
 					</form>
 				)}
