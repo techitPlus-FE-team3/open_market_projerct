@@ -47,34 +47,6 @@ function Purchase() {
 					},
 				);
 				if (response.data.ok) {
-					const userResponse = await axios.get<UserResponse>(
-						`https://localhost/api/users/${logState}`,
-						{
-							headers: {
-								Authorization: `Bearer ${accessToken}`,
-							},
-						},
-					);
-
-					const updatedOrders = [
-						...(userResponse.data.item.extra?.orders || []),
-						response.data.item,
-					];
-
-					await axios.patch<UserResponse>(
-						`https://localhost/api/users/${logState}`,
-						{
-							extra: {
-								...userResponse.data.item.extra,
-								orders: updatedOrders,
-							},
-						},
-						{
-							headers: {
-								Authorization: `Bearer ${accessToken}`,
-							},
-						},
-					);
 					toast.success("성공적으로 구매했습니다!");
 					navigate("/");
 				}
