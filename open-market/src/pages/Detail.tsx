@@ -155,6 +155,7 @@ function Detail() {
 					<span>{product?.name}</span>
 					<span>{product?.seller_id}</span>
 					<span>{product?.createdAt}</span>
+					<span>{product?.extra?.category}</span>
 					<span>{product?.content}</span>
 					<span>{product?.price}</span>
 				</div>
