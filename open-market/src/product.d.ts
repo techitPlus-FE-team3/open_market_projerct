@@ -5,6 +5,7 @@ interface Product {
 	active: boolean;
 	name: string;
 	mainImages: string[];
+	image?: string;
 	content: string;
 	price: number;
 	createdAt: string;
@@ -33,10 +34,16 @@ interface ProductResponse {
 
 interface Reply {
 	_id: number;
-	userId: number;
-	productId: number;
+	order_id: number;
+	user_id: number;
+	product_id: number;
 	rating: number;
 	content: string;
 	createdAt: string;
 	userName: string;
+}
+
+interface ReplyResponse {
+	ok: number;
+	item: Reply;
 }
