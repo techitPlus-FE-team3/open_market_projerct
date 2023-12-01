@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useMutation } from "react-query";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 interface SignUpForm {
 	email: string;
@@ -25,6 +27,8 @@ interface SignUpRequest {
 }
 
 function SignUp() {
+	const navigate = useNavigate();
+
 	const [form, setForm] = useState<SignUpForm>({
 		email: "",
 		password: "",
@@ -181,26 +185,43 @@ function SignUp() {
 			return response.data;
 		},
 		{
-			onSuccess: (data) => {
-				console.log(data);
-				alert("회원가입이 완료되었습니다.");
-				window.location.href = "/signin";
+			onSuccess: () => {
+				// 토스트 표시
+				toast.success("회원가입이 완료되었습니다.", {
+					duration: 4000,
+				});
+
+				// 4초 후에 페이지 이동
+				setTimeout(() => {
+					navigate("/signin");
+				}, 4000);
 			},
 			onError: (error: any) => {
 				console.error(error);
 
-				// 에러 메시지들을 모아서 표시
-				if (
-					error.response &&
-					error.response.data &&
-					error.response.data.errors
-				) {
-					const errorMessages = error.response.data.errors
-						.map((err: { msg: string }) => `${err.msg}`)
-						.join("\n");
-					alert(`회원가입 실패:\n${errorMessages}`);
+				if (error.response) {
+					switch (error.response.status) {
+						case 409:
+							toast.error(
+								error.response.data.message || "이미 등록된 이메일입니다.",
+							);
+							break;
+						case 422:
+							const errorMessages = error.response.data.errors
+								.map((err: { msg: string }) => `${err.msg}`)
+								.join("\n");
+							toast.error(`회원가입 실패: ${errorMessages}`);
+							break;
+						case 500:
+							toast.error(
+								"서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+							);
+							break;
+						default:
+							toast.error("회원가입 중 알 수 없는 오류가 발생했습니다.");
+					}
 				} else {
-					alert("회원가입 중 알 수 없는 오류가 발생했습니다.");
+					toast.error("회원가입 중 알 수 없는 오류가 발생했습니다.");
 				}
 			},
 		},
@@ -209,7 +230,7 @@ function SignUp() {
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (form.password !== form.confirmPassword) {
-			alert("비밀번호가 일치하지 않습니다.");
+			toast.error("비밀번호가 일치하지 않습니다.");
 			return;
 		}
 		const userObject = createUserObject();
