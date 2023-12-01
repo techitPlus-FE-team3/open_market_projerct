@@ -164,14 +164,14 @@ function ProductRegistration() {
 										type="text"
 										name="hashTag"
 										onChange={(e) => {
-											const tagsArray = e.target.value.split(" ");
+											const tagsArray = e.target.value.split(",");
 											setPostItem({
 												...postItem,
 												extra: { ...postItem.extra, tags: tagsArray },
 											});
 										}}
 										id="hashTag"
-										placeholder="해시태그를 띄어쓰기로 구분해주세요"
+										placeholder="해시태그를 ','(콤마)로 구분해주세요"
 									/>
 								</div>
 							</div>
