@@ -8,7 +8,12 @@ function Purchase() {
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const _id = searchParams.get("_id");
+	const [logState, setLogState] = useState<number | undefined>();
 	const [product, setProduct] = useState<Product>();
+
+	const data = localStorage.getItem("_id")
+		? Number(localStorage.getItem("_id"))
+		: undefined;
 
 	async function getProduct(_id: string) {
 		try {
@@ -42,6 +47,34 @@ function Purchase() {
 					},
 				);
 				if (response.data.ok) {
+					const userResponse = await axios.get<UserResponse>(
+						`https://localhost/api/users/${logState}`,
+						{
+							headers: {
+								Authorization: `Bearer ${accessToken}`,
+							},
+						},
+					);
+
+					const updatedOrders = [
+						...(userResponse.data.item.extra?.orders || []),
+						response.data.item,
+					];
+
+					await axios.patch<UserResponse>(
+						`https://localhost/api/users/${logState}`,
+						{
+							extra: {
+								...userResponse.data.item.extra,
+								orders: updatedOrders,
+							},
+						},
+						{
+							headers: {
+								Authorization: `Bearer ${accessToken}`,
+							},
+						},
+					);
 					toast.success("성공적으로 구매했습니다!");
 					navigate("/");
 				}
@@ -56,6 +89,10 @@ function Purchase() {
 			return navigate("/err", { replace: true });
 		}
 		getProduct(_id);
+	}, []);
+
+	useEffect(() => {
+		setLogState(data);
 	}, []);
 
 	return (

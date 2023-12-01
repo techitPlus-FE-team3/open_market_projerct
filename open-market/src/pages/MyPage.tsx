@@ -5,11 +5,15 @@ import { Link } from "react-router-dom";
 
 function MyPage() {
 	const [userInfo, setUserInfo] = useState<User | null>(null);
+	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
+	const [userOrdersInfo, setUserOrdersInfo] = useState<Order[]>([]);
+
+	const userId = localStorage.getItem("_id");
+	const accessToken = localStorage.getItem("accessToken");
+	const [bookmarks, setBookmarks] = useState<number[]>([]);
+	const [bookmarkDetails, setBookmarkDetails] = useState<any[]>([]);
 
 	useEffect(() => {
-		const userId = localStorage.getItem("_id");
-		const accessToken = localStorage.getItem("accessToken");
-
 		const fetchUserInfo = async () => {
 			try {
 				const response = await axios.get<UserResponse>(
@@ -20,16 +24,81 @@ function MyPage() {
 						},
 					},
 				);
-				// console.log(response.data);
 				setUserInfo(response.data.item);
+				if (response.data.item.extra && response.data.item.extra.bookmarks) {
+					setBookmarks(response.data.item.extra.bookmarks);
+				} else {
+					setBookmarks([]);
+				}
+			} catch (error) {
+				console.error("회원 정보 조회 실패:", error);
+			}
+		};
+
+		const fetchUserProductsInfo = async () => {
+			try {
+				const response = await axios.get<ProductListResponse>(
+					`https://localhost/api/seller/products/`,
+					{
+						headers: {
+							Authorization: `Bearer ${accessToken}`,
+						},
+					},
+				);
+				setUserProductsInfo(response.data.item);
 			} catch (error) {
 				// 에러 처리
 				console.error("회원 정보 조회 실패:", error);
 			}
 		};
 
+		async function fetchUserOrderInfo() {
+			const accessToken = localStorage.getItem("accessToken");
+			try {
+				const response = await axios.get<OrderListResponse>(
+					"https://localhost/api/orders",
+					{
+						headers: {
+							Authorization: `Bearer ${accessToken}`,
+						},
+					},
+				);
+				setUserOrdersInfo(response.data.item);
+			} catch (err) {
+				console.error(err);
+			}
+		}
+
 		fetchUserInfo();
+		fetchUserProductsInfo();
+		fetchUserOrderInfo();
 	}, []);
+
+	useEffect(() => {
+		const fetchBookmarkDetails = async () => {
+			const bookmarkInfo = [];
+			for (const bookmarkId of bookmarks) {
+				try {
+					const response = await axios.get(
+						`https://localhost/api/products/${bookmarkId}`,
+						{
+							headers: {
+								Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+							},
+						},
+					);
+					bookmarkInfo.push(response.data.item);
+				} catch (error) {
+					console.error(`북마크 ${bookmarkId} 정보 조회 실패:`, error);
+				}
+			}
+			setBookmarkDetails(bookmarkInfo);
+		};
+
+		if (bookmarks.length > 0) {
+			fetchBookmarkDetails();
+		}
+	}, [bookmarks]);
 
 	if (!userInfo) {
 		return <div>Loading...</div>; // 로딩 처리
@@ -82,31 +151,13 @@ function MyPage() {
 			<article>
 				<h3>북마크</h3>
 				<ul>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
+					{bookmarkDetails.map((product) => (
+						<li key={product._id}>
+							<Link to={`/products?_id=${product._id}`}>
+								<img src={product.mainImages[0]} alt={`앨범 ${product.name}`} />
+							</Link>
+						</li>
+					))}
 				</ul>
 				<Link to="/">전체보기</Link>
 			</article>
@@ -144,64 +195,48 @@ function MyPage() {
 			<article>
 				<h3>구매내역</h3>
 				<ul>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
+					{userOrdersInfo.length !== 0 ? (
+						userOrdersInfo.slice(0, 4).map((order) => {
+							return (
+								<li key={order._id}>
+									<Link to={`/products?_id=${order.products[0]._id}`}>
+										{order.products[0].image ? (
+											<img
+												src={order.products[0].image}
+												alt={`${order.products[0].name} 사진`}
+											/>
+										) : (
+											<img
+												src="/noImage.svg"
+												alt={`${order.products[0].name} 사진 없음`}
+											/>
+										)}
+									</Link>
+								</li>
+							);
+						})
+					) : (
+						<span>구매 내역이 없습니다.</span>
+					)}
 				</ul>
-				<Link to="/">전체보기</Link>
+				<Link to="/orders">전체보기</Link>
 			</article>
 			<article>
-				<h3>판매내역</h3>
+				<h3>판매상품관리</h3>
 				<ul>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
+					{Array.isArray(userProductsInfo) ? (
+						userProductsInfo.slice(0, 4).map((item) => (
+							<li key={item._id}>
+								<Link to={`/productmanage/${item._id}`}>
+									<img src={`${item.mainImages[0]}`} alt="앨범아트" />
+								</Link>
+							</li>
+						))
+					) : (
+						<span>데이터가 없습니다.</span>
+					)}
 				</ul>
-				<Link to="/">전체보기</Link>
+				<Link to={`/user/${userId}/products`}>전체보기</Link>
 			</article>
 		</section>
 	);
