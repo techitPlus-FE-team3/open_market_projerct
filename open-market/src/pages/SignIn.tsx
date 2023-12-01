@@ -52,7 +52,6 @@ function SignIn() {
 						.join("\n");
 					// alert(`${errorMessage}\n\n${detailedMessages}`);
 					toast.error(`${detailedMessages}`);
-					console.log(detailedMessages);
 				} else {
 					toast.error(errorMessage);
 				}
