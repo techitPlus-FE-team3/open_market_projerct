@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 function MyPage() {
 	const [userInfo, setUserInfo] = useState<User | null>(null);
 	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
+	const [userOrdersInfo, setUserOrdersInfo] = useState<Order[]>([]);
 
 	const userId = localStorage.getItem("_id");
 	const accessToken = localStorage.getItem("accessToken");
@@ -51,8 +52,26 @@ function MyPage() {
 			}
 		};
 
+		async function fetchUserOrderInfo() {
+			const accessToken = localStorage.getItem("accessToken");
+			try {
+				const response = await axios.get<OrderListResponse>(
+					"https://localhost/api/orders",
+					{
+						headers: {
+							Authorization: `Bearer ${accessToken}`,
+						},
+					},
+				);
+				setUserOrdersInfo(response.data.item);
+			} catch (err) {
+				console.error(err);
+			}
+		}
+
 		fetchUserInfo();
 		fetchUserProductsInfo();
+		fetchUserOrderInfo();
 	}, []);
 
 	useEffect(() => {
@@ -176,33 +195,31 @@ function MyPage() {
 			<article>
 				<h3>구매내역</h3>
 				<ul>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
+					{userOrdersInfo.length !== 0 ? (
+						userOrdersInfo.slice(0, 4).map((order) => {
+							return (
+								<li key={order._id}>
+									<Link to={`/products?_id=${order.products[0]._id}`}>
+										{order.products[0].image ? (
+											<img
+												src={order.products[0].image}
+												alt={`${order.products[0].name} 사진`}
+											/>
+										) : (
+											<img
+												src="/noImage.svg"
+												alt={`${order.products[0].name} 사진 없음`}
+											/>
+										)}
+									</Link>
+								</li>
+							);
+						})
+					) : (
+						<span>구매 내역이 없습니다.</span>
+					)}
 				</ul>
-				<Link to="/">전체보기</Link>
+				<Link to="/orders">전체보기</Link>
 			</article>
 			<article>
 				<h3>판매상품관리</h3>
