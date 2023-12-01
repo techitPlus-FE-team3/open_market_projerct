@@ -49,7 +49,7 @@ function ProductManage() {
 							"aria-live": "polite",
 						},
 					});
-					navigate(`/user/${userProductInfo?.seller_id}/products`);
+					navigate(-1);
 				})
 				.catch((error) => {
 					console.error("에러 발생:", error);
