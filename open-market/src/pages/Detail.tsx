@@ -25,6 +25,8 @@ function Detail() {
 	const [currentUser, setCurrentUser] = useState<User | undefined>();
 	const [logState, setLogState] = useState<number | undefined>();
 	const [order, setOrder] = useState<Order[]>();
+	const [ratingValue, setRatingValue] = useState<number>(3);
+	const [hover, setHover] = useState(-1);
 
 	const data = localStorage.getItem("_id")
 		? Number(localStorage.getItem("_id"))
@@ -190,28 +192,28 @@ function Detail() {
 						<BookmarkOutlinedIcon />
 						{product?.extra?.bookmark ? product?.extra?.bookmark : 0}
 					</button>
-					{logState && logState === product?.seller_id ? (
-						<Link to={`/productmanage?_id=${product?._id}`}>
+					{!logState ? (
+						<Link to={"/signin"} onClick={handelSignIn}>
+							<CheckIcon />
+							구매하기
+							{product?.extra?.order ? product?.extra?.order : 0}
+						</Link>
+					) : logState && logState === product?.seller_id ? (
+						<Link to={`/productmanage/${product?._id}`}>
 							<CheckIcon />
 							상품 관리
 						</Link>
-					) : logState && order?.length !== 0 ? (
-						<button type="button">
-							<DownloadIcon />
-							다운로드
-						</button>
-					) : logState ? (
+					) : (logState && order?.length === 0) || order === undefined ? (
 						<Link to={`/productpurchase?_id=${product?._id}`}>
 							<CheckIcon />
 							구매하기
 							{product?.extra?.order ? product?.extra?.order : 0}
 						</Link>
 					) : (
-						<Link to={"/signin"} onClick={handelSignIn}>
-							<CheckIcon />
-							구매하기
-							{product?.extra?.order ? product?.extra?.order : 0}
-						</Link>
+						<button type="button">
+							<DownloadIcon />
+							다운로드
+						</button>
 					)}
 				</div>
 			</article>
@@ -239,11 +241,20 @@ function Detail() {
 							<span>{currentUser?.email}</span>
 						</div>
 						<div>
-							<StarIcon />
-							<StarIcon />
-							<StarIcon />
-							<StarBorderIcon />
-							<StarBorderIcon />
+							<Rating
+								name="rating"
+								value={ratingValue}
+								precision={0.5}
+								max={5}
+								onChange={(e, newValue) => {
+									newValue === null
+										? setRatingValue(1)
+										: setRatingValue(newValue);
+								}}
+								onChangeActive={(e, newHover) => {
+									setHover(newHover);
+								}}
+							/>
 						</div>
 						<div>
 							<label htmlFor="content">댓글 내용</label>
