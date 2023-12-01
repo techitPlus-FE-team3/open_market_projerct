@@ -95,7 +95,7 @@ function Detail() {
 		}
 	}
 
-	async function handleReplySubmit(e) {
+	async function handleReplySubmit(e: { preventDefault: () => void }) {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
 		try {
