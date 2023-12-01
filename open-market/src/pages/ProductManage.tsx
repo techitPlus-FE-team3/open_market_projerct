@@ -24,7 +24,7 @@ function ProductManage() {
 				);
 				setUserProductInfo(response.data.item);
 			} catch (error) {
-				console.error("회원 정보 조회 실패:", error);
+				console.error("상품 정보 조회 실패:", error);
 			}
 		};
 
@@ -34,6 +34,7 @@ function ProductManage() {
 	function handleProductDelete(e: { preventDefault: () => void }) {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
+		confirm("상품을 정말로 삭제하시겠습니까?");
 
 		try {
 			axios
@@ -58,6 +59,7 @@ function ProductManage() {
 			console.error(error);
 		}
 	}
+
 	return (
 		<section>
 			<Helmet>
@@ -85,7 +87,7 @@ function ProductManage() {
 			</div>
 			<div>
 				<span>설명: {userProductInfo?.content}</span>
-				<span>공개여부: {userProductInfo?.active}</span>
+				<span>공개여부: {userProductInfo?.show.toString()}</span>
 			</div>
 			<div>
 				<button type="submit" onClick={handleProductDelete}>
