@@ -44,31 +44,25 @@ function Detail() {
 			setLogState(data);
 			if (data) {
 				getUser(data);
-				getOrder({ userId: data, productId: Number(_id)! });
+				getOrder(Number(_id)!);
 			}
 		} catch (err) {
 			console.error(err);
 		}
 	}
 
-	async function getOrder({
-		userId,
-		productId,
-	}: {
-		userId: number;
-		productId: number;
-	}) {
+	async function getOrder(productId: number) {
 		const accessToken = localStorage.getItem("accessToken");
 		try {
-			const response = await axios.get<UserResponse>(
-				`https://localhost/api/users/${userId}`,
+			const response = await axios.get<OrderListResponse>(
+				`https://localhost/api/orders`,
 				{
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
 					},
 				},
 			);
-			const userOrder = response.data.item.extra?.orders?.filter(
+			const userOrder = response.data.item.filter(
 				(order) => order.products[0]._id === productId,
 			);
 			setOrder(userOrder);
