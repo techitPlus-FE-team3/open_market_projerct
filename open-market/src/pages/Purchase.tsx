@@ -8,7 +8,6 @@ function Purchase() {
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const _id = searchParams.get("_id");
-	const [logState, setLogState] = useState<number | undefined>();
 	const [product, setProduct] = useState<Product>();
 
 	const data = localStorage.getItem("_id")
@@ -61,10 +60,6 @@ function Purchase() {
 			return navigate("/err", { replace: true });
 		}
 		getProduct(_id);
-	}, []);
-
-	useEffect(() => {
-		setLogState(data);
 	}, []);
 
 	return (
