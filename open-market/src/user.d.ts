@@ -10,6 +10,7 @@ interface User {
 	extra?: {
 		profileImage: string;
 		bookmarks?: number[];
+		orders?: Order[];
 		terms: {
 			termsOfUse: boolean;
 			providingPersonalInformation: boolean;
@@ -25,5 +26,5 @@ interface User {
 
 interface UserResponse {
 	ok: number;
-	user: User;
+	item: User;
 }

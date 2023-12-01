@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useMutation } from "react-query";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 interface SignUpForm {
 	email: string;
@@ -25,6 +27,8 @@ interface SignUpRequest {
 }
 
 function SignUp() {
+	const navigate = useNavigate();
+
 	const [form, setForm] = useState<SignUpForm>({
 		email: "",
 		password: "",
@@ -46,6 +50,13 @@ function SignUp() {
 	const [recievingMarketingInformation, setRecievingMarketingInformation] =
 		useState(false);
 	const [confirmAge, setConfirmAge] = useState(false);
+
+	// 이메일 중복 확인 상태
+	const [emailCheck, setEmailCheck] = useState({
+		checked: false,
+		valid: false,
+		message: "",
+	});
 
 	const handleAgreeAllChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const isChecked = e.target.checked;
@@ -133,6 +144,37 @@ function SignUp() {
 		};
 	};
 
+	// 중복 확인 함수
+	const checkEmailDuplication = async () => {
+		try {
+			const response = await axios.get(
+				`https://localhost/api/users/email?email=${form.email}`,
+			);
+			if (response.data.ok) {
+				setEmailCheck({
+					checked: true,
+					valid: true,
+					message: "사용 가능한 이메일입니다.",
+				});
+			}
+		} catch (error) {
+			if (axios.isAxiosError(error) && error.response) {
+				setEmailCheck({
+					checked: true,
+					valid: false,
+					message: error.response.data.message,
+				});
+			} else {
+				console.error("이메일 중복 확인 중 오류가 발생했습니다.", error);
+				setEmailCheck({
+					checked: true,
+					valid: false,
+					message: "중복 확인 중 오류가 발생했습니다.",
+				});
+			}
+		}
+	};
+
 	// 회원가입 요청 처리
 	const signUpMutation = useMutation(
 		async (newUser: SignUpRequest) => {
@@ -143,14 +185,44 @@ function SignUp() {
 			return response.data;
 		},
 		{
-			onSuccess: (data) => {
-				console.log(data);
-				alert("회원가입이 완료되었습니다.");
-				window.location.href = "/signin";
+			onSuccess: () => {
+				// 토스트 표시
+				toast.success("회원가입이 완료되었습니다.", {
+					duration: 4000,
+				});
+
+				// 4초 후에 페이지 이동
+				setTimeout(() => {
+					navigate("/signin");
+				}, 4000);
 			},
 			onError: (error: any) => {
 				console.error(error);
-				alert(error.response.data.message);
+
+				if (error.response) {
+					switch (error.response.status) {
+						case 409:
+							toast.error(
+								error.response.data.message || "이미 등록된 이메일입니다.",
+							);
+							break;
+						case 422:
+							const errorMessages = error.response.data.errors
+								.map((err: { msg: string }) => `${err.msg}`)
+								.join("\n");
+							toast.error(`회원가입 실패: ${errorMessages}`);
+							break;
+						case 500:
+							toast.error(
+								"서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+							);
+							break;
+						default:
+							toast.error("회원가입 중 알 수 없는 오류가 발생했습니다.");
+					}
+				} else {
+					toast.error("회원가입 중 알 수 없는 오류가 발생했습니다.");
+				}
 			},
 		},
 	);
@@ -158,7 +230,7 @@ function SignUp() {
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (form.password !== form.confirmPassword) {
-			alert("비밀번호가 일치하지 않습니다.");
+			toast.error("비밀번호가 일치하지 않습니다.");
 			return;
 		}
 		const userObject = createUserObject();
@@ -168,9 +240,15 @@ function SignUp() {
 	// 입력 필드 변경 처리
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
-		setForm({ ...form, [name]: value });
-	};
 
+		// 전화번호 필드의 경우 숫자만 허용
+		if (name === "phone") {
+			const numbersOnly = value.replace(/[^0-9]/g, "");
+			setForm({ ...form, [name]: numbersOnly });
+		} else {
+			setForm({ ...form, [name]: value });
+		}
+	};
 	return (
 		<section>
 			<Helmet>
@@ -190,6 +268,10 @@ function SignUp() {
 							placeholder="이메일"
 							required
 						/>
+						<button type="button" onClick={checkEmailDuplication}>
+							중복 확인
+						</button>
+						{emailCheck.checked && <p>{emailCheck.message}</p>}
 					</li>
 					<li>
 						<label htmlFor="password">비밀번호</label>
