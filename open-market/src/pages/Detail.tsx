@@ -6,7 +6,6 @@ import DownloadIcon from "@mui/icons-material/Download";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StarIcon from "@mui/icons-material/Star";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { Rating } from "@mui/material";
 import axios from "axios";
@@ -20,7 +19,7 @@ function Detail() {
 	const [searchParams] = useSearchParams();
 	const _id = searchParams.get("_id");
 
-	const replyRef = useRef<HTMLInputElement>("");
+	const replyRef = useRef<HTMLInputElement>(null);
 
 	const [product, setProduct] = useState<Product>();
 	const [rating, setRating] = useState(0);
@@ -28,7 +27,7 @@ function Detail() {
 	const [logState, setLogState] = useState<number | undefined>();
 	const [order, setOrder] = useState<Order[]>();
 	const [ratingValue, setRatingValue] = useState<number>(3);
-	const [hover, setHover] = useState(-1);
+	const [_, setHover] = useState(-1);
 	const [replyContent, setReplyContent] = useState<string>();
 
 	const data = localStorage.getItem("_id")
@@ -115,7 +114,7 @@ function Detail() {
 			);
 			if (response.data.ok) {
 				toast.success("댓글을 작성했습니다.");
-				replyRef.current.value = "";
+				replyRef.current!.value = "";
 				setRatingValue(3);
 			}
 		} catch (err) {
@@ -282,12 +281,12 @@ function Detail() {
 								value={ratingValue}
 								precision={0.5}
 								max={5}
-								onChange={(e, newValue) => {
+								onChange={(_, newValue) => {
 									newValue === null
 										? setRatingValue(1)
 										: setRatingValue(newValue);
 								}}
-								onChangeActive={(e, newHover) => {
+								onChangeActive={(_, newHover) => {
 									setHover(newHover);
 								}}
 							/>
