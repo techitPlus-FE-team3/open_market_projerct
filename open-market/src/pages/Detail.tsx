@@ -1,3 +1,4 @@
+import { loggedInState } from "@/states/authState";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
@@ -13,11 +14,14 @@ import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 function Detail() {
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const _id = searchParams.get("_id");
+
+	const loggedIn = useRecoilValue(loggedInState);
 
 	const replyRef = useRef<HTMLInputElement>(null);
 
@@ -30,10 +34,6 @@ function Detail() {
 	const [_, setHover] = useState(-1);
 	const [replyContent, setReplyContent] = useState<string>();
 
-	const data = localStorage.getItem("_id")
-		? Number(localStorage.getItem("_id"))
-		: undefined;
-
 	async function getProduct(_id: string) {
 		try {
 			const response = await axios.get<ProductResponse>(
@@ -41,34 +41,27 @@ function Detail() {
 			);
 			setProduct(response.data.item);
 			setRating(getRating(response.data.item));
-			setLogState(data);
-			if (data) {
-				getUser(data);
-				getOrder({ userId: data, productId: Number(_id)! });
+			if (loggedIn) {
+				getUser(Number(localStorage.getItem("_id")!));
+				getOrder(Number(_id)!);
 			}
 		} catch (err) {
 			console.error(err);
 		}
 	}
 
-	async function getOrder({
-		userId,
-		productId,
-	}: {
-		userId: number;
-		productId: number;
-	}) {
+	async function getOrder(productId: number) {
 		const accessToken = localStorage.getItem("accessToken");
 		try {
-			const response = await axios.get<UserResponse>(
-				`https://localhost/api/users/${userId}`,
+			const response = await axios.get<OrderListResponse>(
+				`https://localhost/api/orders`,
 				{
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
 					},
 				},
 			);
-			const userOrder = response.data.item.extra?.orders?.filter(
+			const userOrder = response.data.item.filter(
 				(order) => order.products[0]._id === productId,
 			);
 			setOrder(userOrder);
@@ -160,7 +153,9 @@ function Detail() {
 	}, []);
 
 	useEffect(() => {
-		setLogState(data);
+		if (loggedIn) {
+			setLogState(Number(localStorage.getItem("_id")!));
+		}
 	}, []);
 
 	useEffect(() => {
@@ -227,18 +222,18 @@ function Detail() {
 						<BookmarkOutlinedIcon />
 						{product?.extra?.bookmark ? product?.extra?.bookmark : 0}
 					</button>
-					{!logState ? (
+					{!loggedIn ? (
 						<Link to={"/signin"} onClick={handelSignIn}>
 							<CheckIcon />
 							구매하기
 							{product?.extra?.order ? product?.extra?.order : 0}
 						</Link>
-					) : logState && logState === product?.seller_id ? (
+					) : loggedIn && logState === product?.seller_id ? (
 						<Link to={`/productmanage/${product?._id}`}>
 							<CheckIcon />
 							상품 관리
 						</Link>
-					) : (logState && order?.length === 0) || order === undefined ? (
+					) : (loggedIn && order?.length === 0) || order === undefined ? (
 						<Link to={`/productpurchase?_id=${product?._id}`}>
 							<CheckIcon />
 							구매하기
@@ -257,11 +252,11 @@ function Detail() {
 					<ModeCommentIcon />
 					댓글
 				</h3>
-				{!logState ? (
+				{!loggedIn ? (
 					<p>로그인 후 댓글을 작성할 수 있습니다.</p>
-				) : logState && logState === product?.seller_id ? (
+				) : loggedIn && logState === product?.seller_id ? (
 					<p>내 상품에는 댓글을 작성할 수 없습니다.</p>
-				) : (logState && order?.length === 0) || order === undefined ? (
+				) : (loggedIn && order?.length === 0) || order === undefined ? (
 					<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
 				) : (
 					<form action="submit">
