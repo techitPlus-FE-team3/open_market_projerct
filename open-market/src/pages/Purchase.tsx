@@ -10,10 +10,6 @@ function Purchase() {
 	const _id = searchParams.get("_id");
 	const [product, setProduct] = useState<Product>();
 
-	const data = localStorage.getItem("_id")
-		? Number(localStorage.getItem("_id"))
-		: undefined;
-
 	async function getProduct(_id: string) {
 		try {
 			const response = await axios.get<ProductResponse>(
