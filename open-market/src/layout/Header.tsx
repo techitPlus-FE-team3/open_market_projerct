@@ -1,7 +1,23 @@
+import { useState } from "react";
 import styled from "@emotion/styled";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { useEffect, useState } from "react";
+import {
+	AppBar,
+	Toolbar,
+	IconButton,
+	Menu,
+	MenuItem,
+	TextField,
+	InputAdornment,
+	Badge,
+} from "@mui/material";
+import {
+	AccountCircle,
+	Notifications,
+	Search,
+	FileUpload,
+	ExitToApp,
+} from "@mui/icons-material";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { loggedInState } from "../states/authState";
@@ -120,8 +136,26 @@ const LogoutButton = styled.button`
 
 const Header = () => {
 	const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
-
 	const navigate = useNavigate();
+
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [notificationAnchorEl, setNotificationAnchorEl] =
+		useState<null | HTMLElement>(null);
+
+	const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleNotificationsMenuOpen = (
+		event: React.MouseEvent<HTMLElement>,
+	) => {
+		setNotificationAnchorEl(event.currentTarget);
+	};
+
+	const handleMenuClose = () => {
+		setAnchorEl(null);
+		setNotificationAnchorEl(null);
+	};
 
 	const handleLogout = () => {
 		// 토큰 제거 및 상태 업데이트
@@ -136,33 +170,90 @@ const Header = () => {
 	};
 
 	return (
-		<StyledHeader>
-			<Logo>
-				<Link to="/">
-					<img src="public/logo/logo2.svg" alt="모디 로고" />
-				</Link>
-			</Logo>
-			<SearchForm action="">
-				<input type="text" placeholder="검색어를 입력하세요" />
-				<button type="submit">검색</button>
-			</SearchForm>
-			<ActionGroup>
-				<UploadButton to="/productregistration">
-					<FileUploadIcon fontSize="small" />
-					업로드
-				</UploadButton>
-				{loggedIn ? (
+		<AppBar position="static" color="default" elevation={1}>
+			<Toolbar>
+				<Logo>
+					<Link to="/">
+						<img src="public/logo/logo2.svg" alt="모디 로고" />
+					</Link>
+				</Logo>
+				<TextField
+					variant="outlined"
+					size="small"
+					placeholder="검색어를 입력하세요"
+					InputProps={{
+						startAdornment: (
+							<InputAdornment position="start">
+								<IconButton>
+									<Search />
+								</IconButton>
+							</InputAdornment>
+						),
+					}}
+					sx={{ m: 2 }}
+				/>
+				{loggedIn && (
 					<>
-						<MyPageButton to="/mypage">마이페이지</MyPageButton>
-						<LogoutButton onClick={handleLogout}>
-							<LogoutIcon />
-						</LogoutButton>
+						<IconButton
+							color="inherit"
+							component={Link}
+							to="/productregistration"
+						>
+							<FileUpload />
+							업로드
+						</IconButton>
+
+						<IconButton color="inherit" onClick={handleNotificationsMenuOpen}>
+							<Badge badgeContent={4} color="secondary">
+								<Notifications />
+							</Badge>
+						</IconButton>
+						<Menu
+							anchorEl={notificationAnchorEl}
+							open={Boolean(notificationAnchorEl)}
+							onClose={handleMenuClose}
+						>
+							{/* Notification items can be mapped here */}
+							<MenuItem onClick={handleMenuClose}>알림1</MenuItem>
+						</Menu>
+
+						<IconButton color="inherit" onClick={handleProfileMenuOpen}>
+							<AccountCircle />
+						</IconButton>
+						<Menu
+							anchorEl={anchorEl}
+							open={Boolean(anchorEl)}
+							onClose={handleMenuClose}
+						>
+							<MenuItem component={Link} to="/mypage" onClick={handleMenuClose}>
+								마이페이지
+							</MenuItem>
+							<MenuItem onClick={handleLogout}>
+								{" "}
+								<ExitToApp />
+								로그아웃
+							</MenuItem>
+						</Menu>
 					</>
-				) : (
-					<LoginButton to="/signin">로그인 / 회원가입</LoginButton>
 				)}
-			</ActionGroup>
-		</StyledHeader>
+				{!loggedIn && (
+					<>
+						<IconButton color="inherit" onClick={handleProfileMenuOpen}>
+							<AccountCircle />
+						</IconButton>
+						<Menu
+							anchorEl={anchorEl}
+							open={Boolean(anchorEl)}
+							onClose={handleMenuClose}
+						>
+							<MenuItem component={Link} to="/signin" onClick={handleMenuClose}>
+								회원가입 / 로그인
+							</MenuItem>
+						</Menu>
+					</>
+				)}
+			</Toolbar>
+		</AppBar>
 	);
 };
 
