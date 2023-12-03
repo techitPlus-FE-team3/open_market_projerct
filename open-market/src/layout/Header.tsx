@@ -1,6 +1,11 @@
 import styled from "@emotion/styled";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import { Link } from "react-router-dom";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { loggedInState } from "../states/authState";
+import toast from "react-hot-toast";
 
 const StyledHeader = styled.header`
 	display: flex;
@@ -89,7 +94,47 @@ const LoginButton = styled(Link)`
 	}
 `;
 
+const MyPageButton = styled(Link)`
+	padding: 0.5rem 1rem;
+	background-color: #6c757d;
+	border: none;
+	border-radius: 20px;
+	color: white;
+	cursor: pointer;
+
+	&:hover {
+		background-color: #5a6268;
+	}
+`;
+
+const LogoutButton = styled.button`
+	border: none;
+	color: #ffb258;
+	cursor: pointer;
+	background-color: transparent;
+
+	&:hover {
+		color: #bd2130;
+	}
+`;
+
 const Header = () => {
+	const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
+
+	const navigate = useNavigate();
+
+	const handleLogout = () => {
+		// 토큰 제거 및 상태 업데이트
+		localStorage.removeItem("accessToken");
+		localStorage.removeItem("refreshToken");
+		localStorage.removeItem("_id");
+		setLoggedIn(false);
+
+		// 로그인 페이지로 리디렉션
+		toast.success(`로그아웃 되었습니다.`);
+		navigate("/");
+	};
+
 	return (
 		<StyledHeader>
 			<Logo>
@@ -106,7 +151,16 @@ const Header = () => {
 					<FileUploadIcon fontSize="small" />
 					업로드
 				</UploadButton>
-				<LoginButton to="/signin">로그인 / 회원가입</LoginButton>
+				{loggedIn ? (
+					<>
+						<MyPageButton to="/mypage">마이페이지</MyPageButton>
+						<LogoutButton onClick={handleLogout}>
+							<LogoutIcon />
+						</LogoutButton>
+					</>
+				) : (
+					<LoginButton to="/signin">로그인 / 회원가입</LoginButton>
+				)}
 			</ActionGroup>
 		</StyledHeader>
 	);

@@ -25,5 +25,5 @@ interface User {
 
 interface UserResponse {
 	ok: number;
-	user: User;
+	item: User;
 }
