@@ -7,6 +7,8 @@ interface Product {
 	mainImages: string[];
 	image?: string;
 	content: string;
+	quantity: number;
+	buyQuantity: number;
 	price: number;
 	createdAt: string;
 	updatedAt: string;
