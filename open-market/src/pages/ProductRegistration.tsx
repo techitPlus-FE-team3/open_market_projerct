@@ -4,7 +4,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import axios from "axios";
 import { useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import toast from "react-hot-toast";
+import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
 interface ProductRegistForm {
@@ -53,6 +53,16 @@ function ProductRegistration() {
 	function handlePostProductRegist(e: { preventDefault: () => void }) {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
+
+		if (postItem.extra.soundFile === "") {
+			toast.error("음원을 업로드해야 합니다", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+			return;
+		}
 		try {
 			axios
 				.post("https://localhost/api/seller/products", postItem, {
@@ -60,17 +70,24 @@ function ProductRegistration() {
 						Authorization: `Bearer ${accessToken}`,
 					},
 				})
-				.then(() => {
+				.then((response) => {
 					toast.success("상품이 성공적으로 올라갔습니다", {
 						ariaProps: {
 							role: "status",
 							"aria-live": "polite",
 						},
 					});
-					navigate("/");
+
+					if (response.status === 200) {
+						const productId = response.data.item._id;
+						navigate(`/products?_id=${productId}`);
+					}
 				})
 				.catch((error) => {
-					console.error("에러 발생:", error);
+					error.response.data.errors.forEach(
+						(err: { msg: Renderable | ValueFunction<Renderable, Toast> }) =>
+							toast.error(err.msg),
+					);
 				});
 		} catch (error) {
 			console.error(error);
@@ -147,14 +164,14 @@ function ProductRegistration() {
 										type="text"
 										name="hashTag"
 										onChange={(e) => {
-											const tagsArray = e.target.value.split(" ");
+											const tagsArray = e.target.value.split(",");
 											setPostItem({
 												...postItem,
 												extra: { ...postItem.extra, tags: tagsArray },
 											});
 										}}
 										id="hashTag"
-										placeholder="해시태그를 띄어쓰기로 구분해주세요"
+										placeholder="해시태그를 ','(콤마)로 구분해주세요"
 									/>
 								</div>
 							</div>
