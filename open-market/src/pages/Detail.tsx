@@ -109,6 +109,7 @@ function Detail() {
 				toast.success("댓글을 작성했습니다.");
 				replyRef.current!.value = "";
 				setRatingValue(3);
+				getProduct(_id!);
 			}
 		} catch (err) {
 			console.error(err);
@@ -160,7 +161,9 @@ function Detail() {
 
 	useEffect(() => {
 		getProduct(_id!);
-	}, [product]);
+		getUser(Number(localStorage.getItem("_id")!));
+		getOrder(Number(_id)!);
+	}, [_id, loggedIn]);
 
 	return (
 		<section>
