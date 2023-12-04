@@ -10,6 +10,7 @@ import {
 	InputAdornment,
 	Badge,
 	Button,
+	CircularProgress,
 } from "@mui/material";
 import {
 	AccountCircle,
@@ -91,7 +92,7 @@ const Header = () => {
 			<Toolbar>
 				<Logo>
 					<Link to="/">
-						{logo ? <img src={logo} alt="모디 로고" /> : "MODI"}
+						{logo ? <img src={logo} alt="모디 로고" /> : <CircularProgress />}
 					</Link>
 				</Logo>
 				<TextField
