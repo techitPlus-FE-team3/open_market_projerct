@@ -61,7 +61,10 @@ const Header = () => {
 	}, []);
 
 	const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-		setAnchorEl(event.currentTarget);
+		const currentTarget = event.currentTarget;
+		if (currentTarget && document.body.contains(currentTarget)) {
+			setAnchorEl(currentTarget);
+		}
 	};
 
 	const handleNotificationsMenuOpen = (
