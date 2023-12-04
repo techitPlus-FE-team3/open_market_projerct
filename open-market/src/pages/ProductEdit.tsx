@@ -4,8 +4,8 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import toast from "react-hot-toast";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface ProductEditForm {
 	show: boolean;
@@ -85,6 +85,17 @@ function ProductEdit() {
 	function handleEditProduct(e: { preventDefault: () => void }) {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
+
+		if (postItem.extra.soundFile === "") {
+			toast.error("음원을 업로드해야 합니다", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+			return;
+		}
+
 		try {
 			axios
 				.patch(`https://localhost/api/seller/products/${productId}`, postItem, {
@@ -99,13 +110,23 @@ function ProductEdit() {
 							"aria-live": "polite",
 						},
 					});
-					navigate("/");
+					navigate(-1);
 				})
 				.catch((error) => {
-					console.error("에러 발생:", error);
+					error.response.data.errors.forEach(
+						(err: { msg: Renderable | ValueFunction<Renderable, Toast> }) =>
+							toast.error(err.msg),
+					);
 				});
 		} catch (error) {
 			console.error(error);
+		}
+	}
+
+	function handleEditCancel() {
+		const result = confirm("정말로 수정을 취소하시겠습니까?");
+		if (result) {
+			navigate(-1);
 		}
 	}
 
@@ -177,10 +198,10 @@ function ProductEdit() {
 									type="text"
 									name="hashTag"
 									id="hashTag"
-									placeholder="해시태그를 입력해주세요"
+									placeholder=",(콤마)로 구분하여 입력해주세요"
 									defaultValue={userProductInfo?.extra?.tags}
 									onChange={(e) => {
-										const tagsArray = e.target.value.split(" ");
+										const tagsArray = e.target.value.split(",");
 										setPostItem({
 											...postItem,
 											extra: { ...postItem.extra, tags: tagsArray },
@@ -257,12 +278,9 @@ function ProductEdit() {
 					</div>
 				</div>
 				<div>
-					<Link
-						to={"/"}
-						onClick={() => confirm("정말로 수정을 취소하시겠습니까?")}
-					>
+					<button type="button" onClick={handleEditCancel}>
 						취소
-					</Link>
+					</button>
 					<button type="submit" onClick={handleEditProduct}>
 						수정
 					</button>
