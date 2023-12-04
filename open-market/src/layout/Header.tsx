@@ -24,6 +24,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { loggedInState } from "../states/authState";
 import toast from "react-hot-toast";
+import logoImage from "../../public/logo/logo2.svg"; // 로고 이미지를 import 합니다.
 
 const Logo = styled.h1`
 	a {
@@ -39,7 +40,7 @@ const Logo = styled.h1`
 `;
 
 const Header = () => {
-	const [logo, setLogo] = useState("");
+	const [isLogoLoaded, setIsLogoLoaded] = useState(false); // 로고 로딩 상태 관리
 
 	const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
 	const navigate = useNavigate();
@@ -48,17 +49,10 @@ const Header = () => {
 	const [notificationAnchorEl, setNotificationAnchorEl] =
 		useState<null | HTMLElement>(null);
 
-	useEffect(() => {
-		// 로고 이미지를 사전에 로딩.
-		const loadLogo = async () => {
-			const response = await fetch("public/logo/logo2.svg");
-			const imageBlob = await response.blob();
-			const imageObjectURL = URL.createObjectURL(imageBlob);
-			setLogo(imageObjectURL);
-		};
-
-		loadLogo();
-	}, []);
+	// 로고 이미지 로딩 완료 시 핸들러
+	const onLogoLoad = () => {
+		setIsLogoLoaded(true);
+	};
 
 	const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
 		const currentTarget = event.currentTarget;
@@ -95,7 +89,13 @@ const Header = () => {
 			<Toolbar>
 				<Logo>
 					<Link to="/">
-						{logo ? <img src={logo} alt="모디 로고" /> : <CircularProgress />}
+						<img
+							src={logoImage}
+							alt="모디 로고"
+							onLoad={onLogoLoad} // 이미지 로딩 완료 핸들러
+							style={{ display: isLogoLoaded ? "block" : "none" }} // 로딩 상태에 따라 이미지 표시 여부 결정
+						/>
+						{!isLogoLoaded && <CircularProgress />}
 					</Link>
 				</Logo>
 				<TextField
