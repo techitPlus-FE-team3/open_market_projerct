@@ -24,7 +24,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { loggedInState } from "../states/authState";
 import toast from "react-hot-toast";
-import logoImage from "../../public/logo/logo2.svg"; // 로고 이미지를 import 합니다.
+import logoImage from "/logo/logo2.svg";
 
 const Logo = styled.h1`
 	a {
