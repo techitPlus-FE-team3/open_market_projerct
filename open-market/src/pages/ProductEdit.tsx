@@ -198,7 +198,7 @@ function ProductEdit() {
 									type="text"
 									name="hashTag"
 									id="hashTag"
-									placeholder="해시태그를 입력해주세요"
+									placeholder=",(콤마)로 구분하여 입력해주세요"
 									defaultValue={userProductInfo?.extra?.tags}
 									onChange={(e) => {
 										const tagsArray = e.target.value.split(",");
