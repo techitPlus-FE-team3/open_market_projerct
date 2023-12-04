@@ -10,7 +10,6 @@ interface User {
 	extra?: {
 		profileImage: string;
 		bookmarks?: number[];
-		orders?: Order[];
 		terms: {
 			termsOfUse: boolean;
 			providingPersonalInformation: boolean;

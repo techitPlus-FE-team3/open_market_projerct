@@ -5,8 +5,8 @@ import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 function ProductManage() {
-	const { productId } = useParams();
 	const navigate = useNavigate();
+	const { productId } = useParams();
 	const [userProductInfo, setUserProductInfo] = useState<Product>();
 
 	useEffect(() => {
@@ -34,8 +34,8 @@ function ProductManage() {
 	function handleProductDelete(e: { preventDefault: () => void }) {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
-		confirm("상품을 정말로 삭제하시겠습니까?");
-
+		const result = confirm("상품을 정말로 삭제하시겠습니까?");
+		if (!result) return;
 		try {
 			axios
 				.delete(`https://localhost/api/seller/products/${productId}`, {
