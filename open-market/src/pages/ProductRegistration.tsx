@@ -9,11 +9,14 @@ import { Link, useNavigate } from "react-router-dom";
 
 interface ProductRegistForm {
 	show: boolean;
+	active: boolean;
 	name: string;
 	mainImages: string[];
 	content: string;
 	price: number;
 	shippingFees: number;
+	quantity: number;
+	buyQuantity: number;
 	extra: {
 		isNew: boolean;
 		isBest: boolean;
@@ -34,11 +37,14 @@ function ProductRegistration() {
 
 	const [postItem, setPostItem] = useState<ProductRegistForm>({
 		show: true,
+		active: true,
 		name: "",
 		mainImages: [],
 		content: "",
 		price: 0,
 		shippingFees: 0,
+		quantity: Number.MAX_SAFE_INTEGER,
+		buyQuantity: 0,
 		extra: {
 			isNew: true,
 			isBest: false,
