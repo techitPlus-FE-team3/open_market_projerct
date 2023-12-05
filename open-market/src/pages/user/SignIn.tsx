@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import { loggedInState } from "@/states/authState";
+import axiosInstance from "@/api/instance";
 
 function SignIn() {
 	const [, setLoggedIn] = useRecoilState(loggedInState);
@@ -17,7 +18,7 @@ function SignIn() {
 		e.preventDefault();
 
 		try {
-			const response = await axios.post("https://localhost/api/users/login", {
+			const response = await axiosInstance.post("/users/login", {
 				email,
 				password,
 			});
