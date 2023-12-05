@@ -163,8 +163,10 @@ function ProductDetail() {
 
 	useEffect(() => {
 		getProduct(productId!);
-		getUser(Number(localStorage.getItem("_id")!));
-		getOrder(Number(productId)!);
+		if (loggedIn) {
+			getUser(Number(localStorage.getItem("_id")!));
+			getOrder(Number(productId)!);
+		}
 	}, [productId, loggedIn]);
 
 	return (
