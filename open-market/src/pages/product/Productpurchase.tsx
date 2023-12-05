@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "@/api/instance";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
@@ -11,8 +11,8 @@ function Productpurchase() {
 
 	async function getProduct(id: string) {
 		try {
-			const response = await axios.get<ProductResponse>(
-				`https://localhost/api/products/${id}`,
+			const response = await axiosInstance.get<ProductResponse>(
+				`/products/${id}`,
 			);
 			setProduct(response.data.item);
 		} catch (err) {
@@ -24,8 +24,8 @@ function Productpurchase() {
 		if (confirm("구매하시겠습니까?")) {
 			const accessToken = localStorage.getItem("accessToken");
 			try {
-				const response = await axios.post<OrderResponse>(
-					"https://localhost/api/orders",
+				const response = await axiosInstance.post<OrderResponse>(
+					"/orders",
 					{
 						products: [
 							{
