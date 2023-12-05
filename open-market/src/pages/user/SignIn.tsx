@@ -4,10 +4,10 @@ import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
-import { loggedInState } from "../states/authState";
+import { loggedInState } from "@/states/authState";
 
 function SignIn() {
-	const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
+	const [, setLoggedIn] = useRecoilState(loggedInState);
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -50,7 +50,6 @@ function SignIn() {
 					const detailedMessages = error.response.data.errors
 						.map((err: any) => `${err.msg} (${err.path})`)
 						.join("\n");
-					// alert(`${errorMessage}\n\n${detailedMessages}`);
 					toast.error(`${detailedMessages}`);
 				} else {
 					toast.error(errorMessage);

@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-function Purchase() {
+function Productpurchase() {
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const _id = searchParams.get("_id");
@@ -100,4 +100,4 @@ function Purchase() {
 	);
 }
 
-export default Purchase;
+export default Productpurchase;

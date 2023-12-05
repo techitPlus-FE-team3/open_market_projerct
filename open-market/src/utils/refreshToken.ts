@@ -1,9 +1,6 @@
 import axios from "axios";
 import toast from "react-hot-toast";
-
-const axiosInstance = axios.create({
-	baseURL: "https://localhost/api",
-});
+import axiosInstance from "@/api/instance";
 
 // 토큰 갱신 함수
 async function refreshToken() {
@@ -36,7 +33,8 @@ async function refreshToken() {
 }
 
 // 응답 인터셉터 설정
-axiosInstance.interceptors.response.use(
+
+const interceptor = axiosInstance.interceptors.response.use(
 	(response) => response, // 요청이 성공적인 경우 그대로 응답을 반환
 	async (error) => {
 		const originalRequest = error.config;
@@ -55,4 +53,4 @@ axiosInstance.interceptors.response.use(
 	},
 );
 
-export default axiosInstance;
+export default interceptor;

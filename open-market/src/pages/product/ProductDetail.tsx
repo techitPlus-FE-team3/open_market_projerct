@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
-function Detail() {
+function ProductDetail() {
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const _id = searchParams.get("_id");
@@ -229,7 +229,7 @@ function Detail() {
 						<Link to={"/signin"} onClick={handelSignIn}>
 							<CheckIcon />
 							구매하기
-							{product?.extra?.order ? product?.extra?.order : 0}
+							{product?.buyQuantity ? product?.buyQuantity : 0}
 						</Link>
 					) : loggedIn && logState === product?.seller_id ? (
 						<Link to={`/productmanage/${product?._id}`}>
@@ -240,7 +240,7 @@ function Detail() {
 						<Link to={`/productpurchase?_id=${product?._id}`}>
 							<CheckIcon />
 							구매하기
-							{product?.extra?.order ? product?.extra?.order : 0}
+							{product?.buyQuantity ? product?.buyQuantity : 0}
 						</Link>
 					) : (
 						<button type="button">
@@ -338,4 +338,4 @@ function Detail() {
 	);
 }
 
-export default Detail;
+export default ProductDetail;

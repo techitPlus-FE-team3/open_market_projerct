@@ -1,4 +1,3 @@
-import genres from "@/data/genres";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import axios from "axios";
@@ -86,7 +85,7 @@ function ProductRegistration() {
 
 					if (response.status === 200) {
 						const productId = response.data.item._id;
-						navigate(`/products?_id=${productId}`);
+						navigate(`/productdetail?_id=${productId}`);
 					}
 				})
 				.catch((error) => {
@@ -157,11 +156,11 @@ function ProductRegistration() {
 										<option value="none" disabled hidden>
 											장르를 선택해주세요
 										</option>
-										{genres.map((item) => (
+										{/* {genres.map((item) => (
 											<option key={item} value={item}>
 												{item}
 											</option>
-										))}
+										))} */}
 									</select>
 								</div>
 								<div>
