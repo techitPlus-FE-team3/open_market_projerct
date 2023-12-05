@@ -18,7 +18,6 @@ interface ProductEditForm {
 		category: string;
 		tags: string[];
 		soundFile: string;
-		bookmark: number;
 	};
 }
 
@@ -39,7 +38,6 @@ function ProductEdit() {
 			category: "",
 			tags: [],
 			soundFile: "",
-			bookmark: 0,
 		},
 	});
 
@@ -70,7 +68,6 @@ function ProductEdit() {
 						category: fetchedProductInfo?.extra?.category || "",
 						tags: fetchedProductInfo?.extra?.tags || [],
 						soundFile: fetchedProductInfo?.extra?.soundFile || "",
-						bookmark: fetchedProductInfo?.extra?.bookmark || 0,
 					},
 				});
 			} catch (error) {

@@ -21,9 +21,7 @@ interface ProductRegistForm {
 		isBest: boolean;
 		category: string;
 		tags: string[];
-		order: number;
 		soundFile: string;
-		bookmark: number;
 	};
 }
 function ProductRegistration() {
@@ -49,9 +47,7 @@ function ProductRegistration() {
 			isBest: false,
 			category: "",
 			tags: [],
-			order: 0,
 			soundFile: "",
-			bookmark: 0,
 		},
 	});
 
