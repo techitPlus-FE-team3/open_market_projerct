@@ -1,8 +1,9 @@
+import { debounce } from "@/utils";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useMutation } from "react-query";
 import toast from "react-hot-toast";
+import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 
 interface SignUpForm {
@@ -269,8 +270,8 @@ function SignUp() {
 							type="text"
 							id="email"
 							name="email"
-							value={form.email}
-							onChange={handleChange}
+							defaultValue={form.email}
+							onChange={debounce(handleChange)}
 							placeholder="이메일"
 							required
 						/>
@@ -285,8 +286,8 @@ function SignUp() {
 							type="password"
 							id="password"
 							name="password"
-							value={form.password}
-							onChange={handleChange}
+							defaultValue={form.password}
+							onChange={debounce(handleChange)}
 							placeholder="비밀번호"
 							required
 						/>
@@ -297,8 +298,8 @@ function SignUp() {
 							type="password"
 							id="confirmPassword"
 							name="confirmPassword"
-							value={form.confirmPassword}
-							onChange={handleChange}
+							defaultValue={form.confirmPassword}
+							onChange={debounce(handleChange)}
 							placeholder="비밀번호 확인"
 							required
 						/>
@@ -309,8 +310,8 @@ function SignUp() {
 							type="text"
 							id="name"
 							name="name"
-							value={form.name}
-							onChange={handleChange}
+							defaultValue={form.name}
+							onChange={debounce(handleChange)}
 							placeholder="이름"
 							required
 						/>
@@ -321,8 +322,8 @@ function SignUp() {
 							type="tel"
 							id="phone"
 							name="phone"
-							value={form.phone}
-							onChange={handleChange}
+							defaultValue={form.phone}
+							onChange={debounce(handleChange)}
 							placeholder="휴대폰 번호"
 							required
 						/>

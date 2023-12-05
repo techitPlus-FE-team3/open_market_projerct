@@ -1,3 +1,4 @@
+import { debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import axios from "axios";
@@ -165,9 +166,9 @@ function ProductEdit() {
 								id="title"
 								placeholder="제목을 입력해주세요"
 								defaultValue={userProductInfo?.name}
-								onChange={(e) =>
-									setPostItem({ ...postItem, name: e.target.value })
-								}
+								onChange={debounce((e: { target: { value: any } }) =>
+									setPostItem({ ...postItem, name: e.target.value }),
+								)}
 							/>
 						</div>
 						<div>
@@ -199,13 +200,13 @@ function ProductEdit() {
 									id="hashTag"
 									placeholder=",(콤마)로 구분하여 입력해주세요"
 									defaultValue={userProductInfo?.extra?.tags}
-									onChange={(e) => {
+									onChange={debounce((e: { target: { value: string } }) => {
 										const tagsArray = e.target.value.split(",");
 										setPostItem({
 											...postItem,
 											extra: { ...postItem.extra, tags: tagsArray },
 										});
-									}}
+									})}
 								/>
 							</div>
 						</div>
@@ -218,9 +219,9 @@ function ProductEdit() {
 									cols={30}
 									rows={3}
 									defaultValue={userProductInfo?.content}
-									onChange={(e) =>
-										setPostItem({ ...postItem, content: e.target.value })
-									}
+									onChange={debounce((e: { target: { value: any } }) =>
+										setPostItem({ ...postItem, content: e.target.value }),
+									)}
 								/>
 							</div>
 							<div>
@@ -249,9 +250,9 @@ function ProductEdit() {
 							name="price"
 							id="price"
 							defaultValue={userProductInfo?.price}
-							onChange={(e) =>
-								setPostItem({ ...postItem, price: +e.target.value })
-							}
+							onChange={debounce((e: { target: { value: string | number } }) =>
+								setPostItem({ ...postItem, price: +e.target.value }),
+							)}
 						/>
 					</div>
 					<div>

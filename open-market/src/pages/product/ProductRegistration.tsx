@@ -1,3 +1,4 @@
+import { debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import axios from "axios";
@@ -131,9 +132,9 @@ function ProductRegistration() {
 									type="text"
 									name="title"
 									ref={titleRef}
-									onChange={(e) =>
-										setPostItem({ ...postItem, name: e.target.value })
-									}
+									onChange={debounce((e: { target: { value: any } }) =>
+										setPostItem({ ...postItem, name: e.target.value }),
+									)}
 									id="title"
 									placeholder="제목을 입력해주세요"
 								/>
@@ -168,13 +169,15 @@ function ProductRegistration() {
 									<input
 										type="text"
 										name="hashTag"
-										onChange={(e) => {
-											const tagsArray = e.target.value.split(",");
-											setPostItem({
-												...postItem,
-												extra: { ...postItem.extra, tags: tagsArray },
-											});
-										}}
+										onChange={debounce(
+											(e: React.ChangeEvent<HTMLInputElement>) => {
+												const tagsArray = e.target.value.split(",");
+												setPostItem({
+													...postItem,
+													extra: { ...postItem.extra, tags: tagsArray },
+												});
+											},
+										)}
 										id="hashTag"
 										placeholder="해시태그를 ','(콤마)로 구분해주세요"
 									/>
@@ -186,9 +189,9 @@ function ProductRegistration() {
 									<textarea
 										name="description"
 										id="description"
-										onChange={(e) =>
-											setPostItem({ ...postItem, content: e.target.value })
-										}
+										onChange={debounce((e: { target: { value: any } }) =>
+											setPostItem({ ...postItem, content: e.target.value }),
+										)}
 										cols={30}
 										rows={3}
 									/>
@@ -219,9 +222,10 @@ function ProductRegistration() {
 								type="number"
 								name="price"
 								id="price"
-								onChange={(e) =>
-									setPostItem({ ...postItem, price: +e.target.value })
-								}
+								onChange={debounce(
+									(e: { target: { value: string | number } }) =>
+										setPostItem({ ...postItem, price: +e.target.value }),
+								)}
 							/>
 						</div>
 						<div>
