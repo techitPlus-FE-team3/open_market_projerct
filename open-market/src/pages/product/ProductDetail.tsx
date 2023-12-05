@@ -13,13 +13,12 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 function ProductDetail() {
 	const navigate = useNavigate();
-	const [searchParams] = useSearchParams();
-	const _id = searchParams.get("_id");
+	const { productId } = useParams();
 
 	const loggedIn = useRecoilValue(loggedInState);
 
@@ -34,16 +33,16 @@ function ProductDetail() {
 	const [_, setHover] = useState(-1);
 	const [replyContent, setReplyContent] = useState<string>();
 
-	async function getProduct(_id: string) {
+	async function getProduct(id: string) {
 		try {
 			const response = await axios.get<ProductResponse>(
-				`https://localhost/api/products/${_id}`,
+				`https://localhost/api/products/${id}`,
 			);
 			setProduct(response.data.item);
 			setRating(getRating(response.data.item));
 			if (loggedIn) {
 				getUser(Number(localStorage.getItem("_id")!));
-				getOrder(Number(_id)!);
+				getOrder(Number(id)!);
 			}
 		} catch (err) {
 			console.error(err);
@@ -95,7 +94,7 @@ function ProductDetail() {
 				`https://localhost/api/replies`,
 				{
 					order_id: order![0]._id,
-					product_id: Number(_id),
+					product_id: Number(productId),
 					rating: ratingValue,
 					content: replyContent,
 				},
@@ -109,7 +108,7 @@ function ProductDetail() {
 				toast.success("댓글을 작성했습니다.");
 				replyRef.current!.value = "";
 				setRatingValue(3);
-				getProduct(_id!);
+				getProduct(productId!);
 			}
 		} catch (err) {
 			console.error(err);
@@ -147,10 +146,10 @@ function ProductDetail() {
 	}
 
 	useEffect(() => {
-		if (_id === null || _id === "") {
+		if (productId === null || productId === "") {
 			return navigate("/err", { replace: true });
 		}
-		getProduct(_id);
+		getProduct(productId!);
 	}, []);
 
 	useEffect(() => {
@@ -160,10 +159,10 @@ function ProductDetail() {
 	}, []);
 
 	useEffect(() => {
-		getProduct(_id!);
+		getProduct(productId!);
 		getUser(Number(localStorage.getItem("_id")!));
-		getOrder(Number(_id)!);
-	}, [_id, loggedIn]);
+		getOrder(Number(productId)!);
+	}, [productId, loggedIn]);
 
 	return (
 		<section>

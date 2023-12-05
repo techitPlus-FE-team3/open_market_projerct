@@ -81,7 +81,7 @@ function ProductRegistration() {
 
 					if (response.status === 200) {
 						const productId = response.data.item._id;
-						navigate(`/productdetail?_id=${productId}`);
+						navigate(`/productdetail/${productId}`);
 					}
 				})
 				.catch((error) => {
