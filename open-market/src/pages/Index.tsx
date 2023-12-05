@@ -19,7 +19,6 @@ function Index() {
 				"https://localhost/api/products",
 			);
 			setProductList(response.data.item);
-			console.log(productList);
 		} catch (err) {
 			console.error(err);
 		}
@@ -52,7 +51,7 @@ function Index() {
 					{productList?.slice(0, 4).map((product) => {
 						return (
 							<li key={String(product._id)} className="musicItem">
-								<Link to={`/products?_id=${product._id}`}>
+								<Link to={`/productdetail?_id=${product._id}`}>
 									{product.mainImages[0] ? (
 										<ProductImage
 											src={product.mainImages[0]}
@@ -66,7 +65,7 @@ function Index() {
 									)}
 									<span>{product.name}</span>
 								</Link>
-								<audio src="/" controls />
+								<audio src={product?.extra?.soundFile} controls />
 								<button type="submit">북마크</button>
 							</li>
 						);
