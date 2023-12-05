@@ -1,3 +1,4 @@
+import axiosInstance from "@/api/instance";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -13,7 +14,7 @@ function UserProducts() {
 		const fetchUserProductsInfo = async () => {
 			try {
 				const response = await axios.get<ProductListResponse>(
-					`https://localhost/api/seller/products/`,
+					`${axiosInstance}/seller/products/`,
 					{
 						headers: {
 							Authorization: `Bearer ${accessToken}`,

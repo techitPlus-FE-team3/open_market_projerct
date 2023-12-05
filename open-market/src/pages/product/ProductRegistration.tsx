@@ -1,3 +1,4 @@
+import axiosInstance from "@/api/instance";
 import { debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -67,7 +68,7 @@ function ProductRegistration() {
 		}
 		try {
 			axios
-				.post("https://localhost/api/seller/products", postItem, {
+				.post(`${axiosInstance}/seller/products`, postItem, {
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
 					},

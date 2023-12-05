@@ -1,3 +1,4 @@
+import axiosInstance from "@/api/instance";
 import { debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -48,7 +49,7 @@ function ProductEdit() {
 		const fetchUserProductInfo = async () => {
 			try {
 				const response = await axios.get<ProductResponse>(
-					`https://localhost/api/seller/products/${productId}`,
+					`${axiosInstance}/seller/products/${productId}`,
 					{
 						headers: {
 							Authorization: `Bearer ${accessToken}`,
@@ -95,7 +96,7 @@ function ProductEdit() {
 
 		try {
 			axios
-				.patch(`https://localhost/api/seller/products/${productId}`, postItem, {
+				.patch(`${axiosInstance}/seller/products/${productId}`, postItem, {
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
 					},
