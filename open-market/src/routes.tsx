@@ -5,7 +5,7 @@ import MyPage from "@/pages/user/MyPage";
 import ProductEdit from "@/pages/product/ProductEdit";
 import ProductManage from "@/pages/product/ProductManage";
 import ProductRegistration from "@/pages/product/ProductRegistration";
-import Productpurchase from "@/pages/product/Productpurchase";
+import ProductPurchase from "@/pages/product/ProductPurchase";
 import SignIn from "@/pages/user/SignIn";
 import SignUp from "@/pages/user/SignUp";
 import UserOrders from "@/pages/user/UserOrders";
@@ -27,10 +27,10 @@ const router = createBrowserRouter(
 			<Route path="productmanage/:productId" element={<ProductManage />} />
 			{/* buy */}
 			<Route path="productdetail/:productId" element={<ProductDetail />} />
-			<Route path="productpurchase/:productId" element={<Productpurchase />} />
+			<Route path="productpurchase/:productId" element={<ProductPurchase />} />
 			{/* user */}
 			<Route path="mypage" element={<MyPage />} />
-			<Route path="update/:userId" element={<UserEdit />} />
+			<Route path="useredit/:userId" element={<UserEdit />} />
 			<Route path="user/:userId/products" element={<UserProducts />} />
 			<Route path="/orders" element={<UserOrders />} />
 			{/* signin, signup */}
