@@ -9,7 +9,6 @@ interface User {
 	updatedAt: string;
 	extra?: {
 		profileImage: string;
-		bookmarks?: number[];
 		terms: {
 			termsOfUse: boolean;
 			providingPersonalInformation: boolean;

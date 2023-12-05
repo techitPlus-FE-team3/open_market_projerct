@@ -223,7 +223,7 @@ function ProductDetail() {
 				<div>
 					<button>
 						<BookmarkOutlinedIcon />
-						{product?.extra?.bookmark ? product?.extra?.bookmark : 0}
+						{product?.bookmarks ? product?.bookmarks.length : 0}
 					</button>
 					{!loggedIn ? (
 						<Link to={"/signin"} onClick={handelSignIn}>

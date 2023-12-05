@@ -225,7 +225,6 @@ async function registProduct() {
         tags: ["비비드", "신나는", "팝한"],
         sort: 5,
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
-        bookmark: 40,
       },
     },
     {
@@ -250,7 +249,6 @@ async function registProduct() {
         category: "발라드",
         tags: ["슬픈", "우울한", "팝한"],
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
-        bookmark: 10,
         sort: 4,
       },
     },
@@ -277,7 +275,6 @@ async function registProduct() {
         sort: 3,
         tags: ["행복한", "희망찬", "기대하는"],
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
-        bookmark: 20,
       },
     },
     {
@@ -303,7 +300,6 @@ async function registProduct() {
         sort: 1,
         tags: ["희망찬", "행복한", "긍정적인"],
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-baedal.mp3`,
-        bookmark: 14,
       },
     },
     {
@@ -330,7 +326,6 @@ async function registProduct() {
         sort: 2,
         tags: ["슬픈", "우울한", "절망적인"],
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
-        bookmark: 10,
       },
     },
     {
@@ -356,7 +351,6 @@ async function registProduct() {
         sort: 1,
         tags: ["히어로", "영웅", "웅장한"],
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
-        bookmark: 100,
       },
     },
     {
@@ -382,7 +376,6 @@ async function registProduct() {
         sort: 3,
         tags: ["피곤한", "우울한"],
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
-        bookmark: 9,
       },
     },
     {
@@ -408,7 +401,6 @@ async function registProduct() {
         sort: 8,
         tags: ["웅장한", "긴장감있는", "정적인"],
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
-        bookmark: 2,
       },
     },
     {
@@ -435,7 +427,6 @@ async function registProduct() {
         sort: 2,
         tags: ["신나는", "재밌는", "팝한"],
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
-        bookmark: 40,
       },
     },
     {
@@ -461,7 +452,6 @@ async function registProduct() {
         sort: 4,
         tags: ["슬픈", "달콤한", "팝한"],
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
-        bookmark: 10,
       },
     },
     {
@@ -488,7 +478,6 @@ async function registProduct() {
         sort: 6,
         tags: ["희망찬", "힘찬"],
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
-        bookmark: 10,
       },
     },
     {
@@ -514,7 +503,6 @@ async function registProduct() {
         sort: 7,
         tags: ["조용한"],
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
-        bookmark: 2,
       },
     },
     {
@@ -540,7 +528,6 @@ async function registProduct() {
         sort: 6,
         tags: ["웅장한", "강한", "팝한"],
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
-        bookmark: 40,
       },
     },
     {
@@ -566,7 +553,6 @@ async function registProduct() {
         sort: 5,
         tags: ["설렘", "신나는", "긴장감"],
         soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-baedal.mp3`,
-        bookmark: 20,
       },
     },
   ];
