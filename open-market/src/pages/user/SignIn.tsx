@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
-import { loggedInState } from "../../states/authState";
+import { loggedInState } from "@/states/authState";
 
 function SignIn() {
 	const [, setLoggedIn] = useRecoilState(loggedInState);
