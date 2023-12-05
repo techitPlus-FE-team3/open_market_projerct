@@ -28,6 +28,10 @@ async function refreshToken() {
 		console.error("Error refreshing token:", error);
 		// 에러 핸들링 로직 (예: 로그아웃 처리, 사용자에게 알림 등)
 		toast.error("토큰이 만료되었습니다. 다시 로그인해주세요.");
+		localStorage.removeItem("accessToken");
+		localStorage.removeItem("refreshToken");
+		localStorage.removeItem("_id");
+		window.location.href = "/signin";
 		throw error;
 	}
 }
@@ -42,10 +46,10 @@ const interceptor = axiosInstance.interceptors.response.use(
 			originalRequest._retry = true;
 			try {
 				const newAccessToken = await refreshToken();
-				axios.defaults.headers.common["Authorization"] =
-					`Bearer ${newAccessToken}`;
+				originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
 				return axiosInstance(originalRequest); // 실패한 요청을 새 토큰으로 재시도
 			} catch (refreshError) {
+				window.location.href = "/signin";
 				return Promise.reject(refreshError);
 			}
 		}
