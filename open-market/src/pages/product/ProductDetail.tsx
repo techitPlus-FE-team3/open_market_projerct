@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
-function Detail() {
+function ProductDetail() {
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const _id = searchParams.get("_id");
@@ -338,4 +338,4 @@ function Detail() {
 	);
 }
 
-export default Detail;
+export default ProductDetail;

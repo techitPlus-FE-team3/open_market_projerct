@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
-function UserUpdate() {
+function UserEdit() {
 	return (
 		<section>
 			<Helmet>
@@ -52,4 +52,4 @@ function UserUpdate() {
 	);
 }
 
-export default UserUpdate;
+export default UserEdit;

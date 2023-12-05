@@ -1,16 +1,16 @@
 import RootLayout from "@/layout/RootLayout";
-import Detail from "@/pages/Detail";
+import ProductDetail from "@/pages/product/ProductDetail";
 import Index from "@/pages/Index";
-import MyPage from "@/pages/MyPage";
-import ProductEdit from "@/pages/ProductEdit";
-import ProductManage from "@/pages/ProductManage";
-import ProductRegistration from "@/pages/ProductRegistration";
-import Purchase from "@/pages/Purchase";
-import SignIn from "@/pages/SignIn";
-import SignUp from "@/pages/SignUp";
-import UserOrders from "@/pages/UserOrders";
-import UserProducts from "@/pages/UserProducts";
-import UserUpdate from "@/pages/UserUpdate";
+import MyPage from "@/pages/user/MyPage";
+import ProductEdit from "@/pages/product/ProductEdit";
+import ProductManage from "@/pages/product/ProductManage";
+import ProductRegistration from "@/pages/product/ProductRegistration";
+import Productpurchase from "@/pages/product/Productpurchase";
+import SignIn from "@/pages/user/SignIn";
+import SignUp from "@/pages/user/SignUp";
+import UserOrders from "@/pages/user/UserOrders";
+import UserProducts from "@/pages/user/UserProducts";
+import UserEdit from "@/pages/user/UserEdit";
 import {
 	Route,
 	createBrowserRouter,
@@ -26,11 +26,11 @@ const router = createBrowserRouter(
 			<Route path="productedit/:productId" element={<ProductEdit />} />
 			<Route path="productmanage/:productId" element={<ProductManage />} />
 			{/* buy */}
-			<Route path="products" element={<Detail />} />
-			<Route path="productpurchase" element={<Purchase />} />
+			<Route path="ProductDetail" element={<ProductDetail />} />
+			<Route path="productpurchase" element={<Productpurchase />} />
 			{/* user */}
 			<Route path="mypage" element={<MyPage />} />
-			<Route path="update/:userId" element={<UserUpdate />} />
+			<Route path="update/:userId" element={<UserEdit />} />
 			<Route path="user/:userId/products" element={<UserProducts />} />
 			<Route path="/orders" element={<UserOrders />} />
 			{/* signin, signup */}
