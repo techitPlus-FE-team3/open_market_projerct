@@ -12,10 +12,12 @@ interface SignUpForm {
 	name: string;
 	phone: string;
 	extra: {
-		termsOfUse: boolean;
-		providingPersonalInformation: boolean;
-		recievingMarketingInformation: boolean;
-		confirmAge: boolean;
+		terms: {
+			termsOfUse: boolean;
+			providingPersonalInformation: boolean;
+			recievingMarketingInformation: boolean;
+			confirmAge: boolean;
+		};
 	};
 }
 interface SignUpRequest {
@@ -36,10 +38,12 @@ function SignUp() {
 		name: "",
 		phone: "",
 		extra: {
-			termsOfUse: false,
-			providingPersonalInformation: false,
-			recievingMarketingInformation: false,
-			confirmAge: false,
+			terms: {
+				termsOfUse: false,
+				providingPersonalInformation: false,
+				recievingMarketingInformation: false,
+				confirmAge: false,
+			},
 		},
 	});
 
@@ -70,10 +74,12 @@ function SignUp() {
 		setForm((prevForm) => ({
 			...prevForm,
 			extra: {
-				termsOfUse: isChecked,
-				providingPersonalInformation: isChecked,
-				recievingMarketingInformation: isChecked,
-				confirmAge: isChecked,
+				terms: {
+					termsOfUse: isChecked,
+					providingPersonalInformation: isChecked,
+					recievingMarketingInformation: isChecked,
+					confirmAge: isChecked,
+				},
 			},
 		}));
 	};

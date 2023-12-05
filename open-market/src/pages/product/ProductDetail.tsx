@@ -229,7 +229,7 @@ function ProductDetail() {
 						<Link to={"/signin"} onClick={handelSignIn}>
 							<CheckIcon />
 							구매하기
-							{product?.extra?.order ? product?.extra?.order : 0}
+							{product?.buyQuantity ? product?.buyQuantity : 0}
 						</Link>
 					) : loggedIn && logState === product?.seller_id ? (
 						<Link to={`/productmanage/${product?._id}`}>
@@ -240,7 +240,7 @@ function ProductDetail() {
 						<Link to={`/productpurchase?_id=${product?._id}`}>
 							<CheckIcon />
 							구매하기
-							{product?.extra?.order ? product?.extra?.order : 0}
+							{product?.buyQuantity ? product?.buyQuantity : 0}
 						</Link>
 					) : (
 						<button type="button">

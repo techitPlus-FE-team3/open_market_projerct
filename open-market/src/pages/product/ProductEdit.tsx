@@ -1,4 +1,3 @@
-import genres from "@/data/genres";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import axios from "axios";
@@ -14,10 +13,10 @@ interface ProductEditForm {
 	content: string;
 	price: number;
 	shippingFees: number;
+	buyQuantity: number;
 	extra: {
 		category: string;
 		tags: string[];
-		order: number;
 		soundFile: string;
 		bookmark: number;
 	};
@@ -35,10 +34,10 @@ function ProductEdit() {
 		content: "",
 		price: 0,
 		shippingFees: 0,
+		buyQuantity: 0,
 		extra: {
 			category: "",
 			tags: [],
-			order: 0,
 			soundFile: "",
 			bookmark: 0,
 		},
@@ -65,11 +64,11 @@ function ProductEdit() {
 					mainImages: fetchedProductInfo?.mainImages || [],
 					content: fetchedProductInfo?.content || "",
 					price: fetchedProductInfo?.price || 0,
+					buyQuantity: fetchedProductInfo?.buyQuantity || 0,
 					shippingFees: 0,
 					extra: {
 						category: fetchedProductInfo?.extra?.category || "",
 						tags: fetchedProductInfo?.extra?.tags || [],
-						order: fetchedProductInfo?.extra?.order || 0,
 						soundFile: fetchedProductInfo?.extra?.soundFile || "",
 						bookmark: fetchedProductInfo?.extra?.bookmark || 0,
 					},
@@ -185,11 +184,11 @@ function ProductEdit() {
 										});
 									}}
 								>
-									{genres.map((genre) => (
+									{/*{genres.map((genre) => (
 										<option key={genre} value={genre}>
 											{genre}
 										</option>
-									))}
+									))}*/}
 								</select>
 							</div>
 							<div>

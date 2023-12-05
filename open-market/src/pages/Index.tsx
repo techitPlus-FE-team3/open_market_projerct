@@ -51,7 +51,7 @@ function Index() {
 					{productList?.slice(0, 4).map((product) => {
 						return (
 							<li key={String(product._id)} className="musicItem">
-								<Link to={`/products?_id=${product._id}`}>
+								<Link to={`/productdetail?_id=${product._id}`}>
 									{product.mainImages[0] ? (
 										<ProductImage
 											src={product.mainImages[0]}
