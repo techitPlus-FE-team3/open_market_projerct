@@ -48,8 +48,8 @@ function ProductEdit() {
 
 		const fetchUserProductInfo = async () => {
 			try {
-				const response = await axios.get<ProductResponse>(
-					`${axiosInstance}/seller/products/${productId}`,
+				const response = await axiosInstance.get<ProductResponse>(
+					`/seller/products/${productId}`,
 					{
 						headers: {
 							Authorization: `Bearer ${accessToken}`,
@@ -95,8 +95,8 @@ function ProductEdit() {
 		}
 
 		try {
-			axios
-				.patch(`${axiosInstance}/seller/products/${productId}`, postItem, {
+			axiosInstance
+				.patch(`/seller/products/${productId}`, postItem, {
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
 					},

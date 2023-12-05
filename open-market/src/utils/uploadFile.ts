@@ -1,5 +1,4 @@
 import axiosInstance from "@/api/instance";
-import axios from "axios";
 import toast from "react-hot-toast";
 
 export async function uploadFile(
@@ -13,7 +12,7 @@ export async function uploadFile(
 	try {
 		const accessToken = localStorage.getItem("accessToken");
 
-		const response = await axios.post(`${axiosInstance}/files`, formData, {
+		const response = await axiosInstance.post(`/files`, formData, {
 			headers: {
 				"Content-Type": "multipart/form-data",
 				Authorization: `Bearer ${accessToken}`,

@@ -1,6 +1,5 @@
 import axiosInstance from "@/api/instance";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
@@ -13,8 +12,8 @@ function UserProducts() {
 
 		const fetchUserProductsInfo = async () => {
 			try {
-				const response = await axios.get<ProductListResponse>(
-					`${axiosInstance}/seller/products/`,
+				const response = await axiosInstance.get<ProductListResponse>(
+					`/seller/products/`,
 					{
 						headers: {
 							Authorization: `Bearer ${accessToken}`,

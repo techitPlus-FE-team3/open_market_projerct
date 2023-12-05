@@ -15,8 +15,8 @@ function ProductManage() {
 
 		const fetchUserProductInfo = async () => {
 			try {
-				const response = await axios.get<ProductResponse>(
-					`${axiosInstance}/seller/products/${productId}`,
+				const response = await axiosInstance.get<ProductResponse>(
+					`/seller/products/${productId}`,
 					{
 						headers: {
 							Authorization: `Bearer ${accessToken}`,
@@ -38,8 +38,8 @@ function ProductManage() {
 		const result = confirm("상품을 정말로 삭제하시겠습니까?");
 		if (!result) return;
 		try {
-			axios
-				.delete(`${axiosInstance}/seller/products/${productId}`, {
+			axiosInstance
+				.delete(`/seller/products/${productId}`, {
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
 					},

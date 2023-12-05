@@ -2,7 +2,6 @@ import axiosInstance from "@/api/instance";
 import { debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import axios from "axios";
 import { useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
@@ -67,8 +66,8 @@ function ProductRegistration() {
 			return;
 		}
 		try {
-			axios
-				.post(`${axiosInstance}/seller/products`, postItem, {
+			axiosInstance
+				.post(`/seller/products`, postItem, {
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
 					},
