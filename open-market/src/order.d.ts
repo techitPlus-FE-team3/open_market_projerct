@@ -1,11 +1,15 @@
 interface Order {
 	_id: number;
 	user_id: number;
+	state?: string;
 	createdAt: string;
+	updatedAt: string;
 	products: Product[];
 	cost: {
-		total: number;
+		products: number;
+		shippongFees: 0;
 	};
+	total: number;
 }
 
 interface OrderListResponse {
