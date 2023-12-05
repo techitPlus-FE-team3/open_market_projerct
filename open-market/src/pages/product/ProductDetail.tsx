@@ -239,7 +239,7 @@ function ProductDetail() {
 							상품 관리
 						</Link>
 					) : (loggedIn && order?.length === 0) || order === undefined ? (
-						<Link to={`/productpurchase?_id=${product?._id}`}>
+						<Link to={`/productpurchase/${product?._id}`}>
 							<CheckIcon />
 							구매하기
 							{product?.buyQuantity ? product?.buyQuantity : 0}
