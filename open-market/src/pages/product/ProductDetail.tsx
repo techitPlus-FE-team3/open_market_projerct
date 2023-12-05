@@ -131,7 +131,9 @@ function ProductDetail() {
 	}
 
 	function handelSignIn() {
-		toast.error("로그인 후 이용 가능합니다");
+		if (confirm("로그인 후 이용 가능합니다")) {
+			navigate("/signin");
+		}
 	}
 
 	function ShowStarRating({ rating }: { rating: number }) {
@@ -225,11 +227,11 @@ function ProductDetail() {
 						{product?.bookmarks ? product?.bookmarks.length : 0}
 					</button>
 					{!loggedIn ? (
-						<Link to={"/signin"} onClick={handelSignIn}>
+						<button type="button" onClick={handelSignIn}>
 							<CheckIcon />
 							구매하기
 							{product?.buyQuantity ? product?.buyQuantity : 0}
-						</Link>
+						</button>
 					) : loggedIn && logState === product?.seller_id ? (
 						<Link to={`/productmanage/${product?._id}`}>
 							<CheckIcon />
