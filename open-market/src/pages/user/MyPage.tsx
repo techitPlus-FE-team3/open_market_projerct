@@ -1,4 +1,5 @@
-import axiosInstance from "@/utils/TokenRefresh";
+import axios from "axios";
+import axiosInstance from "@/api/instance";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,6 +15,8 @@ function MyPage() {
 
 	const userId = localStorage.getItem("_id");
 	const accessToken = localStorage.getItem("accessToken");
+
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchUserInfo = async () => {
@@ -33,7 +36,16 @@ function MyPage() {
 					setBookmarks([]);
 				}
 			} catch (error) {
-				console.error("회원 정보 조회 실패:", error);
+				if (axios.isAxiosError(error)) {
+					console.error("회원 정보 조회 실패:", error);
+					if (error.response && error.response.status === 401) {
+						toast.error("세션이 만료되었습니다. 다시 로그인해주세요.");
+						navigate("/signin");
+					}
+				} else {
+					// 에러가 AxiosError가 아닌 경우
+					console.error("Unexpected error:", error);
+				}
 			}
 		};
 
