@@ -1,18 +1,32 @@
-import React from "react";
+import { useState } from "react";
 import styled from "@emotion/styled";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
+import {
+	AppBar,
+	Toolbar,
+	IconButton,
+	Menu,
+	MenuItem,
+	TextField,
+	InputAdornment,
+	Badge,
+	Button,
+	CircularProgress,
+} from "@mui/material";
+import {
+	AccountCircle,
+	Notifications,
+	Search,
+	FileUpload,
+	ExitToApp,
+} from "@mui/icons-material";
 
-const StyledHeader = styled.header`
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 1rem 2rem;
-	background-color: #fff;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
+import { Link, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { loggedInState } from "../states/authState";
+import toast from "react-hot-toast";
+import logoImage from "/logo/logo2.svg";
 
 const Logo = styled.h1`
-	font-size: 1.5rem;
 	a {
 		text-decoration: none;
 		color: inherit;
@@ -25,91 +39,144 @@ const Logo = styled.h1`
 	}
 `;
 
-const SearchForm = styled.form`
-	display: flex;
-	align-items: center;
-	flex-grow: 1;
-	input {
-		flex-grow: 1;
-		padding: 0.5rem 1rem;
-		border: 1px solid #ddd;
-		border-radius: 20px;
-		margin-right: 0.5rem;
-	}
-
-	button {
-		padding: 0.5rem 1rem;
-		background-color: #007bff;
-		border: none;
-		border-radius: 20px;
-		color: white;
-		cursor: pointer;
-
-		&:hover {
-			background-color: #0056b3;
-		}
-	}
-`;
-
-const ActionGroup = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	gap: 1rem;
-`;
-
-const UploadButton = styled.button`
-	display: flex;
-	align-items: center;
-	padding: 0.5rem 1rem;
-	background-color: #28a745;
-	border: none;
-	border-radius: 20px;
-	color: white;
-	cursor: pointer;
-
-	svg {
-		margin-right: 0.5rem;
-	}
-
-	&:hover {
-		background-color: #1e7e34;
-	}
-`;
-
-const LoginButton = styled.button`
-	padding: 0.5rem 1rem;
-	background-color: #6c757d;
-	border: none;
-	border-radius: 20px;
-	color: white;
-	cursor: pointer;
-
-	&:hover {
-		background-color: #5a6268;
-	}
-`;
-
 const Header = () => {
+	const [isLogoLoaded, setIsLogoLoaded] = useState(false); // 로고 로딩 상태 관리
+
+	const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
+	const navigate = useNavigate();
+
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [notificationAnchorEl, setNotificationAnchorEl] =
+		useState<null | HTMLElement>(null);
+
+	// 로고 이미지 로딩 완료 시 핸들러
+	const onLogoLoad = () => {
+		setIsLogoLoaded(true);
+	};
+
+	const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+		const currentTarget = event.currentTarget;
+		if (currentTarget && document.body.contains(currentTarget)) {
+			setAnchorEl(currentTarget);
+		}
+	};
+
+	const handleNotificationsMenuOpen = (
+		event: React.MouseEvent<HTMLElement>,
+	) => {
+		setNotificationAnchorEl(event.currentTarget);
+	};
+
+	const handleMenuClose = () => {
+		setAnchorEl(null);
+		setNotificationAnchorEl(null);
+	};
+
+	const handleLogout = () => {
+		// 토큰 제거 및 상태 업데이트
+		localStorage.removeItem("accessToken");
+		localStorage.removeItem("refreshToken");
+		localStorage.removeItem("_id");
+		setLoggedIn(false);
+
+		// 로그인 페이지로 리디렉션
+		toast.success(`로그아웃 되었습니다.`);
+		navigate("/");
+	};
+
 	return (
-		<StyledHeader>
-			<Logo>
-				<a href="/">
-					<img src="/logo.png" alt="모디 로고" />
-				</a>
-			</Logo>
-			<SearchForm action="">
-				<input type="text" placeholder="검색어를 입력하세요" />
-				<button type="submit">검색</button>
-			</SearchForm>
-			<ActionGroup>
-				<UploadButton>
-					<FileUploadIcon fontSize="small" />
-					업로드
-				</UploadButton>
-				<LoginButton>로그인 / 회원가입</LoginButton>
-			</ActionGroup>
-		</StyledHeader>
+		<AppBar position="static" color="default" elevation={1}>
+			<Toolbar>
+				<Logo>
+					<Link to="/">
+						<img
+							src={logoImage}
+							alt="모디 로고"
+							onLoad={onLogoLoad} // 이미지 로딩 완료 핸들러
+							style={{ display: isLogoLoaded ? "block" : "none" }} // 로딩 상태에 따라 이미지 표시 여부 결정
+						/>
+						{!isLogoLoaded && <CircularProgress />}
+					</Link>
+				</Logo>
+				<TextField
+					variant="outlined"
+					size="small"
+					placeholder="검색어를 입력하세요"
+					InputProps={{
+						startAdornment: (
+							<InputAdornment position="start">
+								<IconButton>
+									<Search />
+								</IconButton>
+							</InputAdornment>
+						),
+					}}
+					sx={{ m: 2 }}
+				/>
+				{loggedIn && (
+					<>
+						<Button
+							startIcon={<FileUpload />}
+							variant="outlined"
+							color="inherit"
+							component={Link}
+							to="/productregistration"
+							sx={{ mr: 2 }}
+						>
+							업로드
+						</Button>
+
+						<IconButton color="inherit" onClick={handleNotificationsMenuOpen}>
+							<Badge badgeContent={4} color="secondary">
+								<Notifications />
+							</Badge>
+						</IconButton>
+						<Menu
+							anchorEl={notificationAnchorEl}
+							open={Boolean(notificationAnchorEl)}
+							onClose={handleMenuClose}
+						>
+							{/* Notification items can be mapped here */}
+							<MenuItem onClick={handleMenuClose}>알림1</MenuItem>
+						</Menu>
+
+						<IconButton color="inherit" onClick={handleProfileMenuOpen}>
+							<AccountCircle />
+						</IconButton>
+						<Menu
+							anchorEl={anchorEl}
+							open={Boolean(anchorEl)}
+							onClose={handleMenuClose}
+						>
+							<MenuItem component={Link} to="/mypage" onClick={handleMenuClose}>
+								마이페이지
+							</MenuItem>
+							<MenuItem onClick={handleLogout}>
+								{" "}
+								<ExitToApp />
+								로그아웃
+							</MenuItem>
+						</Menu>
+					</>
+				)}
+				{!loggedIn && (
+					<>
+						<IconButton color="inherit" onClick={handleProfileMenuOpen}>
+							<AccountCircle />
+						</IconButton>
+						<Menu
+							anchorEl={anchorEl}
+							open={Boolean(anchorEl)}
+							onClose={handleMenuClose}
+						>
+							<MenuItem component={Link} to="/signin" onClick={handleMenuClose}>
+								회원가입 / 로그인
+							</MenuItem>
+						</Menu>
+					</>
+				)}
+			</Toolbar>
+		</AppBar>
 	);
 };
 
