@@ -1,4 +1,5 @@
 import { loggedInState } from "@/states/authState";
+import { debounce } from "@/utils";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
@@ -10,7 +11,7 @@ import StarIcon from "@mui/icons-material/Star";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { Rating } from "@mui/material";
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -297,7 +298,11 @@ function ProductDetail() {
 								name="content"
 								type="text"
 								ref={replyRef}
-								onChange={(e) => setReplyContent(e.target.value)}
+								onChange={debounce(
+									(e: {
+										target: { value: SetStateAction<string | undefined> };
+									}) => setReplyContent(e.target.value),
+								)}
 								required
 							/>
 							<button type="submit" onClick={handleReplySubmit}>
