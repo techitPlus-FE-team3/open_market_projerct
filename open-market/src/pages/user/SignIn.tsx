@@ -1,3 +1,4 @@
+import axiosInstance from "@/api/instance";
 import { loggedInState } from "@/states/authState";
 import { debounce } from "@/utils";
 import axios from "axios";
@@ -6,8 +7,6 @@ import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { loggedInState } from "@/states/authState";
-import axiosInstance from "@/api/instance";
 
 function SignIn() {
 	const [_, setLoggedIn] = useRecoilState(loggedInState);
