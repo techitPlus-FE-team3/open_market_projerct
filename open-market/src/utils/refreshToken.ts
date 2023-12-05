@@ -19,6 +19,10 @@ async function refreshToken() {
 
 		if (response.data.ok) {
 			localStorage.setItem("accessToken", response.data.accessToken);
+			// 글로벌 설정 대신 axiosInstance의 헤더를 갱신
+			axiosInstance.defaults.headers.common["Authorization"] =
+				`Bearer ${response.data.accessToken}`;
+
 			return response.data.accessToken;
 		} else {
 			toast.error("토큰이 만료되었습니다. 다시 로그인해주세요.");
