@@ -14,13 +14,12 @@ import axios from "axios";
 import { SetStateAction, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 function ProductDetail() {
 	const navigate = useNavigate();
-	const [searchParams] = useSearchParams();
-	const _id = searchParams.get("_id");
+	const { productId } = useParams();
 
 	const loggedIn = useRecoilValue(loggedInState);
 
@@ -35,16 +34,16 @@ function ProductDetail() {
 	const [_, setHover] = useState(-1);
 	const [replyContent, setReplyContent] = useState<string>();
 
-	async function getProduct(_id: string) {
+	async function getProduct(id: string) {
 		try {
 			const response = await axios.get<ProductResponse>(
-				`https://localhost/api/products/${_id}`,
+				`https://localhost/api/products/${id}`,
 			);
 			setProduct(response.data.item);
 			setRating(getRating(response.data.item));
 			if (loggedIn) {
 				getUser(Number(localStorage.getItem("_id")!));
-				getOrder(Number(_id)!);
+				getOrder(Number(id)!);
 			}
 		} catch (err) {
 			console.error(err);
@@ -96,7 +95,7 @@ function ProductDetail() {
 				`https://localhost/api/replies`,
 				{
 					order_id: order![0]._id,
-					product_id: Number(_id),
+					product_id: Number(productId),
 					rating: ratingValue,
 					content: replyContent,
 				},
@@ -110,7 +109,7 @@ function ProductDetail() {
 				toast.success("댓글을 작성했습니다.");
 				replyRef.current!.value = "";
 				setRatingValue(3);
-				getProduct(_id!);
+				getProduct(productId!);
 			}
 		} catch (err) {
 			console.error(err);
@@ -133,7 +132,9 @@ function ProductDetail() {
 	}
 
 	function handelSignIn() {
-		toast.error("로그인 후 이용 가능합니다");
+		if (confirm("로그인 후 이용 가능합니다")) {
+			navigate("/signin");
+		}
 	}
 
 	function ShowStarRating({ rating }: { rating: number }) {
@@ -148,10 +149,10 @@ function ProductDetail() {
 	}
 
 	useEffect(() => {
-		if (_id === null || _id === "") {
+		if (productId === null || productId === "") {
 			return navigate("/err", { replace: true });
 		}
-		getProduct(_id);
+		getProduct(productId!);
 	}, []);
 
 	useEffect(() => {
@@ -161,10 +162,12 @@ function ProductDetail() {
 	}, []);
 
 	useEffect(() => {
-		getProduct(_id!);
-		getUser(Number(localStorage.getItem("_id")!));
-		getOrder(Number(_id)!);
-	}, [_id, loggedIn]);
+		getProduct(productId!);
+		if (loggedIn) {
+			getUser(Number(localStorage.getItem("_id")!));
+			getOrder(Number(productId)!);
+		}
+	}, [productId, loggedIn]);
 
 	return (
 		<section>
@@ -227,18 +230,18 @@ function ProductDetail() {
 						{product?.bookmarks ? product?.bookmarks.length : 0}
 					</button>
 					{!loggedIn ? (
-						<Link to={"/signin"} onClick={handelSignIn}>
+						<button type="button" onClick={handelSignIn}>
 							<CheckIcon />
 							구매하기
 							{product?.buyQuantity ? product?.buyQuantity : 0}
-						</Link>
+						</button>
 					) : loggedIn && logState === product?.seller_id ? (
 						<Link to={`/productmanage/${product?._id}`}>
 							<CheckIcon />
 							상품 관리
 						</Link>
 					) : (loggedIn && order?.length === 0) || order === undefined ? (
-						<Link to={`/productpurchase?_id=${product?._id}`}>
+						<Link to={`/productpurchase/${product?._id}`}>
 							<CheckIcon />
 							구매하기
 							{product?.buyQuantity ? product?.buyQuantity : 0}

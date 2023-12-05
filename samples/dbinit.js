@@ -795,6 +795,8 @@ async function registCode() {
           sort: 1,
           code: "PC08",
           value: "락",
+          code: "PC08",
+          value: "락",
           depth: 1,
         },
         {
