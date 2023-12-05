@@ -153,7 +153,7 @@ function MyPage() {
 				<ul>
 					{bookmarkDetails.map((product) => (
 						<li key={product._id}>
-							<Link to={`/products?_id=${product._id}`}>
+							<Link to={`/productdetail?_id=${product._id}`}>
 								<img src={product.mainImages[0]} alt={`앨범 ${product.name}`} />
 							</Link>
 						</li>
@@ -199,7 +199,7 @@ function MyPage() {
 						userOrdersInfo.slice(0, 4).map((order) => {
 							return (
 								<li key={order._id}>
-									<Link to={`/products?_id=${order.products[0]._id}`}>
+									<Link to={`/productdetail?_id=${order.products[0]._id}`}>
 										{order.products[0].image ? (
 											<img
 												src={order.products[0].image}

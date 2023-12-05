@@ -1,4 +1,4 @@
-import genres from "@/data/genres";
+import { debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import axios from "axios";
@@ -9,19 +9,20 @@ import { Link, useNavigate } from "react-router-dom";
 
 interface ProductRegistForm {
 	show: boolean;
+	active: boolean;
 	name: string;
 	mainImages: string[];
 	content: string;
 	price: number;
 	shippingFees: number;
+	quantity: number;
+	buyQuantity: number;
 	extra: {
 		isNew: boolean;
 		isBest: boolean;
 		category: string;
 		tags: string[];
-		order: number;
 		soundFile: string;
-		bookmark: number;
 	};
 }
 function ProductRegistration() {
@@ -34,19 +35,20 @@ function ProductRegistration() {
 
 	const [postItem, setPostItem] = useState<ProductRegistForm>({
 		show: true,
+		active: true,
 		name: "",
 		mainImages: [],
 		content: "",
 		price: 0,
 		shippingFees: 0,
+		quantity: Number.MAX_SAFE_INTEGER,
+		buyQuantity: 0,
 		extra: {
 			isNew: true,
 			isBest: false,
 			category: "",
 			tags: [],
-			order: 0,
 			soundFile: "",
-			bookmark: 0,
 		},
 	});
 
@@ -80,7 +82,7 @@ function ProductRegistration() {
 
 					if (response.status === 200) {
 						const productId = response.data.item._id;
-						navigate(`/products?_id=${productId}`);
+						navigate(`/productdetail?_id=${productId}`);
 					}
 				})
 				.catch((error) => {
@@ -126,9 +128,9 @@ function ProductRegistration() {
 									type="text"
 									name="title"
 									ref={titleRef}
-									onChange={(e) =>
-										setPostItem({ ...postItem, name: e.target.value })
-									}
+									onChange={debounce((e: { target: { value: any } }) =>
+										setPostItem({ ...postItem, name: e.target.value }),
+									)}
 									id="title"
 									placeholder="제목을 입력해주세요"
 								/>
@@ -151,11 +153,11 @@ function ProductRegistration() {
 										<option value="none" disabled hidden>
 											장르를 선택해주세요
 										</option>
-										{genres.map((item) => (
+										{/* {genres.map((item) => (
 											<option key={item} value={item}>
 												{item}
 											</option>
-										))}
+										))} */}
 									</select>
 								</div>
 								<div>
@@ -163,13 +165,15 @@ function ProductRegistration() {
 									<input
 										type="text"
 										name="hashTag"
-										onChange={(e) => {
-											const tagsArray = e.target.value.split(",");
-											setPostItem({
-												...postItem,
-												extra: { ...postItem.extra, tags: tagsArray },
-											});
-										}}
+										onChange={debounce(
+											(e: React.ChangeEvent<HTMLInputElement>) => {
+												const tagsArray = e.target.value.split(",");
+												setPostItem({
+													...postItem,
+													extra: { ...postItem.extra, tags: tagsArray },
+												});
+											},
+										)}
 										id="hashTag"
 										placeholder="해시태그를 ','(콤마)로 구분해주세요"
 									/>
@@ -181,9 +185,9 @@ function ProductRegistration() {
 									<textarea
 										name="description"
 										id="description"
-										onChange={(e) =>
-											setPostItem({ ...postItem, content: e.target.value })
-										}
+										onChange={debounce((e: { target: { value: any } }) =>
+											setPostItem({ ...postItem, content: e.target.value }),
+										)}
 										cols={30}
 										rows={3}
 									/>
@@ -214,9 +218,10 @@ function ProductRegistration() {
 								type="number"
 								name="price"
 								id="price"
-								onChange={(e) =>
-									setPostItem({ ...postItem, price: +e.target.value })
-								}
+								onChange={debounce(
+									(e: { target: { value: string | number } }) =>
+										setPostItem({ ...postItem, price: +e.target.value }),
+								)}
 							/>
 						</div>
 						<div>

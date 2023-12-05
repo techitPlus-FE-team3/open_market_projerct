@@ -1,4 +1,5 @@
 import { loggedInState } from "@/states/authState";
+import { debounce } from "@/utils";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
@@ -10,13 +11,13 @@ import StarIcon from "@mui/icons-material/Star";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { Rating } from "@mui/material";
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
-function Detail() {
+function ProductDetail() {
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const _id = searchParams.get("_id");
@@ -223,13 +224,13 @@ function Detail() {
 				<div>
 					<button>
 						<BookmarkOutlinedIcon />
-						{product?.extra?.bookmark ? product?.extra?.bookmark : 0}
+						{product?.bookmarks ? product?.bookmarks.length : 0}
 					</button>
 					{!loggedIn ? (
 						<Link to={"/signin"} onClick={handelSignIn}>
 							<CheckIcon />
 							구매하기
-							{product?.extra?.order ? product?.extra?.order : 0}
+							{product?.buyQuantity ? product?.buyQuantity : 0}
 						</Link>
 					) : loggedIn && logState === product?.seller_id ? (
 						<Link to={`/productmanage/${product?._id}`}>
@@ -240,7 +241,7 @@ function Detail() {
 						<Link to={`/productpurchase?_id=${product?._id}`}>
 							<CheckIcon />
 							구매하기
-							{product?.extra?.order ? product?.extra?.order : 0}
+							{product?.buyQuantity ? product?.buyQuantity : 0}
 						</Link>
 					) : (
 						<button type="button">
@@ -296,7 +297,11 @@ function Detail() {
 								name="content"
 								type="text"
 								ref={replyRef}
-								onChange={(e) => setReplyContent(e.target.value)}
+								onChange={debounce(
+									(e: {
+										target: { value: SetStateAction<string | undefined> };
+									}) => setReplyContent(e.target.value),
+								)}
 								required
 							/>
 							<button type="submit" onClick={handleReplySubmit}>
@@ -338,4 +343,4 @@ function Detail() {
 	);
 }
 
-export default Detail;
+export default ProductDetail;

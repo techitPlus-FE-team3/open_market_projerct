@@ -62,18 +62,19 @@ function UserProducts() {
 										<PlayArrowIcon />
 									</button>
 									<p>
-										판매 개수: <span>{item.extra?.order}</span>
+										판매 개수: <span>{item.buyQuantity}</span>
 									</p>
 									<p>
 										총 수익:{" "}
 										<span>
-											{typeof item.extra?.order !== "undefined"
-												? item.extra?.order * item.price
+											{typeof item.buyQuantity !== "undefined"
+												? item.buyQuantity * item.price
 												: "0"}
 										</span>
 									</p>
 									<p>
-										북마크 수: <span>{item.extra?.bookmark}</span>
+										북마크 수:{" "}
+										<span>{item?.bookmarks ? item?.bookmarks.length : 0}</span>
 									</p>
 									<Link to={`/productmanage/${item._id}`}>상세보기</Link>
 								</li>

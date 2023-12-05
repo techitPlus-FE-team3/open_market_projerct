@@ -78,8 +78,8 @@ function ProductManage() {
 					</div>
 					<span>
 						판매수익:{" "}
-						{typeof userProductInfo?.extra?.order !== "undefined"
-							? userProductInfo?.extra?.order * userProductInfo?.price
+						{typeof userProductInfo?.buyQuantity !== "undefined"
+							? userProductInfo?.buyQuantity * userProductInfo?.price
 							: "0"}
 						원
 					</span>

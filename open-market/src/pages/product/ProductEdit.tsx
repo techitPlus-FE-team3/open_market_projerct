@@ -1,4 +1,4 @@
-import genres from "@/data/genres";
+import { debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import axios from "axios";
@@ -14,12 +14,11 @@ interface ProductEditForm {
 	content: string;
 	price: number;
 	shippingFees: number;
+	buyQuantity: number;
 	extra: {
 		category: string;
 		tags: string[];
-		order: number;
 		soundFile: string;
-		bookmark: number;
 	};
 }
 
@@ -35,12 +34,11 @@ function ProductEdit() {
 		content: "",
 		price: 0,
 		shippingFees: 0,
+		buyQuantity: 0,
 		extra: {
 			category: "",
 			tags: [],
-			order: 0,
 			soundFile: "",
-			bookmark: 0,
 		},
 	});
 
@@ -65,13 +63,12 @@ function ProductEdit() {
 					mainImages: fetchedProductInfo?.mainImages || [],
 					content: fetchedProductInfo?.content || "",
 					price: fetchedProductInfo?.price || 0,
+					buyQuantity: fetchedProductInfo?.buyQuantity || 0,
 					shippingFees: 0,
 					extra: {
 						category: fetchedProductInfo?.extra?.category || "",
 						tags: fetchedProductInfo?.extra?.tags || [],
-						order: fetchedProductInfo?.extra?.order || 0,
 						soundFile: fetchedProductInfo?.extra?.soundFile || "",
-						bookmark: fetchedProductInfo?.extra?.bookmark || 0,
 					},
 				});
 			} catch (error) {
@@ -166,9 +163,9 @@ function ProductEdit() {
 								id="title"
 								placeholder="제목을 입력해주세요"
 								defaultValue={userProductInfo?.name}
-								onChange={(e) =>
-									setPostItem({ ...postItem, name: e.target.value })
-								}
+								onChange={debounce((e: { target: { value: any } }) =>
+									setPostItem({ ...postItem, name: e.target.value }),
+								)}
 							/>
 						</div>
 						<div>
@@ -185,11 +182,11 @@ function ProductEdit() {
 										});
 									}}
 								>
-									{genres.map((genre) => (
+									{/*{genres.map((genre) => (
 										<option key={genre} value={genre}>
 											{genre}
 										</option>
-									))}
+									))}*/}
 								</select>
 							</div>
 							<div>
@@ -200,13 +197,13 @@ function ProductEdit() {
 									id="hashTag"
 									placeholder=",(콤마)로 구분하여 입력해주세요"
 									defaultValue={userProductInfo?.extra?.tags}
-									onChange={(e) => {
+									onChange={debounce((e: { target: { value: string } }) => {
 										const tagsArray = e.target.value.split(",");
 										setPostItem({
 											...postItem,
 											extra: { ...postItem.extra, tags: tagsArray },
 										});
-									}}
+									})}
 								/>
 							</div>
 						</div>
@@ -219,9 +216,9 @@ function ProductEdit() {
 									cols={30}
 									rows={3}
 									defaultValue={userProductInfo?.content}
-									onChange={(e) =>
-										setPostItem({ ...postItem, content: e.target.value })
-									}
+									onChange={debounce((e: { target: { value: any } }) =>
+										setPostItem({ ...postItem, content: e.target.value }),
+									)}
 								/>
 							</div>
 							<div>
@@ -250,9 +247,9 @@ function ProductEdit() {
 							name="price"
 							id="price"
 							defaultValue={userProductInfo?.price}
-							onChange={(e) =>
-								setPostItem({ ...postItem, price: +e.target.value })
-							}
+							onChange={debounce((e: { target: { value: string | number } }) =>
+								setPostItem({ ...postItem, price: +e.target.value }),
+							)}
 						/>
 					</div>
 					<div>
