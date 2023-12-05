@@ -5,6 +5,7 @@ import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "@/api/instance";
 
 interface SignUpForm {
 	email: string;
@@ -154,8 +155,8 @@ function SignUp() {
 	// 중복 확인 함수
 	const checkEmailDuplication = async () => {
 		try {
-			const response = await axios.get(
-				`https://localhost/api/users/email?email=${form.email}`,
+			const response = await axiosInstance.get(
+				`/users/email?email=${form.email}`,
 			);
 			if (response.data.ok) {
 				setEmailCheck({
@@ -185,10 +186,7 @@ function SignUp() {
 	// 회원가입 요청 처리
 	const signUpMutation = useMutation(
 		async (newUser: SignUpRequest) => {
-			const response = await axios.post(
-				"https://localhost/api/users/",
-				newUser,
-			);
+			const response = await axiosInstance.post("/users/", newUser);
 			return response.data;
 		},
 		{
