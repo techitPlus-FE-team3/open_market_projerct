@@ -1,6 +1,5 @@
-import axios from "axios";
-import toast from "react-hot-toast";
 import axiosInstance from "@/api/instance";
+import toast from "react-hot-toast";
 
 // 토큰 갱신 함수
 async function refreshToken() {
