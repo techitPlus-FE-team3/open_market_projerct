@@ -2,18 +2,17 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Productpurchase() {
 	const navigate = useNavigate();
-	const [searchParams] = useSearchParams();
-	const _id = searchParams.get("_id");
+	const { productId } = useParams();
 	const [product, setProduct] = useState<Product>();
 
-	async function getProduct(_id: string) {
+	async function getProduct(id: string) {
 		try {
 			const response = await axios.get<ProductResponse>(
-				`https://localhost/api/products/${_id}`,
+				`https://localhost/api/products/${id}`,
 			);
 			setProduct(response.data.item);
 		} catch (err) {
@@ -52,10 +51,10 @@ function Productpurchase() {
 	}
 
 	useEffect(() => {
-		if (_id === null || _id === "") {
+		if (productId === null || productId === "") {
 			return navigate("/err", { replace: true });
 		}
-		getProduct(_id);
+		getProduct(productId!);
 	}, []);
 
 	return (

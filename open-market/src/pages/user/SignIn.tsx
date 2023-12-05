@@ -1,14 +1,16 @@
+import { loggedInState } from "@/states/authState";
+import { debounce } from "@/utils";
 import axios from "axios";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { loggedInState } from "@/states/authState";
 import axiosInstance from "@/api/instance";
 
 function SignIn() {
-	const [, setLoggedIn] = useRecoilState(loggedInState);
+	const [_, setLoggedIn] = useRecoilState(loggedInState);
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -75,16 +77,23 @@ function SignIn() {
 					<input
 						type="text"
 						id="email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
+						defaultValue={email}
+						onChange={debounce(
+							(e: { target: { value: React.SetStateAction<string> } }) =>
+								setEmail(e.target.value),
+						)}
 						placeholder="이메일"
 					/>
 					<label htmlFor="password">비밀번호</label>
 					<input
 						type="password"
 						id="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
+						defaultValue={password}
+						onChange={debounce(
+							(e: { target: { value: React.SetStateAction<string> } }) => {
+								setPassword(e.target.value);
+							},
+						)}
 						placeholder="비밀번호"
 					/>
 				</fieldset>
