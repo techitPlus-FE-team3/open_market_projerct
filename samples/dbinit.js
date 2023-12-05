@@ -791,7 +791,6 @@ async function registCode() {
           value: "뉴에이지",
           depth: 1,
         },
-
         {
           sort: 1,
           code: "PC08",
@@ -831,12 +830,6 @@ async function registCode() {
         {
           sort: 3,
           code: "PC14",
-          value: "월드뮤직",
-          depth: 1,
-        },
-        {
-          sort: 3,
-          code: "PC15",
           value: "월드뮤직",
           depth: 1,
         },
