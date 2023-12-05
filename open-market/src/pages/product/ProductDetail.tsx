@@ -1,3 +1,4 @@
+import axiosInstance from "@/api/instance";
 import { loggedInState } from "@/states/authState";
 import { debounce } from "@/utils";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -10,7 +11,6 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StarIcon from "@mui/icons-material/Star";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { Rating } from "@mui/material";
-import axios from "axios";
 import { SetStateAction, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
@@ -36,8 +36,8 @@ function ProductDetail() {
 
 	async function getProduct(id: string) {
 		try {
-			const response = await axios.get<ProductResponse>(
-				`https://localhost/api/products/${id}`,
+			const response = await axiosInstance.get<ProductResponse>(
+				`/products/${id}`,
 			);
 			setProduct(response.data.item);
 			setRating(getRating(response.data.item));
@@ -53,14 +53,11 @@ function ProductDetail() {
 	async function getOrder(productId: number) {
 		const accessToken = localStorage.getItem("accessToken");
 		try {
-			const response = await axios.get<OrderListResponse>(
-				`https://localhost/api/orders`,
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
+			const response = await axiosInstance.get<OrderListResponse>(`/orders`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
 				},
-			);
+			});
 			const userOrder = response.data.item.filter(
 				(order) => order.products[0]._id === productId,
 			);
@@ -73,14 +70,11 @@ function ProductDetail() {
 	async function getUser(id: number) {
 		const accessToken = localStorage.getItem("accessToken");
 		try {
-			const response = await axios.get<UserResponse>(
-				`https://localhost/api/users/${id}`,
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
+			const response = await axiosInstance.get<UserResponse>(`/users/${id}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
 				},
-			);
+			});
 			setCurrentUser(response.data.item);
 		} catch (err) {
 			console.error(err);
@@ -91,8 +85,8 @@ function ProductDetail() {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
 		try {
-			const response = await axios.post<ReplyResponse>(
-				`https://localhost/api/replies`,
+			const response = await axiosInstance.post<ReplyResponse>(
+				`/replies`,
 				{
 					order_id: order![0]._id,
 					product_id: Number(productId),
