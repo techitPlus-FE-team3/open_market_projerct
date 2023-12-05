@@ -1,5 +1,5 @@
+import axiosInstance from "@/api/instance";
 import styled from "@emotion/styled";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
@@ -15,9 +15,8 @@ function Index() {
 
 	async function getProductList() {
 		try {
-			const response = await axios.get<ProductListResponse>(
-				"https://localhost/api/products",
-			);
+			const response =
+				await axiosInstance.get<ProductListResponse>("/products");
 			setProductList(response.data.item);
 		} catch (err) {
 			console.error(err);
