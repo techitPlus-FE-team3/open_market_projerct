@@ -1,9 +1,9 @@
-import axios from "axios";
 import axiosInstance from "@/api/instance";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 function MyPage() {
 	const [userInfo, setUserInfo] = useState<User | null>(null);
@@ -18,7 +18,7 @@ function MyPage() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const fetchUserInfo = async () => {
+		async function fetchUserInfo() {
 			try {
 				const response = await axiosInstance.get<UserResponse>(
 					`/users/${userId}`,
@@ -41,9 +41,9 @@ function MyPage() {
 					console.error("Unexpected error:", error);
 				}
 			}
-		};
+		}
 
-		const fetchUserProductsInfo = async () => {
+		async function fetchUserProductsInfo() {
 			try {
 				const response = await axiosInstance.get<ProductListResponse>(
 					`/seller/products/`,
@@ -57,7 +57,7 @@ function MyPage() {
 			} catch (error) {
 				console.error("회원 정보 조회 실패:", error);
 			}
-		};
+		}
 
 		async function fetchUserOrderInfo() {
 			try {
@@ -72,7 +72,7 @@ function MyPage() {
 			}
 		}
 
-		const fetchBookmarks = async () => {
+		async function fetchBookmarks() {
 			try {
 				const response = await axiosInstance.get(`/bookmarks`, {
 					headers: {
@@ -84,7 +84,7 @@ function MyPage() {
 			} catch (error) {
 				console.error("북마크 정보 조회 실패:", error);
 			}
-		};
+		}
 
 		fetchUserInfo();
 		fetchUserProductsInfo();
