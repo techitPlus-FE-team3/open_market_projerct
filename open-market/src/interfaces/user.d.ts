@@ -13,7 +13,7 @@ interface User {
 			termsOfUse: boolean;
 			providingPersonalInformation: boolean;
 			recievingMarketingInformation: boolean;
-			cofirmAge: boolean;
+			confirmAge: boolean;
 		};
 	};
 	token: {
