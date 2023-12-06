@@ -10,7 +10,7 @@ if (process.env.NODE_ENV) {
 }
 
 import moment from "moment";
-import db, { getClient, nextSeq } from "../utils/dbutil.js";
+import db, { getClient, nextSeq } from "../utils/dbUtil.js";
 
 async function main() {
   await db.dropDatabase();
@@ -210,7 +210,7 @@ async function registProduct() {
       show: true,
       active: true,
       name: "비비드",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 0,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-album2.jpg`,
@@ -235,7 +235,7 @@ async function registProduct() {
       show: true,
       active: true,
       name: "집에 보내줘",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 198,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-album3.jpg`,
@@ -260,7 +260,7 @@ async function registProduct() {
       show: true,
       active: true,
       name: "레고 레츠고",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 99,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-cross.jpg`,
@@ -285,7 +285,7 @@ async function registProduct() {
       show: true,
       active: true,
       name: "스마일",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 89,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-smile.jpg`,
@@ -310,7 +310,7 @@ async function registProduct() {
       show: true,
       active: true,
       name: "안스마일",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 98,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-smile.jpg`,
@@ -336,10 +336,10 @@ async function registProduct() {
       show: false,
       active: true,
       name: "히어로 김히로",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 99,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-night.png`,
+        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-night.jpg`,
       ],
       content: `우리들의 영웅 김히로가 악당들을 물리치는 상황을 담은 노래`,
       createdAt: getTime(-30, -60 * 60 * 21),
@@ -361,7 +361,7 @@ async function registProduct() {
       show: true,
       active: true,
       name: "안졸리다 졸려",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 98,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-album2.jpg`,
@@ -386,7 +386,7 @@ async function registProduct() {
       show: true,
       active: true,
       name: "루미큐브",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 97,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-rummikub.png`,
@@ -411,7 +411,7 @@ async function registProduct() {
       show: true,
       active: true,
       name: "짱구는 못말려 숲속 산책",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 96,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-jjangu.jpg`,
@@ -437,7 +437,7 @@ async function registProduct() {
       show: true,
       active: true,
       name: "라푼젤라또",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 95,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-rapunzel.jpg`,
@@ -462,7 +462,7 @@ async function registProduct() {
       show: true,
       active: true,
       name: "INVU",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 94,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-invu.jpg`,
@@ -488,7 +488,7 @@ async function registProduct() {
       show: true,
       active: true,
       name: "데이지",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 800,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-album3.jpg`,
@@ -513,7 +513,7 @@ async function registProduct() {
       show: true,
       active: true,
       name: "핑크베놈",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 94,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-night.jpg`,
@@ -538,7 +538,7 @@ async function registProduct() {
       show: true,
       active: true,
       name: "하입보이",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 298,
       mainImages: [
         `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-cross.jpg`,
@@ -793,8 +793,6 @@ async function registCode() {
         },
         {
           sort: 1,
-          code: "PC08",
-          value: "락",
           code: "PC08",
           value: "락",
           depth: 1,
