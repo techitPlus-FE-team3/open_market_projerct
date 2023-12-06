@@ -15,7 +15,7 @@ function Index() {
 	const searchRef = useRef<HTMLInputElement>(null);
 
 	const [productList, setProductList] = useState<Product[]>([]);
-	const [searchKeword, setSearchKeyword] = useState<string>("");
+	const [searchKeyword, setSearchKeyword] = useState<string>("");
 	const [searchedList, setSearchedList] = useState<Product[]>([]);
 
 	async function getProductList() {
@@ -41,11 +41,11 @@ function Index() {
 	useEffect(() => {
 		setSearchedList(
 			searchProductList({
-				searchKeword: searchKeword,
+				searchKeyword: searchKeyword,
 				productList: productList,
 			}),
 		);
-	}, [searchKeword]);
+	}, [searchKeyword]);
 
 	return (
 		<>
@@ -67,9 +67,9 @@ function Index() {
 					<button type="submit">최신순</button>
 				</div>
 				<ol className="musicList">
-					{searchKeword && searchedList.length === 0 ? (
+					{searchKeyword && searchedList.length === 0 ? (
 						<span>해당하는 상품이 없습니다.</span>
-					) : searchKeword && searchedList.length !== 0 ? (
+					) : searchKeyword && searchedList.length !== 0 ? (
 						searchedList.slice(0, 4).map((product) => {
 							return (
 								<li key={String(product._id)} className="musicItem">
