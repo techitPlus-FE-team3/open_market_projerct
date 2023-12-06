@@ -29,6 +29,7 @@ function MyPage() {
 					},
 				);
 				setUserInfo(response.data.item);
+				// console.log(response.data.item);
 			} catch (error) {
 				if (axios.isAxiosError(error)) {
 					console.error("회원 정보 조회 실패:", error);
@@ -96,6 +97,8 @@ function MyPage() {
 		return <div>Loading...</div>; // 로딩 처리
 	}
 
+	const profileImageUrl = userInfo.extra?.profileImage || "public/user.svg";
+
 	return (
 		<section>
 			<Helmet>
@@ -104,7 +107,7 @@ function MyPage() {
 			<h2>마이페이지</h2>
 			<article>
 				<h3>내 정보</h3>
-				<img src="public/user.svg" alt="회원 썸네일" />
+				<img src={profileImageUrl} alt="회원 썸네일" />
 				<div>
 					<div>
 						<h4>회원정보</h4>
