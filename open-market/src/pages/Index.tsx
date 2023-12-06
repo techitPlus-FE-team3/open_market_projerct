@@ -1,4 +1,5 @@
 import axiosInstance from "@/api/instance";
+import { searchProductList } from "@/utils";
 import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
@@ -33,29 +34,17 @@ function Index() {
 		);
 	}
 
-	function filterProductList(searchKeword: string) {
-		const filteredList = productList.filter((product) => {
-			const name = product.name.split(" ").join("").toLowerCase();
-			const genre = product.extra?.category;
-			const tags = product.extra?.tags;
-			if (name.includes(searchKeword) || genre?.includes(searchKeword)) {
-				return true;
-			} else if (
-				tags?.some((tag) => tag.toLowerCase().includes(searchKeword))
-			) {
-				return true;
-			}
-			return false;
-		});
-		return filteredList;
-	}
-
 	useEffect(() => {
 		getProductList();
 	}, []);
 
 	useEffect(() => {
-		setSearchedList(filterProductList(searchKeword));
+		setSearchedList(
+			searchProductList({
+				searchKeword: searchKeword,
+				productList: productList,
+			}),
+		);
 	}, [searchKeword]);
 
 	return (
