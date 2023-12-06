@@ -48,6 +48,7 @@ function UserEdit() {
 						password: "", // 비밀번호 필드 초기화
 						confirmPassword: "", // 비밀번호 확인 필드 초기화
 					};
+					// console.log(fetchedData);
 					setUserData(fetchedData);
 				}
 			} catch (error) {
@@ -106,6 +107,41 @@ function UserEdit() {
 		}
 	};
 
+	// 파일 업로드 핸들러
+	const handleImageUpload = async (
+		event: React.ChangeEvent<HTMLInputElement>,
+	) => {
+		if (event.target.files && event.target.files.length > 0) {
+			const file = event.target.files[0];
+			const formData = new FormData();
+			formData.append("attach", file); // 'attach' 필드에 파일 추가
+
+			try {
+				const response = await axiosInstance.post("/files", formData, {
+					headers: {
+						"Content-Type": "multipart/form-data",
+						Authorization: `Bearer ${accessToken}`,
+					},
+				});
+
+				if (response.data.ok) {
+					const filePath = `https://localhost${response.data.file.path}`;
+					// 상태 업데이트로 이미지 경로 저장
+					setUserData((prevUserData) => ({
+						...prevUserData,
+						extra: {
+							...prevUserData.extra,
+							profileImage: filePath,
+						},
+					}));
+				}
+			} catch (error) {
+				console.error("Image upload failed:", error);
+				toast.error("이미지 업로드에 실패했습니다.");
+			}
+		}
+	};
+
 	return (
 		<section>
 			<Helmet>
@@ -125,7 +161,7 @@ function UserEdit() {
 							type="file"
 							accept="image/*"
 							id="userProfileImage"
-							onChange={handleInputChange}
+							onChange={handleImageUpload}
 						/>
 					</li>
 					<li>
