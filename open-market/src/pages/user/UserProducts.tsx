@@ -1,34 +1,57 @@
 import axiosInstance from "@/api/instance";
+import {
+	getItemWithExpireTime,
+	numberWithComma,
+	setItemWithExpireTime,
+} from "@/utils";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
 function UserProducts() {
 	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
+	const accessToken = localStorage.getItem("accessToken");
+
+	async function fetchUserProductsInfo() {
+		try {
+			const response = await axiosInstance.get<ProductListResponse>(
+				`/seller/products/`,
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				},
+			);
+			const responseData = response.data.item;
+			setUserProductsInfo(responseData);
+			// 데이터를 로컬 스토리지에 저장
+			setItemWithExpireTime("userProductsInfo", responseData, 5000 * 100);
+		} catch (error) {
+			// 에러 처리
+			console.error("상품 리스트 조회 실패:", error);
+		}
+	}
 
 	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
+		// 로컬 스토리지에서 데이터를 가져와 시도
+		const storedUserProductsInfo = getItemWithExpireTime("userProductsInfo");
 
-		const fetchUserProductsInfo = async () => {
-			try {
-				const response = await axiosInstance.get<ProductListResponse>(
-					`/seller/products/`,
-					{
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
-						},
-					},
-				);
-				setUserProductsInfo(response.data.item);
-			} catch (error) {
-				// 에러 처리
-				console.error("상품 리스트 조회 실패:", error);
-			}
-		};
-
-		fetchUserProductsInfo();
+		if (storedUserProductsInfo) {
+			setUserProductsInfo(storedUserProductsInfo);
+		} else {
+			fetchUserProductsInfo();
+		}
 	}, []);
+
+	const handleSortProductList = useCallback(async () => {
+		// 정렬 로직
+		const sortedProductsList = [...userProductsInfo].sort(
+			(a, b) => b.buyQuantity * b.price - a.buyQuantity * a.price,
+		);
+		setUserProductsInfo(sortedProductsList);
+		setItemWithExpireTime("userProductsInfo", sortedProductsList, 5000 * 100);
+	}, [userProductsInfo]);
 
 	return (
 		<section>
@@ -46,10 +69,14 @@ function UserProducts() {
 					</div>
 					<ul>
 						<li>
-							<button type="button">인기순</button>
+							<button type="button" onClick={handleSortProductList}>
+								수익순
+							</button>
 						</li>
 						<li>
-							<button type="button">최신순</button>
+							<button type="button" onClick={fetchUserProductsInfo}>
+								최신순
+							</button>
 						</li>
 					</ul>
 					<ul>
@@ -68,7 +95,7 @@ function UserProducts() {
 										총 수익:{" "}
 										<span>
 											{typeof item.buyQuantity !== "undefined"
-												? item.buyQuantity * item.price
+												? numberWithComma(item.buyQuantity * item.price)
 												: "0"}
 										</span>
 									</p>
