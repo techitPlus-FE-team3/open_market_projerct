@@ -10,7 +10,6 @@ function MyPage() {
 	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
 	const [userOrdersInfo, setUserOrdersInfo] = useState<Order[]>([]);
 
-	const [bookmarks, setBookmarks] = useState<number[]>([]);
 	const [bookmarkDetails, setBookmarkDetails] = useState<any[]>([]);
 
 	const userId = localStorage.getItem("_id");
@@ -30,11 +29,6 @@ function MyPage() {
 					},
 				);
 				setUserInfo(response.data.item);
-				if (response.data.item.extra && response.data.item.extra.bookmarks) {
-					setBookmarks(response.data.item.extra.bookmarks);
-				} else {
-					setBookmarks([]);
-				}
 			} catch (error) {
 				if (axios.isAxiosError(error)) {
 					console.error("회원 정보 조회 실패:", error);
@@ -78,33 +72,25 @@ function MyPage() {
 			}
 		}
 
+		const fetchBookmarks = async () => {
+			try {
+				const response = await axiosInstance.get(`/bookmarks`, {
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				});
+				// console.log(response.data.item);
+				setBookmarkDetails(response.data.item || []);
+			} catch (error) {
+				console.error("북마크 정보 조회 실패:", error);
+			}
+		};
+
 		fetchUserInfo();
 		fetchUserProductsInfo();
 		fetchUserOrderInfo();
+		fetchBookmarks();
 	}, []);
-
-	useEffect(() => {
-		const fetchBookmarkDetails = async () => {
-			const bookmarkInfo = [];
-			for (const bookmarkId of bookmarks) {
-				try {
-					const response = await axiosInstance.get(`/products/${bookmarkId}`, {
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
-						},
-					});
-					bookmarkInfo.push(response.data.item);
-				} catch (error) {
-					console.error(`북마크 ${bookmarkId} 정보 조회 실패:`, error);
-				}
-			}
-			setBookmarkDetails(bookmarkInfo);
-		};
-
-		if (bookmarks.length > 0) {
-			fetchBookmarkDetails();
-		}
-	}, [bookmarks]);
 
 	if (!userInfo) {
 		return <div>Loading...</div>; // 로딩 처리
@@ -157,13 +143,17 @@ function MyPage() {
 			<article>
 				<h3>북마크</h3>
 				<ul>
-					{bookmarkDetails.map((product) => (
-						<li key={product._id}>
-							<Link to={`/productdetail/${product._id}`}>
-								<img src={product.mainImages[0]} alt={`앨범 ${product.name}`} />
-							</Link>
-						</li>
-					))}
+					{bookmarkDetails.length !== 0 ? (
+						bookmarkDetails.slice(0, 4).map((item) => (
+							<li key={item._id}>
+								<Link to={`/productdetail/${item.product_id}`}>
+									<img src={`${item.product.image}`} alt="앨범아트" />
+								</Link>
+							</li>
+						))
+					) : (
+						<span>북마크가 없습니다.</span>
+					)}
 				</ul>
 				<Link to="/">전체보기</Link>
 			</article>
@@ -230,7 +220,7 @@ function MyPage() {
 			<article>
 				<h3>판매상품관리</h3>
 				<ul>
-					{Array.isArray(userProductsInfo) ? (
+					{userProductsInfo.length !== 0 ? (
 						userProductsInfo.slice(0, 4).map((item) => (
 							<li key={item._id}>
 								<Link to={`/productmanage/${item._id}`}>
@@ -239,7 +229,7 @@ function MyPage() {
 							</li>
 						))
 					) : (
-						<span>데이터가 없습니다.</span>
+						<span>판매 내역이 없습니다.</span>
 					)}
 				</ul>
 				<Link to={`/user/${userId}/products`}>전체보기</Link>
