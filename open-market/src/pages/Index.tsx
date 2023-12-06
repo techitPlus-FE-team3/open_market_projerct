@@ -1,6 +1,6 @@
 import axiosInstance from "@/api/instance";
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
@@ -11,7 +11,11 @@ const ProductImage = styled("img")`
 `;
 
 function Index() {
+	const searchRef = useRef<HTMLInputElement>(null);
+
 	const [productList, setProductList] = useState<Product[]>([]);
+	const [searchKeword, setSearchKeyword] = useState<string>("");
+	const [searchedList, setSearchedList] = useState<Product[]>([]);
 
 	async function getProductList() {
 		try {
@@ -23,9 +27,36 @@ function Index() {
 		}
 	}
 
+	function searchProductItem() {
+		setSearchKeyword(
+			searchRef.current!.value.split(" ").join("").toLowerCase(),
+		);
+	}
+
+	function filterProductList(searchKeword: string) {
+		const filteredList = productList.filter((product) => {
+			const name = product.name.split(" ").join("").toLowerCase();
+			const genre = product.extra?.category;
+			const tags = product.extra?.tags;
+			if (name.includes(searchKeword) || genre?.includes(searchKeword)) {
+				return true;
+			} else if (
+				tags?.some((tag) => tag.toLowerCase().includes(searchKeword))
+			) {
+				return true;
+			}
+			return false;
+		});
+		return filteredList;
+	}
+
 	useEffect(() => {
 		getProductList();
 	}, []);
+
+	useEffect(() => {
+		setSearchedList(filterProductList(searchKeword));
+	}, [searchKeword]);
 
 	return (
 		<>
@@ -39,36 +70,63 @@ function Index() {
 					<label htmlFor="searchBar" className="">
 						검색
 					</label>
-					<input type="text" id="searchBar" name="searchBar" />
-					<button>검색</button>
+					<input type="text" id="searchBar" name="searchBar" ref={searchRef} />
+					<button onClick={searchProductItem}>검색</button>
 				</div>
 				<div className="sortButtonWrapper">
 					<button type="submit">인기순</button>
 					<button type="submit">최신순</button>
 				</div>
 				<ol className="musicList">
-					{productList?.slice(0, 4).map((product) => {
-						return (
-							<li key={String(product._id)} className="musicItem">
-								<Link to={`/productdetail/${product._id}`}>
-									{product.mainImages[0] ? (
-										<ProductImage
-											src={product.mainImages[0]}
-											alt={`${product.name} 사진`}
-										/>
-									) : (
-										<ProductImage
-											src="/noImage.svg"
-											alt={`${product.name} 사진 없음`}
-										/>
-									)}
-									<span>{product.name}</span>
-								</Link>
-								<audio src={product?.extra?.soundFile} controls />
-								<button type="submit">북마크</button>
-							</li>
-						);
-					})}
+					{searchKeword && searchedList.length === 0 ? (
+						<span>해당하는 상품이 없습니다.</span>
+					) : searchKeword && searchedList.length !== 0 ? (
+						searchedList.slice(0, 4).map((product) => {
+							return (
+								<li key={String(product._id)} className="musicItem">
+									<Link to={`/productdetail/${product._id}`}>
+										{product.mainImages[0] ? (
+											<ProductImage
+												src={product.mainImages[0]}
+												alt={`${product.name} 사진`}
+											/>
+										) : (
+											<ProductImage
+												src="/noImage.svg"
+												alt={`${product.name} 사진 없음`}
+											/>
+										)}
+										<span>{product.name}</span>
+									</Link>
+									<audio src={product?.extra?.soundFile} controls />
+									<button type="submit">북마크</button>
+								</li>
+							);
+						})
+					) : (
+						productList?.slice(0, 4).map((product) => {
+							return (
+								<li key={String(product._id)} className="musicItem">
+									<Link to={`/productdetail/${product._id}`}>
+										{product.mainImages[0] ? (
+											<ProductImage
+												src={product.mainImages[0]}
+												alt={`${product.name} 사진`}
+											/>
+										) : (
+											<ProductImage
+												src="/noImage.svg"
+												alt={`${product.name} 사진 없음`}
+											/>
+										)}
+										<span>{product.name}</span>
+									</Link>
+									<audio src={product?.extra?.soundFile} controls />
+									<button type="submit">북마크</button>
+								</li>
+							);
+						})
+					)}
 				</ol>
 				<button type="submit">더보기</button>
 			</section>
