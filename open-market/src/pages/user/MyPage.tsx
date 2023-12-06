@@ -120,7 +120,7 @@ function MyPage() {
 							<h5>휴대폰 번호</h5>
 							<p>{userInfo.phone}</p>
 						</div>
-						<Link to="/update/userId">회원정보 수정</Link>
+						<Link to={`/useredit/${userId}`}>회원정보 수정</Link>
 					</div>
 					<div>
 						<h4>내가 쓴 댓글</h4>
