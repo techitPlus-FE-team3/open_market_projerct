@@ -50,29 +50,27 @@ const Header = () => {
 		useState<null | HTMLElement>(null);
 
 	// 로고 이미지 로딩 완료 시 핸들러
-	const onLogoLoad = () => {
+	function onLogoLoad() {
 		setIsLogoLoaded(true);
-	};
+	}
 
-	const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+	function handleProfileMenuOpen(event: React.MouseEvent<HTMLElement>) {
 		const currentTarget = event.currentTarget;
 		if (currentTarget && document.body.contains(currentTarget)) {
 			setAnchorEl(currentTarget);
 		}
-	};
+	}
 
-	const handleNotificationsMenuOpen = (
-		event: React.MouseEvent<HTMLElement>,
-	) => {
+	function handleNotificationsMenuOpen(event: React.MouseEvent<HTMLElement>) {
 		setNotificationAnchorEl(event.currentTarget);
-	};
+	}
 
-	const handleMenuClose = () => {
+	function handleMenuClose() {
 		setAnchorEl(null);
 		setNotificationAnchorEl(null);
-	};
+	}
 
-	const handleLogout = () => {
+	function handleLogout() {
 		// 토큰 제거 및 상태 업데이트
 		localStorage.removeItem("accessToken");
 		localStorage.removeItem("refreshToken");
@@ -82,7 +80,7 @@ const Header = () => {
 		// 로그인 페이지로 리디렉션
 		toast.success(`로그아웃 되었습니다.`);
 		navigate("/");
-	};
+	}
 
 	return (
 		<AppBar position="static" color="default" elevation={1}>
