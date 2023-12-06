@@ -27,7 +27,7 @@ function Index() {
 		}
 	}
 
-	function searchProductItem() {
+	function handleSearchKeyword() {
 		setSearchKeyword(
 			searchRef.current!.value.split(" ").join("").toLowerCase(),
 		);
@@ -71,7 +71,7 @@ function Index() {
 						검색
 					</label>
 					<input type="text" id="searchBar" name="searchBar" ref={searchRef} />
-					<button onClick={searchProductItem}>검색</button>
+					<button onClick={handleSearchKeyword}>검색</button>
 				</div>
 				<div className="sortButtonWrapper">
 					<button type="submit">인기순</button>
