@@ -22,6 +22,7 @@ import { KeyboardEvent, useEffect, useState } from "react";
 
 import axiosInstance from "@/api/instance";
 import {
+	categoryKeywordState,
 	fetchproductListState,
 	productListState,
 	searchKeywordState,
@@ -66,6 +67,7 @@ const Header = () => {
 	const [_, setSearchedProductList] = useRecoilState<Product[]>(
 		searchedProductListState,
 	);
+	const [__, setCategoryFilter] = useRecoilState<string>(categoryKeywordState);
 
 	const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
 	const navigate = useNavigate();
@@ -145,7 +147,13 @@ const Header = () => {
 		<AppBar position="static" color="default" elevation={1}>
 			<Toolbar>
 				<Logo>
-					<Link to="/" onClick={() => setSearchKeyword("")}>
+					<Link
+						to="/"
+						onClick={() => {
+							setSearchKeyword("");
+							setCategoryFilter("all");
+						}}
+					>
 						<img
 							src={logoImage}
 							alt="모디 로고"

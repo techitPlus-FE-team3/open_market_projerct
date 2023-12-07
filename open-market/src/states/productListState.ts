@@ -28,3 +28,8 @@ export const searchedProductListState = atom<Product[]>({
 	key: "searchProductListState",
 	default: [],
 });
+
+export const categoryKeywordState = atom<string>({
+	key: "categoryKeywordState",
+	default: "all",
+});
