@@ -29,7 +29,6 @@ function MyPage() {
 					},
 				);
 				setUserInfo(response.data.item);
-				// console.log(response.data.item);
 			} catch (error) {
 				if (axios.isAxiosError(error)) {
 					console.error("회원 정보 조회 실패:", error);
