@@ -201,7 +201,7 @@ function ProductRegistration() {
 										</option>
 										{category && category.length !== 0
 											? category.map((item) => (
-													<option key={item.code} value={item.code}>
+													<option key={item.code} value={item.value}>
 														{item.value}
 													</option>
 											  ))

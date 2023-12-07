@@ -88,7 +88,6 @@ function MyPage() {
 						Authorization: `Bearer ${accessToken}`,
 					},
 				});
-				// console.log(response.data.item);
 				setBookmarkDetails(response.data.item || []);
 			} catch (error) {
 				console.error("북마크 정보 조회 실패:", error);
