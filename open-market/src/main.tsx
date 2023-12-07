@@ -7,8 +7,10 @@ import { RecoilRoot } from "recoil";
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>
 		<RecoilRoot>
-			<Toaster />
-			<App />
+			<React.Suspense fallback={<div>Loading...</div>}>
+				<Toaster />
+				<App />
+			</React.Suspense>
 		</RecoilRoot>
 	</React.StrictMode>,
 );

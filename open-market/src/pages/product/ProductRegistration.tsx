@@ -2,7 +2,7 @@ import axiosInstance from "@/api/instance";
 import { debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,6 +25,7 @@ interface ProductRegistForm {
 		soundFile: string;
 	};
 }
+
 function ProductRegistration() {
 	const navigate = useNavigate();
 	const albumRef = useRef(null);
@@ -32,14 +33,6 @@ function ProductRegistration() {
 	const formRef = useRef(null);
 	const genreRef = useRef(null);
 	const soundFileRef = useRef(null);
-
-	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (!accessToken) {
-			toast.error("로그인이 필요한 서비스입니다.");
-			navigate("/signin");
-		}
-	}, [navigate]);
 
 	const [postItem, setPostItem] = useState<ProductRegistForm>({
 		show: true,
@@ -59,10 +52,21 @@ function ProductRegistration() {
 			soundFile: "",
 		},
 	});
+	const [category, setCategory] = useState<CategoryCode[]>();
 
 	function handlePostProductRegist(e: { preventDefault: () => void }) {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
+
+		if (postItem.mainImages.length === 0) {
+			toast.error("앨범아트를 업로드해야 합니다", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+			return;
+		}
 
 		if (postItem.extra.soundFile === "") {
 			toast.error("음원을 업로드해야 합니다", {
@@ -106,6 +110,30 @@ function ProductRegistration() {
 		}
 	}
 
+	useEffect(() => {
+		const accessToken = localStorage.getItem("accessToken");
+
+		async function fetchCategory() {
+			try {
+				const response = await axiosInstance.get(`/codes/productCategory`, {
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				});
+				const responseData = response.data.item;
+				const categoryCodeList = responseData.productCategory.codes;
+				setCategory(categoryCodeList);
+
+				// 데이터를 로컬 스토리지에 저장
+			} catch (error) {
+				// 에러 처리
+				console.error("상품 리스트 조회 실패:", error);
+			}
+		}
+
+		fetchCategory();
+	}, []);
+
 	return (
 		<section>
 			<Helmet>
@@ -130,6 +158,14 @@ function ProductRegistration() {
 								name="photo"
 								id="photo"
 							/>
+							{postItem.mainImages.length !== 0 ? (
+								<img
+									src={postItem?.mainImages[0]}
+									alt={`${postItem?.name}앨범아트`}
+								/>
+							) : (
+								""
+							)}
 						</div>
 						<div>
 							<div>
@@ -163,11 +199,13 @@ function ProductRegistration() {
 										<option value="none" disabled hidden>
 											장르를 선택해주세요
 										</option>
-										{/* {genres.map((item) => (
-											<option key={item} value={item}>
-												{item}
-											</option>
-										))} */}
+										{category && category.length !== 0
+											? category.map((item) => (
+													<option key={item.code} value={item.code}>
+														{item.value}
+													</option>
+											  ))
+											: undefined}
 									</select>
 								</div>
 								<div>
