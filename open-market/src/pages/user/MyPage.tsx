@@ -198,17 +198,10 @@ function MyPage() {
 							return (
 								<li key={order._id}>
 									<Link to={`/productdetail/${order.products[0]._id}`}>
-										{order.products[0].image ? (
-											<img
-												src={order.products[0].image}
-												alt={`${order.products[0].name} 사진`}
-											/>
-										) : (
-											<img
-												src="/noImage.svg"
-												alt={`${order.products[0].name} 사진 없음`}
-											/>
-										)}
+										<img
+											src={order.products[0].image}
+											alt={`${order.products[0].name} 사진`}
+										/>
 									</Link>
 								</li>
 							);

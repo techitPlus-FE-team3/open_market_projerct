@@ -172,9 +172,7 @@ function ProductDetail() {
 			<article>
 				<div>
 					<img
-						src={
-							product?.mainImages[0] ? product?.mainImages[0] : "/noImage.svg"
-						}
+						src={product?.mainImages[0]}
 						alt={`${product?.name} 앨범 아트`}
 					/>
 					<button>

@@ -54,17 +54,10 @@ function UserOrders() {
 					orderList.map((order) => {
 						return (
 							<li key={order._id}>
-								{order.products[0].image ? (
-									<ProductImage
-										src={order.products[0].image}
-										alt={`${order.products[0].name} 사진`}
-									/>
-								) : (
-									<ProductImage
-										src="/noImage.svg"
-										alt={`${order.products[0].name} 사진 없음`}
-									/>
-								)}
+								<ProductImage
+									src={order.products[0].image}
+									alt={`${order.products[0].name} 사진`}
+								/>
 								<Link to={`/products?_id=${order.products[0]._id}`}>
 									{order.products[0].name}
 								</Link>
