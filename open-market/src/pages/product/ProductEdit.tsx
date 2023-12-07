@@ -2,7 +2,6 @@ import axiosInstance from "@/api/instance";
 import { debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
@@ -28,6 +27,7 @@ function ProductEdit() {
 
 	const { productId } = useParams();
 	const [userProductInfo, setUserProductInfo] = useState<Product>();
+	const [category, setCategory] = useState<CategoryCode[]>();
 	const [postItem, setPostItem] = useState<ProductEditForm>({
 		show: false,
 		name: "",
@@ -76,7 +76,25 @@ function ProductEdit() {
 				console.error("상품 정보 조회 실패:", error);
 			}
 		};
+		async function fetchCategory() {
+			try {
+				const response = await axiosInstance.get(`/codes/productCategory`, {
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				});
+				const responseData = response.data.item;
+				const categoryCodeList = responseData.productCategory.codes;
+				setCategory(categoryCodeList);
 
+				// 데이터를 로컬 스토리지에 저장
+			} catch (error) {
+				// 에러 처리
+				console.error("상품 리스트 조회 실패:", error);
+			}
+		}
+
+		fetchCategory();
 		fetchUserProductInfo();
 	}, [productId]);
 
@@ -193,11 +211,13 @@ function ProductEdit() {
 										});
 									}}
 								>
-									{/*{genres.map((genre) => (
-										<option key={genre} value={genre}>
-											{genre}
-										</option>
-									))}*/}
+									{category && category.length !== 0
+										? category.map((item) => (
+												<option key={item.code} value={item.code}>
+													{item.value}
+												</option>
+										  ))
+										: undefined}
 								</select>
 							</div>
 							<div>
