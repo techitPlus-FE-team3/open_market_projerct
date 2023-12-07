@@ -48,7 +48,6 @@ function UserEdit() {
 						password: "", // 비밀번호 필드 초기화
 						confirmPassword: "", // 비밀번호 확인 필드 초기화
 					};
-					// console.log(fetchedData);
 					setUserData(fetchedData);
 				}
 			} catch (error) {
@@ -60,7 +59,7 @@ function UserEdit() {
 		fetchUserInfo();
 	}, [userId, accessToken]);
 
-	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 
 		// 비밀번호 확인 로직
@@ -84,9 +83,9 @@ function UserEdit() {
 			console.error("Error updating user info:", error);
 			toast.error("회원 정보 수정에 실패했습니다.");
 		}
-	};
+	}
 
-	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	async function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
 		const { id, value, type, checked } = event.target;
 		if (type === "checkbox") {
 			setUserData({
@@ -105,12 +104,10 @@ function UserEdit() {
 				[id]: value,
 			});
 		}
-	};
+	}
 
 	// 파일 업로드 핸들러
-	const handleImageUpload = async (
-		event: React.ChangeEvent<HTMLInputElement>,
-	) => {
+	async function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
 		if (event.target.files && event.target.files.length > 0) {
 			const file = event.target.files[0];
 			const formData = new FormData();
@@ -140,7 +137,7 @@ function UserEdit() {
 				toast.error("이미지 업로드에 실패했습니다.");
 			}
 		}
-	};
+	}
 
 	return (
 		<section>
