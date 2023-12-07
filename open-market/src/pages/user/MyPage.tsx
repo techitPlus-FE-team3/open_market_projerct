@@ -96,6 +96,8 @@ function MyPage() {
 		return <div>Loading...</div>; // 로딩 처리
 	}
 
+	const profileImageUrl = userInfo.extra?.profileImage || "public/user.svg";
+
 	return (
 		<section>
 			<Helmet>
@@ -104,7 +106,7 @@ function MyPage() {
 			<h2>마이페이지</h2>
 			<article>
 				<h3>내 정보</h3>
-				<img src="public/user.svg" alt="회원 썸네일" />
+				<img src={profileImageUrl} alt="회원 썸네일" />
 				<div>
 					<div>
 						<h4>회원정보</h4>
@@ -120,7 +122,7 @@ function MyPage() {
 							<h5>휴대폰 번호</h5>
 							<p>{userInfo.phone}</p>
 						</div>
-						<Link to="/update/userId">회원정보 수정</Link>
+						<Link to={`/useredit/${userId}`}>회원정보 수정</Link>
 					</div>
 					<div>
 						<h4>내가 쓴 댓글</h4>
