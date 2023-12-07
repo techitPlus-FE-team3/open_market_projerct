@@ -163,6 +163,22 @@ function ProductDetail() {
 		}
 	}, [productId, loggedIn]);
 
+	useEffect(() => {
+		let sessionHistory: Product[] = JSON.parse(
+			sessionStorage.getItem("historyList") || "[]",
+		);
+		if (product) {
+			if (sessionHistory.length > 5) {
+				sessionHistory.pop();
+			}
+			sessionHistory.unshift(product);
+			sessionHistory = Array.from(
+				new Set(sessionHistory.map((item) => JSON.stringify(item))),
+			).map((item) => JSON.parse(item));
+			sessionStorage.setItem("historyList", JSON.stringify(sessionHistory));
+		}
+	}, [product]);
+
 	return (
 		<section>
 			<Helmet>
