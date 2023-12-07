@@ -84,6 +84,8 @@ function ProductRegistration() {
 						const productId = response.data.item._id;
 						navigate(`/productdetail/${productId}`);
 					}
+
+					localStorage.removeItem("userProductsInfo");
 				})
 				.catch((error) => {
 					error.response.data.errors.forEach(
