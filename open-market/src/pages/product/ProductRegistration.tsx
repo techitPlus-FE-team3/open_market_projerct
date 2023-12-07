@@ -33,6 +33,7 @@ function ProductRegistration() {
 	const formRef = useRef(null);
 	const genreRef = useRef(null);
 	const soundFileRef = useRef(null);
+
 	const [postItem, setPostItem] = useState<ProductRegistForm>({
 		show: true,
 		active: true,

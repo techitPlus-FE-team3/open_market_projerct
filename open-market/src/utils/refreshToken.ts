@@ -1,8 +1,11 @@
 import axiosInstance from "@/api/instance";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 // 토큰 갱신 함수
 async function refreshToken() {
+	const navigate = useNavigate();
+
 	try {
 		const refreshToken = localStorage.getItem("refreshToken");
 		if (!refreshToken) {
@@ -18,7 +21,7 @@ async function refreshToken() {
 
 		if (response.data.ok) {
 			localStorage.setItem("accessToken", response.data.accessToken);
-			// 글로벌 설정 대신 axiosInstance의 헤더를 갱신
+			// axiosInstance의 헤더를 갱신
 			axiosInstance.defaults.headers.common["Authorization"] =
 				`Bearer ${response.data.accessToken}`;
 
@@ -34,7 +37,8 @@ async function refreshToken() {
 		localStorage.removeItem("accessToken");
 		localStorage.removeItem("refreshToken");
 		localStorage.removeItem("_id");
-		window.location.href = "/signin";
+		// window.location.href = "/signin";
+		navigate("/signin");
 		throw error;
 	}
 }

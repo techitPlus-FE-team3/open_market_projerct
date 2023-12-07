@@ -20,7 +20,7 @@ function UserEdit() {
 		},
 	});
 	const navigate = useNavigate();
-	const userId = localStorage.getItem("_id"); // 혹은 다른 인증 방식을 사용할 수 있습니다.
+	const userId = localStorage.getItem("_id");
 	const accessToken = localStorage.getItem("accessToken");
 
 	useEffect(() => {

@@ -1,5 +1,4 @@
 import axiosInstance from "@/api/instance";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
@@ -9,6 +8,14 @@ function ProductManage() {
 	const navigate = useNavigate();
 	const { productId } = useParams();
 	const [userProductInfo, setUserProductInfo] = useState<Product>();
+
+	useEffect(() => {
+		const accessToken = localStorage.getItem("accessToken");
+		if (!accessToken) {
+			toast.error("로그인이 필요한 서비스입니다.");
+			navigate("/signin");
+		}
+	}, [navigate]);
 
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");
