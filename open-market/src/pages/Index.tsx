@@ -1,9 +1,15 @@
-import axiosInstance from "@/api/instance";
+import {
+	fetchproductListState,
+	productListState,
+	searchKeywordState,
+	searchedProductListState,
+} from "@/states/productListState";
 import { searchProductList } from "@/utils";
 import styled from "@emotion/styled";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const ProductImage = styled("img")`
 	width: 42px;
@@ -14,19 +20,14 @@ const ProductImage = styled("img")`
 function Index() {
 	const searchRef = useRef<HTMLInputElement>(null);
 
-	const [productList, setProductList] = useState<Product[]>([]);
-	const [searchKeyword, setSearchKeyword] = useState<string>("");
-	const [searchedList, setSearchedList] = useState<Product[]>([]);
+	const [productList, setProductList] = useRecoilState(productListState);
+	const fetchedProductList = useRecoilValue(fetchproductListState);
 
-	async function getProductList() {
-		try {
-			const response =
-				await axiosInstance.get<ProductListResponse>("/products");
-			setProductList(response.data.item);
-		} catch (err) {
-			console.error(err);
-		}
-	}
+	const [searchKeyword, setSearchKeyword] =
+		useRecoilState<string>(searchKeywordState);
+	const [searchedProductList, setSearchedProductList] = useRecoilState<
+		Product[]
+	>(searchedProductListState);
 
 	function handleSearchKeyword() {
 		setSearchKeyword(
@@ -35,16 +36,17 @@ function Index() {
 	}
 
 	useEffect(() => {
-		getProductList();
+		setProductList(fetchedProductList!);
 	}, []);
 
 	useEffect(() => {
-		setSearchedList(
+		setSearchedProductList(
 			searchProductList({
 				searchKeyword: searchKeyword,
-				productList: productList,
+				productList: productList!,
 			}),
 		);
+		searchRef.current!.value = searchKeyword;
 	}, [searchKeyword]);
 
 	return (
@@ -60,17 +62,19 @@ function Index() {
 						검색
 					</label>
 					<input type="text" id="searchBar" name="searchBar" ref={searchRef} />
-					<button onClick={handleSearchKeyword}>검색</button>
+					<button type="button" onClick={handleSearchKeyword}>
+						검색
+					</button>
 				</div>
 				<div className="sortButtonWrapper">
 					<button type="submit">인기순</button>
 					<button type="submit">최신순</button>
 				</div>
 				<ol className="musicList">
-					{searchKeyword && searchedList.length === 0 ? (
+					{searchKeyword && searchedProductList.length === 0 ? (
 						<span>해당하는 상품이 없습니다.</span>
-					) : searchKeyword && searchedList.length !== 0 ? (
-						searchedList.slice(0, 4).map((product) => {
+					) : searchKeyword && searchedProductList.length !== 0 ? (
+						searchedProductList.slice(0, 4).map((product) => {
 							return (
 								<li key={String(product._id)} className="musicItem">
 									<Link to={`/productdetail/${product._id}`}>
