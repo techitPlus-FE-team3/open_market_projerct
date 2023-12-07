@@ -84,6 +84,16 @@ function ProductEdit() {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
 
+		if (postItem.mainImages.length === 0) {
+			toast.error("앨범아트를 업로드해야 합니다", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+			return;
+		}
+
 		if (postItem.extra.soundFile === "") {
 			toast.error("음원을 업로드해야 합니다", {
 				ariaProps: {
