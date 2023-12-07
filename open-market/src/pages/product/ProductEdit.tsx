@@ -45,6 +45,14 @@ function ProductEdit() {
 
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");
+		if (!accessToken) {
+			toast.error("로그인이 필요한 서비스입니다.");
+			navigate("/signin");
+		}
+	}, [navigate]);
+
+	useEffect(() => {
+		const accessToken = localStorage.getItem("accessToken");
 
 		const fetchUserProductInfo = async () => {
 			try {

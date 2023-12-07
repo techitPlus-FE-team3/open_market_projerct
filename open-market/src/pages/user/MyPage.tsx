@@ -18,6 +18,13 @@ function MyPage() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		// 비로그인 상태 체크
+		if (!accessToken) {
+			toast.error("로그인이 필요한 서비스입니다.");
+			navigate("/signin");
+			return;
+		}
+
 		async function fetchUserInfo() {
 			try {
 				const response = await axiosInstance.get<UserResponse>(
@@ -90,7 +97,7 @@ function MyPage() {
 		fetchUserProductsInfo();
 		fetchUserOrderInfo();
 		fetchBookmarks();
-	}, []);
+	}, [accessToken, navigate]);
 
 	if (!userInfo) {
 		return <div>Loading...</div>; // 로딩 처리

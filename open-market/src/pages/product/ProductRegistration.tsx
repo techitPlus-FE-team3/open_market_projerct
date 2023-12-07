@@ -2,7 +2,7 @@ import axiosInstance from "@/api/instance";
 import { debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -32,6 +32,14 @@ function ProductRegistration() {
 	const formRef = useRef(null);
 	const genreRef = useRef(null);
 	const soundFileRef = useRef(null);
+
+	useEffect(() => {
+		const accessToken = localStorage.getItem("accessToken");
+		if (!accessToken) {
+			toast.error("로그인이 필요한 서비스입니다.");
+			navigate("/signin");
+		}
+	}, [navigate]);
 
 	const [postItem, setPostItem] = useState<ProductRegistForm>({
 		show: true,
