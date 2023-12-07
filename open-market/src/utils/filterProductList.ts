@@ -18,3 +18,20 @@ export function searchProductList({
 	});
 	return filteredList;
 }
+
+export function categoryFilterProductList({
+	category,
+	productList,
+}: {
+	category: string;
+	productList: Product[];
+}) {
+	const filteredList = productList.filter((product) => {
+		const productCategory = product.extra?.category!;
+		if (productCategory.includes(category)) {
+			return true;
+		}
+		return false;
+	});
+	return filteredList;
+}
