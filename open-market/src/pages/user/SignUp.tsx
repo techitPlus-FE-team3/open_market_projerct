@@ -192,14 +192,8 @@ function SignUp() {
 		{
 			onSuccess: () => {
 				// 토스트 표시
-				toast.success("회원가입이 완료되었습니다.", {
-					// duration: 4000,
-				});
+				toast.success("회원가입이 완료되었습니다.");
 
-				// 4초 후에 페이지 이동
-				// setTimeout(() => {
-				// 	navigate("/signin");
-				// }, 4000);
 				navigate("/signin");
 			},
 			onError: (error: any) => {
