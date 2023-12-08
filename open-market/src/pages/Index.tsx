@@ -59,13 +59,24 @@ function Index() {
 	}, []);
 
 	useEffect(() => {
+		function translateValueToCode(value: string) {
+			if (value === "all") {
+				return value;
+			}
+			if (value !== undefined && category !== undefined) {
+				return category.find((item) => item.value === value)?.code;
+			}
+		}
+
+		const selectedCode = translateValueToCode(categoryFilter)!;
+
 		setFilteredProductList(
 			categoryFilterProductList({
-				category: categoryFilter,
+				code: selectedCode,
 				productList: productList,
 			}),
 		);
-	}, [categoryFilter]);
+	}, [categoryFilter, category]);
 
 	useEffect(() => {
 		const list =
