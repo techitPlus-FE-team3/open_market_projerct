@@ -1,6 +1,6 @@
 import axiosInstance from "@/api/instance";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,7 +14,9 @@ function MyPage() {
 
 	const userId = localStorage.getItem("_id");
 	const accessToken = localStorage.getItem("accessToken");
-
+	const historyList = JSON.parse(
+		sessionStorage.getItem("historyList") as string,
+	);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -168,33 +170,20 @@ function MyPage() {
 			<article>
 				<h3>히스토리</h3>
 				<ul>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
+					{historyList ? (
+						historyList.map(
+							(item: { _id: Key | null | undefined; mainImages: any[] }) => (
+								<li key={item._id}>
+									<Link to={`/productdetail/${item._id}`}>
+										<img src={`${item?.mainImages[0]}`} alt="앨범아트" />
+									</Link>
+								</li>
+							),
+						)
+					) : (
+						<span>히스토리가 없습니다.</span>
+					)}
 				</ul>
-				<Link to="/">전체보기</Link>
 			</article>
 			<article>
 				<h3>구매내역</h3>
@@ -222,7 +211,7 @@ function MyPage() {
 				<h3>판매상품관리</h3>
 				<ul>
 					{userProductsInfo.length !== 0 ? (
-						userProductsInfo.slice(0, 4).map((item) => (
+						userProductsInfo.slice(0, 5).map((item) => (
 							<li key={item._id}>
 								<Link to={`/productmanage/${item._id}`}>
 									<img src={`${item.mainImages[0]}`} alt="앨범아트" />
