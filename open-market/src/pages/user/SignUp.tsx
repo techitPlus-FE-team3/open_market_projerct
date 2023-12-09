@@ -5,7 +5,8 @@ import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "@/api/instance";
+// import axiosInstance from "@/api/instance";
+import axiosInstance from "@/utils/refreshToken";
 
 interface SignUpForm {
 	email: string;
