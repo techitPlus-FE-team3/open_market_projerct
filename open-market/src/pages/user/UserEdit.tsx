@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import axiosInstance from "@/api/instance";
+// import axiosInstance from "@/api/instance";
+import axiosInstance from "@/utils/refreshToken";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -24,6 +25,11 @@ function UserEdit() {
 	const accessToken = localStorage.getItem("accessToken");
 
 	useEffect(() => {
+		if (!accessToken) {
+			toast.error("로그인이 필요한 서비스입니다.");
+			navigate("/signin");
+		}
+
 		// 사용자 정보 불러오기
 		async function fetchUserInfo() {
 			try {
