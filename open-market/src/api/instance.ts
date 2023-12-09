@@ -1,7 +1,7 @@
-import axios from "axios";
+// import axios from "axios";
 
-const axiosInstance = axios.create({
-	baseURL: "https://localhost/api",
-});
+// const axiosInstance = axios.create({
+// 	baseURL: "https://localhost/api",
+// });
 
-export default axiosInstance;
+// export default axiosInstance;
