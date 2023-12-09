@@ -8,8 +8,8 @@ function UserEdit() {
 	const [userData, setUserData] = useState({
 		email: "",
 		name: "",
-		password: "",
-		confirmPassword: "",
+		// password: "",
+		// confirmPassword: "",
 		phone: "",
 		extra: {
 			profileImage: "",
@@ -45,8 +45,8 @@ function UserEdit() {
 								...response.data.item.extra?.terms, // API 응답의 terms
 							},
 						},
-						password: "", // 비밀번호 필드 초기화
-						confirmPassword: "", // 비밀번호 확인 필드 초기화
+						// password: "", // 비밀번호 필드 초기화
+						// confirmPassword: "", // 비밀번호 확인 필드 초기화
 					};
 					setUserData(fetchedData);
 				}
@@ -63,10 +63,10 @@ function UserEdit() {
 		event.preventDefault();
 
 		// 비밀번호 확인 로직
-		if (userData.password !== userData.confirmPassword) {
-			toast.error("비밀번호가 일치하지 않습니다.");
-			return;
-		}
+		// if (userData.password !== userData.confirmPassword) {
+		// 	toast.error("비밀번호가 일치하지 않습니다.");
+		// 	return;
+		// }
 
 		// 정보 수정 요청
 		try {
@@ -179,7 +179,7 @@ function UserEdit() {
 							onChange={handleInputChange}
 						/>
 					</li>
-					<li>
+					{/* <li>
 						<label htmlFor="password">비밀번호</label>
 						<input
 							type="password"
@@ -196,7 +196,7 @@ function UserEdit() {
 							value={userData.confirmPassword}
 							onChange={handleInputChange}
 						/>
-					</li>
+					</li> */}
 					<li>
 						<label htmlFor="phone">휴대폰 번호</label>
 						<input
