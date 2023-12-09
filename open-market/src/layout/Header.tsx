@@ -123,6 +123,7 @@ const Header = () => {
 			e.preventDefault();
 			setSearchKeyword(target.value);
 			target.value = "";
+			setCategoryFilter("all");
 		}
 	}
 
