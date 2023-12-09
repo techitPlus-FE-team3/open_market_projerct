@@ -20,15 +20,15 @@ export function searchProductList({
 }
 
 export function categoryFilterProductList({
-	category,
+	code,
 	productList,
 }: {
-	category: string;
+	code: string;
 	productList: Product[];
 }) {
 	const filteredList = productList.filter((product) => {
 		const productCategory = product.extra?.category!;
-		if (productCategory.includes(category)) {
+		if (productCategory.includes(code)) {
 			return true;
 		}
 		return false;
