@@ -5,7 +5,7 @@ import MyPage from "@/pages/user/MyPage";
 import ProductEdit from "@/pages/product/ProductEdit";
 import ProductManage from "@/pages/product/ProductManage";
 import ProductRegistration from "@/pages/product/ProductRegistration";
-import ProductPurchase from "@/pages/product/ProductPurchase";
+import ProductPurchase from "@/pages/product/ProductPurchase1";
 import SignIn from "@/pages/user/SignIn";
 import SignUp from "@/pages/user/SignUp";
 import UserOrders from "@/pages/user/UserOrders";
