@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-// import axiosInstance from "@/api/instance";
 import axiosInstance from "@/utils/refreshToken";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,6 +24,7 @@ function UserEdit() {
 	const userId = localStorage.getItem("_id");
 	const accessToken = localStorage.getItem("accessToken");
 
+	// 비로그인 상태 체크
 	useRequireAuth();
 
 	useEffect(() => {

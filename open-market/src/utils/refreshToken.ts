@@ -1,7 +1,5 @@
-// import axiosInstance from "@/api/instance";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 const axiosInstance = axios.create({
 	baseURL: "https://localhost/api",
