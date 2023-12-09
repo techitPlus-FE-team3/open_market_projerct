@@ -1,6 +1,11 @@
-import axiosInstance from "@/api/instance";
+// import axiosInstance from "@/api/instance";
+import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+
+const axiosInstance = axios.create({
+	baseURL: "https://localhost/api",
+});
 
 // 토큰 갱신 함수
 async function refreshToken() {
@@ -38,14 +43,14 @@ async function refreshToken() {
 		localStorage.removeItem("refreshToken");
 		localStorage.removeItem("_id");
 		// window.location.href = "/signin";
-		navigate("/signin");
+		// navigate("/signin");
 		throw error;
 	}
 }
 
 // 응답 인터셉터 설정
 
-const interceptor = axiosInstance.interceptors.response.use(
+axiosInstance.interceptors.response.use(
 	(response) => response, // 요청이 성공적인 경우 그대로 응답을 반환
 	async (error) => {
 		const originalRequest = error.config;
@@ -56,7 +61,8 @@ const interceptor = axiosInstance.interceptors.response.use(
 				originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
 				return axiosInstance(originalRequest); // 실패한 요청을 새 토큰으로 재시도
 			} catch (refreshError) {
-				window.location.href = "/signin";
+				// window.location.href = "/signin";
+				// navigate("/signin");
 				return Promise.reject(refreshError);
 			}
 		}
@@ -64,4 +70,4 @@ const interceptor = axiosInstance.interceptors.response.use(
 	},
 );
 
-export default interceptor;
+export default axiosInstance;
