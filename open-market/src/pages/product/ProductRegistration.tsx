@@ -1,4 +1,5 @@
-import axiosInstance from "@/api/instance";
+// import axiosInstance from "@/api/instance";
+import axiosInstance from "@/utils/refreshToken";
 import { debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -112,6 +113,13 @@ function ProductRegistration() {
 
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");
+
+		// 비로그인 상태 체크
+		if (!accessToken) {
+			toast.error("로그인이 필요한 서비스입니다.");
+			navigate("/signin");
+			return;
+		}
 
 		async function fetchCategory() {
 			try {
