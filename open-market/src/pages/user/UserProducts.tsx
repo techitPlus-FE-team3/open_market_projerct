@@ -11,6 +11,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 function sortByProfitProductList(list: Product[]) {
 	return list.sort((a, b) => b.buyQuantity * b.price - a.buyQuantity * a.price);
@@ -30,13 +31,14 @@ function UserProducts() {
 	const [searchedList, setSearchedList] = useState<Product[]>([]);
 	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
 
-	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (!accessToken) {
-			toast.error("로그인이 필요한 서비스입니다.");
-			navigate("/signin");
-		}
-	}, [navigate]);
+	// useEffect(() => {
+	// 	const accessToken = localStorage.getItem("accessToken");
+	// 	if (!accessToken) {
+	// 		toast.error("로그인이 필요한 서비스입니다.");
+	// 		navigate("/signin");
+	// 	}
+	// }, [navigate]);
+	useRequireAuth();
 
 	async function fetchUserProductsInfo() {
 		try {

@@ -5,6 +5,7 @@ import { Key, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 function MyPage() {
 	const [userInfo, setUserInfo] = useState<User | null>(null);
@@ -20,13 +21,15 @@ function MyPage() {
 	);
 	const navigate = useNavigate();
 
+	useRequireAuth();
+
 	useEffect(() => {
-		// 비로그인 상태 체크
-		if (!accessToken) {
-			toast.error("로그인이 필요한 서비스입니다.");
-			navigate("/signin");
-			return;
-		}
+		// // 비로그인 상태 체크
+		// if (!accessToken) {
+		// 	toast.error("로그인이 필요한 서비스입니다.");
+		// 	navigate("/signin");
+		// 	return;
+		// }
 
 		async function fetchUserInfo() {
 			try {
@@ -42,10 +45,10 @@ function MyPage() {
 			} catch (error) {
 				if (axios.isAxiosError(error)) {
 					console.error("회원 정보 조회 실패:", error);
-					if (error.response && error.response.status === 401) {
-						toast.error("세션이 만료되었습니다. 다시 로그인해주세요.");
-						navigate("/signin");
-					}
+					// if (error.response && error.response.status === 401) {
+					// 	toast.error("세션이 만료되었습니다. 다시 로그인해주세요.");
+					// 	navigate("/signin");
+					// }
 				} else {
 					// 에러가 AxiosError가 아닌 경우
 					console.error("Unexpected error:", error);
@@ -99,7 +102,7 @@ function MyPage() {
 		fetchUserProductsInfo();
 		fetchUserOrderInfo();
 		fetchBookmarks();
-	}, [accessToken, navigate]);
+	}, [accessToken]);
 
 	if (!userInfo) {
 		return <div>Loading...</div>; // 로딩 처리

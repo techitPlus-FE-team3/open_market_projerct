@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 const ProductImage = styled("img")`
 	width: 42px;
@@ -20,13 +21,14 @@ function UserOrders() {
 
 	const [orderList, setOrderList] = useState<Order[]>([]);
 
-	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (!accessToken) {
-			toast.error("로그인이 필요한 서비스입니다.");
-			navigate("/signin");
-		}
-	}, [navigate]);
+	// useEffect(() => {
+	// 	const accessToken = localStorage.getItem("accessToken");
+	// 	if (!accessToken) {
+	// 		toast.error("로그인이 필요한 서비스입니다.");
+	// 		navigate("/signin");
+	// 	}
+	// }, [navigate]);
+	useRequireAuth();
 
 	async function getOrderList() {
 		const accessToken = localStorage.getItem("accessToken");

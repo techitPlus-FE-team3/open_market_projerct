@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 interface ProductRegistForm {
 	show: boolean;
@@ -54,6 +55,8 @@ function ProductRegistration() {
 		},
 	});
 	const [category, setCategory] = useState<CategoryCode[]>();
+
+	useRequireAuth();
 
 	function handlePostProductRegist(e: { preventDefault: () => void }) {
 		e.preventDefault();
@@ -115,11 +118,11 @@ function ProductRegistration() {
 		const accessToken = localStorage.getItem("accessToken");
 
 		// 비로그인 상태 체크
-		if (!accessToken) {
-			toast.error("로그인이 필요한 서비스입니다.");
-			navigate("/signin");
-			return;
-		}
+		// if (!accessToken) {
+		// 	toast.error("로그인이 필요한 서비스입니다.");
+		// 	navigate("/signin");
+		// 	return;
+		// }
 
 		async function fetchCategory() {
 			try {

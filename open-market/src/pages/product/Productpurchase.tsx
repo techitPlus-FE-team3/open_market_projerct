@@ -4,19 +4,21 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 function ProductPurchase() {
 	const navigate = useNavigate();
 	const { productId } = useParams();
 	const [product, setProduct] = useState<Product>();
 
-	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (!accessToken) {
-			toast.error("로그인이 필요한 서비스입니다.");
-			navigate("/signin");
-		}
-	}, [navigate]);
+	// useEffect(() => {
+	// 	const accessToken = localStorage.getItem("accessToken");
+	// 	if (!accessToken) {
+	// 		toast.error("로그인이 필요한 서비스입니다.");
+	// 		navigate("/signin");
+	// 	}
+	// }, [navigate]);
+	useRequireAuth();
 
 	async function getProduct(id: string) {
 		try {

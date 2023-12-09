@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 interface ProductEditForm {
 	show: boolean;
@@ -44,13 +45,7 @@ function ProductEdit() {
 		},
 	});
 
-	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (!accessToken) {
-			toast.error("로그인이 필요한 서비스입니다.");
-			navigate("/signin");
-		}
-	}, [navigate]);
+	useRequireAuth();
 
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");
