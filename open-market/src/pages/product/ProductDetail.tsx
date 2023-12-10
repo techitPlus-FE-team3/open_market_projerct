@@ -33,6 +33,8 @@ function ProductDetail() {
 	const [ratingValue, setRatingValue] = useState<number>(3);
 	const [_, setHover] = useState(-1);
 	const [replyContent, setReplyContent] = useState<string>();
+	const [category, setCategory] = useState<CategoryCode[]>();
+	const [genre, setGenre] = useState<string>();
 
 	async function getProduct(id: string) {
 		try {
@@ -156,6 +158,21 @@ function ProductDetail() {
 	}, []);
 
 	useEffect(() => {
+		async function fetchCategory() {
+			try {
+				const response = await axiosInstance.get(`/codes/productCategory`);
+				const responseData = response.data.item;
+				const categoryCodeList = responseData.productCategory.codes;
+				setCategory(categoryCodeList);
+			} catch (error) {
+				console.error("상품 리스트 조회 실패:", error);
+			}
+		}
+
+		fetchCategory();
+	}, []);
+
+	useEffect(() => {
 		getProduct(productId!);
 		if (loggedIn) {
 			getUser(Number(localStorage.getItem("_id")!));
@@ -179,6 +196,19 @@ function ProductDetail() {
 		}
 	}, [product]);
 
+	useEffect(() => {
+		function translateCodeToValue(code: string) {
+			if (
+				code !== undefined &&
+				category !== undefined &&
+				product !== undefined
+			) {
+				return category.find((item) => item.code === code)?.value;
+			}
+		}
+		setGenre(translateCodeToValue(product?.extra?.category!));
+	}, [product, category]);
+
 	return (
 		<section>
 			<Helmet>
@@ -199,7 +229,7 @@ function ProductDetail() {
 					<span>{product?.name}</span>
 					<span>{product?.seller_id}</span>
 					<span>{product?.createdAt}</span>
-					<span>{product?.extra?.category}</span>
+					<span>{genre}</span>
 					<span>{product?.content}</span>
 					<span>{product?.price}</span>
 				</div>
