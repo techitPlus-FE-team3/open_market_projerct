@@ -8,8 +8,8 @@ function UserEdit() {
 	const [userData, setUserData] = useState({
 		email: "",
 		name: "",
-		// password: "",
-		// confirmPassword: "",
+		password: "",
+		confirmPassword: "",
 		phone: "",
 		extra: {
 			profileImage: "",
@@ -45,8 +45,8 @@ function UserEdit() {
 								...response.data.item.extra?.terms, // API 응답의 terms
 							},
 						},
-						// password: "", // 비밀번호 필드 초기화
-						// confirmPassword: "", // 비밀번호 확인 필드 초기화
+						password: "", // 비밀번호 필드 초기화
+						confirmPassword: "", // 비밀번호 확인 필드 초기화
 					};
 					setUserData(fetchedData);
 				}
@@ -62,15 +62,26 @@ function UserEdit() {
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 
+		// 비밀번호 길이 확인
+		if (userData.password && userData.password.length < 8) {
+			toast.error("비밀번호는 8자 이상이어야 합니다.");
+			return;
+		}
+
 		// 비밀번호 확인 로직
-		// if (userData.password !== userData.confirmPassword) {
-		// 	toast.error("비밀번호가 일치하지 않습니다.");
-		// 	return;
-		// }
+		if (userData.password !== userData.confirmPassword) {
+			toast.error("비밀번호가 일치하지 않습니다.");
+			return;
+		}
+
+		// 사용자가 비밀번호를 입력하지 않았을 경우 비밀번호 필드를 제외한 데이터로 요청
+		const payload = userData.password
+			? userData
+			: { ...userData, password: undefined, confirmPassword: undefined };
 
 		// 정보 수정 요청
 		try {
-			const response = await axiosInstance.patch(`/users/${userId}`, userData, {
+			const response = await axiosInstance.patch(`/users/${userId}`, payload, {
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
 				},
@@ -179,7 +190,7 @@ function UserEdit() {
 							onChange={handleInputChange}
 						/>
 					</li>
-					{/* <li>
+					<li>
 						<label htmlFor="password">비밀번호</label>
 						<input
 							type="password"
@@ -196,7 +207,7 @@ function UserEdit() {
 							value={userData.confirmPassword}
 							onChange={handleInputChange}
 						/>
-					</li> */}
+					</li>
 					<li>
 						<label htmlFor="phone">휴대폰 번호</label>
 						<input
