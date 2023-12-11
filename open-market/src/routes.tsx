@@ -32,7 +32,7 @@ const router = createBrowserRouter(
 			<Route path="mypage" element={<MyPage />} />
 			<Route path="useredit/:userId" element={<UserEdit />} />
 			<Route path="user/:userId/products" element={<UserProducts />} />
-			<Route path="/orders" element={<UserOrders />} />
+			<Route path="orders" element={<UserOrders />} />
 			{/* signin, signup */}
 			<Route path="signin" element={<SignIn />} />
 			<Route path="signup" element={<SignUp />} />
