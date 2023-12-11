@@ -1,11 +1,42 @@
 import { loggedInState } from "@/states/authState";
+import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
+import styled from "@emotion/styled";
 import axios from "axios";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import logoImage from "/logo/logo1.svg";
+import AuthInput from "@/components/AuthInput";
+
+const Title = styled.h2`
+	${Common.a11yHidden};
+`;
+
+const Backgroud = styled.section`
+	width: 100vw;
+	height: 100vh;
+	background-color: ${Common.colors.black};
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+`;
+
+const Logo = styled.h1`
+	a {
+		text-decoration: none;
+		color: inherit;
+		display: flex;
+		align-items: center;
+
+		img {
+			width: 440px;
+		}
+	}
+`;
 
 function SignIn() {
 	const [_, setLoggedIn] = useRecoilState(loggedInState);
@@ -63,50 +94,58 @@ function SignIn() {
 	};
 
 	return (
-		<section>
+		<Backgroud>
 			<Helmet>
 				<title>Sign In - 모두의 오디오 MODI</title>
 			</Helmet>
-			<h2>로그인</h2>
+			<Logo>
+				<Link to="/">
+					<img src={logoImage} alt="모디 로고" />
+				</Link>
+			</Logo>
+			<Title>로그인</Title>
 			<form onSubmit={handleLogin}>
 				<fieldset>
-					<legend>로그인 폼</legend>
-					<label htmlFor="email">이메일</label>
-					<input
-						type="text"
+					<legend>로그인</legend>
+					<AuthInput
 						id="email"
+						name="email"
+						label="이메일"
+						type="text"
 						defaultValue={email}
 						onChange={debounce(
 							(e: { target: { value: React.SetStateAction<string> } }) =>
 								setEmail(e.target.value),
 						)}
 						placeholder="이메일"
+						required={true}
 					/>
-					<label htmlFor="password">비밀번호</label>
-					<input
-						type="password"
+					<AuthInput
 						id="password"
+						name="password"
+						label="비밀번호"
+						type="password"
 						defaultValue={password}
 						onChange={debounce(
-							(e: { target: { value: React.SetStateAction<string> } }) => {
-								setPassword(e.target.value);
-							},
+							(e: { target: { value: React.SetStateAction<string> } }) =>
+								setPassword(e.target.value),
 						)}
 						placeholder="비밀번호"
+						required={true}
 					/>
 				</fieldset>
 
 				<button type="submit">로그인</button>
+				<ul>
+					<li>
+						<Link to="/signup">회원가입</Link>
+					</li>
+					<li>
+						<Link to="/">아이디/비밀번호 찾기</Link>
+					</li>
+				</ul>
 			</form>
-			<ul>
-				<li>
-					<Link to="/signup">회원가입</Link>
-				</li>
-				<li>
-					<Link to="/">아이디/비밀번호 찾기</Link>
-				</li>
-			</ul>
-		</section>
+		</Backgroud>
 	);
 }
 

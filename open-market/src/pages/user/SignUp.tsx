@@ -1,10 +1,41 @@
+import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
+import styled from "@emotion/styled";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import logoImage from "/logo/logo1.svg";
+import AuthInput from "@/components/AuthInput";
+
+const Title = styled.h2`
+	${Common.a11yHidden};
+`;
+
+const Backgroud = styled.section`
+	width: 100vw;
+	height: 100vh;
+	background-color: ${Common.colors.black};
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+`;
+
+const Logo = styled.h1`
+	a {
+		text-decoration: none;
+		color: inherit;
+		display: flex;
+		align-items: center;
+
+		img {
+			width: 440px;
+		}
+	}
+`;
 
 interface SignUpForm {
 	email: string;
@@ -249,136 +280,144 @@ function SignUp() {
 		}
 	};
 	return (
-		<section>
+		<Backgroud>
 			<Helmet>
 				<title>Sign Up - 모두의 오디오 MODI</title>
 			</Helmet>
-			<h2>회원가입</h2>
+			<Logo>
+				<Link to="/">
+					<img src={logoImage} alt="모디 로고" />
+				</Link>
+			</Logo>
+			<Title>회원가입</Title>
 			<form onSubmit={handleSubmit}>
-				<ul>
-					<li>
-						<label htmlFor="email">이메일</label>
-						<input
-							type="text"
-							id="email"
-							name="email"
-							defaultValue={form.email}
-							onChange={debounce(handleChange)}
-							placeholder="이메일"
-							required
-						/>
-						<button type="button" onClick={checkEmailDuplication}>
-							중복 확인
-						</button>
-						{emailCheck.checked && <p>{emailCheck.message}</p>}
-					</li>
-					<li>
-						<label htmlFor="password">비밀번호</label>
-						<input
-							type="password"
-							id="password"
-							name="password"
-							defaultValue={form.password}
-							onChange={debounce(handleChange)}
-							placeholder="비밀번호"
-							required
-						/>
-					</li>
-					<li>
-						<label htmlFor="confirmPassword">비밀번호 확인</label>
-						<input
-							type="password"
-							id="confirmPassword"
-							name="confirmPassword"
-							defaultValue={form.confirmPassword}
-							onChange={debounce(handleChange)}
-							placeholder="비밀번호 확인"
-							required
-						/>
-					</li>
-					<li>
-						<label htmlFor="name">이름</label>
-						<input
-							type="text"
-							id="name"
-							name="name"
-							defaultValue={form.name}
-							onChange={debounce(handleChange)}
-							placeholder="이름"
-							required
-						/>
-					</li>
-					<li>
-						<label htmlFor="phone">휴대폰 번호</label>
-						<input
-							type="tel"
-							id="phone"
-							name="phone"
-							defaultValue={form.phone}
-							onChange={debounce(handleChange)}
-							placeholder="휴대폰 번호"
-							required
-						/>
-					</li>
-				</ul>
-				<ul>
-					<input
-						type="checkbox"
-						id="agreeAll"
-						checked={agreeAll}
-						onChange={handleAgreeAllChange}
-					/>
-					<label htmlFor="agreeAll">전체 동의합니다</label>
-					<li>
-						<button type="button">약관보기</button>
+				<fieldset>
+					<legend>회원가입</legend>
+					<ul>
+						<li>
+							<AuthInput
+								id="email"
+								name="email"
+								label="이메일"
+								type="text"
+								defaultValue={form.email}
+								onChange={debounce(handleChange)}
+								placeholder="이메일"
+								required={true}
+							/>
+							<button type="button" onClick={checkEmailDuplication}>
+								중복 확인
+							</button>
+							{emailCheck.checked && <p>{emailCheck.message}</p>}
+						</li>
+						<li>
+							<label htmlFor="password">비밀번호</label>
+							<AuthInput
+								id="password"
+								name="password"
+								label="비밀번호"
+								type="password"
+								defaultValue={form.password}
+								onChange={debounce(handleChange)}
+								placeholder="비밀번호"
+								required={true}
+							/>
+						</li>
+						<li>
+							<AuthInput
+								id="confirmPassword"
+								name="confirmPassword"
+								label="비밀번호 확인"
+								type="password"
+								defaultValue={form.confirmPassword}
+								onChange={debounce(handleChange)}
+								placeholder="비밀번호 확인"
+								required={true}
+							/>
+						</li>
+						<li>
+							<AuthInput
+								type="text"
+								id="name"
+								name="name"
+								defaultValue={form.name}
+								onChange={debounce(handleChange)}
+								placeholder="이름"
+								required={true}
+							/>
+						</li>
+						<li>
+							<AuthInput
+								type="tel"
+								id="phone"
+								name="phone"
+								defaultValue={form.phone}
+								onChange={debounce(handleChange)}
+								placeholder="휴대폰 번호"
+								required={true}
+							/>
+						</li>
+					</ul>
+					<ul>
 						<input
 							type="checkbox"
-							id="termsOfUse"
-							checked={termsOfUse}
-							onChange={handleCheckboxChange}
-							required
+							id="agreeAll"
+							checked={agreeAll}
+							onChange={handleAgreeAllChange}
 						/>
+						<label htmlFor="agreeAll">전체 동의합니다</label>
+						<li>
+							<button type="button">약관보기</button>
+							<input
+								type="checkbox"
+								id="termsOfUse"
+								checked={termsOfUse}
+								onChange={handleCheckboxChange}
+								required
+							/>
 
-						<label htmlFor="termsOfUse">이용약관 동의 (필수)</label>
-					</li>
-					<li>
-						<button type="button">약관보기</button>
-						<input
-							type="checkbox"
-							id="providingPersonalInformation"
-							checked={providingPersonalInformation}
-							onChange={handleCheckboxChange}
-							required
-						/>
-						<label htmlFor="providingPersonalInformation">
-							개인정보 수집 및 이용 동의 (필수)
-						</label>
-					</li>
-					<li>
-						<button type="button">약관보기</button>
-						<input
-							type="checkbox"
-							id="recievingMarketingInformation"
-							checked={recievingMarketingInformation}
-							onChange={handleCheckboxChange}
-						/>
-						<label htmlFor="recievingMarketingInformation">
-							마케팅 정보 수신 동의 (선택)
-						</label>
-					</li>
-					<li>
-						<input
-							type="checkbox"
-							id="confirmAge"
-							checked={confirmAge}
-							onChange={handleCheckboxChange}
-						/>
-						<label htmlFor="confirmAge">본인은 만 14세 이상입니다.</label>
-					</li>
-				</ul>
+							<label htmlFor="termsOfUse">이용약관 동의 (필수)</label>
+						</li>
+						<li>
+							<button type="button">약관보기</button>
+							<input
+								type="checkbox"
+								id="providingPersonalInformation"
+								checked={providingPersonalInformation}
+								onChange={handleCheckboxChange}
+								required
+							/>
+							<label htmlFor="providingPersonalInformation">
+								개인정보 수집 및 이용 동의 (필수)
+							</label>
+						</li>
+						<li>
+							<button type="button">약관보기</button>
+							<input
+								type="checkbox"
+								id="recievingMarketingInformation"
+								checked={recievingMarketingInformation}
+								onChange={handleCheckboxChange}
+							/>
+							<label htmlFor="recievingMarketingInformation">
+								마케팅 정보 수신 동의 (선택)
+							</label>
+						</li>
+						<li>
+							<input
+								type="checkbox"
+								id="confirmAge"
+								checked={confirmAge}
+								onChange={handleCheckboxChange}
+							/>
+							<label htmlFor="confirmAge">본인은 만 14세 이상입니다.</label>
+						</li>
+					</ul>
+				</fieldset>
+
 				<button type="submit">회원가입</button>
 			</form>
-		</section>
+		</Backgroud>
 	);
 }
 
