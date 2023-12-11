@@ -1,11 +1,10 @@
-import { debounce } from "@/utils";
+import { axiosInstance, debounce } from "@/utils";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { axiosInstance } from "@/utils";
 
 interface SignUpForm {
 	email: string;

@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import { KeyboardEvent, useEffect, useState } from "react";
 
+import { loggedInState } from "@/states/authState";
 import {
     categoryKeywordState,
     fetchproductListState,
@@ -32,7 +33,6 @@ import toast from "react-hot-toast";
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { loggedInState } from "../states/authState";
 import logoImage from "/logo/logo2.svg";
 
 const Logo = styled.h1`

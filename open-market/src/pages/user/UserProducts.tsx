@@ -1,15 +1,15 @@
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
-	getItemWithExpireTime,
-	numberWithComma,
-	searchProductList,
-	setItemWithExpireTime,
-	axiosInstance,
+    axiosInstance,
+    getItemWithExpireTime,
+    numberWithComma,
+    searchProductList,
+    setItemWithExpireTime,
 } from "@/utils";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 function sortByProfitProductList(list: Product[]) {
 	return list.sort((a, b) => b.buyQuantity * b.price - a.buyQuantity * a.price);

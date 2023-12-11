@@ -1,9 +1,9 @@
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { axiosInstance } from "@/utils";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 function ProductManage() {
 	const navigate = useNavigate();

@@ -1,11 +1,11 @@
-import { debounce, axiosInstance } from "@/utils";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { axiosInstance, debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 interface ProductEditForm {
 	show: boolean;

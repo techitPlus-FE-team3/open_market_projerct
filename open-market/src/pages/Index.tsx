@@ -1,14 +1,14 @@
 import {
-	categoryKeywordState,
-	fetchproductListState,
-	productListState,
-	searchKeywordState,
-	searchedProductListState,
+    categoryKeywordState,
+    fetchproductListState,
+    productListState,
+    searchKeywordState,
+    searchedProductListState,
 } from "@/states/productListState";
 import {
-	categoryFilterProductList,
-	searchProductList,
-	axiosInstance,
+    axiosInstance,
+    categoryFilterProductList,
+    searchProductList,
 } from "@/utils";
 import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
