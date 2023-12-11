@@ -1,7 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
 	baseURL: "https://localhost/api",
 });
 
@@ -46,7 +46,6 @@ function handleTokenRefreshError(error: any) {
 	localStorage.removeItem("accessToken");
 	localStorage.removeItem("refreshToken");
 	localStorage.removeItem("_id");
-	// window.location.href = "/signin";
 }
 
 // 응답 인터셉터 설정
@@ -69,4 +68,4 @@ axiosInstance.interceptors.response.use(
 	},
 );
 
-export default axiosInstance;
+// export default axiosInstance;

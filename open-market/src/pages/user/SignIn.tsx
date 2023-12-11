@@ -1,6 +1,5 @@
-import axiosInstance from "@/utils/refreshToken";
 import { loggedInState } from "@/states/authState";
-import { debounce } from "@/utils";
+import { axiosInstance, debounce } from "@/utils";
 import axios from "axios";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";

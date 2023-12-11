@@ -1,5 +1,5 @@
 // import axiosInstance from "@/api/instance";
-import axiosInstance from "@/utils/refreshToken";
+import { axiosInstance } from "@/utils";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
@@ -11,7 +11,6 @@ function ProductPurchase() {
 	const { productId } = useParams();
 	const [product, setProduct] = useState<Product>();
 
-    
 	//비로그인 상태 체크
 	useRequireAuth();
 

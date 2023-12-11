@@ -1,4 +1,4 @@
-import axiosInstance from "@/utils/refreshToken";
+import { axiosInstance } from "@/utils";
 import toast from "react-hot-toast";
 
 export async function uploadFile(

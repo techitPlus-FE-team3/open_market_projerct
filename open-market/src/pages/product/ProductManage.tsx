@@ -1,4 +1,4 @@
-import axiosInstance from "@/utils/refreshToken";
+import { axiosInstance } from "@/utils";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
@@ -10,7 +10,6 @@ function ProductManage() {
 	const { productId } = useParams();
 	const [userProductInfo, setUserProductInfo] = useState<Product>();
 
-    
 	// 비로그인 상태 체크
 	useRequireAuth();
 

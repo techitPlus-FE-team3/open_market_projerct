@@ -1,6 +1,5 @@
-import axiosInstance from "@/utils/refreshToken";
 import { loggedInState } from "@/states/authState";
-import { debounce } from "@/utils";
+import { debounce, axiosInstance } from "@/utils";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";

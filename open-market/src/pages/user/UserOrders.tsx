@@ -1,12 +1,12 @@
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
 import DownloadIcon from "@mui/icons-material/Download";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import axiosInstance from "@/utils/refreshToken";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 const ProductImage = styled("img")`
 	width: 42px;

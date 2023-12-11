@@ -1,5 +1,4 @@
-import axiosInstance from "@/utils/refreshToken";
-import { debounce } from "@/utils";
+import { debounce, axiosInstance } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useEffect, useRef, useState } from "react";

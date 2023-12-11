@@ -1,9 +1,9 @@
-import axiosInstance from "@/utils/refreshToken";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { axiosInstance } from "@/utils";
 import axios from "axios";
 import { Key, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 function MyPage() {
 	const [userInfo, setUserInfo] = useState<User | null>(null);

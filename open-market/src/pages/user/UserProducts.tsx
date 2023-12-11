@@ -1,9 +1,9 @@
-import axiosInstance from "@/utils/refreshToken";
 import {
 	getItemWithExpireTime,
 	numberWithComma,
 	searchProductList,
 	setItemWithExpireTime,
+	axiosInstance,
 } from "@/utils";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useCallback, useEffect, useRef, useState } from "react";
