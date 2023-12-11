@@ -6,7 +6,7 @@ interface Product {
 	show: boolean;
 	active: boolean;
 	name: string;
-	mainImages: ProductImages[];
+	mainImages: ProductFiles[];
 	image?: string;
 	content: string;
 	quantity: number;
@@ -18,7 +18,7 @@ interface Product {
 		isBest: boolean;
 		category: string;
 		tags: string[];
-		soundFile: string;
+		soundFile: ProductFiles;
 	};
 	replies?: Reply[];
 	bookmarks?: Bookmark[];
@@ -34,7 +34,7 @@ interface ProductResponse {
 	item: Product;
 }
 
-interface ProductImages {
+interface ProductFiles {
 	url: string;
 	fileName: string;
 	orgName: string;
