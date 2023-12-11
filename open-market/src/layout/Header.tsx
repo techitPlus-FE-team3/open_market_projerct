@@ -1,34 +1,33 @@
 import styled from "@emotion/styled";
 import {
-	AccountCircle,
-	ExitToApp,
-	FileUpload,
-	Notifications,
-	Search,
+    AccountCircle,
+    ExitToApp,
+    FileUpload,
+    Notifications,
+    Search,
 } from "@mui/icons-material";
 import {
-	AppBar,
-	Badge,
-	Button,
-	CircularProgress,
-	IconButton,
-	InputAdornment,
-	Menu,
-	MenuItem,
-	TextField,
-	Toolbar,
+    AppBar,
+    Badge,
+    Button,
+    CircularProgress,
+    IconButton,
+    InputAdornment,
+    Menu,
+    MenuItem,
+    TextField,
+    Toolbar,
 } from "@mui/material";
 import { KeyboardEvent, useEffect, useState } from "react";
 
-import axiosInstance from "@/utils/refreshToken";
 import {
-	categoryKeywordState,
-	fetchproductListState,
-	productListState,
-	searchKeywordState,
-	searchedProductListState,
+    categoryKeywordState,
+    fetchproductListState,
+    productListState,
+    searchKeywordState,
+    searchedProductListState,
 } from "@/states/productListState";
-import { searchProductList } from "@/utils";
+import { axiosInstance, searchProductList } from "@/utils";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
