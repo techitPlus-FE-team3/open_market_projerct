@@ -221,7 +221,7 @@ function ProductEdit() {
 								>
 									{category && category.length !== 0
 										? category.map((item) => (
-												<option key={item.code} value={item.value}>
+												<option key={item.code} value={item.code}>
 													{item.value}
 												</option>
 										  ))
