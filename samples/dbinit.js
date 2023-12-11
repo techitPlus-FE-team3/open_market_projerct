@@ -174,7 +174,7 @@ async function registUser() {
       name: "제이지",
       phone: "01044445555",
       address: "서울시 강남구 논현동 222",
-      type: "user",
+      type: "seller",
       createdAt: getTime(-20, -60 * 30),
       updatedAt: getTime(-10, -60 * 60 * 12),
       extra: {
