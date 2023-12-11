@@ -28,7 +28,7 @@ export function categoryFilterProductList({
 }) {
 	const filteredList = productList.filter((product) => {
 		const productCategory = product.extra?.category!;
-		if (productCategory.includes(code)) {
+		if (productCategory?.includes(code)) {
 			return true;
 		}
 		return false;

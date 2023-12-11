@@ -166,7 +166,7 @@ function MyPage() {
 							(item: { _id: Key | null | undefined; mainImages: any[] }) => (
 								<li key={item._id}>
 									<Link to={`/productdetail/${item._id}`}>
-										<img src={`${item?.mainImages[0]}`} alt="앨범아트" />
+										<img src={`${item?.mainImages[0].url}`} alt="앨범아트" />
 									</Link>
 								</li>
 							),
@@ -185,7 +185,7 @@ function MyPage() {
 								<li key={order._id}>
 									<Link to={`/productdetail/${order.products[0]._id}`}>
 										<img
-											src={order.products[0].image}
+											src={order.products[0].image.url}
 											alt={`${order.products[0].name} 사진`}
 										/>
 									</Link>
@@ -205,7 +205,7 @@ function MyPage() {
 						userProductsInfo.slice(0, 5).map((item) => (
 							<li key={item._id}>
 								<Link to={`/productmanage/${item._id}`}>
-									<img src={`${item.mainImages[0]}`} alt="앨범아트" />
+									<img src={`${item.mainImages[0].url}`} alt="앨범아트" />
 								</Link>
 							</li>
 						))

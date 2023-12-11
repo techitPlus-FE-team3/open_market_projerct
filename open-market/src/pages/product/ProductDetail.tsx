@@ -217,7 +217,7 @@ function ProductDetail() {
 			<article>
 				<div>
 					<img
-						src={product?.mainImages[0]}
+						src={product?.mainImages[0].url}
 						alt={`${product?.name} 앨범 아트`}
 					/>
 					<button>

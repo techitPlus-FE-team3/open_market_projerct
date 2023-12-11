@@ -1,10 +1,10 @@
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
-    axiosInstance,
-    getItemWithExpireTime,
-    numberWithComma,
-    searchProductList,
-    setItemWithExpireTime,
+	axiosInstance,
+	getItemWithExpireTime,
+	numberWithComma,
+	searchProductList,
+	setItemWithExpireTime,
 } from "@/utils";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -156,7 +156,7 @@ function UserProducts() {
 						) : searchKeyword && searchedList.length !== 0 ? (
 							searchedList.map((item) => (
 								<li key={item._id}>
-									<img src={item.mainImages[0]} alt="앨범 이름 이미지" />
+									<img src={item.mainImages[0].url} alt="앨범 이름 이미지" />
 									<p>{item.name}</p>
 									<button type="button">
 										<PlayArrowIcon />
@@ -182,7 +182,7 @@ function UserProducts() {
 						) : Array.isArray(userProductsInfo) ? (
 							userProductsInfo.map((item) => (
 								<li key={item._id}>
-									<img src={item.mainImages[0]} alt="앨범 이름 이미지" />
+									<img src={item.mainImages[0].url} alt="앨범 이름 이미지" />
 									<p>{item.name}</p>
 									<button type="button">
 										<PlayArrowIcon />
