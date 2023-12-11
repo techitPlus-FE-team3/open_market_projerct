@@ -6,7 +6,7 @@ interface Product {
 	show: boolean;
 	active: boolean;
 	name: string;
-	mainImages: string[];
+	mainImages: ProductImages[];
 	image?: string;
 	content: string;
 	quantity: number;
@@ -32,6 +32,12 @@ interface ProductListResponse {
 interface ProductResponse {
 	ok: number;
 	item: Product;
+}
+
+interface ProductImages {
+	url: string;
+	fileName: string;
+	orgName: string;
 }
 
 // Reply
