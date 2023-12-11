@@ -1,15 +1,15 @@
-import axiosInstance from "@/api/instance";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
-	getItemWithExpireTime,
-	numberWithComma,
-	searchProductList,
-	setItemWithExpireTime,
+    axiosInstance,
+    getItemWithExpireTime,
+    numberWithComma,
+    searchProductList,
+    setItemWithExpireTime,
 } from "@/utils";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 function sortByProfitProductList(list: Product[]) {
 	return list.sort((a, b) => b.buyQuantity * b.price - a.buyQuantity * a.price);
@@ -21,21 +21,14 @@ function sortByNewestProductList(list: Product[]) {
 	});
 }
 function UserProducts() {
-	const navigate = useNavigate();
-
 	const accessToken = localStorage.getItem("accessToken");
 	const searchRef = useRef<HTMLInputElement>(null);
 	const [searchKeyword, setSearchKeyword] = useState("");
 	const [searchedList, setSearchedList] = useState<Product[]>([]);
 	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
 
-	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (!accessToken) {
-			toast.error("로그인이 필요한 서비스입니다.");
-			navigate("/signin");
-		}
-	}, [navigate]);
+	//비로그인 상태 체크
+	useRequireAuth();
 
 	async function fetchUserProductsInfo() {
 		try {

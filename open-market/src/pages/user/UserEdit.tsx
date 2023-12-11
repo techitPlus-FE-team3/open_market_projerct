@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
-import axiosInstance from "@/api/instance";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { axiosInstance } from "@/utils";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 function UserEdit() {
 	const [userData, setUserData] = useState({
@@ -22,6 +23,9 @@ function UserEdit() {
 	const navigate = useNavigate();
 	const userId = localStorage.getItem("_id");
 	const accessToken = localStorage.getItem("accessToken");
+
+	// 비로그인 상태 체크
+	useRequireAuth();
 
 	useEffect(() => {
 		// 사용자 정보 불러오기

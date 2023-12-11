@@ -1,12 +1,12 @@
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
 import DownloadIcon from "@mui/icons-material/Download";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import axiosInstance from "@/api/instance";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const ProductImage = styled("img")`
 	width: 42px;
@@ -15,17 +15,10 @@ const ProductImage = styled("img")`
 `;
 
 function UserOrders() {
-	const navigate = useNavigate();
-
 	const [orderList, setOrderList] = useState<Order[]>([]);
 
-	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (!accessToken) {
-			toast.error("로그인이 필요한 서비스입니다.");
-			navigate("/signin");
-		}
-	}, [navigate]);
+	//비로그인 상태 체크
+	useRequireAuth();
 
 	async function getOrderList() {
 		const accessToken = localStorage.getItem("accessToken");

@@ -1,4 +1,4 @@
-import axiosInstance from "@/api/instance";
+import { axiosInstance } from "@/utils";
 import { atom, selector } from "recoil";
 
 export const productListState = atom<Product[]>({

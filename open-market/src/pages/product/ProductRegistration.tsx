@@ -1,5 +1,5 @@
-import axiosInstance from "@/api/instance";
-import { debounce } from "@/utils";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { axiosInstance, debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useEffect, useRef, useState } from "react";
@@ -53,6 +53,9 @@ function ProductRegistration() {
 		},
 	});
 	const [category, setCategory] = useState<CategoryCode[]>();
+
+	//비로그인 상태 체크
+	useRequireAuth();
 
 	function handlePostProductRegist(e: { preventDefault: () => void }) {
 		e.preventDefault();

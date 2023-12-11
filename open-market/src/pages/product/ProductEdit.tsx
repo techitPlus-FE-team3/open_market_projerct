@@ -1,5 +1,5 @@
-import axiosInstance from "@/api/instance";
-import { debounce } from "@/utils";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { axiosInstance, debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useEffect, useState } from "react";
@@ -43,13 +43,7 @@ function ProductEdit() {
 		},
 	});
 
-	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (!accessToken) {
-			toast.error("로그인이 필요한 서비스입니다.");
-			navigate("/signin");
-		}
-	}, [navigate]);
+	useRequireAuth();
 
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");

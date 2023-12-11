@@ -1,12 +1,15 @@
-import axiosInstance from "@/api/instance";
 import {
-	categoryKeywordState,
-	fetchproductListState,
-	productListState,
-	searchKeywordState,
-	searchedProductListState,
+    categoryKeywordState,
+    fetchproductListState,
+    productListState,
+    searchKeywordState,
+    searchedProductListState,
 } from "@/states/productListState";
-import { categoryFilterProductList, searchProductList } from "@/utils";
+import {
+    axiosInstance,
+    categoryFilterProductList,
+    searchProductList,
+} from "@/utils";
 import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
