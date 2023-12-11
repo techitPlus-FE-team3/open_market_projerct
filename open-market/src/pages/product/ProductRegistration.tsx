@@ -11,7 +11,7 @@ interface ProductRegistForm {
 	show: boolean;
 	active: boolean;
 	name: string;
-	mainImages: string[];
+	mainImages: ProductFiles[];
 	content: string;
 	price: number;
 	shippingFees: number;
@@ -22,7 +22,7 @@ interface ProductRegistForm {
 		isBest: boolean;
 		category: string;
 		tags: string[];
-		soundFile: string;
+		soundFile: ProductFiles;
 	};
 }
 
@@ -38,7 +38,7 @@ function ProductRegistration() {
 		show: true,
 		active: true,
 		name: "",
-		mainImages: [],
+		mainImages: [{ url: "", fileName: "", orgName: "" }],
 		content: "",
 		price: 0,
 		shippingFees: 0,
@@ -49,7 +49,7 @@ function ProductRegistration() {
 			isBest: false,
 			category: "",
 			tags: [],
-			soundFile: "",
+			soundFile: { url: "", fileName: "", orgName: "" },
 		},
 	});
 	const [category, setCategory] = useState<CategoryCode[]>();
@@ -71,7 +71,7 @@ function ProductRegistration() {
 			return;
 		}
 
-		if (postItem.extra.soundFile === "") {
+		if (postItem.extra.soundFile.url === "") {
 			toast.error("음원을 업로드해야 합니다", {
 				ariaProps: {
 					role: "status",
@@ -80,6 +80,7 @@ function ProductRegistration() {
 			});
 			return;
 		}
+
 		try {
 			axiosInstance
 				.post(`/seller/products`, postItem, {
@@ -155,15 +156,15 @@ function ProductRegistration() {
 								type="file"
 								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
 								ref={albumRef}
-								onChange={(e: { target: { files: any } }) =>
-									uploadFile(e.target.files[0], setPostItem, "image")
-								}
+								onChange={(e: { target: { files: any } }) => {
+									uploadFile(e.target.files[0], setPostItem, "image");
+								}}
 								name="photo"
 								id="photo"
 							/>
-							{postItem.mainImages.length !== 0 ? (
+							{postItem?.mainImages[0].url !== "" ? (
 								<img
-									src={postItem?.mainImages[0]}
+									src={postItem?.mainImages[0].url}
 									alt={`${postItem?.name}앨범아트`}
 								/>
 							) : (
