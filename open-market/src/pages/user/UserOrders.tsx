@@ -56,7 +56,7 @@ function UserOrders() {
 						return (
 							<li key={order._id}>
 								<ProductImage
-									src={order.products[0].image}
+									src={order.products[0].image.url}
 									alt={`${order.products[0].name} 사진`}
 								/>
 								<Link to={`/products?_id=${order.products[0]._id}`}>
@@ -65,7 +65,7 @@ function UserOrders() {
 								<button type="button">
 									<PlayArrowIcon />
 								</button>
-								<audio src={order.products[0].extra?.soundFile} controls />
+								<audio src={order.products[0].extra?.soundFile?.url} controls />
 								<button type="button">
 									<DownloadIcon />
 									다운로드

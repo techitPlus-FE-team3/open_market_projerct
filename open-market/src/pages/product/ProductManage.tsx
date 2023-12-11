@@ -71,7 +71,7 @@ function ProductManage() {
 			</Helmet>
 			<h2>상품 관리</h2>
 			<div>
-				<img src={userProductInfo?.mainImages[0]} alt="앨범아트" />
+				<img src={userProductInfo?.mainImages[0].url} alt="앨범아트" />
 				<div>
 					<span>제목: {userProductInfo?.name}</span>
 					<div>

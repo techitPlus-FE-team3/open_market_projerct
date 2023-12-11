@@ -1,14 +1,14 @@
 import {
-    categoryKeywordState,
-    fetchproductListState,
-    productListState,
-    searchKeywordState,
-    searchedProductListState,
+	categoryKeywordState,
+	fetchproductListState,
+	productListState,
+	searchKeywordState,
+	searchedProductListState,
 } from "@/states/productListState";
 import {
-    axiosInstance,
-    categoryFilterProductList,
-    searchProductList,
+	axiosInstance,
+	categoryFilterProductList,
+	searchProductList,
 } from "@/utils";
 import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
@@ -142,12 +142,12 @@ function Index() {
 									<li key={String(product._id)} className="musicItem">
 										<Link to={`/productdetail/${product._id}`}>
 											<ProductImage
-												src={product.mainImages[0]}
+												src={product.mainImages[0].url}
 												alt={`${product.name} 사진`}
 											/>
 											<span>{product.name}</span>
 										</Link>
-										<audio src={product?.extra?.soundFile} controls />
+										<audio src={product?.extra?.soundFile?.url} controls />
 										<button type="submit">북마크</button>
 									</li>
 								);
@@ -164,12 +164,12 @@ function Index() {
 									<li key={String(product._id)} className="musicItem">
 										<Link to={`/productdetail/${product._id}`}>
 											<ProductImage
-												src={product.mainImages[0]}
+												src={product.mainImages[0].url}
 												alt={`${product.name} 사진`}
 											/>
 											<span>{product.name}</span>
 										</Link>
-										<audio src={product?.extra?.soundFile} controls />
+										<audio src={product?.extra?.soundFile?.url} controls />
 										<button type="submit">북마크</button>
 									</li>
 								);
@@ -181,12 +181,12 @@ function Index() {
 								<li key={String(product._id)} className="musicItem">
 									<Link to={`/productdetail/${product._id}`}>
 										<ProductImage
-											src={product.mainImages[0]}
+											src={product.mainImages[0].url}
 											alt={`${product.name} 사진`}
 										/>
 										<span>{product.name}</span>
 									</Link>
-									<audio src={product?.extra?.soundFile} controls />
+									<audio src={product?.extra?.soundFile?.url} controls />
 									<button type="submit">북마크</button>
 								</li>
 							);
