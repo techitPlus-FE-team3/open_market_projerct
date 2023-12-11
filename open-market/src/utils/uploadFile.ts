@@ -18,16 +18,32 @@ export async function uploadFile(
 				Authorization: `Bearer ${accessToken}`,
 			},
 		});
-
 		const filePath = `https://localhost${response.data.file.path}`;
+
 		// 상태 업데이트
 		setItemCallback((prevItem) => {
 			if (itemType === "image") {
-				return { ...prevItem, mainImages: [filePath] };
+				return {
+					...prevItem,
+					mainImages: [
+						{
+							url: filePath,
+							fileName: filePath.substring(26),
+							orgName: filePath.slice(filePath.lastIndexOf("/") + 1, -4),
+						},
+					],
+				};
 			} else if (itemType === "soundFile") {
 				return {
 					...prevItem,
-					extra: { ...prevItem.extra, soundFile: filePath },
+					extra: {
+						...prevItem.extra,
+						soundFile: {
+							url: filePath,
+							fileName: filePath.substring(26),
+							orgName: filePath.slice(filePath.lastIndexOf("/") + 1, -4),
+						},
+					},
 				};
 			} else {
 				return prevItem;

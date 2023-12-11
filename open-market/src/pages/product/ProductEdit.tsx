@@ -10,7 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 interface ProductEditForm {
 	show: boolean;
 	name: string;
-	mainImages: string[];
+	mainImages: ProductFiles[];
 	content: string;
 	price: number;
 	shippingFees: number;
@@ -18,7 +18,7 @@ interface ProductEditForm {
 	extra: {
 		category: string;
 		tags: string[];
-		soundFile: string;
+		soundFile: ProductFiles;
 	};
 }
 
@@ -31,7 +31,7 @@ function ProductEdit() {
 	const [postItem, setPostItem] = useState<ProductEditForm>({
 		show: false,
 		name: "",
-		mainImages: [],
+		mainImages: [{ url: "", fileName: "", orgName: "" }],
 		content: "",
 		price: 0,
 		shippingFees: 0,
@@ -39,7 +39,7 @@ function ProductEdit() {
 		extra: {
 			category: "",
 			tags: [],
-			soundFile: "",
+			soundFile: { url: "", fileName: "", orgName: "" },
 		},
 	});
 
@@ -71,7 +71,11 @@ function ProductEdit() {
 					extra: {
 						category: fetchedProductInfo?.extra?.category || "",
 						tags: fetchedProductInfo?.extra?.tags || [],
-						soundFile: fetchedProductInfo?.extra?.soundFile || "",
+						soundFile: fetchedProductInfo?.extra?.soundFile || {
+							url: "",
+							fileName: "",
+							orgName: "",
+						},
 					},
 				});
 			} catch (error) {
@@ -114,7 +118,7 @@ function ProductEdit() {
 			return;
 		}
 
-		if (postItem.extra.soundFile === "") {
+		if (postItem.extra.soundFile.url === "") {
 			toast.error("음원을 업로드해야 합니다", {
 				ariaProps: {
 					role: "status",
@@ -181,7 +185,7 @@ function ProductEdit() {
 							}}
 						/>
 						<img
-							src={postItem?.mainImages[0]}
+							src={postItem?.mainImages[0].url}
 							alt={`${userProductInfo?.name}앨범아트`}
 						/>
 					</div>
