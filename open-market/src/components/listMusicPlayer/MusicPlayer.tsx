@@ -1,8 +1,34 @@
 import ControlPanel from "@/components/listMusicPlayer/ControlPanel";
 import PlayerSlider from "@/components/listMusicPlayer/PlayerSlider";
+import { Common } from "@/styles/common";
+import styled from "@emotion/styled";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import { useRef, useState } from "react";
+import {
+	ChangeEvent,
+	SyntheticEvent,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
+
+const PalyerContainer = styled("div")`
+	width: auto;
+	max-width: 780px;
+	padding: ${Common.space.spacingMd};
+	display: flex;
+	flex-flow: row wrap;
+	gap: 10px;
+	align-items: center;
+	position: relative;
+`;
+
+const PlayButton = styled("button")`
+	width: 40px;
+	height: 40px;
+	background-color: transparent;
+	border: none;
+`;
 
 function MusicPlayer({ src }: { src: string }) {
 	const [percentage, setPercentage] = useState(0);
@@ -10,16 +36,17 @@ function MusicPlayer({ src }: { src: string }) {
 	const [duration, setDuration] = useState(0);
 	const [currentTime, setCurrentTime] = useState(0);
 
-	function onChange(e) {
-		const audio = audioRef.current! as HTMLAudioElement;
-		audio.currentTime = (audio.duration / 100) * e.target.value;
-		setPercentage(e.target.value);
-	}
-
 	const audioRef = useRef(null);
 
+	const audio = audioRef.current! as HTMLAudioElement;
+
+	function onChange(e: ChangeEvent<HTMLInputElement>) {
+		const target = e.target as HTMLInputElement;
+		audio.currentTime = (audio.duration / 100) * parseInt(target.value);
+		setPercentage(parseInt(target.value));
+	}
+
 	function handlePlayAndPauseMusic() {
-		const audio = audioRef.current! as HTMLAudioElement;
 		audio.volume = 0.1;
 
 		if (!isPlaying) {
@@ -33,7 +60,7 @@ function MusicPlayer({ src }: { src: string }) {
 		}
 	}
 
-	function getCurrentDuration(e) {
+	function getCurrentDuration(e: SyntheticEvent<HTMLAudioElement>) {
 		const percent = (
 			(e.currentTarget.currentTime / e.currentTarget.duration) *
 			100
@@ -41,13 +68,28 @@ function MusicPlayer({ src }: { src: string }) {
 		const time = e.currentTarget.currentTime;
 
 		setPercentage(+percent);
-		setCurrentTime(time.toFixed(2));
+		setCurrentTime(parseInt(time.toFixed(2)));
 	}
+
+	useEffect(() => {
+		if (percentage === 100) {
+			setTimeout(() => {
+				setIsPlaying(false);
+				setPercentage(0);
+				audio.currentTime = 0;
+			}, 1000);
+		}
+	}, [percentage]);
+
 	return (
-		<div>
-			<button onClick={handlePlayAndPauseMusic}>
-				{isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-			</button>
+		<PalyerContainer>
+			<PlayButton onClick={handlePlayAndPauseMusic}>
+				{isPlaying ? (
+					<PauseIcon fontSize="large" />
+				) : (
+					<PlayArrowIcon fontSize="large" />
+				)}
+			</PlayButton>
 			<PlayerSlider onChange={onChange} percentage={percentage} />
 			<audio
 				ref={audioRef}
@@ -58,7 +100,7 @@ function MusicPlayer({ src }: { src: string }) {
 				src={src}
 			/>
 			<ControlPanel duration={duration} currentTime={currentTime} />
-		</div>
+		</PalyerContainer>
 	);
 }
 
