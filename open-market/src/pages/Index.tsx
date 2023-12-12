@@ -1,3 +1,4 @@
+import ProductListItem from "@/components/ProductListItem";
 import {
 	categoryKeywordState,
 	fetchproductListState,
@@ -5,6 +6,7 @@ import {
 	searchKeywordState,
 	searchedProductListState,
 } from "@/states/productListState";
+import { Common } from "@/styles/common";
 import {
 	axiosInstance,
 	categoryFilterProductList,
@@ -13,13 +15,17 @@ import {
 import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 
-const ProductImage = styled("img")`
-	width: 42px;
-	height: 42px;
-	border-radius: 50%;
+const ProductList = styled("ol")`
+	width: 1160px;
+	padding: 30px 0px;
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	gap: ${Common.space.spacingLg};
+	background-color: ${Common.colors.gray2};
+	border-radius: 10px;
 `;
 
 function Index() {
@@ -132,24 +138,20 @@ function Index() {
 							: undefined}
 					</select>
 				</div>
-				<ol className="musicList">
+				<ProductList>
 					{searchKeyword && searchedProductList !== undefined ? (
 						searchedProductList.length === 0 ? (
 							<span>해당하는 상품이 없습니다.</span>
 						) : (
 							searchedProductList.slice(0, 4).map((product) => {
 								return (
-									<li key={String(product._id)} className="musicItem">
-										<Link to={`/productdetail/${product._id}`}>
-											<ProductImage
-												src={product.mainImages[0].url}
-												alt={`${product.name} 사진`}
-											/>
-											<span>{product.name}</span>
-										</Link>
-										<audio src={product?.extra?.soundFile?.url} controls />
-										<button type="submit">북마크</button>
-									</li>
+									<ProductListItem
+										_id={product._id}
+										image={product.mainImages[0].url}
+										title={product.name}
+										soundFile={product?.extra?.soundFile?.url!}
+										bookmarked={false}
+									/>
 								);
 							})
 						)
@@ -161,38 +163,30 @@ function Index() {
 						) : (
 							filteredProductList.slice(0, 4).map((product) => {
 								return (
-									<li key={String(product._id)} className="musicItem">
-										<Link to={`/productdetail/${product._id}`}>
-											<ProductImage
-												src={product.mainImages[0].url}
-												alt={`${product.name} 사진`}
-											/>
-											<span>{product.name}</span>
-										</Link>
-										<audio src={product?.extra?.soundFile?.url} controls />
-										<button type="submit">북마크</button>
-									</li>
+									<ProductListItem
+										_id={product._id}
+										image={product.mainImages[0].url}
+										title={product.name}
+										soundFile={product?.extra?.soundFile?.url!}
+										bookmarked={false}
+									/>
 								);
 							})
 						)
 					) : (
 						productList?.slice(0, 4).map((product) => {
 							return (
-								<li key={String(product._id)} className="musicItem">
-									<Link to={`/productdetail/${product._id}`}>
-										<ProductImage
-											src={product.mainImages[0].url}
-											alt={`${product.name} 사진`}
-										/>
-										<span>{product.name}</span>
-									</Link>
-									<audio src={product?.extra?.soundFile?.url} controls />
-									<button type="submit">북마크</button>
-								</li>
+								<ProductListItem
+									_id={product._id}
+									image={product.mainImages[0].url}
+									title={product.name}
+									soundFile={product?.extra?.soundFile?.url!}
+									bookmarked={true}
+								/>
 							);
 						})
 					)}
-				</ol>
+				</ProductList>
 				<button type="submit">더보기</button>
 			</section>
 		</>
