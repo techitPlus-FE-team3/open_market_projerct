@@ -9,6 +9,9 @@ import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import logoImage from "/logo/logo1.svg";
 import AuthInput from "@/components/AuthInput";
+import Checkbox from "@mui/material/Checkbox";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const Title = styled.h2`
 	${Common.a11yHidden};
@@ -35,6 +38,99 @@ const Logo = styled.h1`
 			width: 440px;
 		}
 	}
+`;
+
+const Form = styled.form`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	background-color: ${Common.colors.white};
+
+	width: 506px;
+	padding: ${Common.space.spacingLg};
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	border-radius: 10px;
+`;
+
+const Fieldset = styled.fieldset`
+	width: 380px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+	legend {
+		text-align: center;
+		margin: 28px auto;
+
+		font-weight: ${Common.font.weight.bold};
+		font-size: 32px;
+
+		color: ${Common.colors.black};
+	}
+	& > ul:first-of-type {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+		width: 380px;
+	}
+	& > ul:last-of-type {
+		margin-top: 20px;
+		color: ${Common.colors.black};
+		li {
+			display: flex;
+			justify-content: space-between;
+			& > button {
+				background-color: ${Common.colors.emphasize};
+				border: none;
+				border-radius: 5px;
+				color: ${Common.colors.white};
+				margin: 3px 2px;
+			}
+		}
+	}
+`;
+const StyledCheckbox = styled(Checkbox)`
+	margin: 0;
+	padding: 0;
+`;
+
+const EmailField = styled.li`
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	& > div {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+		& > button {
+			width: 70px;
+			height: 56px;
+			background-color: ${Common.colors.emphasize};
+			border: none;
+			border-radius: 10px;
+			padding: 20px 5px;
+			font-size: ${Common.font.size.sm};
+			font-weight: ${Common.font.weight.regular};
+			color: ${Common.colors.white};
+		}
+	}
+`;
+
+const Submit = styled.button`
+	width: 383px;
+	height: 55px;
+
+	background: ${Common.colors.emphasize};
+	border-radius: 10px;
+	border: none;
+
+	font-weight: ${Common.font.weight.bold};
+	font-size: ${Common.font.size.lg};
+	color: ${Common.colors.white}};
+
+	padding: 15px 32px;
 `;
 
 interface SignUpForm {
@@ -290,28 +386,29 @@ function SignUp() {
 				</Link>
 			</Logo>
 			<Title>회원가입</Title>
-			<form onSubmit={handleSubmit}>
-				<fieldset>
+			<Form onSubmit={handleSubmit}>
+				<Fieldset>
 					<legend>회원가입</legend>
 					<ul>
-						<li>
-							<AuthInput
-								id="email"
-								name="email"
-								label="이메일"
-								type="text"
-								defaultValue={form.email}
-								onChange={debounce(handleChange)}
-								placeholder="이메일"
-								required={true}
-							/>
-							<button type="button" onClick={checkEmailDuplication}>
-								중복 확인
-							</button>
+						<EmailField>
+							<div>
+								<AuthInput
+									id="email"
+									name="email"
+									label="이메일"
+									type="text"
+									defaultValue={form.email}
+									onChange={debounce(handleChange)}
+									placeholder="이메일"
+									required={true}
+								/>
+								<button type="button" onClick={checkEmailDuplication}>
+									중복 확인
+								</button>
+							</div>
 							{emailCheck.checked && <p>{emailCheck.message}</p>}
-						</li>
+						</EmailField>
 						<li>
-							<label htmlFor="password">비밀번호</label>
 							<AuthInput
 								id="password"
 								name="password"
@@ -359,64 +456,80 @@ function SignUp() {
 						</li>
 					</ul>
 					<ul>
-						<input
-							type="checkbox"
-							id="agreeAll"
-							checked={agreeAll}
-							onChange={handleAgreeAllChange}
-						/>
-						<label htmlFor="agreeAll">전체 동의합니다</label>
 						<li>
-							<button type="button">약관보기</button>
-							<input
-								type="checkbox"
-								id="termsOfUse"
-								checked={termsOfUse}
-								onChange={handleCheckboxChange}
-								required
-							/>
-
-							<label htmlFor="termsOfUse">이용약관 동의 (필수)</label>
+							<div>
+								<StyledCheckbox
+									id="agreeAll"
+									checked={agreeAll}
+									onChange={handleAgreeAllChange}
+									icon={<CheckCircleOutlineIcon />}
+									checkedIcon={<CheckCircleIcon />}
+								/>
+								<label htmlFor="agreeAll">전체 동의합니다</label>
+							</div>
 						</li>
 						<li>
+							<div>
+								<StyledCheckbox
+									id="termsOfUse"
+									checked={termsOfUse}
+									onChange={handleCheckboxChange}
+									required
+									icon={<CheckCircleOutlineIcon />}
+									checkedIcon={<CheckCircleIcon />}
+								/>
+								<label htmlFor="termsOfUse">이용약관 동의 (필수)</label>
+							</div>
 							<button type="button">약관보기</button>
-							<input
-								type="checkbox"
-								id="providingPersonalInformation"
-								checked={providingPersonalInformation}
-								onChange={handleCheckboxChange}
-								required
-							/>
-							<label htmlFor="providingPersonalInformation">
-								개인정보 수집 및 이용 동의 (필수)
-							</label>
 						</li>
 						<li>
+							<div>
+								<StyledCheckbox
+									id="providingPersonalInformation"
+									checked={providingPersonalInformation}
+									onChange={handleCheckboxChange}
+									required
+									icon={<CheckCircleOutlineIcon />}
+									checkedIcon={<CheckCircleIcon />}
+								/>
+								<label htmlFor="providingPersonalInformation">
+									개인정보 수집 및 이용 동의 (필수)
+								</label>
+							</div>
 							<button type="button">약관보기</button>
-							<input
-								type="checkbox"
-								id="recievingMarketingInformation"
-								checked={recievingMarketingInformation}
-								onChange={handleCheckboxChange}
-							/>
-							<label htmlFor="recievingMarketingInformation">
-								마케팅 정보 수신 동의 (선택)
-							</label>
 						</li>
 						<li>
-							<input
-								type="checkbox"
-								id="confirmAge"
-								checked={confirmAge}
-								onChange={handleCheckboxChange}
-							/>
-							<label htmlFor="confirmAge">본인은 만 14세 이상입니다.</label>
+							<div>
+								<StyledCheckbox
+									id="recievingMarketingInformation"
+									checked={recievingMarketingInformation}
+									onChange={handleCheckboxChange}
+									icon={<CheckCircleOutlineIcon />}
+									checkedIcon={<CheckCircleIcon />}
+								/>
+								<label htmlFor="recievingMarketingInformation">
+									마케팅 정보 수신 동의 (선택)
+								</label>
+							</div>
+							<button type="button">약관보기</button>
+						</li>
+						<li>
+							<div>
+								<StyledCheckbox
+									id="confirmAge"
+									checked={confirmAge}
+									onChange={handleCheckboxChange}
+									icon={<CheckCircleOutlineIcon />}
+									checkedIcon={<CheckCircleIcon />}
+								/>
+								<label htmlFor="confirmAge">본인은 만 14세 이상입니다.</label>
+							</div>
 						</li>
 					</ul>
-				</fieldset>
+				</Fieldset>
 
-				<button type="submit">회원가입</button>
-			</form>
+				<Submit type="submit">회원가입</Submit>
+			</Form>
 		</Backgroud>
 	);
 }
