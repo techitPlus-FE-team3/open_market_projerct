@@ -1,6 +1,10 @@
+import AuthInput from "@/components/AuthInput";
 import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
 import styled from "@emotion/styled";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
@@ -8,10 +12,6 @@ import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import logoImage from "/logo/logo1.svg";
-import AuthInput from "@/components/AuthInput";
-import Checkbox from "@mui/material/Checkbox";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const Title = styled.h2`
 	${Common.a11yHidden};
@@ -78,9 +78,14 @@ const Fieldset = styled.fieldset`
 	& > ul:last-of-type {
 		margin-top: 20px;
 		color: ${Common.colors.black};
+		& > :first-of-type,
+		& > :last-of-type {
+			flex-direction: row;
+		}
 		li {
 			display: flex;
 			justify-content: space-between;
+			flex-direction: row-reverse;
 			& > button {
 				background-color: ${Common.colors.emphasize};
 				border: none;
@@ -94,6 +99,7 @@ const Fieldset = styled.fieldset`
 const StyledCheckbox = styled(Checkbox)`
 	margin: 0;
 	padding: 0;
+	color: ${Common.colors.emphasize};
 `;
 
 const EmailField = styled.li`
@@ -469,6 +475,7 @@ function SignUp() {
 							</div>
 						</li>
 						<li>
+							<button type="button">약관보기</button>
 							<div>
 								<StyledCheckbox
 									id="termsOfUse"
@@ -480,9 +487,9 @@ function SignUp() {
 								/>
 								<label htmlFor="termsOfUse">이용약관 동의 (필수)</label>
 							</div>
-							<button type="button">약관보기</button>
 						</li>
 						<li>
+							<button type="button">약관보기</button>
 							<div>
 								<StyledCheckbox
 									id="providingPersonalInformation"
@@ -496,9 +503,9 @@ function SignUp() {
 									개인정보 수집 및 이용 동의 (필수)
 								</label>
 							</div>
-							<button type="button">약관보기</button>
 						</li>
 						<li>
+							<button type="button">약관보기</button>
 							<div>
 								<StyledCheckbox
 									id="recievingMarketingInformation"
@@ -511,7 +518,6 @@ function SignUp() {
 									마케팅 정보 수신 동의 (선택)
 								</label>
 							</div>
-							<button type="button">약관보기</button>
 						</li>
 						<li>
 							<div>
