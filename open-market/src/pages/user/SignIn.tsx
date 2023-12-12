@@ -1,11 +1,100 @@
+import AuthInput from "@/components/AuthInput";
 import { loggedInState } from "@/states/authState";
+import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
+import styled from "@emotion/styled";
 import axios from "axios";
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import logoImage from "/logo/logo1.svg";
+
+const Title = styled.h2`
+	${Common.a11yHidden};
+`;
+
+const Backgroud = styled.section`
+	width: 100vw;
+	height: 100vh;
+	background-color: ${Common.colors.black};
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+`;
+
+const Logo = styled.h1`
+	a {
+		text-decoration: none;
+		color: inherit;
+		display: flex;
+		align-items: center;
+
+		img {
+			width: 440px;
+		}
+	}
+`;
+const Form = styled.form`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	background-color: ${Common.colors.white};
+
+	width: 506px;
+	padding: ${Common.space.spacingLg};
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	border-radius: 10px;
+`;
+
+const Fieldset = styled.fieldset`
+	width: 380px;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	legend {
+		text-align: center;
+		margin: 28px auto;
+
+		font-weight: ${Common.font.weight.bold};
+		font-size: 32px;
+
+		color: ${Common.colors.black};
+	}
+`;
+
+const Submit = styled.button`
+	width: 383px;
+	height: 55px;
+
+	background: ${Common.colors.emphasize};
+	border-radius: 10px;
+	border: none;
+
+	font-weight: ${Common.font.weight.bold};
+	font-size: ${Common.font.size.lg};
+	color: ${Common.colors.white}};
+
+	padding: 15px 32px;
+`;
+
+const Ul = styled.ul`
+	display: flex;
+	a:visited {
+		text-decoration: none;
+		color: inherit;
+	}
+	margin-bottom: 100px;
+	& > :first-of-type::after {
+		content: "|";
+		display: inline-block;
+		margin: 0 40px;
+	}
+`;
 
 function SignIn() {
 	const [_, setLoggedIn] = useRecoilState(loggedInState);
@@ -63,50 +152,58 @@ function SignIn() {
 	};
 
 	return (
-		<section>
+		<Backgroud>
 			<Helmet>
 				<title>Sign In - 모두의 오디오 MODI</title>
 			</Helmet>
-			<h2>로그인</h2>
-			<form onSubmit={handleLogin}>
-				<fieldset>
-					<legend>로그인 폼</legend>
-					<label htmlFor="email">이메일</label>
-					<input
-						type="text"
+			<Logo>
+				<Link to="/">
+					<img src={logoImage} alt="모디 로고" />
+				</Link>
+			</Logo>
+			<Title>로그인</Title>
+			<Form onSubmit={handleLogin}>
+				<Fieldset>
+					<legend>로그인</legend>
+					<AuthInput
 						id="email"
+						name="email"
+						label="이메일"
+						type="text"
 						defaultValue={email}
 						onChange={debounce(
 							(e: { target: { value: React.SetStateAction<string> } }) =>
 								setEmail(e.target.value),
 						)}
 						placeholder="이메일"
+						required={true}
 					/>
-					<label htmlFor="password">비밀번호</label>
-					<input
-						type="password"
+					<AuthInput
 						id="password"
+						name="password"
+						label="비밀번호"
+						type="password"
 						defaultValue={password}
 						onChange={debounce(
-							(e: { target: { value: React.SetStateAction<string> } }) => {
-								setPassword(e.target.value);
-							},
+							(e: { target: { value: React.SetStateAction<string> } }) =>
+								setPassword(e.target.value),
 						)}
 						placeholder="비밀번호"
+						required={true}
 					/>
-				</fieldset>
+				</Fieldset>
 
-				<button type="submit">로그인</button>
-			</form>
-			<ul>
-				<li>
-					<Link to="/signup">회원가입</Link>
-				</li>
-				<li>
-					<Link to="/">아이디/비밀번호 찾기</Link>
-				</li>
-			</ul>
-		</section>
+				<Submit type="submit">로그인</Submit>
+				<Ul>
+					<li>
+						<Link to="/signup">회원가입</Link>
+					</li>
+					<li>
+						<Link to="/">아이디/비밀번호 찾기</Link>
+					</li>
+				</Ul>
+			</Form>
+		</Backgroud>
 	);
 }
 

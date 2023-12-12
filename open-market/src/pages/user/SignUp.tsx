@@ -1,10 +1,142 @@
+import AuthInput from "@/components/AuthInput";
+import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
+import styled from "@emotion/styled";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import logoImage from "/logo/logo1.svg";
+
+const Title = styled.h2`
+	${Common.a11yHidden};
+`;
+
+const Backgroud = styled.section`
+	width: 100vw;
+	height: 100vh;
+	background-color: ${Common.colors.black};
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+`;
+
+const Logo = styled.h1`
+	a {
+		text-decoration: none;
+		color: inherit;
+		display: flex;
+		align-items: center;
+
+		img {
+			width: 440px;
+		}
+	}
+`;
+
+const Form = styled.form`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	background-color: ${Common.colors.white};
+
+	width: 506px;
+	padding: ${Common.space.spacingLg};
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	border-radius: 10px;
+`;
+
+const Fieldset = styled.fieldset`
+	width: 380px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+	legend {
+		text-align: center;
+		margin: 28px auto;
+
+		font-weight: ${Common.font.weight.bold};
+		font-size: 32px;
+
+		color: ${Common.colors.black};
+	}
+	& > ul:first-of-type {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+		width: 380px;
+	}
+	& > ul:last-of-type {
+		margin-top: 20px;
+		color: ${Common.colors.black};
+		& > :first-of-type,
+		& > :last-of-type {
+			flex-direction: row;
+		}
+		li {
+			display: flex;
+			justify-content: space-between;
+			flex-direction: row-reverse;
+			& > button {
+				background-color: ${Common.colors.emphasize};
+				border: none;
+				border-radius: 5px;
+				color: ${Common.colors.white};
+				margin: 3px 2px;
+			}
+		}
+	}
+`;
+const StyledCheckbox = styled(Checkbox)`
+	margin: 0;
+	padding: 0;
+`;
+
+const EmailField = styled.li`
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	& > div {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+		& > button {
+			width: 70px;
+			height: 56px;
+			background-color: ${Common.colors.emphasize};
+			border: none;
+			border-radius: 10px;
+			padding: 20px 5px;
+			font-size: ${Common.font.size.sm};
+			font-weight: ${Common.font.weight.regular};
+			color: ${Common.colors.white};
+		}
+	}
+`;
+
+const Submit = styled.button`
+	width: 383px;
+	height: 55px;
+
+	background: ${Common.colors.emphasize};
+	border-radius: 10px;
+	border: none;
+
+	font-weight: ${Common.font.weight.bold};
+	font-size: ${Common.font.size.lg};
+	color: ${Common.colors.white}};
+
+	padding: 15px 32px;
+`;
 
 interface SignUpForm {
 	email: string;
@@ -249,136 +381,191 @@ function SignUp() {
 		}
 	};
 	return (
-		<section>
+		<Backgroud>
 			<Helmet>
 				<title>Sign Up - 모두의 오디오 MODI</title>
 			</Helmet>
-			<h2>회원가입</h2>
-			<form onSubmit={handleSubmit}>
-				<ul>
-					<li>
-						<label htmlFor="email">이메일</label>
-						<input
-							type="text"
-							id="email"
-							name="email"
-							defaultValue={form.email}
-							onChange={debounce(handleChange)}
-							placeholder="이메일"
-							required
-						/>
-						<button type="button" onClick={checkEmailDuplication}>
-							중복 확인
-						</button>
-						{emailCheck.checked && <p>{emailCheck.message}</p>}
-					</li>
-					<li>
-						<label htmlFor="password">비밀번호</label>
-						<input
-							type="password"
-							id="password"
-							name="password"
-							defaultValue={form.password}
-							onChange={debounce(handleChange)}
-							placeholder="비밀번호"
-							required
-						/>
-					</li>
-					<li>
-						<label htmlFor="confirmPassword">비밀번호 확인</label>
-						<input
-							type="password"
-							id="confirmPassword"
-							name="confirmPassword"
-							defaultValue={form.confirmPassword}
-							onChange={debounce(handleChange)}
-							placeholder="비밀번호 확인"
-							required
-						/>
-					</li>
-					<li>
-						<label htmlFor="name">이름</label>
-						<input
-							type="text"
-							id="name"
-							name="name"
-							defaultValue={form.name}
-							onChange={debounce(handleChange)}
-							placeholder="이름"
-							required
-						/>
-					</li>
-					<li>
-						<label htmlFor="phone">휴대폰 번호</label>
-						<input
-							type="tel"
-							id="phone"
-							name="phone"
-							defaultValue={form.phone}
-							onChange={debounce(handleChange)}
-							placeholder="휴대폰 번호"
-							required
-						/>
-					</li>
-				</ul>
-				<ul>
-					<input
-						type="checkbox"
-						id="agreeAll"
-						checked={agreeAll}
-						onChange={handleAgreeAllChange}
-					/>
-					<label htmlFor="agreeAll">전체 동의합니다</label>
-					<li>
-						<button type="button">약관보기</button>
-						<input
-							type="checkbox"
-							id="termsOfUse"
-							checked={termsOfUse}
-							onChange={handleCheckboxChange}
-							required
-						/>
+			<Logo>
+				<Link to="/">
+					<img src={logoImage} alt="모디 로고" />
+				</Link>
+			</Logo>
+			<Title>회원가입</Title>
+			<Form onSubmit={handleSubmit}>
+				<Fieldset>
+					<legend>회원가입</legend>
+					<ul>
+						<EmailField>
+							<div>
+								<AuthInput
+									id="email"
+									name="email"
+									label="이메일"
+									type="text"
+									defaultValue={form.email}
+									onChange={debounce(handleChange)}
+									placeholder="이메일"
+									required={true}
+								/>
+								<button type="button" onClick={checkEmailDuplication}>
+									중복 확인
+								</button>
+							</div>
+							{emailCheck.checked && <p>{emailCheck.message}</p>}
+						</EmailField>
+						<li>
+							<AuthInput
+								id="password"
+								name="password"
+								label="비밀번호"
+								type="password"
+								defaultValue={form.password}
+								onChange={debounce(handleChange)}
+								placeholder="비밀번호"
+								required={true}
+							/>
+						</li>
+						<li>
+							<AuthInput
+								id="confirmPassword"
+								name="confirmPassword"
+								label="비밀번호 확인"
+								type="password"
+								defaultValue={form.confirmPassword}
+								onChange={debounce(handleChange)}
+								placeholder="비밀번호 확인"
+								required={true}
+							/>
+						</li>
+						<li>
+							<AuthInput
+								type="text"
+								id="name"
+								name="name"
+								defaultValue={form.name}
+								onChange={debounce(handleChange)}
+								placeholder="이름"
+								required={true}
+							/>
+						</li>
+						<li>
+							<AuthInput
+								type="tel"
+								id="phone"
+								name="phone"
+								defaultValue={form.phone}
+								onChange={debounce(handleChange)}
+								placeholder="휴대폰 번호"
+								required={true}
+							/>
+						</li>
+					</ul>
+					<ul>
+						<li>
+							<div>
+								<StyledCheckbox
+									id="agreeAll"
+									checked={agreeAll}
+									onChange={handleAgreeAllChange}
+									icon={<CheckCircleOutlineIcon />}
+									checkedIcon={<CheckCircleIcon />}
+									sx={{
+										color: Common.colors.gray,
+										"&.Mui-checked": {
+											color: Common.colors.emphasize,
+										},
+									}}
+								/>
+								<label htmlFor="agreeAll">전체 동의합니다</label>
+							</div>
+						</li>
+						<li>
+							<button type="button">약관보기</button>
+							<div>
+								<StyledCheckbox
+									id="termsOfUse"
+									checked={termsOfUse}
+									onChange={handleCheckboxChange}
+									required
+									icon={<CheckCircleOutlineIcon />}
+									checkedIcon={<CheckCircleIcon />}
+									sx={{
+										color: Common.colors.gray,
+										"&.Mui-checked": {
+											color: Common.colors.emphasize,
+										},
+									}}
+								/>
+								<label htmlFor="termsOfUse">이용약관 동의 (필수)</label>
+							</div>
+						</li>
+						<li>
+							<button type="button">약관보기</button>
+							<div>
+								<StyledCheckbox
+									id="providingPersonalInformation"
+									checked={providingPersonalInformation}
+									onChange={handleCheckboxChange}
+									required
+									icon={<CheckCircleOutlineIcon />}
+									checkedIcon={<CheckCircleIcon />}
+									sx={{
+										color: Common.colors.gray,
+										"&.Mui-checked": {
+											color: Common.colors.emphasize,
+										},
+									}}
+								/>
+								<label htmlFor="providingPersonalInformation">
+									개인정보 수집 및 이용 동의 (필수)
+								</label>
+							</div>
+						</li>
+						<li>
+							<button type="button">약관보기</button>
+							<div>
+								<StyledCheckbox
+									id="recievingMarketingInformation"
+									checked={recievingMarketingInformation}
+									onChange={handleCheckboxChange}
+									icon={<CheckCircleOutlineIcon />}
+									checkedIcon={<CheckCircleIcon />}
+									sx={{
+										color: Common.colors.gray,
+										"&.Mui-checked": {
+											color: Common.colors.emphasize,
+										},
+									}}
+								/>
+								<label htmlFor="recievingMarketingInformation">
+									마케팅 정보 수신 동의 (선택)
+								</label>
+							</div>
+						</li>
+						<li>
+							<div>
+								<StyledCheckbox
+									id="confirmAge"
+									checked={confirmAge}
+									onChange={handleCheckboxChange}
+									icon={<CheckCircleOutlineIcon />}
+									checkedIcon={<CheckCircleIcon />}
+									sx={{
+										color: Common.colors.gray,
+										"&.Mui-checked": {
+											color: Common.colors.emphasize,
+										},
+									}}
+								/>
+								<label htmlFor="confirmAge">본인은 만 14세 이상입니다.</label>
+							</div>
+						</li>
+					</ul>
+				</Fieldset>
 
-						<label htmlFor="termsOfUse">이용약관 동의 (필수)</label>
-					</li>
-					<li>
-						<button type="button">약관보기</button>
-						<input
-							type="checkbox"
-							id="providingPersonalInformation"
-							checked={providingPersonalInformation}
-							onChange={handleCheckboxChange}
-							required
-						/>
-						<label htmlFor="providingPersonalInformation">
-							개인정보 수집 및 이용 동의 (필수)
-						</label>
-					</li>
-					<li>
-						<button type="button">약관보기</button>
-						<input
-							type="checkbox"
-							id="recievingMarketingInformation"
-							checked={recievingMarketingInformation}
-							onChange={handleCheckboxChange}
-						/>
-						<label htmlFor="recievingMarketingInformation">
-							마케팅 정보 수신 동의 (선택)
-						</label>
-					</li>
-					<li>
-						<input
-							type="checkbox"
-							id="confirmAge"
-							checked={confirmAge}
-							onChange={handleCheckboxChange}
-						/>
-						<label htmlFor="confirmAge">본인은 만 14세 이상입니다.</label>
-					</li>
-				</ul>
-				<button type="submit">회원가입</button>
-			</form>
-		</section>
+				<Submit type="submit">회원가입</Submit>
+			</Form>
+		</Backgroud>
 	);
 }
 
