@@ -2,9 +2,9 @@ import styled from "@emotion/styled";
 import { Common } from "@/styles/common";
 import { ChangeEventHandler, useEffect, useRef, useState } from "react";
 
-const PlayerContainer = styled("div")`
+const SliderContainer = styled("div")`
 	width: 700px;
-	height: 100px;
+	height: auto;
 	background-color: transparent;
 	position: relative;
 
@@ -105,7 +105,7 @@ function PlayerSlider({
 	}, [percentage]);
 
 	return (
-		<PlayerContainer>
+		<SliderContainer>
 			<div className="slider-container">
 				<div
 					className="progress-bar-cover"
@@ -128,7 +128,7 @@ function PlayerSlider({
 					onChange={onChange}
 				/>
 			</div>
-		</PlayerContainer>
+		</SliderContainer>
 	);
 }
 
