@@ -52,7 +52,7 @@ const Form = styled.form`
 `;
 
 const Fieldset = styled.fieldset`
-	width: 100%;
+	width: 380px;
 	display: flex;
 	flex-direction: column;
 	gap: 5px;

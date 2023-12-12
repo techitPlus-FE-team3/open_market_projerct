@@ -26,15 +26,14 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
-	// 스타일
 	box-sizing: border-box;
 
-	width: 383px;
-	height: 55px;
+	width: 100%;
+	height: 56px;
 	font-size: 18px;
 	font-weight: 500;
 	padding: 0 20px;
-	background: ${Common.colors.gray2};
+	background-color: ${Common.colors.gray2};
 	border: 1px solid ${Common.colors.gray};
 	border-radius: 10px;
 	&::placeholder {
