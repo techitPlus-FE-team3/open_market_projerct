@@ -1,9 +1,16 @@
 import FormInput from "@/components/FormInput";
 import FunctionalButton from "@/components/FunctionalButton";
+import SelectGenre from "@/components/SelectGenre";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
+import styled from "@emotion/styled";
+import CircleIcon from "@mui/icons-material/Circle";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import { Radio, RadioProps } from "@mui/material";
+import { styled as muiStyled } from "@mui/system";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
@@ -27,6 +34,33 @@ interface ProductRegistForm {
 		soundFile: ProductFiles;
 	};
 }
+
+const ProductRadioButtonWrapper = styled.div`
+	width: 590px;
+	height: 290px;
+	color: ${Common.colors.gray};
+	border-radius: 10px;
+	border: 1px solid;
+	padding: ${Common.space.spacingMd};
+`;
+
+const RadioButtonGroup = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	top: 50%;
+	transform: translateY(-60%);
+`;
+
+const CustomRadio = muiStyled((props: RadioProps) => (
+	<Radio
+		color="default"
+		{...props}
+		icon={<RadioButtonUncheckedIcon style={{ color: "#D9D9D9" }} />}
+		checkedIcon={<CircleIcon style={{ color: "#FFB258" }} />}
+	/>
+))``;
 
 function ProductRegistration() {
 	const navigate = useNavigate();
@@ -186,29 +220,17 @@ function ProductRegistration() {
 							</div>
 							<div>
 								<div>
-									<label htmlFor="genre">장르</label>
-									<select
-										name="genre"
+									<SelectGenre
 										id="genre"
-										onChange={(e) => {
+										value="none"
+										handleFn={(e) => {
 											setPostItem({
 												...postItem,
 												extra: { ...postItem.extra, category: e.target.value },
 											});
 										}}
-										defaultValue="none"
-									>
-										<option value="none" disabled hidden>
-											장르를 선택해주세요
-										</option>
-										{category && category.length !== 0
-											? category.map((item) => (
-													<option key={item.code} value={item.code}>
-														{item.value}
-													</option>
-											  ))
-											: undefined}
-									</select>
+										category={category}
+									/>
 								</div>
 								<div>
 									<FormInput
@@ -270,29 +292,45 @@ function ProductRegistration() {
 								)}
 							/>
 						</div>
-						<div>
+						<ProductRadioButtonWrapper>
 							<span>공개여부</span>
-							<div>
-								<div>
-									<span>공개</span>
-									<input
-										type="radio"
-										value="true"
-										name="public"
-										onChange={() => setPostItem({ ...postItem, show: true })}
-									/>
-								</div>
+							<RadioButtonGroup>
+								<span>공개</span>
+								<CustomRadio
+									defaultChecked
+									onChange={() =>
+										setPostItem((prevPostItem) => ({
+											...prevPostItem,
+											show: true,
+										}))
+									}
+									value="true"
+								/>
 								<div>
 									<span>비공개</span>
-									<input
+									{/* <input
 										type="radio"
 										value="false"
 										name="public"
-										onChange={() => setPostItem({ ...postItem, show: false })}
+										onChange={() =>
+											setPostItem((prevPostItem) => ({
+												...prevPostItem,
+												show: false,
+											}))
+										}
+									/> */}
+									<CustomRadio
+										onChange={() =>
+											setPostItem((prevPostItem) => ({
+												...prevPostItem,
+												show: false,
+											}))
+										}
+										value="false"
 									/>
 								</div>
-							</div>
-						</div>
+							</RadioButtonGroup>
+						</ProductRadioButtonWrapper>
 					</div>
 					<div>
 						<FunctionalButton

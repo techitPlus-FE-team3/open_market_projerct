@@ -1,10 +1,17 @@
 import FormInput from "@/components/FormInput";
 import FunctionalButton from "@/components/FunctionalButton";
+import SelectGenre from "@/components/SelectGenre";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
+import styled from "@emotion/styled";
+import CircleIcon from "@mui/icons-material/Circle";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import { useEffect, useState } from "react";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import { Radio, RadioProps } from "@mui/material";
+import { styled as muiStyled } from "@mui/system";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -23,6 +30,32 @@ interface ProductEditForm {
 		soundFile: ProductFiles;
 	};
 }
+const ProductRadioButtonWrapper = styled.div`
+	width: 590px;
+	height: 290px;
+	color: ${Common.colors.gray};
+	border-radius: 10px;
+	border: 1px solid;
+	padding: ${Common.space.spacingMd};
+`;
+
+const RadioButtonGroup = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	top: 50%;
+	transform: translateY(-60%);
+`;
+
+const CustomRadio = muiStyled((props: RadioProps) => (
+	<Radio
+		color="default"
+		{...props}
+		icon={<RadioButtonUncheckedIcon style={{ color: "#D9D9D9" }} />}
+		checkedIcon={<CircleIcon style={{ color: "#FFB258" }} />}
+	/>
+))``;
 
 function ProductEdit() {
 	const navigate = useNavigate();
@@ -44,7 +77,6 @@ function ProductEdit() {
 			soundFile: { url: "", fileName: "", orgName: "" },
 		},
 	});
-
 	useRequireAuth();
 
 	useEffect(() => {
@@ -201,28 +233,17 @@ function ProductEdit() {
 							)}
 						/>
 						<div>
-							<div>
-								<label htmlFor="genre">장르</label>
-								<select
-									name="genre"
-									id="genre"
-									defaultValue={userProductInfo?.extra?.category}
-									onChange={(e) => {
-										setPostItem({
-											...postItem,
-											extra: { ...postItem.extra, category: e.target.value },
-										});
-									}}
-								>
-									{category && category.length !== 0
-										? category.map((item) => (
-												<option key={item.code} value={item.code}>
-													{item.value}
-												</option>
-										  ))
-										: undefined}
-								</select>
-							</div>
+							<SelectGenre
+								id="genre"
+								value={userProductInfo?.extra?.category}
+								handleFn={(e) => {
+									setPostItem({
+										...postItem,
+										extra: { ...postItem.extra, category: e.target.value },
+									});
+								}}
+								category={category}
+							/>
 							<FormInput
 								name="hashTag"
 								label="해시태그"
@@ -279,27 +300,33 @@ function ProductEdit() {
 							setPostItem({ ...postItem, price: +e.target.value }),
 						)}
 					/>
-					<div>
+					<ProductRadioButtonWrapper>
 						<span>공개여부</span>
-						<div>
-							<input
-								type="radio"
-								value="true"
-								name="public"
-								onChange={() => setPostItem({ ...postItem, show: true })}
-							/>
+						<RadioButtonGroup>
 							<span>공개</span>
-						</div>
-						<div>
-							<input
-								type="radio"
-								value="false"
-								name="public"
-								onChange={() => setPostItem({ ...postItem, show: false })}
+							<CustomRadio
+								checked={postItem.show === true}
+								onChange={() =>
+									setPostItem((prevPostItem) => ({
+										...prevPostItem,
+										show: true,
+									}))
+								}
+								value="true"
 							/>
 							<span>비공개</span>
-						</div>
-					</div>
+							<CustomRadio
+								checked={postItem.show === false}
+								onChange={() =>
+									setPostItem((prevPostItem) => ({
+										...prevPostItem,
+										show: false,
+									}))
+								}
+								value="false"
+							/>
+						</RadioButtonGroup>
+					</ProductRadioButtonWrapper>
 				</div>
 				<div>
 					<FunctionalButton
