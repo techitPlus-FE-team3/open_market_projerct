@@ -37,6 +37,60 @@ const Logo = styled.h1`
 		}
 	}
 `;
+const Form = styled.form`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	background-color: ${Common.colors.white};
+
+	width: 506px;
+	padding: ${Common.space.spacingLg};
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	border-radius: 10px;
+`;
+
+const Fieldset = styled.fieldset`
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	legend {
+		text-align: center;
+		margin: 28px auto;
+
+		font-weight: ${Common.font.weight.bold};
+		font-size: 32px;
+
+		color: ${Common.colors.black};
+	}
+`;
+
+const Submit = styled.button`
+	width: 383px;
+	height: 55px;
+
+	background: ${Common.colors.emphasize};
+	border-radius: 10px;
+	border: none;
+
+	font-weight: ${Common.font.weight.bold};
+	font-size: ${Common.font.size.lg};
+	color: ${Common.colors.white}};
+
+	padding: 15px 32px;
+`;
+
+const Ul = styled.ul`
+	display: flex;
+	gap: 40px;
+	a:visited {
+		text-decoration: none;
+		color: inherit;
+	}
+	margin-bottom: 100px;
+`;
 
 function SignIn() {
 	const [_, setLoggedIn] = useRecoilState(loggedInState);
@@ -104,8 +158,8 @@ function SignIn() {
 				</Link>
 			</Logo>
 			<Title>로그인</Title>
-			<form onSubmit={handleLogin}>
-				<fieldset>
+			<Form onSubmit={handleLogin}>
+				<Fieldset>
 					<legend>로그인</legend>
 					<AuthInput
 						id="email"
@@ -133,18 +187,19 @@ function SignIn() {
 						placeholder="비밀번호"
 						required={true}
 					/>
-				</fieldset>
+				</Fieldset>
 
-				<button type="submit">로그인</button>
-				<ul>
+				<Submit type="submit">로그인</Submit>
+				<Ul>
 					<li>
 						<Link to="/signup">회원가입</Link>
 					</li>
+					<li>|</li>
 					<li>
 						<Link to="/">아이디/비밀번호 찾기</Link>
 					</li>
-				</ul>
-			</form>
+				</Ul>
+			</Form>
 		</Backgroud>
 	);
 }
