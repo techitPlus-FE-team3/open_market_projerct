@@ -1,3 +1,4 @@
+import AuthInput from "@/components/AuthInput";
 import { loggedInState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
@@ -9,7 +10,6 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import logoImage from "/logo/logo1.svg";
-import AuthInput from "@/components/AuthInput";
 
 const Title = styled.h2`
 	${Common.a11yHidden};
@@ -84,12 +84,16 @@ const Submit = styled.button`
 
 const Ul = styled.ul`
 	display: flex;
-	gap: 40px;
 	a:visited {
 		text-decoration: none;
 		color: inherit;
 	}
 	margin-bottom: 100px;
+	& > :first-of-type::after {
+		content: "|";
+		display: inline-block;
+		margin: 0 40px;
+	}
 `;
 
 function SignIn() {
@@ -194,7 +198,6 @@ function SignIn() {
 					<li>
 						<Link to="/signup">회원가입</Link>
 					</li>
-					<li>|</li>
 					<li>
 						<Link to="/">아이디/비밀번호 찾기</Link>
 					</li>
