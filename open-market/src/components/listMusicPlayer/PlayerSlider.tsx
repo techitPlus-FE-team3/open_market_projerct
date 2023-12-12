@@ -10,7 +10,7 @@ const SliderContainer = styled("div")`
 
 	/*  Hide Original */
 	.range {
-		-webkit-appearance: none;
+		appearance: none;
 		margin: 0 auto;
 		background-color: ${Common.colors.gray2};
 		width: 100%;
