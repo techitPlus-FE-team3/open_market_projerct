@@ -1,3 +1,5 @@
+import FormInput from "@/components/FormInput";
+import FunctionalButton from "@/components/FunctionalButton";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { axiosInstance, debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
@@ -190,22 +192,17 @@ function ProductEdit() {
 						/>
 					</div>
 					<div>
-						<div>
-							<label htmlFor="title">타이틀 | </label>
-							<input
-								type="text"
-								name="title"
-								id="title"
-								placeholder="제목을 입력해주세요"
-								defaultValue={userProductInfo?.name}
-								onChange={debounce((e: { target: { value: any } }) =>
-									setPostItem({ ...postItem, name: e.target.value }),
-								)}
-							/>
-						</div>
+						<FormInput
+							name="title"
+							label="타이틀"
+							defaultValue={userProductInfo?.name}
+							handleFn={debounce((e: { target: { value: any } }) =>
+								setPostItem({ ...postItem, name: e.target.value }),
+							)}
+						/>
 						<div>
 							<div>
-								<label htmlFor="genre">장르 | </label>
+								<label htmlFor="genre">장르</label>
 								<select
 									name="genre"
 									id="genre"
@@ -226,23 +223,19 @@ function ProductEdit() {
 										: undefined}
 								</select>
 							</div>
-							<div>
-								<label htmlFor="hashTag">해시태그 | </label>
-								<input
-									type="text"
-									name="hashTag"
-									id="hashTag"
-									placeholder=",(콤마)로 구분하여 입력해주세요"
-									defaultValue={userProductInfo?.extra?.tags}
-									onChange={debounce((e: { target: { value: string } }) => {
-										const tagsArray = e.target.value.split(",");
-										setPostItem({
-											...postItem,
-											extra: { ...postItem.extra, tags: tagsArray },
-										});
-									})}
-								/>
-							</div>
+							<FormInput
+								name="hashTag"
+								label="해시태그"
+								defaultValue={userProductInfo?.extra?.tags}
+								placeholder="해시태그를 ','(콤마)로 구분해주세요"
+								handleFn={debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+									const tagsArray = e.target.value.split(",");
+									setPostItem({
+										...postItem,
+										extra: { ...postItem.extra, tags: tagsArray },
+									});
+								})}
+							/>
 						</div>
 						<div>
 							<div>
@@ -277,18 +270,15 @@ function ProductEdit() {
 					</div>
 				</div>
 				<div>
-					<div>
-						<label htmlFor="price">가격</label>
-						<input
-							type="number"
-							name="price"
-							id="price"
-							defaultValue={userProductInfo?.price}
-							onChange={debounce((e: { target: { value: string | number } }) =>
-								setPostItem({ ...postItem, price: +e.target.value }),
-							)}
-						/>
-					</div>
+					<FormInput
+						name="price"
+						label="가격"
+						type="number"
+						defaultValue={userProductInfo?.price}
+						handleFn={debounce((e: { target: { value: string | number } }) =>
+							setPostItem({ ...postItem, price: +e.target.value }),
+						)}
+					/>
 					<div>
 						<span>공개여부</span>
 						<div>
@@ -312,12 +302,16 @@ function ProductEdit() {
 					</div>
 				</div>
 				<div>
-					<button type="button" onClick={handleEditCancel}>
-						취소
-					</button>
-					<button type="submit" onClick={handleEditProduct}>
-						수정
-					</button>
+					<FunctionalButton
+						secondary={true}
+						handleFn={handleEditCancel}
+						text="취소"
+					/>
+					<FunctionalButton
+						type="submit"
+						handleFn={handleEditProduct}
+						text="수정"
+					/>
 				</div>
 			</form>
 		</section>
