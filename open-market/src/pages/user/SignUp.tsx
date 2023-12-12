@@ -99,7 +99,6 @@ const Fieldset = styled.fieldset`
 const StyledCheckbox = styled(Checkbox)`
 	margin: 0;
 	padding: 0;
-	color: ${Common.colors.emphasize};
 `;
 
 const EmailField = styled.li`
@@ -470,6 +469,12 @@ function SignUp() {
 									onChange={handleAgreeAllChange}
 									icon={<CheckCircleOutlineIcon />}
 									checkedIcon={<CheckCircleIcon />}
+									sx={{
+										color: Common.colors.gray,
+										"&.Mui-checked": {
+											color: Common.colors.emphasize,
+										},
+									}}
 								/>
 								<label htmlFor="agreeAll">전체 동의합니다</label>
 							</div>
@@ -484,6 +489,12 @@ function SignUp() {
 									required
 									icon={<CheckCircleOutlineIcon />}
 									checkedIcon={<CheckCircleIcon />}
+									sx={{
+										color: Common.colors.gray,
+										"&.Mui-checked": {
+											color: Common.colors.emphasize,
+										},
+									}}
 								/>
 								<label htmlFor="termsOfUse">이용약관 동의 (필수)</label>
 							</div>
@@ -498,6 +509,12 @@ function SignUp() {
 									required
 									icon={<CheckCircleOutlineIcon />}
 									checkedIcon={<CheckCircleIcon />}
+									sx={{
+										color: Common.colors.gray,
+										"&.Mui-checked": {
+											color: Common.colors.emphasize,
+										},
+									}}
 								/>
 								<label htmlFor="providingPersonalInformation">
 									개인정보 수집 및 이용 동의 (필수)
@@ -513,6 +530,12 @@ function SignUp() {
 									onChange={handleCheckboxChange}
 									icon={<CheckCircleOutlineIcon />}
 									checkedIcon={<CheckCircleIcon />}
+									sx={{
+										color: Common.colors.gray,
+										"&.Mui-checked": {
+											color: Common.colors.emphasize,
+										},
+									}}
 								/>
 								<label htmlFor="recievingMarketingInformation">
 									마케팅 정보 수신 동의 (선택)
@@ -527,6 +550,12 @@ function SignUp() {
 									onChange={handleCheckboxChange}
 									icon={<CheckCircleOutlineIcon />}
 									checkedIcon={<CheckCircleIcon />}
+									sx={{
+										color: Common.colors.gray,
+										"&.Mui-checked": {
+											color: Common.colors.emphasize,
+										},
+									}}
 								/>
 								<label htmlFor="confirmAge">본인은 만 14세 이상입니다.</label>
 							</div>
