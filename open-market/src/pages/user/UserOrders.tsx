@@ -1,4 +1,5 @@
 import ProductListItem from "@/components/ProductListItem";
+import SearchBar from "@/components/SearchBar";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
@@ -37,6 +38,8 @@ function UserOrders() {
 		}
 	}
 
+	function handleSearchKeyword() {}
+
 	useEffect(() => {
 		getOrderList();
 	}, []);
@@ -47,12 +50,7 @@ function UserOrders() {
 				<title>My Orders - 모두의 오디오 MODI</title>
 			</Helmet>
 			<h2>구매내역</h2>
-			<div>
-				<form>
-					<input type="text" placeholder="검색어를 입력하세요" />
-					<button type="submit">검색</button>
-				</form>
-			</div>
+			<SearchBar onClick={handleSearchKeyword} />
 			<ProductList>
 				{orderList.length !== 0 ? (
 					orderList.map((order) => {

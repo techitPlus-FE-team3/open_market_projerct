@@ -1,4 +1,5 @@
 import ProductListItem from "@/components/ProductListItem";
+import SearchBar from "@/components/SearchBar";
 import {
 	categoryKeywordState,
 	fetchproductListState,
@@ -109,15 +110,7 @@ function Index() {
 			<section>
 				<h2>메인페이지</h2>
 				<img src="/vite.svg" alt="hero" />
-				<div className="searchInputWrapper">
-					<label htmlFor="searchBar" className="">
-						검색
-					</label>
-					<input type="text" id="searchBar" name="searchBar" ref={searchRef} />
-					<button type="button" onClick={handleSearchKeyword}>
-						검색
-					</button>
-				</div>
+				<SearchBar onClick={handleSearchKeyword} searchRef={searchRef} />
 				<div className="sortButtonWrapper">
 					<button type="submit">인기순</button>
 					<button type="submit">최신순</button>

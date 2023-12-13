@@ -1,3 +1,4 @@
+import SearchBar from "@/components/SearchBar";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
 	axiosInstance,
@@ -130,14 +131,7 @@ function UserProducts() {
 			<h2>상품관리</h2>
 			{userProductsInfo ? (
 				<>
-					<div>
-						<form>
-							<input type="text" placeholder="판매내역 검색" ref={searchRef} />
-							<button type="submit" onClick={handleSearchKeyword}>
-								검색
-							</button>
-						</form>
-					</div>
+					<SearchBar onClick={handleSearchKeyword} searchRef={searchRef} />
 					<ul>
 						<li>
 							<button type="button" onClick={handleSortByProfit}>
