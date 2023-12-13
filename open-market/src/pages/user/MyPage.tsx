@@ -4,6 +4,7 @@ import axios from "axios";
 import { Key, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
+import MyPageList from "@/components/MyPageList";
 
 function MyPage() {
 	const [userInfo, setUserInfo] = useState<User | null>(null);
@@ -148,7 +149,7 @@ function MyPage() {
 						bookmarkDetails.slice(0, 4).map((item) => (
 							<li key={item._id}>
 								<Link to={`/productdetail/${item.product_id}`}>
-									<img src={`${item.product.image}`} alt="앨범아트" />
+									<img src={`${item.product.image.url}`} alt="앨범아트" />
 								</Link>
 							</li>
 						))
@@ -158,6 +159,17 @@ function MyPage() {
 				</ul>
 				<Link to="/">전체보기</Link>
 			</article>
+			<MyPageList
+				title="북마크"
+				data={bookmarkDetails.length !== 0 ? bookmarkDetails.slice(0, 4) : []}
+				renderItem={(item) => (
+					<Link to={`/productdetail/${item.product_id}`}>
+						<img src={`${item.product.image.url}`} alt="앨범아트" />
+					</Link>
+				)}
+				linkText="전체보기"
+				linkUrl="/"
+			/>
 			<article>
 				<h3>히스토리</h3>
 				<ul>
@@ -176,17 +188,26 @@ function MyPage() {
 					)}
 				</ul>
 			</article>
+			<MyPageList
+				title="히스토리"
+				data={historyList ? historyList.slice(0, 4) : []}
+				renderItem={(item) => (
+					<Link to={`/productdetail/${item._id}`}>
+						<img src={`${item.mainImages[0].url}`} alt="앨범아트" />
+					</Link>
+				)}
+			/>
 			<article>
 				<h3>구매내역</h3>
 				<ul>
 					{userOrdersInfo.length !== 0 ? (
-						userOrdersInfo.slice(0, 4).map((order) => {
+						userOrdersInfo.slice(0, 4).map((item) => {
 							return (
-								<li key={order._id}>
-									<Link to={`/productdetail/${order.products[0]._id}`}>
+								<li key={item._id}>
+									<Link to={`/productdetail/${item.products[0]._id}`}>
 										<img
-											src={order.products[0].image.url}
-											alt={`${order.products[0].name} 사진`}
+											src={item.products[0].image.url}
+											alt={`${item.products[0].name} 사진`}
 										/>
 									</Link>
 								</li>
@@ -198,6 +219,20 @@ function MyPage() {
 				</ul>
 				<Link to="/orders">전체보기</Link>
 			</article>
+			<MyPageList
+				title="구매내역"
+				data={userOrdersInfo.length !== 0 ? userOrdersInfo.slice(0, 4) : []}
+				renderItem={(item) => (
+					<Link to={`/productdetail/${item.products[0]._id}`}>
+						<img
+							src={item.products[0].image.url}
+							alt={`${item.products[0].name} 사진`}
+						/>
+					</Link>
+				)}
+				linkText="전체보기"
+				linkUrl="/orders"
+			/>
 			<article>
 				<h3>판매상품관리</h3>
 				<ul>
@@ -215,6 +250,17 @@ function MyPage() {
 				</ul>
 				<Link to={`/user/${userId}/products`}>전체보기</Link>
 			</article>
+			<MyPageList
+				title="판매상품관리"
+				data={userProductsInfo.length !== 0 ? userProductsInfo.slice(0, 5) : []}
+				renderItem={(item) => (
+					<Link to={`/productmanage/${item._id}`}>
+						<img src={`${item.mainImages[0].url}`} alt="앨범아트" />
+					</Link>
+				)}
+				linkText="전체보기"
+				linkUrl={`/user/${userId}/products`}
+			/>
 		</section>
 	);
 }
