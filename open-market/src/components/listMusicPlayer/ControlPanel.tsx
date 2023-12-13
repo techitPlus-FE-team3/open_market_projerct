@@ -2,7 +2,7 @@ import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 
 const StyledControlPanel = styled("div")`
-	width: 700px;
+	width: 90%;
 	margin-left: 60px;
 	display: flex;
 	flex-flow: row nowrap;

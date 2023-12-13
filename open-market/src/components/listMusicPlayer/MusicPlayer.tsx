@@ -14,18 +14,17 @@ import {
 
 const PalyerContainer = styled("div")`
 	width: auto;
-	max-width: 780px;
+	min-width: 600px;
 	padding: ${Common.space.spacingMd};
 	display: flex;
 	flex-flow: row wrap;
 	gap: 10px;
 	align-items: center;
+	flex: 1;
 	position: relative;
 `;
 
 const PlayButton = styled("button")`
-	width: 40px;
-	height: 40px;
 	background-color: transparent;
 	border: none;
 `;

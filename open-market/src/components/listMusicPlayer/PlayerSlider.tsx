@@ -3,7 +3,7 @@ import { Common } from "@/styles/common";
 import { ChangeEventHandler, useEffect, useRef, useState } from "react";
 
 const SliderContainer = styled("div")`
-	width: 700px;
+	width: 90%;
 	height: auto;
 	background-color: transparent;
 	position: relative;
