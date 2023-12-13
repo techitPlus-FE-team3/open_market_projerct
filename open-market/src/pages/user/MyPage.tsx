@@ -1,12 +1,12 @@
 import MyPageList from "@/components/MyPageList";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
+import styled from "@emotion/styled";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import styled from "@emotion/styled";
-import { Common } from "@/styles/common";
 
 const Section = styled.section`
 	width: 1440px;

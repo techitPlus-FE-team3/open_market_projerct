@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import styled from "@emotion/styled";
 import { Common } from "@/styles/common";
+import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 
 const Article = styled.article`
 	width: 1328px;
