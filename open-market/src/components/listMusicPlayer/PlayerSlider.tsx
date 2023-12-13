@@ -29,7 +29,7 @@ const SliderContainer = styled("div")`
 	.slider-container::before {
 		content: "";
 		background-color: ${Common.colors.gray};
-		width: 99%;
+		width: 100%;
 		height: 24px;
 		display: block;
 		position: absolute;
