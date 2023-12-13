@@ -1,8 +1,17 @@
+import FormInput from "@/components/FormInput";
+import FunctionalButton from "@/components/FunctionalButton";
+import SelectGenre from "@/components/SelectGenre";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
+import styled from "@emotion/styled";
+import CircleIcon from "@mui/icons-material/Circle";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import { useEffect, useState } from "react";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import { Radio, RadioProps } from "@mui/material";
+import { styled as muiStyled } from "@mui/system";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -21,6 +30,32 @@ interface ProductEditForm {
 		soundFile: ProductFiles;
 	};
 }
+const ProductRadioButtonWrapper = styled.div`
+	width: 590px;
+	height: 290px;
+	color: ${Common.colors.gray};
+	border-radius: 10px;
+	border: 1px solid;
+	padding: ${Common.space.spacingMd};
+`;
+
+const RadioButtonGroup = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	top: 50%;
+	transform: translateY(-60%);
+`;
+
+const CustomRadio = muiStyled((props: RadioProps) => (
+	<Radio
+		color="default"
+		{...props}
+		icon={<RadioButtonUncheckedIcon style={{ color: "#D9D9D9" }} />}
+		checkedIcon={<CircleIcon style={{ color: "#FFB258" }} />}
+	/>
+))``;
 
 function ProductEdit() {
 	const navigate = useNavigate();
@@ -42,7 +77,6 @@ function ProductEdit() {
 			soundFile: { url: "", fileName: "", orgName: "" },
 		},
 	});
-
 	useRequireAuth();
 
 	useEffect(() => {
@@ -190,59 +224,39 @@ function ProductEdit() {
 						/>
 					</div>
 					<div>
+						<FormInput
+							name="title"
+							label="타이틀"
+							defaultValue={userProductInfo?.name}
+							handleFn={debounce((e: { target: { value: any } }) =>
+								setPostItem({ ...postItem, name: e.target.value }),
+							)}
+						/>
 						<div>
-							<label htmlFor="title">타이틀 | </label>
-							<input
-								type="text"
-								name="title"
-								id="title"
-								placeholder="제목을 입력해주세요"
-								defaultValue={userProductInfo?.name}
-								onChange={debounce((e: { target: { value: any } }) =>
-									setPostItem({ ...postItem, name: e.target.value }),
-								)}
+							<SelectGenre
+								id="genre"
+								value={userProductInfo?.extra?.category}
+								handleFn={(e) => {
+									setPostItem({
+										...postItem,
+										extra: { ...postItem.extra, category: e.target.value },
+									});
+								}}
+								category={category}
 							/>
-						</div>
-						<div>
-							<div>
-								<label htmlFor="genre">장르 | </label>
-								<select
-									name="genre"
-									id="genre"
-									defaultValue={userProductInfo?.extra?.category}
-									onChange={(e) => {
-										setPostItem({
-											...postItem,
-											extra: { ...postItem.extra, category: e.target.value },
-										});
-									}}
-								>
-									{category && category.length !== 0
-										? category.map((item) => (
-												<option key={item.code} value={item.code}>
-													{item.value}
-												</option>
-										  ))
-										: undefined}
-								</select>
-							</div>
-							<div>
-								<label htmlFor="hashTag">해시태그 | </label>
-								<input
-									type="text"
-									name="hashTag"
-									id="hashTag"
-									placeholder=",(콤마)로 구분하여 입력해주세요"
-									defaultValue={userProductInfo?.extra?.tags}
-									onChange={debounce((e: { target: { value: string } }) => {
-										const tagsArray = e.target.value.split(",");
-										setPostItem({
-											...postItem,
-											extra: { ...postItem.extra, tags: tagsArray },
-										});
-									})}
-								/>
-							</div>
+							<FormInput
+								name="hashTag"
+								label="해시태그"
+								defaultValue={userProductInfo?.extra?.tags}
+								placeholder="해시태그를 ','(콤마)로 구분해주세요"
+								handleFn={debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+									const tagsArray = e.target.value.split(",");
+									setPostItem({
+										...postItem,
+										extra: { ...postItem.extra, tags: tagsArray },
+									});
+								})}
+							/>
 						</div>
 						<div>
 							<div>
@@ -277,47 +291,54 @@ function ProductEdit() {
 					</div>
 				</div>
 				<div>
-					<div>
-						<label htmlFor="price">가격</label>
-						<input
-							type="number"
-							name="price"
-							id="price"
-							defaultValue={userProductInfo?.price}
-							onChange={debounce((e: { target: { value: string | number } }) =>
-								setPostItem({ ...postItem, price: +e.target.value }),
-							)}
-						/>
-					</div>
-					<div>
+					<FormInput
+						name="price"
+						label="가격"
+						type="number"
+						defaultValue={userProductInfo?.price}
+						handleFn={debounce((e: { target: { value: string | number } }) =>
+							setPostItem({ ...postItem, price: +e.target.value }),
+						)}
+					/>
+					<ProductRadioButtonWrapper>
 						<span>공개여부</span>
-						<div>
-							<input
-								type="radio"
-								value="true"
-								name="public"
-								onChange={() => setPostItem({ ...postItem, show: true })}
-							/>
+						<RadioButtonGroup>
 							<span>공개</span>
-						</div>
-						<div>
-							<input
-								type="radio"
-								value="false"
-								name="public"
-								onChange={() => setPostItem({ ...postItem, show: false })}
+							<CustomRadio
+								checked={postItem.show === true}
+								onChange={() =>
+									setPostItem((prevPostItem) => ({
+										...prevPostItem,
+										show: true,
+									}))
+								}
+								value="true"
 							/>
 							<span>비공개</span>
-						</div>
-					</div>
+							<CustomRadio
+								checked={postItem.show === false}
+								onChange={() =>
+									setPostItem((prevPostItem) => ({
+										...prevPostItem,
+										show: false,
+									}))
+								}
+								value="false"
+							/>
+						</RadioButtonGroup>
+					</ProductRadioButtonWrapper>
 				</div>
 				<div>
-					<button type="button" onClick={handleEditCancel}>
-						취소
-					</button>
-					<button type="submit" onClick={handleEditProduct}>
-						수정
-					</button>
+					<FunctionalButton
+						secondary={true}
+						handleFn={handleEditCancel}
+						text="취소"
+					/>
+					<FunctionalButton
+						type="submit"
+						handleFn={handleEditProduct}
+						text="수정"
+					/>
 				</div>
 			</form>
 		</section>
