@@ -284,10 +284,13 @@ function ProductDetail() {
 							{product?.buyQuantity ? product?.buyQuantity : 0}
 						</Link>
 					) : (
-						<button type="button">
+						<a
+							href={`https://localhost/api/files/${product?.extra?.soundFile.fileName}?name=${product?.extra?.soundFile.orgName}`}
+							download={true}
+						>
 							<DownloadIcon />
 							다운로드
-						</button>
+						</a>
 					)}
 				</div>
 			</article>

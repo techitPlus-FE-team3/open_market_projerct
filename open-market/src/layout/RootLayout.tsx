@@ -1,15 +1,18 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "@/layout/Header";
 import Footer from "@/layout/Footer";
 
 function RootLayout() {
+	const location = useLocation();
+	const auth = ["/signin", "/signup"];
+
 	return (
 		<>
-			<Header />
+			{!auth.includes(location.pathname) && <Header />}
 			<main>
 				<Outlet />
 			</main>
-			<Footer />
+			{!auth.includes(location.pathname) && <Footer />}
 		</>
 	);
 }
