@@ -1,10 +1,11 @@
+import MusicPlayer from "@/components/listMusicPlayer/MusicPlayer";
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import DownloadIcon from "@mui/icons-material/Download";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
-import MusicPlayer from "./listMusicPlayer/MusicPlayer";
 
 const theme = createTheme({
 	palette: {
@@ -20,6 +21,7 @@ const ListItem = styled("li")`
 	display: flex;
 	flex-flow: row nowrap;
 	align-items: center;
+	justify-content: space-between;
 	gap: 30px;
 	border-radius: 10px;
 	background-color: ${Common.colors.white};
@@ -29,13 +31,28 @@ const ListItem = styled("li")`
 		flex-flow: row nowrap;
 		align-items: center;
 		gap: 2px;
+		padding: 5px;
 		background-color: transparent;
 		border: none;
 
 		span {
 			position: relative;
 			top: 1px;
+			font-size: ${Common.font.size.sm};
 		}
+	}
+
+	.download {
+		display: flex;
+		flex-flow: row nowrap;
+		align-items: center;
+		gap: 2px;
+		position: relative;
+		top: 2px;
+		padding: 5px;
+		text-decoration: none;
+		color: ${Common.colors.black};
+		font-size: ${Common.font.size.sm};
 	}
 `;
 
@@ -44,6 +61,8 @@ const StyledLink = styled(Link)`
 	flex-flow: row nowrap;
 	align-items: center;
 	gap: 30px;
+	text-decoration: none;
+	color: ${Common.colors.black};
 
 	img {
 		width: 42px;
@@ -60,28 +79,43 @@ const StyledLink = styled(Link)`
 `;
 
 function ProductListItem({
-	_id,
-	image,
-	title,
-	soundFile,
-	bookmarked,
+	key,
+	product,
+	bookmark,
 }: {
-	_id: number;
-	image: string;
-	title: string;
-	soundFile: string;
-	bookmarked: boolean;
+	key: number;
+	product: Product | OrderProduct;
+	bookmark: boolean;
 }) {
 	return (
-		<ListItem key={String(_id)}>
-			<StyledLink to={`/productdetail/${_id}`}>
-				<img src={image} alt={`${title} 사진`} />
-				<span title={title}>{title}</span>
+		<ListItem key={key}>
+			<StyledLink to={`/productdetail/${product._id}`}>
+				<img
+					src={
+						"image" in product ? product.image!.url : product.mainImages[0].url
+					}
+					alt={`${product.name} 사진`}
+				/>
+				<span title={product.name}>{product.name}</span>
 			</StyledLink>
-			<MusicPlayer src={soundFile} />
+			<MusicPlayer src={product.extra?.soundFile.url!} />
+			{"image" in product ? (
+				<a
+					href={`https://localhost/api/files/${product?.extra?.soundFile.fileName}?name=${product?.extra?.soundFile.orgName}`}
+					download={true}
+					className="download"
+				>
+					<ThemeProvider theme={theme}>
+						<DownloadIcon color="primary" />
+					</ThemeProvider>
+					다운로드
+				</a>
+			) : (
+				<></>
+			)}
 			<button type="submit" className="bookmark">
 				<ThemeProvider theme={theme}>
-					{bookmarked ? (
+					{bookmark ? (
 						<BookmarkIcon color="primary" />
 					) : (
 						<BookmarkBorderIcon color="secondary" />

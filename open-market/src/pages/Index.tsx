@@ -146,11 +146,9 @@ function Index() {
 							searchedProductList.slice(0, 4).map((product) => {
 								return (
 									<ProductListItem
-										_id={product._id}
-										image={product.mainImages[0].url}
-										title={product.name}
-										soundFile={product?.extra?.soundFile?.url!}
-										bookmarked={false}
+										key={product._id}
+										product={product}
+										bookmark
 									/>
 								);
 							})
@@ -164,11 +162,9 @@ function Index() {
 							filteredProductList.slice(0, 4).map((product) => {
 								return (
 									<ProductListItem
-										_id={product._id}
-										image={product.mainImages[0].url}
-										title={product.name}
-										soundFile={product?.extra?.soundFile?.url!}
-										bookmarked={false}
+										key={product._id}
+										product={product}
+										bookmark
 									/>
 								);
 							})
@@ -176,13 +172,7 @@ function Index() {
 					) : (
 						productList?.slice(0, 4).map((product) => {
 							return (
-								<ProductListItem
-									_id={product._id}
-									image={product.mainImages[0].url}
-									title={product.name}
-									soundFile={product?.extra?.soundFile?.url!}
-									bookmarked={true}
-								/>
+								<ProductListItem key={product._id} product={product} bookmark />
 							);
 						})
 					)}
