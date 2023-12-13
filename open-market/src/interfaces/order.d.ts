@@ -27,11 +27,7 @@ interface OrderProduct {
 	quantity: number;
 	seller_id: number;
 	name: string;
-	image: {
-		url: string;
-		fileName: string;
-		orgName: string;
-	};
+	image: ProductFiles;
 	price: number;
 	extra: {
 		category: CategoryCode[];
