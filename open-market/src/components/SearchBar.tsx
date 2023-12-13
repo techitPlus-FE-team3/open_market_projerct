@@ -27,6 +27,7 @@ const StyledSearchBar = styled("form")`
 		border: 10px solid rgb(40, 40, 44, 0.8);
 		border-radius: calc(100vh / 2);
 		box-shadow: 0px 5px 5px rgb(40, 40, 44, 0.8);
+		background-color: ${Common.colors.white};
 	}
 
 	button {
