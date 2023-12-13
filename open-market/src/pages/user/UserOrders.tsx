@@ -1,17 +1,20 @@
+import ProductListItem from "@/components/ProductListItem";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
-import DownloadIcon from "@mui/icons-material/Download";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
 
-const ProductImage = styled("img")`
-	width: 42px;
-	height: 42px;
-	border-radius: 50%;
+const ProductList = styled("ul")`
+	width: 1160px;
+	padding: 30px 0px;
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	gap: ${Common.space.spacingLg};
+	background-color: ${Common.colors.gray2};
+	border-radius: 10px;
 `;
 
 function UserOrders() {
@@ -50,37 +53,21 @@ function UserOrders() {
 					<button type="submit">검색</button>
 				</form>
 			</div>
-			<ul>
+			<ProductList>
 				{orderList.length !== 0 ? (
 					orderList.map((order) => {
 						return (
-							<li key={order._id}>
-								<ProductImage
-									src={order.products[0].image.url}
-									alt={`${order.products[0].name} 사진`}
-								/>
-								<Link to={`/products?_id=${order.products[0]._id}`}>
-									{order.products[0].name}
-								</Link>
-								<button type="button">
-									<PlayArrowIcon />
-								</button>
-								<audio src={order.products[0].extra?.soundFile?.url} controls />
-								<button type="button">
-									<DownloadIcon />
-									다운로드
-								</button>
-								<button type="button">
-									<TurnedInNotIcon />
-									북마크
-								</button>
-							</li>
+							<ProductListItem
+								key={order._id}
+								product={order.products[0]}
+								bookmark={false}
+							/>
 						);
 					})
 				) : (
 					<span>구매 내역이 없습니다.</span>
 				)}
-			</ul>
+			</ProductList>
 			<button type="button">더보기</button>
 		</section>
 	);
