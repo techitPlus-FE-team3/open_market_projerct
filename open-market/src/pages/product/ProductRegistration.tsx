@@ -55,7 +55,6 @@ const RadioButtonGroup = styled.div`
 
 const CustomRadio = muiStyled((props: RadioProps) => (
 	<Radio
-		color="default"
 		{...props}
 		icon={<RadioButtonUncheckedIcon style={{ color: "#D9D9D9" }} />}
 		checkedIcon={<CircleIcon style={{ color: "#FFB258" }} />}
@@ -297,7 +296,7 @@ function ProductRegistration() {
 							<RadioButtonGroup>
 								<span>공개</span>
 								<CustomRadio
-									defaultChecked
+									checked={postItem.show === true}
 									onChange={() =>
 										setPostItem((prevPostItem) => ({
 											...prevPostItem,
@@ -320,6 +319,7 @@ function ProductRegistration() {
 										}
 									/> */}
 									<CustomRadio
+										checked={postItem.show === false}
 										onChange={() =>
 											setPostItem((prevPostItem) => ({
 												...prevPostItem,
