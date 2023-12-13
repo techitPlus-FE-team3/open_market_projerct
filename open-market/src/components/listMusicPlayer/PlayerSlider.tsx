@@ -29,8 +29,8 @@ const SliderContainer = styled("div")`
 	.slider-container::before {
 		content: "";
 		background-color: ${Common.colors.gray};
-		width: 100%;
-		height: 24px;
+		width: 99.5%;
+		height: 12px;
 		display: block;
 		position: absolute;
 		border-radius: 10px;
@@ -45,7 +45,7 @@ const SliderContainer = styled("div")`
 	.progress-bar-cover {
 		background-color: ${Common.colors.emphasize};
 		width: 80%;
-		height: 24px;
+		height: 12px;
 		display: block;
 		position: absolute;
 		border-radius: 10px;

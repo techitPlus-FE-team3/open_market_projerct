@@ -8,7 +8,7 @@ const StyledControlPanel = styled("div")`
 	flex-flow: row nowrap;
 	justify-content: space-between;
 	position: absolute;
-	bottom: 0;
+	bottom: 8px;
 	left: 0;
 	font-size: ${Common.font.size.sm};
 `;
