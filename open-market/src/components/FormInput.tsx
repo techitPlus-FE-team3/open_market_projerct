@@ -4,6 +4,16 @@ import styled from "@emotion/styled";
 interface StyleProps {
 	type?: string;
 }
+
+interface FormInputProps {
+	name: string;
+	label: string;
+	type?: string;
+	defaultValue?: string | number | undefined | string[];
+	placeholder?: string;
+	handleFn: React.ChangeEventHandler<HTMLInputElement>;
+}
+
 const FormInputWrapper = styled.div<StyleProps>`
 	display: flex;
 	align-items: center;
@@ -18,7 +28,9 @@ const FormInputWrapper = styled.div<StyleProps>`
     align-items: start;
     justify-content: space-between;
     height: 290px;
+    width:590px;
     position: relative;
+    padding: ${Common.space.spacingMd}
 	`}
 `;
 const InputLabel = styled.label<StyleProps>`
@@ -56,7 +68,7 @@ const Input = styled.input`
     position: absolute; 
 	  right: 0; 
 	  bottom: 0; 
-    width:700px;
+    width:500px;
     font-size: ${Common.font.size.xl};
     height:270px;
     text-align: end;
@@ -72,14 +84,7 @@ function FormInput({
 	defaultValue,
 	placeholder = "",
 	handleFn,
-}: {
-	name: string;
-	label: string;
-	type?: string;
-	defaultValue?: string | number | undefined | string[];
-	placeholder?: string;
-	handleFn: React.ChangeEventHandler<HTMLInputElement>;
-}) {
+}: FormInputProps) {
 	return (
 		<FormInputWrapper type={type}>
 			<InputLabel htmlFor={name} type={type}>

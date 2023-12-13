@@ -5,6 +5,13 @@ interface ButtonProps {
 	secondary?: boolean;
 }
 
+interface FunctionalButtonProps {
+	secondary?: boolean;
+	type?: "button" | "submit" | "reset" | undefined;
+	handleFn: React.MouseEventHandler<HTMLButtonElement>;
+	text: string;
+}
+
 const Button = styled.button<ButtonProps>`
 	border: 0px;
 	color: ${Common.colors.white};
@@ -23,12 +30,7 @@ function FunctionalButton({
 	type = "button",
 	handleFn,
 	text,
-}: {
-	secondary?: boolean;
-	type?: "button" | "submit" | "reset" | undefined;
-	handleFn: React.MouseEventHandler<HTMLButtonElement>;
-	text: string;
-}) {
+}: FunctionalButtonProps) {
 	return (
 		<Button secondary={secondary} type={type} onClick={handleFn}>
 			{text}

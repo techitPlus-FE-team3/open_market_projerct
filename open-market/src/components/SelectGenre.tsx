@@ -1,14 +1,10 @@
-function SelectGenre({
-	id,
-	value,
-	handleFn,
-	category,
-}: {
+interface SelectGenreProps {
 	id: string;
 	value?: string | undefined;
 	handleFn: React.ChangeEventHandler<HTMLSelectElement>;
 	category: CategoryCode[] | undefined;
-}) {
+}
+function SelectGenre({ id, value, handleFn, category }: SelectGenreProps) {
 	return (
 		<>
 			{category && value && (
