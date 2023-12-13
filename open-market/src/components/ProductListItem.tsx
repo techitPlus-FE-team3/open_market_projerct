@@ -92,7 +92,9 @@ function ProductListItem({
 			<StyledLink to={`/productdetail/${product._id}`}>
 				<img
 					src={
-						"image" in product ? product.image!.url : product.mainImages[0].url
+						"image" in product
+							? (product as OrderProduct).image!.url
+							: product.mainImages[0].url
 					}
 					alt={`${product.name} 사진`}
 				/>
