@@ -1,11 +1,20 @@
+import FormInput from "@/components/FormInput";
+import FunctionalButton from "@/components/FunctionalButton";
+import SelectGenre from "@/components/SelectGenre";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
+import styled from "@emotion/styled";
+import CircleIcon from "@mui/icons-material/Circle";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import { useEffect, useRef, useState } from "react";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import { Radio, RadioProps } from "@mui/material";
+import { styled as muiStyled } from "@mui/system";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface ProductRegistForm {
 	show: boolean;
@@ -26,13 +35,34 @@ interface ProductRegistForm {
 	};
 }
 
+const ProductRadioButtonWrapper = styled.div`
+	width: 590px;
+	height: 290px;
+	color: ${Common.colors.gray};
+	border-radius: 10px;
+	border: 1px solid;
+	padding: ${Common.space.spacingMd};
+`;
+
+const RadioButtonGroup = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	top: 50%;
+	transform: translateY(-60%);
+`;
+
+const CustomRadio = muiStyled((props: RadioProps) => (
+	<Radio
+		{...props}
+		icon={<RadioButtonUncheckedIcon style={{ color: "#D9D9D9" }} />}
+		checkedIcon={<CircleIcon style={{ color: "#FFB258" }} />}
+	/>
+))``;
+
 function ProductRegistration() {
 	const navigate = useNavigate();
-	const albumRef = useRef(null);
-	const titleRef = useRef(null);
-	const formRef = useRef(null);
-	const genreRef = useRef(null);
-	const soundFileRef = useRef(null);
 
 	const [postItem, setPostItem] = useState<ProductRegistForm>({
 		show: true,
@@ -114,6 +144,13 @@ function ProductRegistration() {
 		}
 	}
 
+	function handleRegistCancel() {
+		const result = confirm("정말로 등록을 취소하시겠습니까?");
+		if (result) {
+			navigate(-1);
+		}
+	}
+
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");
 
@@ -145,7 +182,7 @@ function ProductRegistration() {
 			</Helmet>
 			<div>
 				<h2>상품 등록</h2>
-				<form encType="multipart/form-data" ref={formRef}>
+				<form encType="multipart/form-data">
 					<div>
 						<div>
 							<div>
@@ -155,7 +192,6 @@ function ProductRegistration() {
 							<input
 								type="file"
 								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
-								ref={albumRef}
 								onChange={(e: { target: { files: any } }) => {
 									uploadFile(e.target.files[0], setPostItem, "image");
 								}}
@@ -173,51 +209,34 @@ function ProductRegistration() {
 						</div>
 						<div>
 							<div>
-								<label htmlFor="title">타이틀</label>
-								<input
-									type="text"
+								<FormInput
 									name="title"
-									ref={titleRef}
-									onChange={debounce((e: { target: { value: any } }) =>
+									label="타이틀"
+									handleFn={debounce((e: { target: { value: any } }) =>
 										setPostItem({ ...postItem, name: e.target.value }),
 									)}
-									id="title"
-									placeholder="제목을 입력해주세요"
 								/>
 							</div>
 							<div>
 								<div>
-									<label htmlFor="genre">장르</label>
-									<select
-										name="genre"
+									<SelectGenre
 										id="genre"
-										ref={genreRef}
-										onChange={(e) => {
+										value="none"
+										handleFn={(e) => {
 											setPostItem({
 												...postItem,
 												extra: { ...postItem.extra, category: e.target.value },
 											});
 										}}
-										defaultValue="none"
-									>
-										<option value="none" disabled hidden>
-											장르를 선택해주세요
-										</option>
-										{category && category.length !== 0
-											? category.map((item) => (
-													<option key={item.code} value={item.code}>
-														{item.value}
-													</option>
-											  ))
-											: undefined}
-									</select>
+										category={category}
+									/>
 								</div>
 								<div>
-									<label htmlFor="hashTag">해시태그 | </label>
-									<input
-										type="text"
+									<FormInput
 										name="hashTag"
-										onChange={debounce(
+										label="해시태그"
+										placeholder="해시태그를 ','(콤마)로 구분해주세요"
+										handleFn={debounce(
 											(e: React.ChangeEvent<HTMLInputElement>) => {
 												const tagsArray = e.target.value.split(",");
 												setPostItem({
@@ -226,8 +245,6 @@ function ProductRegistration() {
 												});
 											},
 										)}
-										id="hashTag"
-										placeholder="해시태그를 ','(콤마)로 구분해주세요"
 									/>
 								</div>
 							</div>
@@ -254,7 +271,6 @@ function ProductRegistration() {
 										accept="audio/*"
 										name="mp3"
 										id="mp3"
-										ref={soundFileRef}
 										onChange={(e: { target: { files: any } }) =>
 											uploadFile(e.target.files[0], setPostItem, "soundFile")
 										}
@@ -265,46 +281,68 @@ function ProductRegistration() {
 					</div>
 					<div>
 						<div>
-							<label htmlFor="price">가격</label>
-							<input
-								type="number"
+							<FormInput
 								name="price"
-								id="price"
-								onChange={debounce(
+								label="가격"
+								type="number"
+								handleFn={debounce(
 									(e: { target: { value: string | number } }) =>
 										setPostItem({ ...postItem, price: +e.target.value }),
 								)}
 							/>
 						</div>
-						<div>
+						<ProductRadioButtonWrapper>
 							<span>공개여부</span>
-							<div>
-								<div>
-									<span>공개</span>
-									<input
-										type="radio"
-										value="true"
-										name="public"
-										onChange={() => setPostItem({ ...postItem, show: true })}
-									/>
-								</div>
+							<RadioButtonGroup>
+								<span>공개</span>
+								<CustomRadio
+									checked={postItem.show === true}
+									onChange={() =>
+										setPostItem((prevPostItem) => ({
+											...prevPostItem,
+											show: true,
+										}))
+									}
+									value="true"
+								/>
 								<div>
 									<span>비공개</span>
-									<input
+									{/* <input
 										type="radio"
 										value="false"
 										name="public"
-										onChange={() => setPostItem({ ...postItem, show: false })}
+										onChange={() =>
+											setPostItem((prevPostItem) => ({
+												...prevPostItem,
+												show: false,
+											}))
+										}
+									/> */}
+									<CustomRadio
+										checked={postItem.show === false}
+										onChange={() =>
+											setPostItem((prevPostItem) => ({
+												...prevPostItem,
+												show: false,
+											}))
+										}
+										value="false"
 									/>
 								</div>
-							</div>
-						</div>
+							</RadioButtonGroup>
+						</ProductRadioButtonWrapper>
 					</div>
 					<div>
-						<Link to={"/"}>취소</Link>
-						<button type="submit" onClick={handlePostProductRegist}>
-							등록
-						</button>
+						<FunctionalButton
+							secondary={true}
+							handleFn={handleRegistCancel}
+							text="취소"
+						/>
+						<FunctionalButton
+							type="submit"
+							handleFn={handlePostProductRegist}
+							text="등록"
+						/>
 					</div>
 				</form>
 			</div>

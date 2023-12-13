@@ -2,7 +2,7 @@ import { axiosInstance } from "@/utils";
 import toast from "react-hot-toast";
 
 export async function uploadFile(
-	file: string, // 업로드할 파일
+	file: File, // 업로드할 파일
 	setItemCallback: (arg0: (prevItem: any) => any) => void, // state
 	itemType: string, // 파일 타입 - mainImages or soundFile
 ) {
