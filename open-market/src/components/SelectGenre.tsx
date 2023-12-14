@@ -16,7 +16,7 @@ const SelectGenreWrapper = styled.div`
 	display: flex;
 	align-items: center;
 	border-radius: 10px;
-	border: 1px solid;
+	background-color: ${Common.colors.white};
 `;
 
 const SelectGenreLabel = styled.label`
@@ -29,6 +29,8 @@ const SelectGenreLabel = styled.label`
 const SelectGenreOption = styled.select`
 	border: none;
 	padding: ${Common.space.spacingLg} 0;
+	background-color: ${Common.colors.white};
+
 	&:focus {
 		outline: none;
 	}

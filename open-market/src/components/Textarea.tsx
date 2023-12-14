@@ -9,9 +9,11 @@ interface TextareaProps {
 
 const TextareaWrapper = styled.div<{ width: string }>`
 	width: ${({ width }) => width};
-	height: 166px;
+	height: 116px;
 	display: flex;
 	white-space: nowrap;
+	background-color: ${Common.colors.white};
+	border-radius: 10px;
 `;
 
 const TextareaLabel = styled.label`
@@ -21,9 +23,12 @@ const TextareaLabel = styled.label`
 
 const TextareaBox = styled.textarea<{ width: string }>`
 	width: ${({ width }) => width || "650px"};
-	height: 160px;
+	height: 116px;
 	border: none;
 	resize: none;
+	background-color: ${Common.colors.white};
+	border-radius: 10px;
+
 	&:focus {
 		border: none;
 		outline: none;

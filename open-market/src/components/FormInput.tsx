@@ -17,10 +17,11 @@ interface FormInputProps {
 const FormInputWrapper = styled.div<StyleProps>`
 	display: flex;
 	align-items: center;
-	border: 1px solid black;
 	border-radius: 10px;
 	padding: ${Common.space.spacingLg} ${Common.space.spacingMd};
 	height: 72px;
+	flex-grow: 1;
+	background-color: ${Common.colors.white};
 
 	${(props) =>
 		props.type === "number" &&
@@ -53,9 +54,11 @@ const Input = styled.input`
 	border: 0px;
 	outline: none;
 	width: 350px;
+	height: 50px;
 	font-size: 16px;
 	color: ${Common.colors.black};
-	height: 50px;
+	background-color: ${Common.colors.white};
+
 	&::-webkit-inner-spin-button {
 		appearance: none;
 		-moz-appearance: none;
