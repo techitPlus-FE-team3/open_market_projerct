@@ -1,4 +1,14 @@
-import { FilterButton, FilterSelect } from "@/components/FilterComponent";
+import {
+	FilterButton,
+	FilterContainer,
+	FilterSelect,
+} from "@/components/FilterComponent";
+import {
+	Heading,
+	ProductContainer,
+	ProductList,
+	ProductSection,
+} from "@/components/ProductListComponent";
 import ProductListItem from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import {
@@ -8,7 +18,6 @@ import {
 	searchKeywordState,
 	searchedProductListState,
 } from "@/states/productListState";
-import { Common } from "@/styles/common";
 import {
 	axiosInstance,
 	categoryFilterProductList,
@@ -19,22 +28,12 @@ import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useRecoilState, useRecoilValue } from "recoil";
 
-const ProductList = styled("ol")`
-	width: 1160px;
-	padding: 30px 0px;
-	display: flex;
-	flex-flow: column nowrap;
-	align-items: center;
-	gap: ${Common.space.spacingLg};
-	background-color: ${Common.colors.gray2};
-	border-radius: 10px;
-`;
+interface bannerProps {
+	display: string;
+}
 
-const FilterContainer = styled("div")`
-	margin: 10px;
-	display: flex;
-	flex-flow: row nowrap;
-	gap: 10px;
+const BannerSection = styled.section<bannerProps>`
+	display: ${(props) => props.display};
 `;
 
 function Index() {
@@ -115,14 +114,20 @@ function Index() {
 			<Helmet>
 				<title>Home - 모두의 오디오 MODI</title>
 			</Helmet>
-			<section>
-				<h2>메인페이지</h2>
-				<img src="/vite.svg" alt="hero" />
-				<SearchBar onClick={handleSearchKeyword} searchRef={searchRef} />
+			<BannerSection display={searchKeyword ? "none" : "block"}>
+				<img src="/banner.svg" alt="배너 이미지" />
+			</BannerSection>
+			<ProductSection>
+				<Heading>메인페이지</Heading>
+				<SearchBar
+					onClick={handleSearchKeyword}
+					searchRef={searchRef}
+					display={searchKeyword ? "block" : "none"}
+				/>
 				<FilterContainer>
 					<FilterButton type="submit">인기순</FilterButton>
 					<FilterButton type="submit">최신순</FilterButton>
-					<FilterSelect>
+					<FilterSelect display={searchKeyword ? "block" : "none"}>
 						<select
 							value={categoryFilter}
 							onChange={(e) => setCategoryFilter(e.target.value)}
@@ -141,12 +146,40 @@ function Index() {
 						</select>
 					</FilterSelect>
 				</FilterContainer>
-				<ProductList>
-					{searchKeyword && searchedProductList !== undefined ? (
-						searchedProductList.length === 0 ? (
-							<span>해당하는 상품이 없습니다.</span>
+				<ProductContainer height={searchKeyword ? "633px" : "400px"}>
+					<ProductList>
+						{searchKeyword && searchedProductList !== undefined ? (
+							searchedProductList.length === 0 ? (
+								<span className="emptyList">해당하는 상품이 없습니다.</span>
+							) : (
+								searchedProductList.slice(0, 4).map((product) => {
+									return (
+										<ProductListItem
+											key={product._id}
+											product={product}
+											bookmark
+										/>
+									);
+								})
+							)
+						) : !searchKeyword &&
+						  categoryFilter !== "all" &&
+						  filteredProductList !== undefined ? (
+							filteredProductList.length === 0 ? (
+								<span className="emptyList">해당하는 상품이 없습니다.</span>
+							) : (
+								filteredProductList.slice(0, 4).map((product) => {
+									return (
+										<ProductListItem
+											key={product._id}
+											product={product}
+											bookmark
+										/>
+									);
+								})
+							)
 						) : (
-							searchedProductList.slice(0, 4).map((product) => {
+							productList?.slice(0, 4).map((product) => {
 								return (
 									<ProductListItem
 										key={product._id}
@@ -155,33 +188,13 @@ function Index() {
 									/>
 								);
 							})
-						)
-					) : !searchKeyword &&
-					  categoryFilter !== "all" &&
-					  filteredProductList !== undefined ? (
-						filteredProductList.length === 0 ? (
-							<span>해당하는 상품이 없습니다.</span>
-						) : (
-							filteredProductList.slice(0, 4).map((product) => {
-								return (
-									<ProductListItem
-										key={product._id}
-										product={product}
-										bookmark
-									/>
-								);
-							})
-						)
-					) : (
-						productList?.slice(0, 4).map((product) => {
-							return (
-								<ProductListItem key={product._id} product={product} bookmark />
-							);
-						})
-					)}
-				</ProductList>
-				<button type="submit">더보기</button>
-			</section>
+						)}
+					</ProductList>
+					<button type="submit" className="moreButton">
+						더보기
+					</button>
+				</ProductContainer>
+			</ProductSection>
 		</>
 	);
 }
