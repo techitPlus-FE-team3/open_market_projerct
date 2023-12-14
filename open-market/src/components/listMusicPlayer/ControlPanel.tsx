@@ -1,7 +1,7 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 
-const StyledControlPanel = styled("div")`
+const StyledControlPanel = styled.div`
 	width: 90%;
 	margin-left: 60px;
 	display: flex;

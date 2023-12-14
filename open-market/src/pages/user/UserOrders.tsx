@@ -1,6 +1,5 @@
-import { FilterButton } from "@/components/FilterComponent";
+import { FilterButton, FilterContainer } from "@/components/FilterComponent";
 import {
-	FilterContainer,
 	Heading,
 	ProductContainer,
 	ProductList,
@@ -9,14 +8,12 @@ import {
 import ProductListItem from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
-
 import {
 	axiosInstance,
 	getItemWithExpireTime,
 	searchOrderList,
 	setItemWithExpireTime,
 } from "@/utils";
-
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 
