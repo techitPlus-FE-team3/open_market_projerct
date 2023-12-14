@@ -85,7 +85,7 @@ function UserOrders() {
 				<FilterButton type="submit">인기순</FilterButton>
 				<FilterButton type="submit">최신순</FilterButton>
 			</FilterContainer>
-			<ProductContainer>
+			<ProductContainer height={"633px"}>
 				<ProductList>
 					{searchKeyword ? (
 						searchedOrderList !== undefined &&

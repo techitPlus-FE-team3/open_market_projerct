@@ -1,6 +1,10 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 
+interface HeightProps {
+	height: string;
+}
+
 export const Heading = styled.h2`
 	display: ${Common.a11yHidden};
 `;
@@ -16,9 +20,9 @@ export const ProductSection = styled.section`
 	gap: ${Common.space.spacingMd};
 `;
 
-export const ProductContainer = styled.div`
+export const ProductContainer = styled.div<HeightProps>`
 	width: 1160px;
-	min-height: 633px;
+	min-height: ${(props) => props.height};
 	padding: ${Common.space.spacingLg} 0 5px 0;
 	display: flex;
 	flex-flow: column nowrap;
