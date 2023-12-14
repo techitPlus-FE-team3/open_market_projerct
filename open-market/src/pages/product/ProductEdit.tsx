@@ -1,6 +1,7 @@
 import FormInput from "@/components/FormInput";
 import FunctionalButton from "@/components/FunctionalButton";
 import SelectGenre from "@/components/SelectGenre";
+import Textarea from "@/components/Textarea";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
@@ -30,12 +31,114 @@ interface ProductEditForm {
 		soundFile: ProductFiles;
 	};
 }
+const ProductEditSection = styled.section`
+	background-color: ${Common.colors.white};
+	padding: 0 56px;
+
+	.a11yHidden {
+		display: ${Common.a11yHidden};
+	}
+
+	.PostFormWrapper {
+		background-color: ${Common.colors.gray2};
+		padding: 40px;
+		width: 1328px;
+		border-radius: 10px;
+		display: flex;
+		flex-direction: column;
+		gap: ${Common.space.spacingXl};
+	}
+`;
+
+const PostImageWrapper = styled.div`
+	width: 300px;
+	height: 300px;
+	background-color: ${Common.colors.white};
+	border-radius: 10px;
+
+	.ImageWrapper {
+		position: relative;
+	}
+	.PostImage {
+		position: absolute;
+		z-index: 10;
+		width: 100%;
+		height: 300px;
+		opacity: 0;
+		cursor: pointer;
+	}
+	.PostImageLabel {
+		display: flex;
+		flex-direction: column;
+		color: ${Common.colors.gray2};
+		align-items: center;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, 105%);
+	}
+	.UploadImage {
+		width: 300px;
+	}
+`;
+
+const PostAudioWrapper = styled.div`
+	width: 211px;
+	background-color: ${Common.colors.white};
+	border-radius: 10px;
+
+	.AudioWrapper {
+		position: relative;
+	}
+	.PostAudio {
+		position: absolute;
+		z-index: 10;
+		width: 100%;
+		height: 116px;
+		opacity: 0;
+		cursor: pointer;
+	}
+	.PostAudioLabel {
+		display: flex;
+		color: ${Common.colors.black};
+		align-items: center;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, 250%);
+	}
+	.UploadAudioFile {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, 270%);
+	}
+`;
+
+const FormTopLayout = styled.div`
+	width: 1248px;
+	display: flex;
+	gap: ${Common.space.spacingLg};
+`;
+
+const FormTopRightLayout = styled.div`
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: ${Common.space.spacingLg};
+	width: 918px;
+`;
+
+const FlexLayout = styled.div`
+	display: flex;
+	gap: ${Common.space.spacingXl};
+`;
 const ProductRadioButtonWrapper = styled.div`
 	width: 590px;
 	height: 290px;
 	color: ${Common.colors.gray};
 	border-radius: 10px;
-	border: 1px solid;
+	background-color: ${Common.colors.white};
 	padding: ${Common.space.spacingMd};
 `;
 
@@ -48,9 +151,8 @@ const RadioButtonGroup = styled.div`
 	transform: translateY(-60%);
 `;
 
-const CustomRadio = muiStyled((props: RadioProps) => (
+const StyledRadio = muiStyled((props: RadioProps) => (
 	<Radio
-		color="default"
 		{...props}
 		icon={<RadioButtonUncheckedIcon style={{ color: "#D9D9D9" }} />}
 		checkedIcon={<CircleIcon style={{ color: "#FFB258" }} />}
@@ -78,6 +180,64 @@ function ProductEdit() {
 		},
 	});
 	useRequireAuth();
+
+	function handleEditProduct(e: { preventDefault: () => void }) {
+		e.preventDefault();
+		const accessToken = localStorage.getItem("accessToken");
+
+		if (postItem.mainImages.length === 0) {
+			toast.error("앨범아트를 업로드해야 합니다", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+			return;
+		}
+
+		if (postItem.extra.soundFile.url === "") {
+			toast.error("음원을 업로드해야 합니다", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+			return;
+		}
+
+		try {
+			axiosInstance
+				.patch(`/seller/products/${productId}`, postItem, {
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				})
+				.then(() => {
+					toast.success("상품이 성공적으로 수정되었습니다", {
+						ariaProps: {
+							role: "status",
+							"aria-live": "polite",
+						},
+					});
+					navigate(-1);
+				})
+				.catch((error) => {
+					error.response.data.errors.forEach(
+						(err: { msg: Renderable | ValueFunction<Renderable, Toast> }) =>
+							toast.error(err.msg),
+					);
+				});
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	function handleEditCancel() {
+		const result = confirm("정말로 수정을 취소하시겠습니까?");
+		if (result) {
+			navigate(-1);
+		}
+	}
 
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");
@@ -138,92 +298,43 @@ function ProductEdit() {
 		fetchUserProductInfo();
 	}, [productId]);
 
-	function handleEditProduct(e: { preventDefault: () => void }) {
-		e.preventDefault();
-		const accessToken = localStorage.getItem("accessToken");
-
-		if (postItem.mainImages.length === 0) {
-			toast.error("앨범아트를 업로드해야 합니다", {
-				ariaProps: {
-					role: "status",
-					"aria-live": "polite",
-				},
-			});
-			return;
-		}
-
-		if (postItem.extra.soundFile.url === "") {
-			toast.error("음원을 업로드해야 합니다", {
-				ariaProps: {
-					role: "status",
-					"aria-live": "polite",
-				},
-			});
-			return;
-		}
-
-		try {
-			axiosInstance
-				.patch(`/seller/products/${productId}`, postItem, {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				})
-				.then(() => {
-					toast.success("상품이 성공적으로 수정되었습니다", {
-						ariaProps: {
-							role: "status",
-							"aria-live": "polite",
-						},
-					});
-					navigate(-1);
-				})
-				.catch((error) => {
-					error.response.data.errors.forEach(
-						(err: { msg: Renderable | ValueFunction<Renderable, Toast> }) =>
-							toast.error(err.msg),
-					);
-				});
-		} catch (error) {
-			console.error(error);
-		}
-	}
-
-	function handleEditCancel() {
-		const result = confirm("정말로 수정을 취소하시겠습니까?");
-		if (result) {
-			navigate(-1);
-		}
-	}
-
 	return (
-		<section>
+		<ProductEditSection>
 			<Helmet>
 				<title>Edit Product - 모두의 오디오 MODI</title>
 			</Helmet>
-			<h2>상품 수정</h2>
-			<form encType="multipart/form-data">
-				<div>
-					<div>
-						<div>
-							<FileUploadIcon fontSize="large" />
-							<label htmlFor="photo">앨범아트 업로드</label>
+			<h2 className="a11yHidden">상품 수정</h2>
+			<form encType="multipart/form-data" className="PostFormWrapper">
+				<FormTopLayout>
+					<PostImageWrapper>
+						<div className="ImageWrapper">
+							<input
+								type="file"
+								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
+								onChange={(e: { target: { files: any } }) => {
+									uploadFile(e.target.files[0], setPostItem, "image");
+								}}
+								className="PostImage"
+								name="photo"
+								id="photo"
+							/>
+							{postItem?.mainImages[0].url !== "" ? (
+								<img
+									className="UploadImage"
+									src={postItem?.mainImages[0].url}
+									alt={`${postItem?.name}앨범아트`}
+								/>
+							) : (
+								<div className="PostImageLabel">
+									<FileUploadIcon
+										style={{ color: "#D9D9D9", fontSize: "80px" }}
+									/>
+									<label htmlFor="photo">커버 업로드</label>
+								</div>
+							)}
 						</div>
-						<input
-							type="file"
-							accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
-							name="photo"
-							id="photo"
-							onChange={(e: { target: { files: any } }) => {
-								uploadFile(e.target.files[0], setPostItem, "image");
-							}}
-						/>
-						<img
-							src={postItem?.mainImages[0].url}
-							alt={`${userProductInfo?.name}앨범아트`}
-						/>
-					</div>
-					<div>
+					</PostImageWrapper>
+					<FormTopRightLayout>
 						<FormInput
 							name="title"
 							label="타이틀"
@@ -232,7 +343,7 @@ function ProductEdit() {
 								setPostItem({ ...postItem, name: e.target.value }),
 							)}
 						/>
-						<div>
+						<FlexLayout>
 							<SelectGenre
 								id="genre"
 								value={userProductInfo?.extra?.category}
@@ -257,40 +368,44 @@ function ProductEdit() {
 									});
 								})}
 							/>
-						</div>
-						<div>
-							<div>
-								<label htmlFor="description">설명</label>
-								<textarea
-									name="description"
-									id="description"
-									cols={30}
-									rows={3}
-									defaultValue={userProductInfo?.content}
-									onChange={debounce((e: { target: { value: any } }) =>
-										setPostItem({ ...postItem, content: e.target.value }),
+						</FlexLayout>
+						<FlexLayout>
+							<Textarea
+								content={userProductInfo?.content}
+								onChange={debounce((e: { target: { value: any } }) =>
+									setPostItem({ ...postItem, content: e.target.value }),
+								)}
+							/>
+							<PostAudioWrapper>
+								<div className="AudioWrapper">
+									<input
+										type="file"
+										accept="audio/*"
+										name="mp3"
+										className="PostAudio"
+										id="mp3"
+										onChange={(e: { target: { files: any } }) =>
+											uploadFile(e.target.files[0], setPostItem, "soundFile")
+										}
+									/>
+									{postItem?.extra.soundFile.url !== "" ? (
+										<span className="UploadAudioFile">
+											{postItem?.extra.soundFile.fileName}
+										</span>
+									) : (
+										<div className="PostAudioLabel">
+											<FileUploadIcon
+												style={{ color: "#FF3821", fontSize: "20px" }}
+											/>
+											<label htmlFor="mp3">음원 업로드</label>
+										</div>
 									)}
-								/>
-							</div>
-							<div>
-								<div>
-									<FileUploadIcon fontSize="small" />
-									<label htmlFor="mp3">음원 업로드</label>
 								</div>
-								<input
-									type="file"
-									accept="audio/*"
-									name="mp3"
-									id="mp3"
-									onChange={(e: { target: { files: any } }) =>
-										uploadFile(e.target.files[0], setPostItem, "soundFile")
-									}
-								/>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div>
+							</PostAudioWrapper>
+						</FlexLayout>
+					</FormTopRightLayout>
+				</FormTopLayout>
+				<FlexLayout>
 					<FormInput
 						name="price"
 						label="가격"
@@ -304,7 +419,7 @@ function ProductEdit() {
 						<span>공개여부</span>
 						<RadioButtonGroup>
 							<span>공개</span>
-							<CustomRadio
+							<StyledRadio
 								checked={postItem.show === true}
 								onChange={() =>
 									setPostItem((prevPostItem) => ({
@@ -315,7 +430,7 @@ function ProductEdit() {
 								value="true"
 							/>
 							<span>비공개</span>
-							<CustomRadio
+							<StyledRadio
 								checked={postItem.show === false}
 								onChange={() =>
 									setPostItem((prevPostItem) => ({
@@ -327,7 +442,7 @@ function ProductEdit() {
 							/>
 						</RadioButtonGroup>
 					</ProductRadioButtonWrapper>
-				</div>
+				</FlexLayout>
 				<div>
 					<FunctionalButton
 						secondary={true}
@@ -341,7 +456,7 @@ function ProductEdit() {
 					/>
 				</div>
 			</form>
-		</section>
+		</ProductEditSection>
 	);
 }
 
