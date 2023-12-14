@@ -1,6 +1,10 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 
+interface DisplayProps {
+	display: string;
+}
+
 export const FilterContainer = styled.div`
 	margin: ${Common.space.spacingLg} 0 5px ${Common.space.spacingMd};
 	display: flex;
@@ -38,7 +42,8 @@ const FilterItem = styled.div`
 
 export const FilterButton = FilterItem.withComponent("button");
 
-export const FilterSelect = styled(FilterItem)`
+export const FilterSelect = styled(FilterItem)<DisplayProps>`
+	display: ${(props) => props.display};
 	select {
 		appearance: none;
 		width: 100%;
