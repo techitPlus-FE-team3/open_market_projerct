@@ -1,3 +1,5 @@
+import { FilterButton } from "@/components/FilterComponent";
+import SearchBar from "@/components/SearchBar";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
 	axiosInstance,
@@ -6,10 +8,18 @@ import {
 	searchProductList,
 	setItemWithExpireTime,
 } from "@/utils";
+import styled from "@emotion/styled";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
+
+const FilterContainer = styled("div")`
+	margin: 10px;
+	display: flex;
+	flex-flow: row nowrap;
+	gap: 10px;
+`;
 
 function sortByProfitProductList(list: Product[]) {
 	return list.sort((a, b) => b.buyQuantity * b.price - a.buyQuantity * a.price);
@@ -130,26 +140,15 @@ function UserProducts() {
 			<h2>상품관리</h2>
 			{userProductsInfo ? (
 				<>
-					<div>
-						<form>
-							<input type="text" placeholder="판매내역 검색" ref={searchRef} />
-							<button type="submit" onClick={handleSearchKeyword}>
-								검색
-							</button>
-						</form>
-					</div>
-					<ul>
-						<li>
-							<button type="button" onClick={handleSortByProfit}>
-								수익순
-							</button>
-						</li>
-						<li>
-							<button type="button" onClick={handleSortByNewest}>
-								최신순
-							</button>
-						</li>
-					</ul>
+					<SearchBar onClick={handleSearchKeyword} searchRef={searchRef} />
+					<FilterContainer>
+						<FilterButton type="button" onClick={handleSortByProfit}>
+							수익순
+						</FilterButton>
+						<FilterButton type="button" onClick={handleSortByNewest}>
+							최신순
+						</FilterButton>
+					</FilterContainer>
 					<ul>
 						{searchKeyword && searchedList.length === 0 ? (
 							<span>해당하는 상품이 없습니다.</span>

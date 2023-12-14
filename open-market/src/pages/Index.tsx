@@ -1,4 +1,6 @@
+import { FilterButton, FilterSelect } from "@/components/FilterComponent";
 import ProductListItem from "@/components/ProductListItem";
+import SearchBar from "@/components/SearchBar";
 import {
 	categoryKeywordState,
 	fetchproductListState,
@@ -26,6 +28,13 @@ const ProductList = styled("ol")`
 	gap: ${Common.space.spacingLg};
 	background-color: ${Common.colors.gray2};
 	border-radius: 10px;
+`;
+
+const FilterContainer = styled("div")`
+	margin: 10px;
+	display: flex;
+	flex-flow: row nowrap;
+	gap: 10px;
 `;
 
 function Index() {
@@ -109,35 +118,29 @@ function Index() {
 			<section>
 				<h2>메인페이지</h2>
 				<img src="/vite.svg" alt="hero" />
-				<div className="searchInputWrapper">
-					<label htmlFor="searchBar" className="">
-						검색
-					</label>
-					<input type="text" id="searchBar" name="searchBar" ref={searchRef} />
-					<button type="button" onClick={handleSearchKeyword}>
-						검색
-					</button>
-				</div>
-				<div className="sortButtonWrapper">
-					<button type="submit">인기순</button>
-					<button type="submit">최신순</button>
-					<select
-						value={categoryFilter}
-						onChange={(e) => setCategoryFilter(e.target.value)}
-					>
-						<option value="none" disabled hidden>
-							장르 선택
-						</option>
-						<option value="all">전체 보기</option>
-						{category && category.length !== 0
-							? category.map((item) => (
-									<option key={item.code} value={item.value}>
-										{item.value}
-									</option>
-							  ))
-							: undefined}
-					</select>
-				</div>
+				<SearchBar onClick={handleSearchKeyword} searchRef={searchRef} />
+				<FilterContainer>
+					<FilterButton type="submit">인기순</FilterButton>
+					<FilterButton type="submit">최신순</FilterButton>
+					<FilterSelect>
+						<select
+							value={categoryFilter}
+							onChange={(e) => setCategoryFilter(e.target.value)}
+						>
+							<option value="none" disabled hidden>
+								장르 선택
+							</option>
+							<option value="all">전체 보기</option>
+							{category && category.length !== 0
+								? category.map((item) => (
+										<option key={item.code} value={item.value}>
+											{item.value}
+										</option>
+								  ))
+								: undefined}
+						</select>
+					</FilterSelect>
+				</FilterContainer>
 				<ProductList>
 					{searchKeyword && searchedProductList !== undefined ? (
 						searchedProductList.length === 0 ? (
