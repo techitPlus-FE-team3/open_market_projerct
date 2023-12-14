@@ -1,33 +1,33 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 import {
-    AccountCircle,
-    ExitToApp,
-    FileUpload,
-    Notifications,
-    Search,
+	AccountCircle,
+	ExitToApp,
+	FileUpload,
+	Notifications,
+	Search,
 } from "@mui/icons-material";
 import {
-    AppBar,
-    Badge,
-    Button,
-    CircularProgress,
-    IconButton,
-    InputAdornment,
-    Menu,
-    MenuItem,
-    TextField,
-    Toolbar,
+	AppBar,
+	Badge,
+	Button,
+	CircularProgress,
+	IconButton,
+	InputAdornment,
+	Menu,
+	MenuItem,
+	TextField,
+	Toolbar,
 } from "@mui/material";
 import { KeyboardEvent, useEffect, useState } from "react";
 
 import { loggedInState } from "@/states/authState";
 import {
-    categoryKeywordState,
-    fetchproductListState,
-    productListState,
-    searchKeywordState,
-    searchedProductListState,
+	categoryKeywordState,
+	fetchproductListState,
+	productListState,
+	searchKeywordState,
+	searchedProductListState,
 } from "@/states/productListState";
 import { axiosInstance, searchProductList } from "@/utils";
 import toast from "react-hot-toast";
@@ -68,27 +68,27 @@ const Logo = styled.h1`
 const SearchBar = styled(TextField)`
 	& .MuiOutlinedInput-root {
 		width: 700px; // 너비
-		border-radius: 100px; // 둥근 모서리
-		background-color: ${Common.colors.white}; // 배경색
+		border-radius: 100px;
+		background-color: ${Common.colors.white};
 		&.Mui-focused fieldset {
-			border-color: ${Common.colors.emphasize}; // 포커스 시 테두리 색상
+			border-color: ${Common.colors.emphasize};
 		}
 	}
 
 	& .MuiInputLabel-root.Mui-focused {
-		color: ${Common.colors.primary}; // 포커스 시 레이블 색상 변경
-		// background-color: ${Common.colors.white}; // 배경색
+		color: ${Common.colors.primary};
+		// background-color: ${Common.colors.white};
 	}
 
 	& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-		border-color: ${Common.colors.emphasize}; // 포커스 시 테두리 색상 변경
+		border-color: ${Common.colors.emphasize};
 	}
 
 	& .MuiIconButton-root {
-		margin-right: -8px; // 아이콘 버튼 왼쪽 여백
-		padding: 2px; // 아이콘 버튼 패딩
-		background-color: ${Common.colors.emphasize}; // 아이콘 배경색
-		color: ${Common.colors.white}; // 아이콘 색상
+		margin-right: -8px;
+		padding: 2px;
+		background-color: ${Common.colors.emphasize};
+		color: ${Common.colors.white};
 	}
 `;
 
@@ -131,7 +131,7 @@ const UserButton = styled(Button)`
 `;
 
 const Header = () => {
-	const [isLogoLoaded, setIsLogoLoaded] = useState(false); // 로고 로딩 상태 관리
+	const [isLogoLoaded, setIsLogoLoaded] = useState(false);
 
 	const [productList, setProductList] = useRecoilState(productListState);
 	const fetchedProductList = useRecoilValue(fetchproductListState);
@@ -157,7 +157,7 @@ const Header = () => {
 	const [notificationAnchorEl, setNotificationAnchorEl] =
 		useState<null | HTMLElement>(null);
 
-	const [searchInput, setSearchInput] = useState(""); // 검색 입력값을 저장하는 로컬 상태
+	const [searchInput, setSearchInput] = useState("");
 
 	async function fetchProductList() {
 		try {
@@ -167,7 +167,6 @@ const Header = () => {
 		}
 	}
 
-	// 로고 이미지 로딩 완료 시 핸들러
 	function onLogoLoad() {
 		setIsLogoLoaded(true);
 	}
@@ -189,13 +188,11 @@ const Header = () => {
 	}
 
 	function handleLogout() {
-		// 토큰 제거 및 상태 업데이트
 		localStorage.removeItem("accessToken");
 		localStorage.removeItem("refreshToken");
 		localStorage.removeItem("_id");
 		setLoggedIn(false);
 
-		// 로그인 페이지로 리디렉션
 		toast.success(`로그아웃 되었습니다.`);
 		navigate("/");
 	}
@@ -205,7 +202,6 @@ const Header = () => {
 		if (e.key === "Enter" && !e.nativeEvent.isComposing) {
 			e.preventDefault();
 			setSearchKeyword(target.value);
-			// target.value = "";
 			setSearchInput("");
 			setCategoryFilter("all");
 		}
@@ -228,17 +224,15 @@ const Header = () => {
 		);
 	}, [searchKeyword]);
 
-	// 검색 입력값 변경 핸들러
 	const handleSearchInputChange = (
 		event: React.ChangeEvent<HTMLInputElement>,
 	) => {
 		setSearchInput(event.target.value);
 	};
 
-	// 검색 버튼 클릭 이벤트 핸들러
 	const handleSearchClick = () => {
-		setSearchKeyword(searchInput); // 현재 검색 입력값으로 검색 키워드 상태 업데이트
-		setSearchInput(""); // 검색 후 입력 필드 초기화
+		setSearchKeyword(searchInput);
+		setSearchInput("");
 	};
 
 	return (
@@ -255,8 +249,8 @@ const Header = () => {
 						<img
 							src={logoImage}
 							alt="모디 로고"
-							onLoad={onLogoLoad} // 이미지 로딩 완료 핸들러
-							style={{ display: isLogoLoaded ? "block" : "none" }} // 로딩 상태에 따라 이미지 표시 여부 결정
+							onLoad={onLogoLoad}
+							style={{ display: isLogoLoaded ? "block" : "none" }}
 						/>
 						{!isLogoLoaded && <CircularProgress />}
 					</Link>
@@ -266,8 +260,8 @@ const Header = () => {
 					variant="outlined"
 					placeholder="검색어를 입력하세요"
 					label="검색"
-					value={searchInput} // 검색 입력값 바인딩
-					onChange={handleSearchInputChange} // 입력 변경 핸들러 바인딩
+					value={searchInput}
+					onChange={handleSearchInputChange}
 					onKeyDown={(e) =>
 						handleEnterKeyPress(e as KeyboardEvent<HTMLInputElement>)
 					}
@@ -303,7 +297,6 @@ const Header = () => {
 							open={Boolean(notificationAnchorEl)}
 							onClose={handleMenuClose}
 						>
-							{/* Notification items can be mapped here */}
 							<MenuItem onClick={handleMenuClose}>알림1</MenuItem>
 						</Menu>
 
