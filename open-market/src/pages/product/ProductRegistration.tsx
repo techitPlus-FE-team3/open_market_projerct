@@ -399,6 +399,7 @@ function ProductRegistration() {
 						<RadioButtonGroup>
 							<span>공개</span>
 							<StyledRadio
+								disabled
 								checked={postItem.show === true}
 								onChange={() =>
 									setPostItem((prevPostItem) => ({
@@ -411,6 +412,7 @@ function ProductRegistration() {
 							<div>
 								<span>비공개</span>
 								<StyledRadio
+									disabled
 									checked={postItem.show === false}
 									onChange={() =>
 										setPostItem((prevPostItem) => ({

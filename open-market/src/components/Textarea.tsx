@@ -37,7 +37,7 @@ const TextareaBox = styled.textarea<{ width: string }>`
 `;
 
 function Textarea({ readOnly = false, content = "", onChange }: TextareaProps) {
-	const width = readOnly ? "918px" : "677px";
+	const width = readOnly ? "928px" : "687px";
 
 	return (
 		<TextareaWrapper width={width}>
