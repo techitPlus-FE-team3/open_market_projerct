@@ -67,7 +67,7 @@ const Logo = styled.h1`
 
 const SearchBar = styled(TextField)`
 	& .MuiOutlinedInput-root {
-		width: 700px; // 너비
+		width: 700px;
 		border-radius: 100px;
 		background-color: ${Common.colors.white};
 		&.Mui-focused fieldset {
@@ -77,7 +77,6 @@ const SearchBar = styled(TextField)`
 
 	& .MuiInputLabel-root.Mui-focused {
 		color: ${Common.colors.primary};
-		// background-color: ${Common.colors.white};
 	}
 
 	& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
