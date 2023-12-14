@@ -84,7 +84,7 @@ const PostImageWrapper = styled.div`
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		transform: translate(-50%, 135%);
+		transform: translate(-50%, 105%);
 	}
 	.UploadImage {
 		width: 300px;
@@ -108,13 +108,12 @@ const PostAudioWrapper = styled.div`
 	}
 	.PostAudioLabel {
 		display: flex;
-		flex-direction: column;
-		color: ${Common.colors.gray2};
+		color: ${Common.colors.black};
 		align-items: center;
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		transform: translate(-50%, 135%);
+		transform: translate(-50%, 250%);
 	}
 `;
 const FormTopRightLayout = styled.div`
@@ -300,7 +299,7 @@ function ProductRegistration() {
 								) : (
 									<div className="PostImageLabel">
 										<FileUploadIcon
-											style={{ color: "#D9D9D9", fontSize: "56px" }}
+											style={{ color: "#D9D9D9", fontSize: "80px" }}
 										/>
 										<label htmlFor="photo">커버 업로드</label>
 									</div>
@@ -364,7 +363,9 @@ function ProductRegistration() {
 											<span>{postItem?.extra.soundFile.fileName}</span>
 										) : (
 											<div className="PostAudioLabel">
-												<FileUploadIcon fontSize="small" />
+												<FileUploadIcon
+													style={{ color: "#FF3821", fontSize: "20px" }}
+												/>
 												<label htmlFor="mp3">음원 업로드</label>
 											</div>
 										)}
