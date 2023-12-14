@@ -161,6 +161,8 @@ const Header = () => {
 	const [notificationAnchorEl, setNotificationAnchorEl] =
 		useState<null | HTMLElement>(null);
 
+	const [searchInput, setSearchInput] = useState(""); // 검색 입력값을 저장하는 로컬 상태
+
 	async function fetchProductList() {
 		try {
 			return await axiosInstance.get("/products");
@@ -229,6 +231,19 @@ const Header = () => {
 		);
 	}, [searchKeyword]);
 
+	// 검색 입력값 변경 핸들러
+	const handleSearchInputChange = (
+		event: React.ChangeEvent<HTMLInputElement>,
+	) => {
+		setSearchInput(event.target.value);
+	};
+
+	// 검색 버튼 클릭 이벤트 핸들러
+	const handleSearchClick = () => {
+		setSearchKeyword(searchInput); // 현재 검색 입력값으로 검색 키워드 상태 업데이트
+		setSearchInput(""); // 검색 후 입력 필드 초기화
+	};
+
 	return (
 		<HeaderContainer position="static" color="default" elevation={1}>
 			<HeaderWrapper>
@@ -254,13 +269,15 @@ const Header = () => {
 					variant="outlined"
 					placeholder="검색어를 입력하세요"
 					label="검색"
+					value={searchInput} // 검색 입력값 바인딩
+					onChange={handleSearchInputChange} // 입력 변경 핸들러 바인딩
 					onKeyDown={(e) =>
 						handleEnterKeyPress(e as KeyboardEvent<HTMLInputElement>)
 					}
 					InputProps={{
 						endAdornment: (
 							<InputAdornment position="end">
-								<IconButton>
+								<IconButton onClick={handleSearchClick}>
 									<Search />
 								</IconButton>
 							</InputAdornment>
