@@ -1,33 +1,33 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 import {
-	AccountCircle,
-	ExitToApp,
-	FileUpload,
-	Notifications,
-	Search,
+    AccountCircle,
+    ExitToApp,
+    FileUpload,
+    Notifications,
+    Search,
 } from "@mui/icons-material";
 import {
-	AppBar,
-	Badge,
-	Button,
-	CircularProgress,
-	IconButton,
-	InputAdornment,
-	Menu,
-	MenuItem,
-	TextField,
-	Toolbar,
+    AppBar,
+    Badge,
+    Button,
+    CircularProgress,
+    IconButton,
+    InputAdornment,
+    Menu,
+    MenuItem,
+    TextField,
+    Toolbar,
 } from "@mui/material";
 import { KeyboardEvent, useEffect, useState } from "react";
 
 import { loggedInState } from "@/states/authState";
 import {
-	categoryKeywordState,
-	fetchproductListState,
-	productListState,
-	searchKeywordState,
-	searchedProductListState,
+    categoryKeywordState,
+    fetchproductListState,
+    productListState,
+    searchKeywordState,
+    searchedProductListState,
 } from "@/states/productListState";
 import { axiosInstance, searchProductList } from "@/utils";
 import toast from "react-hot-toast";
