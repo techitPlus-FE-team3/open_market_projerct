@@ -3,7 +3,6 @@ import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 
-// Footer 스타일 정의
 const FooterContainer = styled.footer`
 	padding: 20px;
 	background: rgba(40, 40, 44, 0.8);
@@ -38,10 +37,6 @@ const Footer = () => {
 			</nav>
 			<div>
 				저장소:
-				{/* <FooterLink to="/facebook">Facebook</FooterLink>
-				<FooterLink to="/instagram">Instagram</FooterLink>
-				<FooterLink to="/twitter">Twitter</FooterLink>
-				<FooterLink to="/youtube">YouTube</FooterLink> */}
 				<FooterLink to="https://github.com/techitPlus-FE-team3/open_market_projerct">
 					Github
 				</FooterLink>
