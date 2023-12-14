@@ -1,6 +1,6 @@
 export function setItemWithExpireTime(
 	key: string,
-	value: Product[],
+	value: Product[] | string,
 	tts: number,
 ): void {
 	// localStorage에 저장할 객체
