@@ -75,10 +75,6 @@ const SearchBar = styled(TextField)`
 		}
 	}
 
-	& .MuiInputLabel-root {
-		// 레이블 기본 스타일
-	}
-
 	& .MuiInputLabel-root.Mui-focused {
 		color: ${Common.colors.primary}; // 포커스 시 레이블 색상 변경
 		// background-color: ${Common.colors.white}; // 배경색
@@ -209,7 +205,8 @@ const Header = () => {
 		if (e.key === "Enter" && !e.nativeEvent.isComposing) {
 			e.preventDefault();
 			setSearchKeyword(target.value);
-			target.value = "";
+			// target.value = "";
+			setSearchInput("");
 			setCategoryFilter("all");
 		}
 	}
