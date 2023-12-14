@@ -20,9 +20,6 @@ const FooterLink = styled(Link)`
 	color:${Common.colors.emphasize}};
 	text-decoration: none;
 
-	&:hover {
-		text-decoration: underline;
-	}
 `;
 
 const Footer = () => {
