@@ -2,9 +2,9 @@ import ProductListItem from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { Common } from "@/styles/common";
-import { axiosInstance } from "@/utils";
+import { axiosInstance, searchOrderList } from "@/utils";
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 
 const ProductList = styled("ul")`
@@ -19,7 +19,11 @@ const ProductList = styled("ul")`
 `;
 
 function UserOrders() {
+	const searchRef = useRef<HTMLInputElement>(null);
+
 	const [orderList, setOrderList] = useState<Order[]>([]);
+	const [searchKeyword, setSearchKeyword] = useState<string>();
+	const [searchedProductList, setSearchedProductList] = useState<Order[]>();
 
 	//비로그인 상태 체크
 	useRequireAuth();
@@ -38,11 +42,25 @@ function UserOrders() {
 		}
 	}
 
-	function handleSearchKeyword() {}
+	function handleSearchKeyword() {
+		setSearchKeyword(
+			searchRef.current!.value.split(" ").join("").toLowerCase(),
+		);
+	}
 
 	useEffect(() => {
 		getOrderList();
 	}, []);
+
+	useEffect(() => {
+		setSearchedProductList(
+			searchOrderList({
+				searchKeyword: searchKeyword!,
+				orderList: orderList!,
+			}),
+		);
+		searchRef.current!.value = searchKeyword ? searchKeyword : "";
+	}, [searchKeyword]);
 
 	return (
 		<section>
@@ -50,9 +68,24 @@ function UserOrders() {
 				<title>My Orders - 모두의 오디오 MODI</title>
 			</Helmet>
 			<h2>구매내역</h2>
-			<SearchBar onClick={handleSearchKeyword} />
+			<SearchBar onClick={handleSearchKeyword} searchRef={searchRef} />
 			<ProductList>
-				{orderList.length !== 0 ? (
+				{searchKeyword ? (
+					searchedProductList !== undefined &&
+					searchedProductList.length !== 0 ? (
+						searchedProductList.map((order) => {
+							return (
+								<ProductListItem
+									key={order._id}
+									product={order.products[0]}
+									bookmark={false}
+								/>
+							);
+						})
+					) : (
+						<span>해당하는 구매내역이 없습니다.</span>
+					)
+				) : orderList !== undefined && orderList.length !== 0 ? (
 					orderList.map((order) => {
 						return (
 							<ProductListItem
@@ -63,7 +96,7 @@ function UserOrders() {
 						);
 					})
 				) : (
-					<span>구매 내역이 없습니다.</span>
+					<span>구매내역이 없습니다.</span>
 				)}
 			</ProductList>
 			<button type="button">더보기</button>
