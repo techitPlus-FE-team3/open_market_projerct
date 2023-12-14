@@ -41,7 +41,7 @@ const StyledSearchBar = styled("form")`
 		transform: translateY(-50%);
 		right: 2%;
 
-		& :first-child {
+		& :first-of-type {
 			position: absolute;
 			top: 3px;
 			left: 3px;
