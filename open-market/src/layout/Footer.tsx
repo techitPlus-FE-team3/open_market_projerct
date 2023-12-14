@@ -17,12 +17,8 @@ const FooterContainer = styled.footer`
 
 const FooterLink = styled(Link)`
 	margin: 0 10px;
-	color:${Common.colors.emphasize}};
+	color: ${Common.colors.emphasize};
 	text-decoration: none;
-
-	&:hover {
-		text-decoration: underline;
-	}
 `;
 
 const Footer = () => {
