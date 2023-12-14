@@ -2,7 +2,12 @@ import ProductListItem from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { Common } from "@/styles/common";
-import { axiosInstance, searchOrderList } from "@/utils";
+import {
+	axiosInstance,
+	getItemWithExpireTime,
+	searchOrderList,
+	setItemWithExpireTime,
+} from "@/utils";
 import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
@@ -53,12 +58,25 @@ function UserOrders() {
 	}, []);
 
 	useEffect(() => {
+		setSearchKeyword(getItemWithExpireTime("searchOrderKeyword"));
 		setSearchedOrderList(
 			searchOrderList({
 				searchKeyword: searchKeyword!,
 				orderList: orderList!,
 			}),
 		);
+	}, [orderList]);
+
+	useEffect(() => {
+		setSearchedOrderList(
+			searchOrderList({
+				searchKeyword: searchKeyword!,
+				orderList: orderList!,
+			}),
+		);
+		if (searchKeyword !== undefined && searchKeyword !== null) {
+			setItemWithExpireTime("searchOrderKeyword", searchKeyword, 5000 * 100);
+		}
 		searchRef.current!.value = searchKeyword ? searchKeyword : "";
 	}, [searchKeyword]);
 
