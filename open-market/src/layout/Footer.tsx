@@ -19,6 +19,7 @@ const FooterLink = styled(Link)`
 	margin: 0 10px;
 	color:${Common.colors.emphasize}};
 	text-decoration: none;
+
 `;
 
 const Footer = () => {
