@@ -17,6 +17,10 @@ import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
+interface FlexLayoutProps {
+	right?: boolean;
+}
+
 interface ProductRegistForm {
 	show: boolean;
 	active: boolean;
@@ -131,9 +135,10 @@ const FormTopRightLayout = styled.div`
 	width: 918px;
 `;
 
-const FlexLayout = styled.div`
+const FlexLayout = styled.div<FlexLayoutProps>`
 	display: flex;
 	gap: ${Common.space.spacingXl};
+	${(props) => props.right && "justify-content: flex-end;"}
 `;
 
 const ProductRadioButtonWrapper = styled.div`
@@ -419,7 +424,7 @@ function ProductRegistration() {
 						</RadioButtonGroup>
 					</ProductRadioButtonWrapper>
 				</FlexLayout>
-				<FlexLayout>
+				<FlexLayout right>
 					<FunctionalButton
 						secondary={true}
 						handleFn={handleRegistCancel}

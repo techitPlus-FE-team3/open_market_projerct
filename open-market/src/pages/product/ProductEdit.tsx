@@ -17,6 +17,10 @@ import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
+interface FlexLayoutProps {
+	right?: boolean;
+}
+
 interface ProductEditForm {
 	show: boolean;
 	name: string;
@@ -129,10 +133,12 @@ const FormTopRightLayout = styled.div`
 	width: 918px;
 `;
 
-const FlexLayout = styled.div`
+const FlexLayout = styled.div<FlexLayoutProps>`
 	display: flex;
 	gap: ${Common.space.spacingXl};
+	${(props) => props.right && "justify-content: flex-end;"}
 `;
+
 const ProductRadioButtonWrapper = styled.div`
 	width: 590px;
 	height: 290px;
@@ -443,7 +449,7 @@ function ProductEdit() {
 						</RadioButtonGroup>
 					</ProductRadioButtonWrapper>
 				</FlexLayout>
-				<div>
+				<FlexLayout right>
 					<FunctionalButton
 						secondary={true}
 						handleFn={handleEditCancel}
@@ -454,7 +460,7 @@ function ProductEdit() {
 						handleFn={handleEditProduct}
 						text="수정"
 					/>
-				</div>
+				</FlexLayout>
 			</form>
 		</ProductEditSection>
 	);
