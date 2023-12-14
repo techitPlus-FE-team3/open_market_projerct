@@ -30,7 +30,8 @@ interface OrderProduct {
 	image: ProductFiles;
 	price: number;
 	extra: {
-		category: CategoryCode[];
+		category: string;
 		soundFile: ProductFiles;
+		tags: string[];
 	};
 }
