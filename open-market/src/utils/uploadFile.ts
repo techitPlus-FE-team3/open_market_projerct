@@ -41,7 +41,7 @@ export async function uploadFile(
 						soundFile: {
 							url: filePath,
 							fileName: filePath.substring(26),
-							orgName: filePath.slice(filePath.lastIndexOf("/") + 1, -4),
+							orgName: filePath.substring(26),
 						},
 					},
 				};
