@@ -34,6 +34,12 @@ interface bannerProps {
 
 const BannerSection = styled.section<bannerProps>`
 	display: ${(props) => props.display};
+	width: 100%;
+	height: 400px;
+
+	img {
+		object-fit: cover;
+	}
 `;
 
 function Index() {
