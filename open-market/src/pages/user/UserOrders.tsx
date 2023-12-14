@@ -1,3 +1,4 @@
+import { FilterButton } from "@/components/FilterComponent";
 import ProductListItem from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
@@ -21,6 +22,13 @@ const ProductList = styled("ul")`
 	gap: ${Common.space.spacingLg};
 	background-color: ${Common.colors.gray2};
 	border-radius: 10px;
+`;
+
+const FilterContainer = styled("div")`
+	margin: 10px;
+	display: flex;
+	flex-flow: row nowrap;
+	gap: 10px;
 `;
 
 function UserOrders() {
@@ -87,6 +95,10 @@ function UserOrders() {
 			</Helmet>
 			<h2>구매내역</h2>
 			<SearchBar onClick={handleSearchKeyword} searchRef={searchRef} />
+			<FilterContainer>
+				<FilterButton type="submit">인기순</FilterButton>
+				<FilterButton type="submit">최신순</FilterButton>
+			</FilterContainer>
 			<ProductList>
 				{searchKeyword ? (
 					searchedOrderList !== undefined && searchedOrderList.length !== 0 ? (
