@@ -23,7 +23,7 @@ function UserOrders() {
 
 	const [orderList, setOrderList] = useState<Order[]>([]);
 	const [searchKeyword, setSearchKeyword] = useState<string>();
-	const [searchedProductList, setSearchedProductList] = useState<Order[]>();
+	const [searchedOrderList, setSearchedOrderList] = useState<Order[]>();
 
 	//비로그인 상태 체크
 	useRequireAuth();
@@ -53,7 +53,7 @@ function UserOrders() {
 	}, []);
 
 	useEffect(() => {
-		setSearchedProductList(
+		setSearchedOrderList(
 			searchOrderList({
 				searchKeyword: searchKeyword!,
 				orderList: orderList!,
@@ -71,9 +71,8 @@ function UserOrders() {
 			<SearchBar onClick={handleSearchKeyword} searchRef={searchRef} />
 			<ProductList>
 				{searchKeyword ? (
-					searchedProductList !== undefined &&
-					searchedProductList.length !== 0 ? (
-						searchedProductList.map((order) => {
+					searchedOrderList !== undefined && searchedOrderList.length !== 0 ? (
+						searchedOrderList.map((order) => {
 							return (
 								<ProductListItem
 									key={order._id}
