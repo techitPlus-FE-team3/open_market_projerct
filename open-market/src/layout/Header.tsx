@@ -1,32 +1,33 @@
+import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 import {
-    AccountCircle,
-    ExitToApp,
-    FileUpload,
-    Notifications,
-    Search,
+	AccountCircle,
+	ExitToApp,
+	FileUpload,
+	Notifications,
+	Search,
 } from "@mui/icons-material";
 import {
-    AppBar,
-    Badge,
-    Button,
-    CircularProgress,
-    IconButton,
-    InputAdornment,
-    Menu,
-    MenuItem,
-    TextField,
-    Toolbar,
+	AppBar,
+	Badge,
+	Button,
+	CircularProgress,
+	IconButton,
+	InputAdornment,
+	Menu,
+	MenuItem,
+	TextField,
+	Toolbar,
 } from "@mui/material";
 import { KeyboardEvent, useEffect, useState } from "react";
 
 import { loggedInState } from "@/states/authState";
 import {
-    categoryKeywordState,
-    fetchproductListState,
-    productListState,
-    searchKeywordState,
-    searchedProductListState,
+	categoryKeywordState,
+	fetchproductListState,
+	productListState,
+	searchKeywordState,
+	searchedProductListState,
 } from "@/states/productListState";
 import { axiosInstance, searchProductList } from "@/utils";
 import toast from "react-hot-toast";
@@ -34,6 +35,22 @@ import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import logoImage from "/logo/logo2.svg";
+
+const HeaderContainer = styled(AppBar)`
+	background: rgba(40, 40, 44, 0.8);
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	width: 100%;
+	align-items: center;
+`;
+
+const HeaderWrapper = styled(Toolbar)`
+	width: 1440px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 100%;
+	padding: 0 20px;
+`;
 
 const Logo = styled.h1`
 	a {
@@ -45,6 +62,75 @@ const Logo = styled.h1`
 		img {
 			height: 40px;
 		}
+	}
+`;
+
+const SearchBar = styled(TextField)`
+	& .MuiOutlinedInput-root {
+		width: 700px; // 너비
+		border-radius: 100px; // 둥근 모서리
+		background-color: ${Common.colors.white}; // 배경색
+		&.Mui-focused fieldset {
+			border-color: ${Common.colors.emphasize}; // 포커스 시 테두리 색상
+		}
+	}
+
+	& .MuiInputLabel-root {
+		// 레이블 기본 스타일
+	}
+
+	& .MuiInputLabel-root.Mui-focused {
+		color: ${Common.colors.primary}; // 포커스 시 레이블 색상 변경
+		// background-color: ${Common.colors.white}; // 배경색
+	}
+
+	& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+		border-color: ${Common.colors.emphasize}; // 포커스 시 테두리 색상 변경
+	}
+
+	& .MuiIconButton-root {
+		margin-right: -8px; // 아이콘 버튼 왼쪽 여백
+		padding: 2px; // 아이콘 버튼 패딩
+		background-color: ${Common.colors.emphasize}; // 아이콘 배경색
+		color: ${Common.colors.white}; // 아이콘 색상
+	}
+`;
+
+const ButtonWrapper = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+`;
+
+const UploadButton = styled(Button)`
+	color: ${Common.colors.white};
+	background-color: transparent;
+	border-radius: 10px;
+	border: 1px solid ${Common.colors.emphasize};
+
+	&:hover {
+		background-color: ${Common.colors.black};
+	}
+
+	.MuiButton-startIcon {
+		margin-right: ${Common.space.spacingMd};
+		color: ${Common.colors.primary};
+	}
+`;
+
+const NotificationButton = styled(IconButton)`
+	color: ${Common.colors.white};
+
+	& > .MuiBadge-root :hover {
+		color: ${Common.colors.emphasize};
+	}
+`;
+
+const UserButton = styled(Button)`
+	color: ${Common.colors.white};
+	&:hover {
+		color: ${Common.colors.emphasize};
 	}
 `;
 
@@ -144,8 +230,8 @@ const Header = () => {
 	}, [searchKeyword]);
 
 	return (
-		<AppBar position="static" color="default" elevation={1}>
-			<Toolbar>
+		<HeaderContainer position="static" color="default" elevation={1}>
+			<HeaderWrapper>
 				<Logo>
 					<Link
 						to="/"
@@ -163,17 +249,17 @@ const Header = () => {
 						{!isLogoLoaded && <CircularProgress />}
 					</Link>
 				</Logo>
-				<TextField
-					variant="outlined"
+				<SearchBar
 					size="small"
+					variant="outlined"
 					placeholder="검색어를 입력하세요"
 					label="검색"
 					onKeyDown={(e) =>
 						handleEnterKeyPress(e as KeyboardEvent<HTMLInputElement>)
 					}
 					InputProps={{
-						startAdornment: (
-							<InputAdornment position="start">
+						endAdornment: (
+							<InputAdornment position="end">
 								<IconButton>
 									<Search />
 								</IconButton>
@@ -183,23 +269,21 @@ const Header = () => {
 					sx={{ m: 2 }}
 				/>
 				{loggedIn && (
-					<>
-						<Button
+					<ButtonWrapper>
+						<UploadButton
 							startIcon={<FileUpload />}
 							variant="outlined"
 							color="inherit"
-							component={Link}
-							to="/productregistration"
-							sx={{ mr: 2 }}
+							href="/productregistration"
 						>
 							업로드
-						</Button>
+						</UploadButton>
 
-						<IconButton color="inherit" onClick={handleNotificationsMenuOpen}>
-							<Badge badgeContent={4} color="secondary">
+						<NotificationButton onClick={handleNotificationsMenuOpen}>
+							<Badge badgeContent={1}>
 								<Notifications />
 							</Badge>
-						</IconButton>
+						</NotificationButton>
 						<Menu
 							anchorEl={notificationAnchorEl}
 							open={Boolean(notificationAnchorEl)}
@@ -209,9 +293,9 @@ const Header = () => {
 							<MenuItem onClick={handleMenuClose}>알림1</MenuItem>
 						</Menu>
 
-						<IconButton color="inherit" onClick={handleProfileMenuOpen}>
+						<UserButton color="inherit" onClick={handleProfileMenuOpen}>
 							<AccountCircle />
-						</IconButton>
+						</UserButton>
 						<Menu
 							anchorEl={anchorEl}
 							open={Boolean(anchorEl)}
@@ -226,13 +310,13 @@ const Header = () => {
 								로그아웃
 							</MenuItem>
 						</Menu>
-					</>
+					</ButtonWrapper>
 				)}
 				{!loggedIn && (
-					<>
-						<IconButton color="inherit" onClick={handleProfileMenuOpen}>
+					<ButtonWrapper>
+						<UserButton onClick={handleProfileMenuOpen}>
 							<AccountCircle />
-						</IconButton>
+						</UserButton>
 						<Menu
 							anchorEl={anchorEl}
 							open={Boolean(anchorEl)}
@@ -242,10 +326,10 @@ const Header = () => {
 								회원가입 / 로그인
 							</MenuItem>
 						</Menu>
-					</>
+					</ButtonWrapper>
 				)}
-			</Toolbar>
-		</AppBar>
+			</HeaderWrapper>
+		</HeaderContainer>
 	);
 };
 
