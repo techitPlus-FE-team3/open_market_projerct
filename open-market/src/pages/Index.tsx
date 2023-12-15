@@ -9,7 +9,7 @@ import {
 	ProductList,
 	ProductSection,
 } from "@/components/ProductListComponent";
-import ProductListItem from "@/components/ProductListItem";
+import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import {
 	categoryKeywordState,
@@ -29,11 +29,11 @@ import { Helmet } from "react-helmet-async";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 interface bannerProps {
-	display: string;
+	showable?: boolean;
 }
 
 const BannerSection = styled.section<bannerProps>`
-	display: ${(props) => props.display};
+	display: ${(props) => (props.showable ? "block" : "none")};
 	width: 100%;
 	height: 400px;
 
@@ -120,7 +120,7 @@ function Index() {
 			<Helmet>
 				<title>Home - 모두의 오디오 MODI</title>
 			</Helmet>
-			<BannerSection display={searchKeyword ? "none" : "block"}>
+			<BannerSection showable={searchKeyword ? false : true}>
 				<img src="/banner.svg" alt="배너 이미지" />
 			</BannerSection>
 			<ProductSection>
@@ -128,12 +128,12 @@ function Index() {
 				<SearchBar
 					onClick={handleSearchKeyword}
 					searchRef={searchRef}
-					display={searchKeyword ? "block" : "none"}
+					showable={searchKeyword ? true : false}
 				/>
 				<FilterContainer>
 					<FilterButton type="submit">인기순</FilterButton>
 					<FilterButton type="submit">최신순</FilterButton>
-					<FilterSelect display={searchKeyword ? "block" : "none"}>
+					<FilterSelect showable={searchKeyword ? true : false}>
 						<select
 							value={categoryFilter}
 							onChange={(e) => setCategoryFilter(e.target.value)}

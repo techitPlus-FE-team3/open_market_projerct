@@ -20,7 +20,7 @@ interface FlexLayoutProps {
 }
 
 interface StyleProps {
-	hash?: boolean;
+	wide?: boolean;
 	large?: boolean;
 }
 
@@ -73,7 +73,7 @@ const ProductItemWrapper = styled.div<StyleProps>`
 	border-radius: 10px;
 	background-color: ${Common.colors.white};
 	padding: ${Common.space.spacingLg} ${Common.space.spacingMd};
-	${(props) => (props.hash ? "width: 677px;" : "flex-grow: 1;")}
+	${(props) => (props.wide ? "width: 677px;" : "flex-grow: 1;")}
 
 	${(props) =>
 		props.large
@@ -267,7 +267,7 @@ function ProductManage() {
 								<ProductLabel bar>장르</ProductLabel>
 								<ProductValue>{genre}</ProductValue>
 							</ProductItemWrapper>
-							<ProductItemWrapper hash>
+							<ProductItemWrapper wide>
 								<ProductLabel bar>해시태그</ProductLabel>
 								<ProductValue>
 									{userProductInfo?.extra?.tags?.map((i) => `#${i} `)}

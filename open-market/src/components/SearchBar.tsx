@@ -7,11 +7,11 @@ import { MouseEventHandler } from "react";
 interface SearchBarProps {
 	onClick: MouseEventHandler<HTMLButtonElement>;
 	searchRef?: React.LegacyRef<HTMLInputElement> | undefined;
-	display: string;
+	showable?: boolean;
 }
 
 interface DisplayProps {
-	display: string;
+	showable?: boolean;
 }
 
 const theme = createTheme({
@@ -21,7 +21,7 @@ const theme = createTheme({
 });
 
 const StyledSearchBar = styled.form<DisplayProps>`
-	display: ${(props) => props.display};
+	display: ${(props) => (props.showable ? "block" : "none")};
 	width: 1160px;
 	height: auto;
 	position: relative;
@@ -60,9 +60,9 @@ const StyledSearchBar = styled.form<DisplayProps>`
 	}
 `;
 
-function SearchBar({ onClick, searchRef, display }: SearchBarProps) {
+function SearchBar({ onClick, searchRef, showable }: SearchBarProps) {
 	return (
-		<StyledSearchBar display={display}>
+		<StyledSearchBar showable={showable}>
 			<label htmlFor="searchBar">검색</label>
 			<input
 				type="text"
