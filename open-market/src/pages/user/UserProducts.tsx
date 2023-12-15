@@ -129,7 +129,6 @@ function UserProducts() {
 		}
 	}, [searchKeyword]);
 
-	console.log(userProductsInfo[0]);
 	return (
 		<ProductSection>
 			<Helmet>
