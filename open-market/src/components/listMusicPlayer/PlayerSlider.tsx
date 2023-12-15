@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { Common } from "@/styles/common";
 import { ChangeEventHandler, useEffect, useRef, useState } from "react";
 
-const SliderContainer = styled("div")`
+const SliderContainer = styled.div`
 	width: 90%;
 	height: auto;
 	background-color: transparent;

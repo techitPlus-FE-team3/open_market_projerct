@@ -1,7 +1,14 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 
-const FilterItem = styled("div")`
+export const FilterContainer = styled.div`
+	margin: ${Common.space.spacingLg} 0 5px ${Common.space.spacingMd};
+	display: flex;
+	flex-flow: row nowrap;
+	gap: ${Common.space.spacingMd};
+`;
+
+const FilterItem = styled.div`
 	display: none;
 	width: 140px;
 	height: 34px;

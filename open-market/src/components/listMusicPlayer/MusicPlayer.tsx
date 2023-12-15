@@ -12,7 +12,7 @@ import {
 	useState,
 } from "react";
 
-const PalyerContainer = styled("div")`
+const PalyerContainer = styled.div`
 	width: auto;
 	min-width: 600px;
 	padding: ${Common.space.spacingMd};
@@ -24,7 +24,7 @@ const PalyerContainer = styled("div")`
 	position: relative;
 `;
 
-const PlayButton = styled("button")`
+const PlayButton = styled.button`
 	background-color: transparent;
 	border: none;
 `;

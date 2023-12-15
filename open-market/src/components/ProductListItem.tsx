@@ -14,7 +14,7 @@ const theme = createTheme({
 	},
 });
 
-const ListItem = styled("li")`
+const ListItem = styled.li`
 	width: 1140px;
 	height: 64px;
 	padding: 5px 30px;

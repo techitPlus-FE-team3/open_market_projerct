@@ -10,7 +10,7 @@ const theme = createTheme({
 	},
 });
 
-const StyledSearchBar = styled("form")`
+const StyledSearchBar = styled.form`
 	width: 1160px;
 	height: auto;
 	position: relative;
