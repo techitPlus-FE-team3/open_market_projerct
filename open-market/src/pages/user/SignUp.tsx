@@ -96,6 +96,7 @@ const Fieldset = styled.fieldset`
 		}
 	}
 `;
+
 const StyledCheckbox = styled(Checkbox)`
 	margin: 0;
 	padding: 0;
