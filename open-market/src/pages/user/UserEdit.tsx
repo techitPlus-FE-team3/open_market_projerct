@@ -358,7 +358,11 @@ function UserEdit() {
 								required={true}
 							/>
 						</li>
-						<li>
+						<li
+							onClick={() =>
+								toast("이메일은 수정 불가능합니다.", { duration: 2000 })
+							}
+						>
 							<AuthInput
 								id="email"
 								name="email"
