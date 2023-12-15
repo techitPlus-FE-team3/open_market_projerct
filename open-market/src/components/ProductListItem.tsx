@@ -129,7 +129,7 @@ export function ProductListItem({
 				/>
 				<span title={product.name}>{product.name}</span>
 			</StyledLink>
-			<MusicPlayer src={product.extra?.soundFile.url!} display />
+			<MusicPlayer src={product.extra?.soundFile.url!} showable />
 			{"image" in product ? (
 				<a
 					href={`https://localhost/api/files/${product?.extra?.soundFile.fileName}?name=${product?.extra?.soundFile.orgName}`}

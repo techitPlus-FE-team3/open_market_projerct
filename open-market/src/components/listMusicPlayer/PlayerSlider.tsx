@@ -3,11 +3,11 @@ import { Common } from "@/styles/common";
 import { ChangeEventHandler, useEffect, useRef, useState } from "react";
 
 interface DisplayProps {
-	display?: boolean;
+	showable?: boolean;
 }
 
 const SliderContainer = styled.div<DisplayProps>`
-	display: ${(props) => (props.display ? "block" : "none")};
+	display: ${(props) => (props.showable ? "block" : "none")};
 	width: 90%;
 	height: auto;
 	background-color: transparent;
@@ -83,11 +83,11 @@ const SliderContainer = styled.div<DisplayProps>`
 function PlayerSlider({
 	onChange,
 	percentage,
-	display,
+	showable,
 }: {
 	onChange: ChangeEventHandler;
 	percentage: number;
-	display?: boolean;
+	showable?: boolean;
 }) {
 	const [position, setPosition] = useState(0);
 	const [marginLeft, setMarginLeft] = useState(0);
@@ -112,7 +112,7 @@ function PlayerSlider({
 	}, [percentage]);
 
 	return (
-		<SliderContainer display={display}>
+		<SliderContainer showable={showable}>
 			<div className="slider-container">
 				<div
 					className="progress-bar-cover"
