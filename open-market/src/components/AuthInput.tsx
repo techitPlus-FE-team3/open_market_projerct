@@ -7,10 +7,11 @@ interface AuthInputProps {
 	name: string;
 	label?: string;
 	type: string;
-	defaultValue: string;
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	defaultValue?: string;
 	placeholder?: string;
 	required?: boolean;
+	readonly?: boolean;
 }
 
 const AuthInputWrppaer = styled.div`
@@ -56,6 +57,7 @@ function AuthInput(props: AuthInputProps) {
 		onChange,
 		placeholder,
 		required,
+		readonly,
 	} = props;
 	return (
 		<AuthInputWrppaer>
@@ -68,6 +70,7 @@ function AuthInput(props: AuthInputProps) {
 				onChange={onChange}
 				placeholder={placeholder}
 				required={required}
+				readOnly={readonly}
 			/>
 		</AuthInputWrppaer>
 	);
