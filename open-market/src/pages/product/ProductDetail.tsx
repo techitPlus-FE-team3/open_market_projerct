@@ -229,7 +229,16 @@ function ProductDetail() {
 					<span>{product?.seller_id}</span>
 					<span>{product?.createdAt}</span>
 					<span>{genre}</span>
-					<span>{product?.content}</span>
+					<div>
+						{product?.content.split("\n").map((line, index) => {
+							return (
+								<span key={index}>
+									{line}
+									<br />
+								</span>
+							);
+						})}
+					</div>
 					<span>{product?.price}</span>
 				</div>
 				<div>
@@ -285,7 +294,7 @@ function ProductDetail() {
 						</Link>
 					) : (
 						<a
-							href={`https://localhost/api/files/${product?.extra?.soundFile.fileName}?name=${product?.extra?.soundFile.orgName}`}
+							href={`https://localhost/api/files/download/${product?.extra?.soundFile.fileName}?name=${product?.extra?.soundFile.orgName}`}
 							download={true}
 						>
 							<DownloadIcon />

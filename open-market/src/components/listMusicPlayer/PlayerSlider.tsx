@@ -2,7 +2,12 @@ import styled from "@emotion/styled";
 import { Common } from "@/styles/common";
 import { ChangeEventHandler, useEffect, useRef, useState } from "react";
 
-const SliderContainer = styled("div")`
+interface DisplayProps {
+	showable?: boolean;
+}
+
+const SliderContainer = styled.div<DisplayProps>`
+	display: ${(props) => (props.showable ? "block" : "none")};
 	width: 90%;
 	height: auto;
 	background-color: transparent;
@@ -78,9 +83,11 @@ const SliderContainer = styled("div")`
 function PlayerSlider({
 	onChange,
 	percentage,
+	showable,
 }: {
 	onChange: ChangeEventHandler;
 	percentage: number;
+	showable?: boolean;
 }) {
 	const [position, setPosition] = useState(0);
 	const [marginLeft, setMarginLeft] = useState(0);
@@ -105,7 +112,7 @@ function PlayerSlider({
 	}, [percentage]);
 
 	return (
-		<SliderContainer>
+		<SliderContainer showable={showable}>
 			<div className="slider-container">
 				<div
 					className="progress-bar-cover"

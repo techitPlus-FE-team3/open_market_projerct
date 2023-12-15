@@ -129,8 +129,8 @@ const UserButton = styled(Button)`
 	}
 `;
 
-function Header() {
-	const [isLogoLoaded, setIsLogoLoaded] = useState(false);
+const Header = () => {
+	const [isLogoLoaded, setIsLogoLoaded] = useState(false); // 로고 로딩 상태 관리
 
 	const [productList, setProductList] = useRecoilState(productListState);
 	const fetchedProductList = useRecoilValue(fetchproductListState);

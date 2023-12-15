@@ -5,10 +5,16 @@ interface StyleProps {
 	type?: string;
 }
 
+interface InputProps {
+	hash?: boolean;
+	title?: boolean;
+}
+
 interface FormInputProps {
 	name: string;
 	label: string;
 	type?: string;
+	maxLength?: number;
 	defaultValue?: string | number | undefined | string[];
 	placeholder?: string;
 	handleFn: React.ChangeEventHandler<HTMLInputElement>;
@@ -50,10 +56,10 @@ const InputLabel = styled.label<StyleProps>`
 	`}
 `;
 
-const Input = styled.input`
+const Input = styled.input<InputProps>`
 	border: 0px;
 	outline: none;
-	width: 350px;
+	width: 360px;
 	height: 50px;
 	font-size: 16px;
 	color: ${Common.colors.black};
@@ -78,6 +84,18 @@ const Input = styled.input`
     padding-top: 200px;
     margin-bottom:10px;
 	`}
+
+	${(props) =>
+		props.name === "title" &&
+		`
+		width: 900px;
+	`}
+
+	${(props) =>
+		props.name === "hashTag" &&
+		`
+    width:600px;
+    `}
 `;
 
 function FormInput({
@@ -86,6 +104,7 @@ function FormInput({
 	type = "text",
 	defaultValue,
 	placeholder = "",
+	maxLength = 50,
 	handleFn,
 }: FormInputProps) {
 	return (
@@ -97,6 +116,7 @@ function FormInput({
 				type={type}
 				name={name}
 				defaultValue={defaultValue}
+				maxLength={maxLength}
 				onChange={handleFn}
 				id={name}
 				placeholder={placeholder}

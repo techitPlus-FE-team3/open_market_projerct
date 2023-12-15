@@ -1,8 +1,18 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 
-const FilterItem = styled("div")`
-	display: none;
+interface DisplayProps {
+	showable?: boolean;
+}
+
+export const FilterContainer = styled.div`
+	margin: ${Common.space.spacingLg} 0 5px ${Common.space.spacingMd};
+	display: flex;
+	flex-flow: row nowrap;
+	gap: ${Common.space.spacingMd};
+`;
+
+const FilterItem = styled.div`
 	width: 140px;
 	height: 34px;
 	padding: 1px 10px 0px 20px;
@@ -31,7 +41,8 @@ const FilterItem = styled("div")`
 
 export const FilterButton = FilterItem.withComponent("button");
 
-export const FilterSelect = styled(FilterItem)`
+export const FilterSelect = styled(FilterItem)<DisplayProps>`
+	display: ${(props) => (props.showable ? "block" : "none")};
 	select {
 		appearance: none;
 		width: 100%;
