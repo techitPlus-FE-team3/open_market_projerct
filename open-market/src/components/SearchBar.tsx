@@ -7,11 +7,11 @@ import { MouseEventHandler } from "react";
 interface SearchBarProps {
 	onClick: MouseEventHandler<HTMLButtonElement>;
 	searchRef?: React.LegacyRef<HTMLInputElement> | undefined;
-	display: string;
+	display?: boolean;
 }
 
 interface DisplayProps {
-	display: string;
+	display?: boolean;
 }
 
 const theme = createTheme({
@@ -21,7 +21,7 @@ const theme = createTheme({
 });
 
 const StyledSearchBar = styled.form<DisplayProps>`
-	display: ${(props) => props.display};
+	display: ${(props) => (props.display ? "block" : "none")};
 	width: 1160px;
 	height: auto;
 	position: relative;

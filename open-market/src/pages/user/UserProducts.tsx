@@ -141,7 +141,7 @@ function UserProducts() {
 					<SearchBar
 						onClick={handleSearchKeyword}
 						searchRef={searchRef}
-						display={"block"}
+						display
 					/>
 					<FilterContainer>
 						<FilterButton type="button" onClick={handleSortByProfit}>

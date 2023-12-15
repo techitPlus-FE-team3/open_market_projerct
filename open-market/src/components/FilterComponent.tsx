@@ -1,9 +1,8 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 
-
 interface DisplayProps {
-	display: string;
+	display?: boolean;
 }
 
 export const FilterContainer = styled.div`
@@ -44,7 +43,7 @@ const FilterItem = styled.div`
 export const FilterButton = FilterItem.withComponent("button");
 
 export const FilterSelect = styled(FilterItem)<DisplayProps>`
-	display: ${(props) => props.display};
+	display: ${(props) => (props.display ? "block" : "none")};
 	select {
 		appearance: none;
 		width: 100%;
