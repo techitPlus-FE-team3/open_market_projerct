@@ -1,25 +1,21 @@
-import { FilterButton } from "@/components/FilterComponent";
+import { FilterButton, FilterContainer } from "@/components/FilterComponent";
+import {
+	Heading,
+	ProductContainer,
+	ProductList,
+	ProductSection,
+} from "@/components/ProductListComponent";
+import { UserProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
 	axiosInstance,
 	getItemWithExpireTime,
-	numberWithComma,
 	searchProductList,
 	setItemWithExpireTime,
 } from "@/utils";
-import styled from "@emotion/styled";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
-
-const FilterContainer = styled("div")`
-	margin: 10px;
-	display: flex;
-	flex-flow: row nowrap;
-	gap: 10px;
-`;
 
 function sortByProfitProductList(list: Product[]) {
 	return list.sort((a, b) => b.buyQuantity * b.price - a.buyQuantity * a.price);
@@ -30,6 +26,7 @@ function sortByNewestProductList(list: Product[]) {
 		return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
 	});
 }
+
 function UserProducts() {
 	const accessToken = localStorage.getItem("accessToken");
 	const searchRef = useRef<HTMLInputElement>(null);
@@ -132,15 +129,20 @@ function UserProducts() {
 		}
 	}, [searchKeyword]);
 
+	console.log(userProductsInfo[0]);
 	return (
-		<section>
+		<ProductSection>
 			<Helmet>
 				<title>My Products - 모두의 오디오 MODI</title>
 			</Helmet>
-			<h2>상품관리</h2>
+			<Heading>상품관리</Heading>
 			{userProductsInfo ? (
 				<>
-					<SearchBar onClick={handleSearchKeyword} searchRef={searchRef} />
+					<SearchBar
+						onClick={handleSearchKeyword}
+						searchRef={searchRef}
+						display={"block"}
+					/>
 					<FilterContainer>
 						<FilterButton type="button" onClick={handleSortByProfit}>
 							수익순
@@ -149,71 +151,33 @@ function UserProducts() {
 							최신순
 						</FilterButton>
 					</FilterContainer>
-					<ul>
-						{searchKeyword && searchedList.length === 0 ? (
-							<span>해당하는 상품이 없습니다.</span>
-						) : searchKeyword && searchedList.length !== 0 ? (
-							searchedList.map((item) => (
-								<li key={item._id}>
-									<img src={item.mainImages[0].url} alt="앨범 이름 이미지" />
-									<p>{item.name}</p>
-									<button type="button">
-										<PlayArrowIcon />
-									</button>
-									<p>
-										판매 개수: <span>{item.buyQuantity}</span>
-									</p>
-									<p>
-										총 수익:{" "}
-										<span>
-											{typeof item.buyQuantity !== "undefined"
-												? numberWithComma(item.buyQuantity * item.price)
-												: "0"}
-										</span>
-									</p>
-									<p>
-										북마크 수:{" "}
-										<span>{item?.bookmarks ? item?.bookmarks.length : 0}</span>
-									</p>
-									<Link to={`/productmanage/${item._id}`}>상세보기</Link>
-								</li>
-							))
-						) : Array.isArray(userProductsInfo) ? (
-							userProductsInfo.map((item) => (
-								<li key={item._id}>
-									<img src={item.mainImages[0].url} alt="앨범 이름 이미지" />
-									<p>{item.name}</p>
-									<button type="button">
-										<PlayArrowIcon />
-									</button>
-									<p>
-										판매 개수: <span>{item.buyQuantity}</span>
-									</p>
-									<p>
-										총 수익:{" "}
-										<span>
-											{typeof item.buyQuantity !== "undefined"
-												? numberWithComma(item.buyQuantity * item.price)
-												: "0"}
-										</span>
-									</p>
-									<p>
-										북마크 수:{" "}
-										<span>{item?.bookmarks ? item?.bookmarks.length : 0}</span>
-									</p>
-									<Link to={`/productmanage/${item._id}`}>상세보기</Link>
-								</li>
-							))
-						) : (
-							<span>데이터가 없습니다.</span>
-						)}
-					</ul>
-					<button type="submit">더보기</button>
+					<ProductContainer height="633px">
+						<ProductList>
+							{searchKeyword && searchedList.length === 0 ? (
+								<span className="emptyList">해당하는 상품이 없습니다.</span>
+							) : searchKeyword && searchedList.length !== 0 ? (
+								searchedList.map((item) => (
+									<UserProductListItem product={item} />
+								))
+							) : Array.isArray(userProductsInfo) ? (
+								userProductsInfo.map((item) => (
+									<UserProductListItem product={item} />
+								))
+							) : (
+								<span>데이터가 없습니다.</span>
+							)}
+						</ProductList>
+						<button type="submit" className="moreButton">
+							더보기
+						</button>
+					</ProductContainer>
 				</>
 			) : (
-				<span>현재 회원님이 판매하고 있는 상품이 없습니다</span>
+				<span className="emptyList">
+					현재 회원님이 판매하고 있는 상품이 없습니다
+				</span>
 			)}
-		</section>
+		</ProductSection>
 	);
 }
 
