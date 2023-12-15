@@ -1,6 +1,7 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 
+
 interface DisplayProps {
 	display: string;
 }
