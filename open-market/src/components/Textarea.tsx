@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 interface TextareaProps {
 	readOnly?: boolean;
 	content?: string;
+	small?: boolean;
 	onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
@@ -21,14 +22,15 @@ const TextareaLabel = styled.label`
 	padding: ${Common.space.spacingMd};
 `;
 
-const TextareaBox = styled.textarea<{ width: string }>`
+const TextareaBox = styled.textarea<{ width: string; height: string }>`
 	width: ${({ width }) => width || "650px"};
-	height: 116px;
+	height: ${({ height }) => height};
 	border: none;
 	resize: none;
 	background-color: ${Common.colors.white};
 	border-radius: 10px;
-	padding-top: 10px;
+	margin-top: 10px;
+	/* overflow: scroll; */
 
 	&:focus {
 		border: none;
@@ -36,8 +38,14 @@ const TextareaBox = styled.textarea<{ width: string }>`
 	}
 `;
 
-function Textarea({ readOnly = false, content = "", onChange }: TextareaProps) {
+function Textarea({
+	readOnly = false,
+	content = "",
+	small = false,
+	onChange,
+}: TextareaProps) {
 	const width = readOnly ? "928px" : "687px";
+	const height = small ? "70px" : "116px";
 
 	return (
 		<TextareaWrapper width={width}>
@@ -46,6 +54,7 @@ function Textarea({ readOnly = false, content = "", onChange }: TextareaProps) {
 				name="description"
 				id="description"
 				width={width}
+				height={height}
 				readOnly={readOnly}
 				defaultValue={content}
 				onChange={onChange}
