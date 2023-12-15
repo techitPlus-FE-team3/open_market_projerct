@@ -4,13 +4,24 @@ import SearchIcon from "@mui/icons-material/Search";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { MouseEventHandler } from "react";
 
+interface SearchBarProps {
+	onClick: MouseEventHandler<HTMLButtonElement>;
+	searchRef?: React.LegacyRef<HTMLInputElement> | undefined;
+	display: string;
+}
+
+interface DisplayProps {
+	display: string;
+}
+
 const theme = createTheme({
 	palette: {
 		primary: { main: "#F5F2F5" },
 	},
 });
 
-const StyledSearchBar = styled.form`
+const StyledSearchBar = styled.form<DisplayProps>`
+	display: ${(props) => props.display};
 	width: 1160px;
 	height: auto;
 	position: relative;
@@ -49,15 +60,9 @@ const StyledSearchBar = styled.form`
 	}
 `;
 
-function SearchBar({
-	onClick,
-	searchRef,
-}: {
-	onClick: MouseEventHandler<HTMLButtonElement>;
-	searchRef?: React.LegacyRef<HTMLInputElement> | undefined;
-}) {
+function SearchBar({ onClick, searchRef, display }: SearchBarProps) {
 	return (
-		<StyledSearchBar>
+		<StyledSearchBar display={display}>
 			<label htmlFor="searchBar">검색</label>
 			<input
 				type="text"

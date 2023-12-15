@@ -80,12 +80,16 @@ function UserOrders() {
 				<title>My Orders - 모두의 오디오 MODI</title>
 			</Helmet>
 			<Heading>구매내역</Heading>
-			<SearchBar onClick={handleSearchKeyword} searchRef={searchRef} />
+			<SearchBar
+				onClick={handleSearchKeyword}
+				searchRef={searchRef}
+				display="block"
+			/>
 			<FilterContainer>
 				<FilterButton type="submit">인기순</FilterButton>
 				<FilterButton type="submit">최신순</FilterButton>
 			</FilterContainer>
-			<ProductContainer>
+			<ProductContainer height={"633px"}>
 				<ProductList>
 					{searchKeyword ? (
 						searchedOrderList !== undefined &&
