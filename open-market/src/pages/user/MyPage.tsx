@@ -78,6 +78,12 @@ const PersonalInfoItem = styled.div`
 	}
 `;
 
+const UserImage = styled.img`
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+`;
+
 const Comment = styled.div`
 	position: relative;
 	display: flex;
@@ -243,7 +249,7 @@ function MyPage() {
 			<MainTitle>마이페이지</MainTitle>
 			<Article>
 				<InfoTitle>내 정보</InfoTitle>
-				<img src={profileImageUrl} alt="회원 썸네일" />
+				<UserImage src={profileImageUrl} alt="회원 썸네일" />
 				<Info>
 					<PersonalInfo>
 						<Title>회원정보</Title>
