@@ -1,20 +1,20 @@
 import RootLayout from "@/layout/RootLayout";
-import ProductDetail from "@/pages/product/ProductDetail";
 import Index from "@/pages/Index";
-import MyPage from "@/pages/user/MyPage";
+import ProductDetail from "@/pages/product/ProductDetail";
 import ProductEdit from "@/pages/product/ProductEdit";
 import ProductManage from "@/pages/product/ProductManage";
-import ProductRegistration from "@/pages/product/ProductRegistration";
 import ProductPurchase from "@/pages/product/ProductPurchase";
+import ProductRegistration from "@/pages/product/ProductRegistration";
+import MyPage from "@/pages/user/MyPage";
 import SignIn from "@/pages/user/SignIn";
 import SignUp from "@/pages/user/SignUp";
+import UserEdit from "@/pages/user/UserEdit";
 import UserOrders from "@/pages/user/UserOrders";
 import UserProducts from "@/pages/user/UserProducts";
-import UserEdit from "@/pages/user/UserEdit";
 import {
-	Route,
-	createBrowserRouter,
-	createRoutesFromElements,
+    Route,
+    createBrowserRouter,
+    createRoutesFromElements,
 } from "react-router-dom";
 
 const router = createBrowserRouter(

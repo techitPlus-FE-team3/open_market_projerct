@@ -3,13 +3,13 @@ import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Checkbox from "@mui/material/Checkbox";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 const Title = styled.h2`
 	${Common.a11yHidden};

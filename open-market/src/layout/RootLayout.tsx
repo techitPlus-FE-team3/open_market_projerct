@@ -1,6 +1,6 @@
-import { Outlet, useLocation } from "react-router-dom";
-import Header from "@/layout/Header";
 import Footer from "@/layout/Footer";
+import Header from "@/layout/Header";
+import { Outlet, useLocation } from "react-router-dom";
 
 function RootLayout() {
 	const location = useLocation();
