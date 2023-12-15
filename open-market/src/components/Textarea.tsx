@@ -29,9 +29,7 @@ const TextareaBox = styled.textarea<{ width: string; height: string }>`
 	resize: none;
 	background-color: ${Common.colors.white};
 	border-radius: 10px;
-	margin-top: 10px;
-	/* overflow: scroll; */
-
+	margin: 5px;
 	&:focus {
 		border: none;
 		outline: none;
@@ -45,7 +43,7 @@ function Textarea({
 	onChange,
 }: TextareaProps) {
 	const width = readOnly ? "928px" : "687px";
-	const height = small ? "70px" : "116px";
+	const height = small ? "80px" : "111px";
 
 	return (
 		<TextareaWrapper width={width}>
