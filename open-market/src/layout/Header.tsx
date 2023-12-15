@@ -129,7 +129,7 @@ const UserButton = styled(Button)`
 	}
 `;
 
-const Header = () => {
+function Header() {
 	const [isLogoLoaded, setIsLogoLoaded] = useState(false);
 
 	const [productList, setProductList] = useRecoilState(productListState);
@@ -337,6 +337,6 @@ const Header = () => {
 			</HeaderWrapper>
 		</HeaderContainer>
 	);
-};
+}
 
 export default Header;
