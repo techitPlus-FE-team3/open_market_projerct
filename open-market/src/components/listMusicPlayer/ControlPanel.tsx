@@ -1,10 +1,14 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 
-const StyledControlPanel = styled.div`
+interface DisplayProps {
+	display?: boolean;
+}
+
+const StyledControlPanel = styled.div<DisplayProps>`
+	display: ${(props) => (props.display ? "flex" : "none")};
 	width: 90%;
 	margin-left: 60px;
-	display: flex;
 	flex-flow: row nowrap;
 	justify-content: space-between;
 	position: absolute;
@@ -16,9 +20,11 @@ const StyledControlPanel = styled.div`
 function ControlPanel({
 	duration,
 	currentTime,
+	display,
 }: {
 	duration: number;
 	currentTime: number;
+	display?: boolean;
 }) {
 	function secondsToHms(seconds: number) {
 		if (!seconds) return "00:00";
@@ -52,7 +58,7 @@ function ControlPanel({
 	}
 
 	return (
-		<StyledControlPanel>
+		<StyledControlPanel display={display}>
 			<span>{secondsToHms(currentTime)}</span>
 			<span>{secondsToHms(duration)}</span>
 		</StyledControlPanel>
