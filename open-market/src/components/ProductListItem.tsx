@@ -1,5 +1,6 @@
 import MusicPlayer from "@/components/listMusicPlayer/MusicPlayer";
 import { Common } from "@/styles/common";
+import { numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
@@ -54,9 +55,22 @@ const ListItem = styled.li`
 		color: ${Common.colors.black};
 		font-size: ${Common.font.size.sm};
 	}
+
+	.manageLink {
+		width: 100px;
+		height: 24px;
+		display: flex;
+		flex-flow: row nowrap;
+		align-items: center;
+		justify-content: center;
+		color: ${Common.colors.black};
+		text-decoration: none;
+		background-color: ${Common.colors.emphasize};
+		border-radius: 10px;
+	}
 `;
 
-const StyledLink = styled(Link)`
+const StyledTitleSpan = styled.span`
 	display: flex;
 	flex-flow: row nowrap;
 	align-items: center;
@@ -78,7 +92,22 @@ const StyledLink = styled(Link)`
 	}
 `;
 
-function ProductListItem({
+const StyledElementSpan = styled.span`
+	width: 200px;
+	height: 30px;
+	padding: ${Common.space.spacingMd};
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	gap: ${Common.space.spacingMd};
+	color: ${Common.colors.gray};
+	background-color: ${Common.colors.gray2};
+	border-radius: 10px;
+`;
+
+const StyledLink = StyledTitleSpan.withComponent(Link);
+
+export function ProductListItem({
 	key,
 	product,
 	bookmark,
@@ -100,7 +129,7 @@ function ProductListItem({
 				/>
 				<span title={product.name}>{product.name}</span>
 			</StyledLink>
-			<MusicPlayer src={product.extra?.soundFile.url!} />
+			<MusicPlayer src={product.extra?.soundFile.url!} display />
 			{"image" in product ? (
 				<a
 					href={`https://localhost/api/files/${product?.extra?.soundFile.fileName}?name=${product?.extra?.soundFile.orgName}`}
@@ -129,4 +158,32 @@ function ProductListItem({
 	);
 }
 
-export default ProductListItem;
+export function UserProductListItem({ product }: { product: Product }) {
+	return (
+		<ListItem key={product?._id}>
+			<StyledTitleSpan>
+				<img src={product?.mainImages[0].url} alt={`${product?.name} 사진`} />
+				<span title={product?.name}>{product?.name}</span>
+			</StyledTitleSpan>
+			<MusicPlayer src={product?.extra?.soundFile.url!} />
+			<StyledElementSpan>
+				판매 개수: <span>{product?.buyQuantity}</span>
+			</StyledElementSpan>
+			<StyledElementSpan>
+				총 수익:
+				<span>
+					{typeof product?.buyQuantity !== "undefined"
+						? numberWithComma(product?.buyQuantity * product?.price)
+						: "0"}
+				</span>
+			</StyledElementSpan>
+			<StyledElementSpan>
+				북마크 수:
+				<span>{product?.bookmarks ? product?.bookmarks.length : 0}</span>
+			</StyledElementSpan>
+			<Link className="manageLink" to={`/productmanage/${product?._id}`}>
+				상세보기
+			</Link>
+		</ListItem>
+	);
+}
