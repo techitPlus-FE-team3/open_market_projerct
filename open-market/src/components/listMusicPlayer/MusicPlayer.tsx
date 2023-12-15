@@ -12,15 +12,20 @@ import {
 	useState,
 } from "react";
 
-const PalyerContainer = styled.div`
+interface WidthProps {
+	showable?: boolean;
+}
+
+const PalyerContainer = styled.div<WidthProps>`
 	width: auto;
-	min-width: 600px;
+	min-width: ${(props) => (props.showable ? "600px;" : "65px")};
+	overflow: hidden;
 	padding: ${Common.space.spacingMd};
 	display: flex;
 	flex-flow: row wrap;
 	gap: 10px;
 	align-items: center;
-	flex: 1;
+	flex: ${(props) => (props.showable ? "1" : "0")};
 	position: relative;
 `;
 
@@ -29,7 +34,7 @@ const PlayButton = styled.button`
 	border: none;
 `;
 
-function MusicPlayer({ src }: { src: string }) {
+function MusicPlayer({ src, showable }: { src: string; showable?: boolean }) {
 	const [percentage, setPercentage] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [duration, setDuration] = useState(0);
@@ -81,7 +86,7 @@ function MusicPlayer({ src }: { src: string }) {
 	}, [percentage]);
 
 	return (
-		<PalyerContainer>
+		<PalyerContainer showable={showable}>
 			<PlayButton onClick={handlePlayAndPauseMusic}>
 				{isPlaying ? (
 					<PauseIcon fontSize="large" />
@@ -89,7 +94,11 @@ function MusicPlayer({ src }: { src: string }) {
 					<PlayArrowIcon fontSize="large" />
 				)}
 			</PlayButton>
-			<PlayerSlider onChange={onChange} percentage={percentage} />
+			<PlayerSlider
+				onChange={onChange}
+				percentage={percentage}
+				showable={showable}
+			/>
 			<audio
 				ref={audioRef}
 				onTimeUpdate={getCurrentDuration}
@@ -98,7 +107,11 @@ function MusicPlayer({ src }: { src: string }) {
 				}}
 				src={src}
 			/>
-			<ControlPanel duration={duration} currentTime={currentTime} />
+			<ControlPanel
+				duration={duration}
+				currentTime={currentTime}
+				showable={showable}
+			/>
 		</PalyerContainer>
 	);
 }

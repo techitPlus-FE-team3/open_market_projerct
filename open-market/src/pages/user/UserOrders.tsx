@@ -5,7 +5,7 @@ import {
 	ProductList,
 	ProductSection,
 } from "@/components/ProductListComponent";
-import ProductListItem from "@/components/ProductListItem";
+import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
@@ -80,11 +80,7 @@ function UserOrders() {
 				<title>My Orders - 모두의 오디오 MODI</title>
 			</Helmet>
 			<Heading>구매내역</Heading>
-			<SearchBar
-				onClick={handleSearchKeyword}
-				searchRef={searchRef}
-				display="block"
-			/>
+			<SearchBar onClick={handleSearchKeyword} searchRef={searchRef} showable />
 			<FilterContainer>
 				<FilterButton type="submit">인기순</FilterButton>
 				<FilterButton type="submit">최신순</FilterButton>
