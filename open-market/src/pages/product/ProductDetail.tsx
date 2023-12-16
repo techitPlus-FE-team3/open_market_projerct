@@ -1,7 +1,8 @@
 import { loggedInState } from "@/states/authState";
+import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
+import styled from "@emotion/styled";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
 import CheckIcon from "@mui/icons-material/Check";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -15,6 +16,85 @@ import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+
+interface CommentProps {
+	user?: boolean;
+}
+
+const CommentContainer = styled.article`
+	width: 1160px;
+	height: 346px;
+	padding: ${Common.space.spacingMd};
+	margin: ${Common.space.spacingXl} auto;
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: space-between;
+	position: relative;
+	border: 1px solid ${Common.colors.gray};
+	border-radius: 10px;
+
+	h3 {
+		position: absolute;
+		top: -40px;
+		left: 0;
+
+		& :first-of-type {
+			margin-right: 5px;
+			position: relative;
+			top: 6px;
+			color: ${Common.colors.gray2};
+		}
+	}
+
+	.moreButton {
+		width: 100px;
+		height: 40px;
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+		background-color: transparent;
+		border: none;
+		font-weight: ${Common.font.weight.regular};
+
+		&::after {
+			content: "";
+			position: absolute;
+			top: 50%;
+			transform: translateY(-30%);
+			right: 12px;
+			border-bottom: solid 8px transparent;
+			border-top: solid 8px black;
+			border-left: solid 8px transparent;
+			border-right: solid 8px transparent;
+		}
+	}
+`;
+
+const CommentListItem = styled.li`
+	width: 100%;
+	margin: ${Common.space.spacingMd} 0;
+	display: flex;
+	flex-flow: column nowrap;
+	position: relative;
+`;
+
+const CommentBlock = styled.div<CommentProps>`
+	width: ${(props) => (props.user ? "260px" : "100%")};
+	min-height: ${(props) => (props.user ? "24px" : "40px")};
+	padding: ${Common.space.spacingMd};
+	display: flex;
+	flex-flow: column nowrap;
+	position: ${(props) => (props.user ? "absolute" : "relative")};
+	top: ${(props) => (props.user ? "1px" : "0")};
+	left: ${(props) => (props.user ? "30px" : "0")};
+	border: 1px solid ${Common.colors.gray};
+	border-radius: 10px;
+
+	& :last-of-type {
+		display: ${(props) => (props.user ? "relative" : "flex")};
+		justify-content: ${(props) => (props.user ? "" : "flex-end")};
+	}
+`;
 
 function ProductDetail() {
 	const navigate = useNavigate();
@@ -303,65 +383,67 @@ function ProductDetail() {
 					)}
 				</div>
 			</article>
-			<article>
+			<CommentContainer>
 				<h3>
 					<ModeCommentIcon />
 					댓글
 				</h3>
-				{!loggedIn ? (
-					<p>로그인 후 댓글을 작성할 수 있습니다.</p>
-				) : loggedIn && logState === product?.seller_id ? (
-					<p>내 상품에는 댓글을 작성할 수 없습니다.</p>
-				) : (loggedIn && order?.length === 0) || order === undefined ? (
-					<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
-				) : (
-					<form action="submit">
-						<div>
-							<span>
-								{currentUser?.extra?.profileImage ? (
-									currentUser?.extra?.profileImage
-								) : (
-									<AccountCircleIcon />
-								)}
-							</span>
-							<span>{currentUser?.email}</span>
-						</div>
-						<div>
-							<Rating
-								name="rating"
-								value={ratingValue}
-								precision={0.5}
-								max={5}
-								onChange={(_, newValue) => {
-									newValue === null
-										? setRatingValue(1)
-										: setRatingValue(newValue);
-								}}
-								onChangeActive={(_, newHover) => {
-									setHover(newHover);
-								}}
-							/>
-						</div>
-						<div>
-							<label htmlFor="content">댓글 내용</label>
-							<input
-								id="content"
-								name="content"
-								type="text"
-								ref={replyRef}
-								onChange={debounce(
-									(e: {
-										target: { value: SetStateAction<string | undefined> };
-									}) => setReplyContent(e.target.value),
-								)}
-								required
-							/>
-							<button type="submit" onClick={handleReplySubmit}>
-								작성하기
-							</button>
-						</div>
-					</form>
-				)}
+				<div>
+					{!loggedIn ? (
+						<p>로그인 후 댓글을 작성할 수 있습니다.</p>
+					) : loggedIn && logState === product?.seller_id ? (
+						<p>내 상품에는 댓글을 작성할 수 없습니다.</p>
+					) : (loggedIn && order?.length === 0) || order === undefined ? (
+						<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
+					) : (
+						<form action="submit">
+							<div>
+								<span>
+									{currentUser?.extra?.profileImage ? (
+										currentUser?.extra?.profileImage
+									) : (
+										<AccountCircleIcon />
+									)}
+								</span>
+								<span>{currentUser?.email}</span>
+							</div>
+							<div>
+								<Rating
+									name="rating"
+									value={ratingValue}
+									precision={0.5}
+									max={5}
+									onChange={(_, newValue) => {
+										newValue === null
+											? setRatingValue(1)
+											: setRatingValue(newValue);
+									}}
+									onChangeActive={(_, newHover) => {
+										setHover(newHover);
+									}}
+								/>
+							</div>
+							<div>
+								<label htmlFor="content">댓글 내용</label>
+								<input
+									id="content"
+									name="content"
+									type="text"
+									ref={replyRef}
+									onChange={debounce(
+										(e: {
+											target: { value: SetStateAction<string | undefined> };
+										}) => setReplyContent(e.target.value),
+									)}
+									required
+								/>
+								<button type="submit" onClick={handleReplySubmit}>
+									작성하기
+								</button>
+							</div>
+						</form>
+					)}
+				</div>
 
 				<ul>
 					{product?.replies?.length === 0 ? (
@@ -369,28 +451,22 @@ function ProductDetail() {
 					) : (
 						product?.replies?.map((reply) => {
 							return (
-								<li key={reply._id}>
+								<CommentListItem key={reply._id}>
 									<div>
 										<AccountCircleIcon />
-										<span>{reply.userName}</span>
+										<CommentBlock user>{reply.userName}</CommentBlock>
 									</div>
-									<div>
-										<p>{reply.content}</p>
-										<div>
-											<ShowStarRating rating={reply.rating} />
-											{reply.rating}
-										</div>
-									</div>
-								</li>
+									<CommentBlock>
+										<span>{reply.content}</span>
+										<ShowStarRating rating={reply.rating} />
+									</CommentBlock>
+								</CommentListItem>
 							);
 						})
 					)}
 				</ul>
-				<button>
-					더보기
-					<ArrowDropDownIcon />
-				</button>
-			</article>
+				<button className="moreButton">더보기</button>
+			</CommentContainer>
 		</section>
 	);
 }
