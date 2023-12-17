@@ -3,11 +3,11 @@ import styled from "@emotion/styled";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Rating } from "@mui/material";
 
-interface CommentProps {
+interface ReplyProps {
 	user?: boolean;
 }
 
-export const CommentContainer = styled.article`
+export const ReplyContainer = styled.article`
 	width: 1160px;
 	min-height: 346px;
 	padding: ${Common.space.spacingMd};
@@ -56,7 +56,7 @@ export const CommentContainer = styled.article`
 	}
 `;
 
-const StyledCommentListItem = styled.li`
+const StyledReplyListItem = styled.li`
 	width: 100%;
 	margin: ${Common.space.spacingMd} 0;
 	display: flex;
@@ -64,7 +64,7 @@ const StyledCommentListItem = styled.li`
 	position: relative;
 `;
 
-export const CommentBlock = styled.div<CommentProps>`
+export const ReplyBlock = styled.div<ReplyProps>`
 	width: ${(props) => (props.user ? "260px" : "100%")};
 	min-height: ${(props) => (props.user ? "24px" : "40px")};
 	height: auto;
@@ -98,14 +98,14 @@ export const CommentBlock = styled.div<CommentProps>`
 	}
 `;
 
-export const CommentInputForm = styled.form`
+export const ReplyInputForm = styled.form`
 	position: relative;
 
 	.a11yHidden {
 		display: ${Common.a11yHidden};
 	}
 
-	.commentTextAreaContainer {
+	.replyTextAreaContainer {
 		width: 100%;
 		height: 80px;
 		border: 1px solid ${Common.colors.gray};
@@ -132,7 +132,7 @@ export const CommentInputForm = styled.form`
 	}
 `;
 
-export const CommentTextarea = styled(CommentBlock)`
+export const ReplyTextarea = styled(ReplyBlock)`
 	height: 50px;
 	line-height: normal;
 	word-break: normal;
@@ -145,19 +145,19 @@ export function ShowStarRating({ rating }: { rating: number }) {
 	);
 }
 
-function CommentListItem({ reply }: { reply: Reply }) {
+function ReplyListItem({ reply }: { reply: Reply }) {
 	return (
-		<StyledCommentListItem key={reply._id}>
+		<StyledReplyListItem key={reply._id}>
 			<div>
 				<AccountCircleIcon />
-				<CommentBlock user>{reply.userName}</CommentBlock>
+				<ReplyBlock user>{reply.userName}</ReplyBlock>
 			</div>
-			<CommentBlock>
+			<ReplyBlock>
 				<span>{reply.content}</span>
 				<ShowStarRating rating={reply.rating} />
-			</CommentBlock>
-		</StyledCommentListItem>
+			</ReplyBlock>
+		</StyledReplyListItem>
 	);
 }
 
-export default CommentListItem;
+export default ReplyListItem;

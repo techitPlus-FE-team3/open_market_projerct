@@ -1,10 +1,10 @@
-import CommentListItem, {
-	CommentBlock,
-	CommentContainer,
-	CommentInputForm,
-	CommentTextarea,
+import ReplyListItem, {
+	ReplyBlock,
+	ReplyContainer,
+	ReplyInputForm,
+	ReplyTextarea,
 	ShowStarRating,
-} from "@/components/CommentComponent";
+} from "@/components/ReplyComponent";
 import { loggedInState } from "@/states/authState";
 
 import { axiosInstance, debounce } from "@/utils";
@@ -299,7 +299,7 @@ function ProductDetail() {
 					)}
 				</div>
 			</article>
-			<CommentContainer>
+			<ReplyContainer>
 				<h3>
 					<ModeCommentIcon />
 					댓글
@@ -312,7 +312,7 @@ function ProductDetail() {
 					) : (loggedIn && order?.length === 0) || order === undefined ? (
 						<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
 					) : (
-						<CommentInputForm action="submit">
+						<ReplyInputForm action="submit">
 							<span>
 								{currentUser?.extra?.profileImage ? (
 									currentUser?.extra?.profileImage
@@ -320,7 +320,7 @@ function ProductDetail() {
 									<AccountCircleIcon />
 								)}
 							</span>
-							<CommentBlock user>{currentUser?.name}</CommentBlock>
+							<ReplyBlock user>{currentUser?.name}</ReplyBlock>
 							<div className="inputRating">
 								<Rating
 									name="rating"
@@ -340,8 +340,8 @@ function ProductDetail() {
 							<label htmlFor="content" className="a11yHidden">
 								댓글 내용
 							</label>
-							<div className="commentTextAreaContainer">
-								<CommentTextarea
+							<div className="replyTextAreaContainer">
+								<ReplyTextarea
 									id="content"
 									name="content"
 									ref={replyRef}
@@ -356,7 +356,7 @@ function ProductDetail() {
 									작성하기
 								</button>
 							</div>
-						</CommentInputForm>
+						</ReplyInputForm>
 					)}
 				</div>
 				<ul>
@@ -364,12 +364,12 @@ function ProductDetail() {
 						<p>댓글이 없습니다.</p>
 					) : (
 						product?.replies?.map((reply) => {
-							return <CommentListItem reply={reply} />;
+							return <ReplyListItem reply={reply} />;
 						})
 					)}
 				</ul>
 				<button className="moreButton">더보기</button>
-			</CommentContainer>
+			</ReplyContainer>
 		</section>
 	);
 }
