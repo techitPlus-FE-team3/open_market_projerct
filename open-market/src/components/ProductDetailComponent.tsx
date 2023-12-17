@@ -1,13 +1,13 @@
-import { Common } from "@/styles/common";
-import styled from "@emotion/styled";
-import StarIcon from "@mui/icons-material/Star";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import { ShowStarRating } from "./ReplyComponent";
 import {
 	DetailBadge,
 	DetailBadgeContainer,
-} from "./ProductDetailBadgeComponent";
+} from "@/components/ProductDetailBadgeComponent";
+import { ShowStarRating } from "@/components/ReplyComponent";
+import { Common } from "@/styles/common";
 import { numberWithComma } from "@/utils";
+import styled from "@emotion/styled";
+import StarIcon from "@mui/icons-material/Star";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
 interface DetailProps {
 	product: Product | undefined;
@@ -66,7 +66,7 @@ const ProductMediaContainer = styled.div`
 `;
 
 const ProductDetailInfo = styled.div`
-	width: 430px;
+	width: 670px;
 	height: 270px;
 	display: flex;
 	flex-flow: column nowrap;
@@ -135,7 +135,6 @@ const ProductDetailExtra = styled.div`
 	gap: 5px;
 	position: relative;
 	top: -98px;
-	right: -250px;
 
 	.rating {
 		margin-left: 5px;
