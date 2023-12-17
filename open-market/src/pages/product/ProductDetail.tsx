@@ -6,8 +6,10 @@ import ReplyListItem, {
 	ShowStarRating,
 } from "@/components/ReplyComponent";
 import { loggedInState } from "@/states/authState";
+import { Common } from "@/styles/common";
 
 import { axiosInstance, debounce } from "@/utils";
+import styled from "@emotion/styled";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
 import CheckIcon from "@mui/icons-material/Check";
@@ -22,6 +24,40 @@ import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+
+interface BadgeProps {
+	isNew?: boolean;
+	isBest?: boolean;
+}
+
+const DetailBadgeContainer = styled.div`
+	width: 200px;
+	height: auto;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	gap: 5px;
+`;
+
+const DetailBadge = styled.div<BadgeProps>`
+	width: 100px;
+	height: 40px;
+	margin: 5px 0;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+	border-radius: 100px;
+	background-color: ${Common.colors.gray2};
+
+	& :first-of-type {
+		${(props) =>
+			props.isNew &&
+			`color: ${Common.colors.emphasize}; position: relative; right: 2px;`}
+		${(props) => props.isBest && `color: ${Common.colors.secondary}`}
+	}
+`;
 
 function ProductDetail() {
 	const navigate = useNavigate();
@@ -237,24 +273,24 @@ function ProductDetail() {
 					</div>
 					<span>{product?.price}</span>
 				</div>
-				<div>
+				<DetailBadgeContainer>
 					{product?.extra?.isNew ? (
-						<div>
-							<StarIcon />
+						<DetailBadge isNew>
+							<StarIcon fontSize="small" />
 							New!
-						</div>
+						</DetailBadge>
 					) : (
 						<></>
 					)}
 					{product?.extra?.isBest ? (
-						<div>
-							<ThumbUpIcon />
+						<DetailBadge isBest>
+							<ThumbUpIcon fontSize="small" />
 							Best!
-						</div>
+						</DetailBadge>
 					) : (
 						<></>
 					)}
-				</div>
+				</DetailBadgeContainer>
 				<div>
 					<div>
 						<ShowStarRating rating={rating} />
