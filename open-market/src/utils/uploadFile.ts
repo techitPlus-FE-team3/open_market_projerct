@@ -18,7 +18,10 @@ export async function uploadFile(
 				Authorization: `Bearer ${accessToken}`,
 			},
 		});
-		const filePath = `https://localhost${response.data.file.path}`;
+
+		const filePath = `https://localhost/api${response.data.file.path}`;
+		const name = response.data.file.name;
+		const originalname = response.data.file.originalname;
 
 		// 상태 업데이트
 		setItemCallback((prevItem) => {
@@ -27,9 +30,9 @@ export async function uploadFile(
 					...prevItem,
 					mainImages: [
 						{
-							url: filePath,
-							fileName: filePath.substring(26),
-							orgName: filePath.slice(filePath.lastIndexOf("/") + 1, -4),
+							path: filePath,
+							name: name,
+							originalname: originalname,
 						},
 					],
 				};
@@ -39,9 +42,9 @@ export async function uploadFile(
 					extra: {
 						...prevItem.extra,
 						soundFile: {
-							url: filePath,
-							fileName: filePath.substring(26),
-							orgName: filePath.substring(26),
+							path: filePath,
+							name: name,
+							originalname: originalname,
 						},
 					},
 				};

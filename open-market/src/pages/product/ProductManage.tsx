@@ -253,7 +253,7 @@ function ProductManage() {
 			<div className="ProductInfoWrapper">
 				<FormTopLayout>
 					<img
-						src={userProductInfo?.mainImages[0].url}
+						src={userProductInfo?.mainImages[0].path}
 						alt="앨범아트"
 						className="ProductImage"
 					/>
