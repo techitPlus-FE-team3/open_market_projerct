@@ -8,6 +8,7 @@ import { numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
 import StarIcon from "@mui/icons-material/Star";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { useRef, useState } from "react";
 
 interface DetailProps {
 	product: Product | undefined;
@@ -40,7 +41,7 @@ const ProductMediaContainer = styled.div`
 		object-fit: cover;
 	}
 
-	.playButton {
+	button {
 		width: 70px;
 		height: 70px;
 		position: absolute;
@@ -50,7 +51,27 @@ const ProductMediaContainer = styled.div`
 		background-color: transparent;
 		border: none;
 		font-size: 0;
+	}
 
+	.pauseButton {
+		&::before {
+			content: "";
+			display: inline-block;
+			margin-right: 20px;
+			width: 10px;
+			height: 70px;
+			background-color: ${Common.colors.secondary};
+		}
+		&::after {
+			content: "";
+			display: inline-block;
+			width: 10px;
+			height: 70px;
+			background-color: ${Common.colors.secondary};
+		}
+	}
+
+	.playButton {
 		&::after {
 			content: "";
 			position: absolute;
@@ -145,14 +166,41 @@ const ProductDetailExtra = styled.div`
 `;
 
 function ProductDetailComponent({ product, genre, rating }: DetailProps) {
+	const audioRef = useRef(null);
+	const [isPlaying, setIsPlaying] = useState(false);
+	const audio = audioRef.current! as HTMLAudioElement;
+
+	function handlePlayAndPauseMusic() {
+		audio.volume = 0.1;
+
+		if (!isPlaying) {
+			setIsPlaying(true);
+			audio.play();
+		}
+
+		if (isPlaying) {
+			setIsPlaying(false);
+			audio.pause();
+		}
+	}
 	return (
 		<ProductDetailArticle>
 			<ProductMediaContainer>
 				<img
-					src={product?.mainImages[0].url}
+					src={product?.mainImages[0].path}
 					alt={`${product?.name} 앨범 아트`}
 				/>
-				<button className="playButton">play</button>
+				{isPlaying ? (
+					<button className="pauseButton" onClick={handlePlayAndPauseMusic}>
+						pause
+					</button>
+				) : (
+					<button className="playButton" onClick={handlePlayAndPauseMusic}>
+						play
+					</button>
+				)}
+
+				<audio src={product?.extra?.soundFile?.path!} ref={audioRef} />
 			</ProductMediaContainer>
 			<ProductDetailInfo>
 				<span className="title">{product?.name}</span>
