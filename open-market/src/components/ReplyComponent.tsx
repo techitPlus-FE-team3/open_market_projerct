@@ -1,6 +1,7 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import StarIcon from "@mui/icons-material/Star";
 import { Rating } from "@mui/material";
 
 interface ReplyProps {
@@ -141,7 +142,18 @@ export const ReplyTextarea = styled(ReplyBlock)`
 
 export function ShowStarRating({ rating }: { rating: number }) {
 	return (
-		<Rating name="showRating" value={Number(rating)} precision={0.5} readOnly />
+		<Rating
+			name="showRating"
+			value={Number(rating)}
+			precision={0.5}
+			readOnly
+			emptyIcon={
+				<StarIcon
+					style={{ color: `${Common.colors.white}` }}
+					fontSize="inherit"
+				/>
+			}
+		/>
 	);
 }
 
