@@ -7,6 +7,7 @@ import {
 	DetailBadge,
 	DetailBadgeContainer,
 } from "./ProductDetailBadgeComponent";
+import { numberWithComma } from "@/utils";
 
 interface DetailProps {
 	product: Product | undefined;
@@ -164,7 +165,7 @@ function ProductDetailComponent({ product, genre, rating }: DetailProps) {
 						{product?.extra?.tags.map((tag) => `#${tag} `)}
 					</span>
 					<div className="content">{product?.content}</div>
-					<span className="price">{product?.price}</span>
+					<span className="price">{numberWithComma(product?.price!)}</span>
 				</ProductDetailContentContainer>
 			</ProductDetailInfo>
 			<ProductDetailExtra>
