@@ -35,9 +35,9 @@ interface ProductResponse {
 }
 
 interface ProductFiles {
-	url: string;
-	fileName: string;
-	orgName: string;
+	path: string;
+	name: string;
+	originalname: string;
 }
 
 // Reply
