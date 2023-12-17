@@ -49,7 +49,7 @@ const DetailBadge = styled.div<BadgeProps>`
 	justify-content: center;
 	gap: 5px;
 	border-radius: 100px;
-	background-color: ${Common.colors.gray2};
+	background-color: ${Common.colors.white};
 
 	& :first-of-type {
 		${(props) =>
