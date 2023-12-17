@@ -213,7 +213,7 @@ function ProductDetail() {
 			<article>
 				<div>
 					<img
-						src={product?.mainImages[0].url}
+						src={product?.mainImages[0].path}
 						alt={`${product?.name} 앨범 아트`}
 					/>
 					<button>
@@ -290,7 +290,7 @@ function ProductDetail() {
 						</Link>
 					) : (
 						<a
-							href={`https://localhost/api/files/download/${product?.extra?.soundFile.fileName}?name=${product?.extra?.soundFile.orgName}`}
+							href={`https://localhost/api/files/download/${product?.extra?.soundFile.name}?name=${product?.extra?.soundFile.originalname}`}
 							download={true}
 						>
 							<DownloadIcon />

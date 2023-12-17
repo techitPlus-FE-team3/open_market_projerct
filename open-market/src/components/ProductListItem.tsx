@@ -120,17 +120,17 @@ export function ProductListItem({
 				<img
 					src={
 						"image" in product
-							? (product as OrderProduct).image!.url
-							: product.mainImages[0]?.url
+							? (product as OrderProduct).image!.path
+							: product.mainImages[0]?.path
 					}
 					alt={`${product.name} 사진`}
 				/>
 				<span title={product.name}>{product.name}</span>
 			</StyledLink>
-			<MusicPlayer src={product.extra?.soundFile?.url!} showable />
+			<MusicPlayer src={product.extra?.soundFile?.path!} showable />
 			{"image" in product ? (
 				<a
-					href={`https://localhost/api/files/download/${product?.extra?.soundFile.fileName}?name=${product?.extra?.soundFile.orgName}`}
+					href={`https://localhost/api/files/download/${product?.extra?.soundFile.name}?name=${product?.extra?.soundFile.originalname}`}
 					download={true}
 					className="download"
 				>
@@ -160,10 +160,10 @@ export function UserProductListItem({ product }: { product: Product }) {
 	return (
 		<ListItem key={product?._id}>
 			<StyledTitleSpan>
-				<img src={product?.mainImages[0]?.url} alt={`${product?.name} 사진`} />
+				<img src={product?.mainImages[0]?.path} alt={`${product?.name} 사진`} />
 				<span title={product?.name}>{product?.name}</span>
 			</StyledTitleSpan>
-			<MusicPlayer src={product?.extra?.soundFile?.url!} />
+			<MusicPlayer src={product?.extra?.soundFile?.path!} />
 			<StyledElementSpan>
 				판매 개수: <span>{product?.buyQuantity}</span>
 			</StyledElementSpan>
