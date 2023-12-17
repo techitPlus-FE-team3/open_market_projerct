@@ -174,7 +174,7 @@ function ProductEdit() {
 	const [postItem, setPostItem] = useState<ProductEditForm>({
 		show: false,
 		name: "",
-		mainImages: [{ url: "", fileName: "", orgName: "" }],
+		mainImages: [{ path: "", name: "", originalname: "" }],
 		content: "",
 		price: 0,
 		shippingFees: 0,
@@ -182,7 +182,7 @@ function ProductEdit() {
 		extra: {
 			category: "",
 			tags: [],
-			soundFile: { url: "", fileName: "", orgName: "" },
+			soundFile: { path: "", name: "", originalname: "" },
 		},
 	});
 	useRequireAuth();
@@ -201,7 +201,7 @@ function ProductEdit() {
 			return;
 		}
 
-		if (postItem.extra.soundFile.url === "") {
+		if (postItem.extra.soundFile.path === "") {
 			toast.error("음원을 업로드해야 합니다", {
 				ariaProps: {
 					role: "status",
@@ -272,9 +272,9 @@ function ProductEdit() {
 						category: fetchedProductInfo?.extra?.category || "",
 						tags: fetchedProductInfo?.extra?.tags || [],
 						soundFile: fetchedProductInfo?.extra?.soundFile || {
-							url: "",
-							fileName: "",
-							orgName: "",
+							path: "",
+							name: "",
+							originalname: "",
 						},
 					},
 				});
@@ -324,10 +324,10 @@ function ProductEdit() {
 								name="photo"
 								id="photo"
 							/>
-							{postItem?.mainImages[0].url !== "" ? (
+							{postItem?.mainImages[0].path !== "" ? (
 								<img
 									className="UploadImage"
-									src={postItem?.mainImages[0].url}
+									src={postItem?.mainImages[0].path}
 									alt={`${postItem?.name}앨범아트`}
 								/>
 							) : (
@@ -394,9 +394,9 @@ function ProductEdit() {
 											uploadFile(e.target.files[0], setPostItem, "soundFile")
 										}
 									/>
-									{postItem?.extra.soundFile.url !== "" ? (
+									{postItem?.extra.soundFile.path !== "" ? (
 										<span className="UploadAudioFile">
-											{postItem?.extra.soundFile.fileName}
+											{postItem?.extra.soundFile.name}
 										</span>
 									) : (
 										<div className="PostAudioLabel">

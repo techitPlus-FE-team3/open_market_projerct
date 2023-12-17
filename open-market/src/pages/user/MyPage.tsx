@@ -240,7 +240,6 @@ function MyPage() {
 	}
 
 	const profileImageUrl = userInfo.extra?.profileImage || "public/user.svg";
-
 	return (
 		<Section>
 			<Helmet>
@@ -295,7 +294,7 @@ function MyPage() {
 				emptyMessage="북마크가 없습니다."
 				renderItem={(item) => (
 					<Link to={`/productdetail/${item.product_id}`}>
-						<Image src={`${item.product.image.url}`} alt="앨범아트" />
+						<Image src={`${item.product.image.path}`} alt="앨범아트" />
 					</Link>
 				)}
 				linkText="전체보기"
@@ -307,7 +306,7 @@ function MyPage() {
 				emptyMessage="히스토리가 없습니다."
 				renderItem={(item) => (
 					<Link to={`/productdetail/${item._id}`}>
-						<Image src={`${item.mainImages[0].url}`} alt="앨범아트" />
+						<Image src={`${item.mainImages[0].path}`} alt="앨범아트" />
 					</Link>
 				)}
 			/>
@@ -318,7 +317,7 @@ function MyPage() {
 				renderItem={(item) => (
 					<Link to={`/productdetail/${item.products[0]._id}`}>
 						<Image
-							src={item.products[0].image.url}
+							src={item.products[0].image.path}
 							alt={`${item.products[0].name} 사진`}
 						/>
 					</Link>
@@ -332,7 +331,7 @@ function MyPage() {
 				emptyMessage="판매내역이 없습니다."
 				renderItem={(item) => (
 					<Link to={`/productmanage/${item._id}`}>
-						<Image src={`${item.mainImages[0].url}`} alt="앨범아트" />
+						<Image src={`${item.mainImages[0].path}`} alt="앨범아트" />
 					</Link>
 				)}
 				linkText="전체보기"
