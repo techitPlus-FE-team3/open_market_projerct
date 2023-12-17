@@ -1,245 +1,23 @@
+import ProductDetailExtraLink from "@/components/ProductDetailBadgeComponent";
+import ProductDetailComponent from "@/components/ProductDetailComponent";
 import { Heading } from "@/components/ProductListComponent";
 import ReplyListItem, {
 	ReplyBlock,
 	ReplyContainer,
 	ReplyInputForm,
 	ReplyTextarea,
-	ShowStarRating,
 } from "@/components/ReplyComponent";
 import { loggedInState } from "@/states/authState";
-import { Common } from "@/styles/common";
-
 import { axiosInstance, debounce } from "@/utils";
-import styled from "@emotion/styled";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
-import CheckIcon from "@mui/icons-material/Check";
-import DownloadIcon from "@mui/icons-material/Download";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import StarIcon from "@mui/icons-material/Star";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { Rating } from "@mui/material";
 import { SetStateAction, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-
-interface BadgeProps {
-	isNew?: boolean;
-	isBest?: boolean;
-}
-
-const DetailBadgeContainer = styled.div`
-	width: 250px;
-	height: auto;
-	display: flex;
-	flex-flow: row nowrap;
-	justify-content: flex-end;
-	gap: 10px;
-`;
-
-const DetailBadge = styled.div<BadgeProps>`
-	width: 100px;
-	height: 40px;
-	margin: 5px 0;
-	display: flex;
-	flex-flow: row nowrap;
-	align-items: center;
-	justify-content: center;
-	gap: 5px;
-	border-radius: 100px;
-	background-color: ${Common.colors.white};
-
-	& :first-of-type {
-		${(props) =>
-			props.isNew &&
-			`color: ${Common.colors.emphasize}; position: relative; right: 2px;`}
-		${(props) => props.isBest && `color: ${Common.colors.secondary}`}
-	}
-`;
-
-const ProductDetailArticle = styled.article`
-	width: 1440px;
-	height: 400px;
-	margin: 0 auto;
-	padding: ${Common.space.spacingXl};
-	display: flex;
-	flex-flow: row nowrap;
-	align-items: center;
-	gap: ${Common.space.spacingXl};
-	background-color: ${Common.colors.black};
-`;
-
-const ProductMediaContainer = styled.div`
-	width: 270px;
-	height: 270px;
-	position: relative;
-	background-color: ${Common.colors.emphasize};
-	box-shadow: 0px 5px 5px rgb(40, 40, 44, 0.8);
-
-	img {
-		width: 270px;
-		height: 270px;
-		object-fit: cover;
-	}
-
-	.playButton {
-		width: 70px;
-		height: 70px;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		background-color: transparent;
-		border: none;
-		font-size: 0;
-
-		&::after {
-			content: "";
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			border-top: solid 35px transparent;
-			border-bottom: solid 35px transparent;
-			border-left: solid 54px ${Common.colors.secondary};
-			border-right: solid 0px transparent;
-		}
-	}
-`;
-
-const ProductDetailInfo = styled.div`
-	width: 430px;
-	height: 270px;
-	display: flex;
-	flex-flow: column nowrap;
-	justify-content: space-between;
-	gap: 5px;
-	color: ${Common.colors.white};
-	box-shadow: 0px 5px 5px rgb(40, 40, 44, 0.8);
-
-	.title {
-		font-size: ${Common.font.size.xl};
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	.seller {
-		font-size: ${Common.font.size.lg};
-	}
-`;
-
-const ProductDetailContentContainer = styled.div`
-	width: 425px;
-	height: 160px;
-	padding: ${Common.space.spacingMd};
-	display: flex;
-	flex-flow: column nowrap;
-	gap: 5px;
-	background-color: ${Common.colors.white};
-	border-radius: 10px;
-
-	.genre {
-		color: ${Common.colors.gray};
-	}
-
-	.tags {
-		color: ${Common.colors.gray};
-	}
-
-	.content {
-		height: 70px;
-		color: ${Common.colors.black};
-		white-space: pre-wrap;
-		word-break: normal;
-		overflow-wrap: break-word;
-		overflow: auto;
-	}
-
-	.price {
-		font-size: ${Common.font.size.lg};
-		font-weight: ${Common.font.weight.bold};
-		color: ${Common.colors.secondary};
-		align-self: flex-end;
-
-		&::after {
-			content: "₩";
-			margin-left: 2px;
-			font-size: ${Common.font.size.sm};
-		}
-	}
-`;
-
-const ProductDetailExtra = styled.div`
-	display: flex;
-	flex-flow: column nowrap;
-	align-items: flex-end;
-	gap: 5px;
-	position: relative;
-	top: -98px;
-	right: -250px;
-
-	.rating {
-		margin-left: 5px;
-		color: ${Common.colors.white};
-		position: relative;
-		top: -6px;
-	}
-`;
-
-const ProductExtraLinkContainer = styled.article`
-	width: 1440px;
-	height: 80px;
-	margin-bottom: 50px;
-	display: flex;
-	flex-flow: row nowrap;
-	justify-content: center;
-	background-color: ${Common.colors.gray2};
-	box-shadow: 0px 5px 5px rgb(40, 40, 44, 0.3);
-
-	div {
-		width: 1160px;
-		padding-right: ${Common.space.spacingMd};
-		display: flex;
-		flex-flow: row nowrap;
-		justify-content: space-between;
-		align-items: center;
-	}
-`;
-
-const ProductExtraBadgeStyle = styled(DetailBadge)`
-	width: 200px;
-	height: 50px;
-	text-decoration: none;
-	color: ${Common.colors.black};
-	box-shadow: 0px 5px 5px rgb(40, 40, 44, 0.3);
-	& :first-of-type {
-		color: ${Common.colors.secondary};
-		position: relative;
-		top: -1px;
-	}
-`.withComponent("span");
-
-const ProductExtraLink = ProductExtraBadgeStyle.withComponent(Link);
-
-const DownloadLink = ProductExtraBadgeStyle.withComponent("a");
-
-const BookmarkButton = styled(ProductExtraBadgeStyle)`
-	border: none;
-	font-size: 18px;
-	& :first-of-type {
-		color: ${Common.colors.emphasize};
-		position: relative;
-		top: -1px;
-	}
-`.withComponent("button");
-
-const NoUserPurchaseButton = styled(ProductExtraBadgeStyle)`
-	border: none;
-	font-size: 18px;
-`.withComponent("button");
 
 function ProductDetail() {
 	const navigate = useNavigate();
@@ -351,12 +129,6 @@ function ProductDetail() {
 		}
 	}
 
-	function handelSignIn() {
-		if (confirm("로그인 후 이용 가능합니다")) {
-			navigate("/signin");
-		}
-	}
-
 	useEffect(() => {
 		if (productId === null || productId === "") {
 			return navigate("/err", { replace: true });
@@ -428,88 +200,13 @@ function ProductDetail() {
 				<title>Product Detail - 모두의 오디오 MODI</title>
 			</Helmet>
 			<Heading>상세 페이지</Heading>
-			<ProductDetailArticle>
-				<ProductMediaContainer>
-					<img
-						src={product?.mainImages[0].url}
-						alt={`${product?.name} 앨범 아트`}
-					/>
-					<button className="playButton">play</button>
-				</ProductMediaContainer>
-				<ProductDetailInfo>
-					<span className="title">{product?.name}</span>
-					<span className="seller">{product?.seller_id}</span>
-					<span>{product?.createdAt}</span>
-					<ProductDetailContentContainer>
-						<span className="genre">{genre}</span>
-						<span className="tags">
-							{product?.extra?.tags.map((tag) => `#${tag} `)}
-						</span>
-						<div className="content">{product?.content}</div>
-						<span className="price">{product?.price}</span>
-					</ProductDetailContentContainer>
-				</ProductDetailInfo>
-				<ProductDetailExtra>
-					<DetailBadgeContainer>
-						{product?.extra?.isNew ? (
-							<DetailBadge isNew>
-								<StarIcon fontSize="small" />
-								New!
-							</DetailBadge>
-						) : (
-							<></>
-						)}
-						{product?.extra?.isBest ? (
-							<DetailBadge isBest>
-								<ThumbUpIcon fontSize="small" />
-								Best!
-							</DetailBadge>
-						) : (
-							<></>
-						)}
-					</DetailBadgeContainer>
-					<div>
-						<ShowStarRating rating={rating} />
-						<span className="rating">{rating}</span>
-					</div>
-				</ProductDetailExtra>
-			</ProductDetailArticle>
-			<ProductExtraLinkContainer>
-				<div>
-					<BookmarkButton>
-						<BookmarkOutlinedIcon />
-						북마크
-						{product?.bookmarks ? product?.bookmarks.length : 0}
-					</BookmarkButton>
-					{!loggedIn ? (
-						<NoUserPurchaseButton type="button" onClick={handelSignIn}>
-							<CheckIcon />
-							구매하기
-							{product?.buyQuantity ? product?.buyQuantity : 0}
-						</NoUserPurchaseButton>
-					) : loggedIn && logState === product?.seller_id ? (
-						<ProductExtraLink to={`/productmanage/${product?._id}`}>
-							<CheckIcon />
-							상품 관리
-						</ProductExtraLink>
-					) : (loggedIn && order?.length === 0) || order === undefined ? (
-						<ProductExtraLink to={`/productpurchase/${product?._id}`}>
-							<CheckIcon />
-							구매하기
-							{product?.buyQuantity ? product?.buyQuantity : 0}
-						</ProductExtraLink>
-					) : (
-						<DownloadLink
-							href={`https://localhost/api/files/download/${product?.extra?.soundFile.fileName}?name=${product?.extra?.soundFile.orgName}`}
-							download={true}
-						>
-							<DownloadIcon />
-							다운로드
-							{product?.buyQuantity ? product?.buyQuantity : 0}
-						</DownloadLink>
-					)}
-				</div>
-			</ProductExtraLinkContainer>
+			<ProductDetailComponent product={product} genre={genre} rating={rating} />
+			<ProductDetailExtraLink
+				product={product}
+				order={order}
+				loggedIn={loggedIn}
+				logState={logState}
+			/>
 			<ReplyContainer>
 				<h3>
 					<ModeCommentIcon />
