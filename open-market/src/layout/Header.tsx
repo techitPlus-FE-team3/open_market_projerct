@@ -187,9 +187,8 @@ const Header = () => {
 	}
 
 	function handleLogout() {
-		localStorage.removeItem("accessToken");
-		localStorage.removeItem("refreshToken");
-		localStorage.removeItem("_id");
+		localStorage.clear();
+		sessionStorage.clear();
 		setLoggedIn(false);
 
 		toast.success(`로그아웃 되었습니다.`);
@@ -337,6 +336,6 @@ const Header = () => {
 			</HeaderWrapper>
 		</HeaderContainer>
 	);
-}
+};
 
 export default Header;
