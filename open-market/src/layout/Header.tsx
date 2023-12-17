@@ -130,7 +130,7 @@ const UserButton = styled(Button)`
 `;
 
 const Header = () => {
-	const [isLogoLoaded, setIsLogoLoaded] = useState(false);
+	const [isLogoLoaded, setIsLogoLoaded] = useState(false); // 로고 로딩 상태 관리
 
 	const [productList, setProductList] = useRecoilState(productListState);
 	const fetchedProductList = useRecoilValue(fetchproductListState);
@@ -337,6 +337,6 @@ const Header = () => {
 			</HeaderWrapper>
 		</HeaderContainer>
 	);
-};
+}
 
 export default Header;

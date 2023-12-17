@@ -1,7 +1,14 @@
+import ReplyListItem, {
+	ReplyBlock,
+	ReplyContainer,
+	ReplyInputForm,
+	ReplyTextarea,
+	ShowStarRating,
+} from "@/components/ReplyComponent";
 import { loggedInState } from "@/states/authState";
+
 import { axiosInstance, debounce } from "@/utils";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
 import CheckIcon from "@mui/icons-material/Check";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -22,7 +29,7 @@ function ProductDetail() {
 
 	const loggedIn = useRecoilValue(loggedInState);
 
-	const replyRef = useRef<HTMLInputElement>(null);
+	const replyRef = useRef<HTMLTextAreaElement>(null);
 
 	const [product, setProduct] = useState<Product>();
 	const [rating, setRating] = useState(0);
@@ -130,17 +137,6 @@ function ProductDetail() {
 		if (confirm("로그인 후 이용 가능합니다")) {
 			navigate("/signin");
 		}
-	}
-
-	function ShowStarRating({ rating }: { rating: number }) {
-		return (
-			<Rating
-				name="showRating"
-				value={Number(rating)}
-				precision={0.5}
-				readOnly
-			/>
-		);
 	}
 
 	useEffect(() => {
@@ -303,20 +299,20 @@ function ProductDetail() {
 					)}
 				</div>
 			</article>
-			<article>
+			<ReplyContainer>
 				<h3>
 					<ModeCommentIcon />
 					댓글
 				</h3>
-				{!loggedIn ? (
-					<p>로그인 후 댓글을 작성할 수 있습니다.</p>
-				) : loggedIn && logState === product?.seller_id ? (
-					<p>내 상품에는 댓글을 작성할 수 없습니다.</p>
-				) : (loggedIn && order?.length === 0) || order === undefined ? (
-					<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
-				) : (
-					<form action="submit">
-						<div>
+				<div>
+					{!loggedIn ? (
+						<p>로그인 후 댓글을 작성할 수 있습니다.</p>
+					) : loggedIn && logState === product?.seller_id ? (
+						<p>내 상품에는 댓글을 작성할 수 없습니다.</p>
+					) : (loggedIn && order?.length === 0) || order === undefined ? (
+						<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
+					) : (
+						<ReplyInputForm action="submit">
 							<span>
 								{currentUser?.extra?.profileImage ? (
 									currentUser?.extra?.profileImage
@@ -324,73 +320,56 @@ function ProductDetail() {
 									<AccountCircleIcon />
 								)}
 							</span>
-							<span>{currentUser?.email}</span>
-						</div>
-						<div>
-							<Rating
-								name="rating"
-								value={ratingValue}
-								precision={0.5}
-								max={5}
-								onChange={(_, newValue) => {
-									newValue === null
-										? setRatingValue(1)
-										: setRatingValue(newValue);
-								}}
-								onChangeActive={(_, newHover) => {
-									setHover(newHover);
-								}}
-							/>
-						</div>
-						<div>
-							<label htmlFor="content">댓글 내용</label>
-							<input
-								id="content"
-								name="content"
-								type="text"
-								ref={replyRef}
-								onChange={debounce(
-									(e: {
-										target: { value: SetStateAction<string | undefined> };
-									}) => setReplyContent(e.target.value),
-								)}
-								required
-							/>
-							<button type="submit" onClick={handleReplySubmit}>
-								작성하기
-							</button>
-						</div>
-					</form>
-				)}
-
+							<ReplyBlock user>{currentUser?.name}</ReplyBlock>
+							<div className="inputRating">
+								<Rating
+									name="rating"
+									value={ratingValue}
+									precision={0.5}
+									max={5}
+									onChange={(_, newValue) => {
+										newValue === null
+											? setRatingValue(1)
+											: setRatingValue(newValue);
+									}}
+									onChangeActive={(_, newHover) => {
+										setHover(newHover);
+									}}
+								/>
+							</div>
+							<label htmlFor="content" className="a11yHidden">
+								댓글 내용
+							</label>
+							<div className="replyTextAreaContainer">
+								<ReplyTextarea
+									id="content"
+									name="content"
+									ref={replyRef}
+									onChange={debounce(
+										(e: {
+											target: { value: SetStateAction<string | undefined> };
+										}) => setReplyContent(e.target.value),
+									)}
+									required
+								/>
+								<button type="submit" onClick={handleReplySubmit}>
+									작성하기
+								</button>
+							</div>
+						</ReplyInputForm>
+					)}
+				</div>
 				<ul>
 					{product?.replies?.length === 0 ? (
 						<p>댓글이 없습니다.</p>
 					) : (
 						product?.replies?.map((reply) => {
-							return (
-								<li key={reply._id}>
-									<div>
-										<AccountCircleIcon />
-										<span>{reply.userName}</span>
-									</div>
-									<div>
-										<p>{reply.content}</p>
-										<div>
-											<ShowStarRating rating={reply.rating} />
-											{reply.rating}
-										</div>
-									</div>
-								</li>
-							);
+							return <ReplyListItem reply={reply} />;
 						})
 					)}
 				</ul>
-				<button>
-					더보기
-					<ArrowDropDownIcon />
-				</button>
-			</article>
+				<button className="moreButton">더보기</button>
+			</ReplyContainer>
 		</section>
 	);
 }

@@ -1,9 +1,167 @@
+import AuthInput from "@/components/AuthInput";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
+import styled from "@emotion/styled";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import Checkbox from "@mui/material/Checkbox";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+
+const Title = styled.h2`
+	${Common.a11yHidden};
+`;
+
+const Backgroud = styled.section`
+	width: 100vw;
+	height: 100vh;
+	background-color: ${Common.colors.black};
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+`;
+
+const Form = styled.form`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	background-color: ${Common.colors.white};
+
+	width: 506px;
+	padding: ${Common.space.spacingLg};
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	border-radius: 10px;
+`;
+
+const Fieldset = styled.fieldset`
+	width: 380px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+	legend {
+		text-align: center;
+		margin: 28px auto;
+
+		font-weight: ${Common.font.weight.bold};
+		font-size: 32px;
+
+		color: ${Common.colors.black};
+	}
+	& > ul:first-of-type {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+		width: 380px;
+	}
+	& > ul:last-of-type {
+		width: 100%;
+		margin-top: 20px;
+		color: ${Common.colors.black};
+		li {
+			margin-bottom: 10px;
+			display: flex;
+			justify-content: space-between;
+			& > button {
+				background-color: ${Common.colors.emphasize};
+				color: ${Common.colors.white};
+				border: none;
+				border-radius: 5px;
+				margin: 3px 2px;
+			}
+		}
+
+		& > :first-of-type {
+			flex-direction: row-reverse;
+		}
+	}
+`;
+
+const UserImageWrapper = styled.li`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+	& > label {
+		font-size: 16px;
+		font-weight: ${Common.font.weight.bold};
+		color: ${Common.colors.black};
+	}
+	& > div {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+
+		input[placeholder="첨부파일"] {
+			vertical-align: middle;
+			background-color: ${Common.colors.gray2};
+			border: 1px solid ${Common.colors.gray};
+			color: ${Common.colors.gray};
+			border-radius: 10px;
+			width: 78%;
+			padding: 0 10px;
+		}
+
+		label {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 0 10px;
+			cursor: pointer;
+			background-color: ${Common.colors.emphasize};
+			color: ${Common.colors.white};
+			font-size: ${Common.font.size.sm};
+			border-radius: 10px;
+		}
+
+		input[type="file"] {
+			position: absolute;
+			width: 0;
+			height: 0;
+			padding: 0;
+			overflow: hidden;
+			border: 0;
+		}
+	}
+`;
+
+const UserImage = styled.img`
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+`;
+
+const StyledCheckbox = styled(Checkbox)`
+	margin: 0;
+	padding: 0;
+`;
+
+const Submit = styled.button`
+	width: 383px;
+	height: 55px;
+
+	background: ${Common.colors.emphasize};
+	border-radius: 10px;
+	border: none;
+
+	font-weight: ${Common.font.weight.bold};
+	font-size: ${Common.font.size.lg};
+	color: ${Common.colors.white}};
+
+	padding: 15px 32px;
+`;
+
+const Cancle = styled(Link)`
+	:visited {
+		color: inherit;
+	}
+`;
 
 function UserEdit() {
 	const [userData, setUserData] = useState({
@@ -23,6 +181,7 @@ function UserEdit() {
 	const navigate = useNavigate();
 	const userId = localStorage.getItem("_id");
 	const accessToken = localStorage.getItem("accessToken");
+	const [uploadedFileName, setUploadedFileName] = useState("");
 
 	// 비로그인 상태 체크
 	useRequireAuth();
@@ -125,6 +284,7 @@ function UserEdit() {
 	async function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
 		if (event.target.files && event.target.files.length > 0) {
 			const file = event.target.files[0];
+			setUploadedFileName(file.name); // 업로드한 파일의 이름을 상태에 저장
 			const formData = new FormData();
 			formData.append("attach", file); // 'attach' 필드에 파일 추가
 
@@ -155,100 +315,140 @@ function UserEdit() {
 	}
 
 	return (
-		<section>
+		<Backgroud>
 			<Helmet>
 				<title>Edit User - 모두의 오디오 MODI</title>
 			</Helmet>
-			<h2>회원정보 수정</h2>
-			<form onSubmit={handleSubmit}>
-				<ul>
-					{/* 프로필 이미지 수정 */}
-					<li>
-						<img
-							src={userData.extra.profileImage || "../../public/user.svg"}
-							alt="프로필 이미지"
-						/>
-						<label htmlFor="userProfileImage">프로필 이미지</label>
-						<input
-							type="file"
-							accept="image/*"
-							id="userProfileImage"
-							onChange={handleImageUpload}
-						/>
-					</li>
-					<li>
-						<label htmlFor="name">이름</label>
-						<input
-							type="text"
-							id="name"
-							value={userData.name}
-							onChange={handleInputChange}
-						/>
-					</li>
-					<li>
-						<label htmlFor="email">이메일</label>
-						<input
-							type="email"
-							id="email"
-							value={userData.email}
-							onChange={handleInputChange}
-						/>
-					</li>
-					<li>
-						<label htmlFor="password">비밀번호</label>
-						<input
-							type="password"
-							id="password"
-							value={userData.password}
-							onChange={handleInputChange}
-						/>
-					</li>
-					<li>
-						<label htmlFor="confirmPassword">비밀번호 확인</label>
-						<input
-							type="password"
-							id="confirmPassword"
-							value={userData.confirmPassword}
-							onChange={handleInputChange}
-						/>
-					</li>
-					<li>
-						<label htmlFor="phone">휴대폰 번호</label>
-						<input
-							type="text"
-							id="phone"
-							value={userData.phone}
-							onChange={handleInputChange}
-						/>
-					</li>
-				</ul>
-				<ul>
-					<li>
-						<input
-							type="checkbox"
-							id="recievingMarketingInformation"
-							checked={!!userData.extra.terms.recievingMarketingInformation}
-							onChange={handleInputChange}
-						/>
-						<label htmlFor="recievingMarketingInformation">
-							마케팅 정보 수신 동의
-						</label>
-						<button type="button">약관보기</button>
-					</li>
-					<li>
-						<input
-							type="checkbox"
-							id="confirmAge"
-							checked={!!userData.extra.terms.confirmAge}
-							onChange={handleInputChange}
-						/>
-						<label htmlFor="confirmAge">본인은 만 14세 이상입니다.</label>
-					</li>
-				</ul>
-				<Link to="/mypage">수정취소</Link>
-				<button type="submit">수정하기</button>
-			</form>
-		</section>
+			<Title>회원정보 수정</Title>
+			<Form onSubmit={handleSubmit}>
+				<Fieldset>
+					<legend>회원정보 수정</legend>
+
+					<ul>
+						{/* 프로필 이미지 수정 */}
+						<UserImageWrapper>
+							<UserImage
+								src={userData.extra.profileImage || "../../public/user.svg"}
+								alt="프로필 이미지"
+							/>
+							<label htmlFor="userProfileImage">프로필 이미지</label>
+							<div>
+								<input
+									value={uploadedFileName || "첨부파일"}
+									placeholder="첨부파일"
+									readOnly={true}
+								/>
+								<label htmlFor="userProfileImage">파일찾기</label>
+								<input
+									type="file"
+									accept="image/*"
+									id="userProfileImage"
+									onChange={handleImageUpload}
+								/>
+							</div>
+						</UserImageWrapper>
+						<li>
+							<AuthInput
+								id="name"
+								name="name"
+								type="text"
+								defaultValue={userData.name}
+								onChange={handleInputChange}
+								placeholder="이름을 입력하세요"
+								required={true}
+							/>
+						</li>
+						<li
+							onClick={() =>
+								toast("이메일은 수정 불가능합니다.", { duration: 2000 })
+							}
+						>
+							<AuthInput
+								id="email"
+								name="email"
+								type="email"
+								defaultValue={userData.email}
+								onChange={handleInputChange}
+								placeholder="이메일 주소를 입력하세요"
+								required={true}
+								readonly={true}
+							/>
+						</li>
+						<li>
+							<AuthInput
+								id="password"
+								name="password"
+								type="password"
+								onChange={handleInputChange}
+								placeholder="비밀번호를 입력하세요"
+							/>
+						</li>
+						<li>
+							<AuthInput
+								id="confirmPassword"
+								name="confirmPassword"
+								type="password"
+								onChange={handleInputChange}
+								placeholder="비밀번호 확인"
+							/>
+						</li>
+						<li>
+							<AuthInput
+								id="phone"
+								name="phone"
+								type="text"
+								defaultValue={userData.phone}
+								onChange={handleInputChange}
+								placeholder="전화번호를 입력하세요"
+							/>
+						</li>
+					</ul>
+					<ul>
+						<li>
+							<button type="button">약관보기</button>
+							<div>
+								<StyledCheckbox
+									id="recievingMarketingInformation"
+									checked={!!userData.extra.terms.recievingMarketingInformation}
+									onChange={handleInputChange}
+									icon={<CheckCircleOutlineIcon />}
+									checkedIcon={<CheckCircleIcon />}
+									sx={{
+										color: Common.colors.gray,
+										"&.Mui-checked": {
+											color: Common.colors.emphasize,
+										},
+									}}
+								/>
+								<label htmlFor="recievingMarketingInformation">
+									마케팅 정보 수신 동의
+								</label>
+							</div>
+						</li>
+						<li>
+							<div>
+								<StyledCheckbox
+									id="confirmAge"
+									checked={!!userData.extra.terms.confirmAge}
+									onChange={handleInputChange}
+									icon={<CheckCircleOutlineIcon />}
+									checkedIcon={<CheckCircleIcon />}
+									sx={{
+										color: Common.colors.gray,
+										"&.Mui-checked": {
+											color: Common.colors.emphasize,
+										},
+									}}
+								/>
+								<label htmlFor="confirmAge">본인은 만 14세 이상입니다.</label>
+							</div>
+						</li>
+					</ul>
+				</Fieldset>
+				<Submit type="submit">수정하기</Submit>
+				<Cancle to="/mypage">수정취소</Cancle>
+			</Form>
+		</Backgroud>
 	);
 }
 

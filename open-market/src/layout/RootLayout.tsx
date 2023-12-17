@@ -1,18 +1,22 @@
-import { Outlet, useLocation } from "react-router-dom";
-import Header from "@/layout/Header";
 import Footer from "@/layout/Footer";
+import Header from "@/layout/Header";
+import { Outlet, useLocation } from "react-router-dom";
 
 function RootLayout() {
 	const location = useLocation();
-	const auth = ["/signin", "/signup"];
+	const noHeaderFooterRoutes = ["/signin", "/signup", "/useredit/:userId"];
 
+	const shouldDisplayHeaderFooter = !noHeaderFooterRoutes.some((route) =>
+		location.pathname.includes(route.replace("/:userId", "")),
+	);
+    
 	return (
 		<>
-			{!auth.includes(location.pathname) && <Header />}
+			{shouldDisplayHeaderFooter && <Header />}
 			<main>
 				<Outlet />
 			</main>
-			{!auth.includes(location.pathname) && <Footer />}
+			{shouldDisplayHeaderFooter && <Footer />}
 		</>
 	);
 }

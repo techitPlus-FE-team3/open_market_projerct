@@ -108,28 +108,26 @@ const StyledElementSpan = styled.span`
 const StyledLink = StyledTitleSpan.withComponent(Link);
 
 export function ProductListItem({
-	key,
 	product,
 	bookmark,
 }: {
-	key: number;
 	product: Product | OrderProduct;
 	bookmark: boolean;
 }) {
 	return (
-		<ListItem key={key}>
+		<ListItem key={product?._id}>
 			<StyledLink to={`/productdetail/${product._id}`}>
 				<img
 					src={
 						"image" in product
 							? (product as OrderProduct).image!.url
-							: product.mainImages[0].url
+							: product.mainImages[0]?.url
 					}
 					alt={`${product.name} 사진`}
 				/>
 				<span title={product.name}>{product.name}</span>
 			</StyledLink>
-			<MusicPlayer src={product.extra?.soundFile.url!} showable />
+			<MusicPlayer src={product.extra?.soundFile?.url!} showable />
 			{"image" in product ? (
 				<a
 					href={`https://localhost/api/files/download/${product?.extra?.soundFile.fileName}?name=${product?.extra?.soundFile.orgName}`}
@@ -162,10 +160,10 @@ export function UserProductListItem({ product }: { product: Product }) {
 	return (
 		<ListItem key={product?._id}>
 			<StyledTitleSpan>
-				<img src={product?.mainImages[0].url} alt={`${product?.name} 사진`} />
+				<img src={product?.mainImages[0]?.url} alt={`${product?.name} 사진`} />
 				<span title={product?.name}>{product?.name}</span>
 			</StyledTitleSpan>
-			<MusicPlayer src={product?.extra?.soundFile.url!} />
+			<MusicPlayer src={product?.extra?.soundFile?.url!} />
 			<StyledElementSpan>
 				판매 개수: <span>{product?.buyQuantity}</span>
 			</StyledElementSpan>
