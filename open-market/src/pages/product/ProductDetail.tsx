@@ -23,7 +23,7 @@ interface CommentProps {
 
 const CommentContainer = styled.article`
 	width: 1160px;
-	height: 346px;
+	min-height: 346px;
 	padding: ${Common.space.spacingMd};
 	margin: ${Common.space.spacingXl} auto;
 	display: flex;
@@ -81,14 +81,30 @@ const CommentListItem = styled.li`
 const CommentBlock = styled.div<CommentProps>`
 	width: ${(props) => (props.user ? "260px" : "100%")};
 	min-height: ${(props) => (props.user ? "24px" : "40px")};
-	padding: ${Common.space.spacingMd};
+	height: auto;
+	white-space: pre-wrap;
+	word-break: normal;
+	overflow-wrap: break-word;
+	padding: ${(props) =>
+		props.user ? `0 ${Common.space.spacingMd}` : `${Common.space.spacingMd}`};
 	display: flex;
 	flex-flow: column nowrap;
-	position: ${(props) => (props.user ? "absolute" : "relative")};
-	top: ${(props) => (props.user ? "1px" : "0")};
-	left: ${(props) => (props.user ? "30px" : "0")};
 	border: 1px solid ${Common.colors.gray};
 	border-radius: 10px;
+	${(props) =>
+		!props.user &&
+		`
+    line-height: ${Common.space.spacingXl};
+  `};
+
+	${(props) =>
+		props.user &&
+		`
+    justify-content: center;
+    position: absolute;
+    top: 1px;
+    left: ${Common.space.spacingXl};
+  `};
 
 	& :last-of-type {
 		display: ${(props) => (props.user ? "relative" : "flex")};
@@ -96,13 +112,54 @@ const CommentBlock = styled.div<CommentProps>`
 	}
 `;
 
+const CommentInputForm = styled.form`
+	position: relative;
+
+	.a11yHidden {
+		display: ${Common.a11yHidden};
+	}
+
+	.commentTextAreaContainer {
+		width: 100%;
+		height: 80px;
+		border: 1px solid ${Common.colors.gray};
+		border-radius: 10px;
+	}
+
+	.inputRating {
+		position: absolute;
+		top: -2px;
+		left: 300px;
+	}
+
+	button {
+		width: 100px;
+		height: 24px;
+		position: absolute;
+		bottom: 5px;
+		right: 5px;
+		color: ${Common.colors.black};
+		font-weight: ${Common.font.weight.bold};
+		background-color: ${Common.colors.emphasize};
+		border: none;
+		border-radius: 10px;
+	}
+`;
+
+const CommentTextarea = styled(CommentBlock)`
+	height: 50px;
+	line-height: normal;
+	word-break: normal;
+	border-width: 0;
+`.withComponent("textarea");
+
 function ProductDetail() {
 	const navigate = useNavigate();
 	const { productId } = useParams();
 
 	const loggedIn = useRecoilValue(loggedInState);
 
-	const replyRef = useRef<HTMLInputElement>(null);
+	const replyRef = useRef<HTMLTextAreaElement>(null);
 
 	const [product, setProduct] = useState<Product>();
 	const [rating, setRating] = useState(0);
@@ -396,18 +453,16 @@ function ProductDetail() {
 					) : (loggedIn && order?.length === 0) || order === undefined ? (
 						<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
 					) : (
-						<form action="submit">
-							<div>
-								<span>
-									{currentUser?.extra?.profileImage ? (
-										currentUser?.extra?.profileImage
-									) : (
-										<AccountCircleIcon />
-									)}
-								</span>
-								<span>{currentUser?.email}</span>
-							</div>
-							<div>
+						<CommentInputForm action="submit">
+							<span>
+								{currentUser?.extra?.profileImage ? (
+									currentUser?.extra?.profileImage
+								) : (
+									<AccountCircleIcon />
+								)}
+							</span>
+							<CommentBlock user>{currentUser?.name}</CommentBlock>
+							<div className="inputRating">
 								<Rating
 									name="rating"
 									value={ratingValue}
@@ -423,12 +478,13 @@ function ProductDetail() {
 									}}
 								/>
 							</div>
-							<div>
-								<label htmlFor="content">댓글 내용</label>
-								<input
+							<label htmlFor="content" className="a11yHidden">
+								댓글 내용
+							</label>
+							<div className="commentTextAreaContainer">
+								<CommentTextarea
 									id="content"
 									name="content"
-									type="text"
 									ref={replyRef}
 									onChange={debounce(
 										(e: {
@@ -441,7 +497,7 @@ function ProductDetail() {
 									작성하기
 								</button>
 							</div>
-						</form>
+						</CommentInputForm>
 					)}
 				</div>
 
