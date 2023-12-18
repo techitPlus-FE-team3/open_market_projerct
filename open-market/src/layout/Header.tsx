@@ -337,6 +337,6 @@ const Header = () => {
 			</HeaderWrapper>
 		</HeaderContainer>
 	);
-}
+};
 
 export default Header;
