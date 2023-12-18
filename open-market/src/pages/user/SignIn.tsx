@@ -77,7 +77,7 @@ const Submit = styled.button`
 
 	font-weight: ${Common.font.weight.bold};
 	font-size: ${Common.font.size.lg};
-	color: ${Common.colors.white}};
+	color: ${Common.colors.white};
 
 	padding: 15px 32px;
 `;
