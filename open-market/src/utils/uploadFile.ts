@@ -21,7 +21,7 @@ export async function uploadFile(
 			},
 		});
 
-		const filePath = `${API_KEY.response.data.file.path}`;
+		const filePath = `${API_KEY}${response.data.file.path}`;
 		const name = response.data.file.name;
 		const originalname = response.data.file.originalname;
 
