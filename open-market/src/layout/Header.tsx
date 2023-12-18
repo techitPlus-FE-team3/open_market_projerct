@@ -281,7 +281,7 @@ const Header = () => {
 							startIcon={<FileUpload />}
 							variant="outlined"
 							color="inherit"
-							href="/productregistration"
+							onClick={() => navigate("/productregistration")}
 						>
 							업로드
 						</UploadButton>
