@@ -242,6 +242,7 @@ const Header = () => {
 						onClick={() => {
 							setSearchKeyword("");
 							setCategoryFilter("all");
+							localStorage.removeItem("userProductsInfo");
 						}}
 					>
 						<img
@@ -306,7 +307,14 @@ const Header = () => {
 							open={Boolean(anchorEl)}
 							onClose={handleMenuClose}
 						>
-							<MenuItem component={Link} to="/mypage" onClick={handleMenuClose}>
+							<MenuItem
+								component={Link}
+								to="/mypage"
+								onClick={() => {
+									handleMenuClose();
+									localStorage.removeItem("userProductsInfo");
+								}}
+							>
 								마이페이지
 							</MenuItem>
 							<MenuItem onClick={handleLogout}>
