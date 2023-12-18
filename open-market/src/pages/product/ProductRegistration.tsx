@@ -280,7 +280,7 @@ function ProductRegistration() {
 
 		fetchCategory();
 	}, []);
-	console.log(postItem.mainImages[0]);
+
 	return (
 		<ProductRegistSection>
 			<Helmet>
