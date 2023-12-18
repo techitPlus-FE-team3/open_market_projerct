@@ -7,6 +7,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import DownloadIcon from "@mui/icons-material/Download";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
+const API_KEY = import.meta.env.VITE_API_SERVER;
 
 const theme = createTheme({
 	palette: {
@@ -130,7 +131,7 @@ export function ProductListItem({
 			<MusicPlayer src={product.extra?.soundFile?.path!} showable />
 			{"image" in product ? (
 				<a
-					href={`https://localhost/api/files/download/${product?.extra?.soundFile.name}?name=${product?.extra?.soundFile.originalname}`}
+					href={`${API_KEY}/${product?.extra?.soundFile.name}?name=${product?.extra?.soundFile.originalname}`}
 					download={true}
 					className="download"
 				>

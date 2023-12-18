@@ -1,8 +1,10 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
+const API_KEY = import.meta.env.VITE_API_SERVER;
+
 export const axiosInstance = axios.create({
-	baseURL: "https://localhost/api",
+	baseURL: API_KEY,
 });
 
 let refreshingToken: any = null;

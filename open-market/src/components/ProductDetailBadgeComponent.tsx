@@ -137,7 +137,7 @@ function ProductDetailExtraLink({
 					</ProductExtraLink>
 				) : (
 					<DownloadLink
-						href={`https://localhost/api/files/download/${product?.extra?.soundFile.fileName}?name=${product?.extra?.soundFile.orgName}`}
+						href={`https://localhost/api/files/download/${product?.extra?.soundFile.name}?name=${product?.extra?.soundFile.originalname}`}
 						download={true}
 					>
 						<DownloadIcon />

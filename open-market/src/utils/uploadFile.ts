@@ -1,6 +1,8 @@
 import { axiosInstance } from "@/utils";
 import toast from "react-hot-toast";
 
+const API_KEY = import.meta.env.VITE_API_SERVER;
+
 export async function uploadFile(
 	file: File, // 업로드할 파일
 	setItemCallback: (arg0: (prevItem: any) => any) => void, // state
@@ -19,7 +21,7 @@ export async function uploadFile(
 			},
 		});
 
-		const filePath = `https://localhost/api${response.data.file.path}`;
+		const filePath = `${API_KEY}${response.data.file.path}`;
 		const name = response.data.file.name;
 		const originalname = response.data.file.originalname;
 
