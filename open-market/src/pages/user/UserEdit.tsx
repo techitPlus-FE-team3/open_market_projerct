@@ -11,6 +11,8 @@ import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
+const API_KEY = import.meta.env.VITE_API_SERVER;
+
 const Title = styled.h2`
 	${Common.a11yHidden};
 `;
@@ -297,7 +299,7 @@ function UserEdit() {
 				});
 
 				if (response.data.ok) {
-					const filePath = `https://localhost${response.data.file.path}`;
+					const filePath = `${API_KEY.response.data.file.path}`;
 					// 상태 업데이트로 이미지 경로 저장
 					setUserData((prevUserData) => ({
 						...prevUserData,

@@ -256,7 +256,7 @@ function ProductDetail() {
 								<ReplyTextarea
 									id="content"
 									name="content"
-									ref={replyRef}
+									// ref={replyRef}
 									onChange={debounce(
 										(e: {
 											target: { value: SetStateAction<string | undefined> };
