@@ -1,26 +1,23 @@
+import ProductDetailExtraLink from "@/components/ProductDetailBadgeComponent";
+import ProductDetailComponent from "@/components/ProductDetailComponent";
+import { Heading } from "@/components/ProductListComponent";
 import ReplyListItem, {
 	ReplyBlock,
 	ReplyContainer,
 	ReplyInputForm,
 	ReplyTextarea,
-	ShowStarRating,
 } from "@/components/ReplyComponent";
 import { loggedInState } from "@/states/authState";
 
 import { axiosInstance, debounce } from "@/utils";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
-import CheckIcon from "@mui/icons-material/Check";
-import DownloadIcon from "@mui/icons-material/Download";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StarIcon from "@mui/icons-material/Star";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { Rating } from "@mui/material";
 import { SetStateAction, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 function ProductDetail() {
@@ -133,12 +130,6 @@ function ProductDetail() {
 		}
 	}
 
-	function handelSignIn() {
-		if (confirm("로그인 후 이용 가능합니다")) {
-			navigate("/signin");
-		}
-	}
-
 	useEffect(() => {
 		if (productId === null || productId === "") {
 			return navigate("/err", { replace: true });
@@ -209,96 +200,14 @@ function ProductDetail() {
 			<Helmet>
 				<title>Product Detail - 모두의 오디오 MODI</title>
 			</Helmet>
-			<h2>상세 페이지</h2>
-			<article>
-				<div>
-					<img
-						src={product?.mainImages[0].path}
-						alt={`${product?.name} 앨범 아트`}
-					/>
-					<button>
-						<PlayArrowIcon />
-					</button>
-				</div>
-				<div>
-					<span>{product?.name}</span>
-					<span>{product?.seller_id}</span>
-					<span>{product?.createdAt}</span>
-					<span>{genre}</span>
-					<div>
-						{product?.content.split("\n").map((line, index) => {
-							return (
-								<span key={index}>
-									{line}
-									<br />
-								</span>
-							);
-						})}
-					</div>
-					<span>{product?.price}</span>
-				</div>
-				<div>
-					{product?.extra?.isNew ? (
-						<div>
-							<StarIcon />
-							New!
-						</div>
-					) : (
-						<></>
-					)}
-					{product?.extra?.isBest ? (
-						<div>
-							<ThumbUpIcon />
-							Best!
-						</div>
-					) : (
-						<></>
-					)}
-				</div>
-				<div>
-					<div>
-						<ShowStarRating rating={rating} />
-					</div>
-					<span>{rating}</span>
-				</div>
-				<div>
-					<img src="https://svgsilh.com/svg/2028515.svg" alt="음파" />
-				</div>
-			</article>
-			<article>
-				<div>
-					<button>
-						<BookmarkOutlinedIcon />
-						{product?.bookmarks ? product?.bookmarks.length : 0}
-					</button>
-					{!loggedIn ? (
-						<button type="button" onClick={handelSignIn}>
-							<CheckIcon />
-							구매하기
-							{product?.buyQuantity ? product?.buyQuantity : 0}
-						</button>
-					) : loggedIn && logState === product?.seller_id ? (
-						<Link to={`/productmanage/${product?._id}`}>
-							<CheckIcon />
-							상품 관리
-						</Link>
-					) : (loggedIn && order?.length === 0) || order === undefined ? (
-						<Link to={`/productpurchase/${product?._id}`}>
-							<CheckIcon />
-							구매하기
-							{product?.buyQuantity ? product?.buyQuantity : 0}
-						</Link>
-					) : (
-						<a
-							href={`https://localhost/api/files/download/${product?.extra?.soundFile.name}?name=${product?.extra?.soundFile.originalname}`}
-							download={true}
-						>
-							<DownloadIcon />
-							다운로드
-						</a>
-					)}
-				</div>
-			</article>
+			<Heading>상세 페이지</Heading>
+			<ProductDetailComponent product={product} genre={genre} rating={rating} />
+			<ProductDetailExtraLink
+				product={product}
+				order={order}
+				loggedIn={loggedIn}
+				logState={logState}
+			/>
 			<ReplyContainer>
 				<h3>
 					<ModeCommentIcon />
@@ -335,6 +244,9 @@ function ProductDetail() {
 									onChangeActive={(_, newHover) => {
 										setHover(newHover);
 									}}
+									emptyIcon={
+										<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
+									}
 								/>
 							</div>
 							<label htmlFor="content" className="a11yHidden">
