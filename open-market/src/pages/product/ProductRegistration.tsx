@@ -2,6 +2,7 @@ import FormInput from "@/components/FormInput";
 import FunctionalButton from "@/components/FunctionalButton";
 import SelectGenre from "@/components/SelectGenre";
 import Textarea from "@/components/Textarea";
+import UploadLoadingSpinner from "@/components/uploadLoadingSpinner";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
@@ -96,6 +97,7 @@ const PostImageWrapper = styled.div`
 `;
 const PostAudioWrapper = styled.div`
 	width: 211px;
+	height: 116px;
 	background-color: ${Common.colors.white};
 	border-radius: 10px;
 
@@ -189,6 +191,8 @@ function ProductRegistration() {
 		},
 	});
 	const [category, setCategory] = useState<CategoryCode[]>();
+	const [imageLoading, setImageLoading] = useState<boolean>(false);
+	const [audioLoading, setAudioLoading] = useState<boolean>(false);
 
 	//비로그인 상태 체크
 	useRequireAuth();
@@ -280,6 +284,7 @@ function ProductRegistration() {
 
 		fetchCategory();
 	}, []);
+
 	return (
 		<ProductRegistSection>
 			<Helmet>
@@ -294,13 +299,23 @@ function ProductRegistration() {
 								type="file"
 								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
 								onChange={(e: { target: { files: any } }) => {
-									uploadFile(e.target.files[0], setPostItem, "image");
+									setImageLoading(true);
+									uploadFile(e.target.files[0], setPostItem, "image")
+										.then(() => {
+											setImageLoading(false);
+										})
+										.catch((error) => {
+											console.log(error);
+											setImageLoading(false);
+										});
 								}}
 								className="PostImage"
 								name="photo"
 								id="photo"
 							/>
-							{postItem?.mainImages[0].path !== "" ? (
+							{imageLoading ? (
+								<UploadLoadingSpinner width="300px" height="300px" />
+							) : postItem?.mainImages[0].path !== "" ? (
 								<img
 									className="UploadImage"
 									src={postItem?.mainImages[0].path}
@@ -363,11 +378,21 @@ function ProductRegistration() {
 										name="mp3"
 										className="PostAudio"
 										id="mp3"
-										onChange={(e: { target: { files: any } }) =>
+										onChange={(e: { target: { files: any } }) => {
+											setAudioLoading(true);
 											uploadFile(e.target.files[0], setPostItem, "soundFile")
-										}
+												.then(() => {
+													setAudioLoading(false);
+												})
+												.catch((error) => {
+													console.log(error);
+													setAudioLoading(false);
+												});
+										}}
 									/>
-									{postItem?.extra.soundFile.path !== "" ? (
+									{audioLoading ? (
+										<UploadLoadingSpinner width="211px" height="116px" />
+									) : postItem?.extra.soundFile.path !== "" ? (
 										<span className="UploadAudioFile">
 											{postItem?.extra.soundFile.name}
 										</span>
