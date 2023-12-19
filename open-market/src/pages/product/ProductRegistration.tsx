@@ -2,7 +2,7 @@ import FormInput from "@/components/FormInput";
 import FunctionalButton from "@/components/FunctionalButton";
 import SelectGenre from "@/components/SelectGenre";
 import Textarea from "@/components/Textarea";
-import UploadLoadingSpinner from "@/components/uploadLoadingSpinner";
+import UploadLoadingSpinner from "@/components/UploadLoadingSpinner";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
