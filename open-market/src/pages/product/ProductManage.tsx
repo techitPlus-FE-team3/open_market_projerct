@@ -2,7 +2,7 @@ import FunctionalButton from "@/components/FunctionalButton";
 import Textarea from "@/components/Textarea";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { Common } from "@/styles/common";
-import { axiosInstance } from "@/utils";
+import { axiosInstance, numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
 import CircleIcon from "@mui/icons-material/Circle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
@@ -280,7 +280,11 @@ function ProductManage() {
 				</FormTopLayout>
 				<FlexLayout>
 					<ProductItemWrapper large>
-						<ProductLabel>판매 수익</ProductLabel>
+						<ProductLabel>
+							판매 수익 (판매 가격:
+							<span> {numberWithComma(userProductInfo?.price!)}₩</span>)
+						</ProductLabel>
+
 						<ProductValue large>
 							{typeof userProductInfo?.buyQuantity !== "undefined"
 								? userProductInfo?.buyQuantity * userProductInfo?.price
