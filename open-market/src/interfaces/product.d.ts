@@ -14,6 +14,7 @@ interface Product {
 	createdAt: string;
 	updatedAt: string;
 	extra?: {
+		sellerName: string;
 		isNew: boolean;
 		isBest: boolean;
 		category: string;
