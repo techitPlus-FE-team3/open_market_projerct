@@ -9,7 +9,7 @@ import ReplyListItem, {
 } from "@/components/ReplyComponent";
 import { loggedInState } from "@/states/authState";
 
-import { axiosInstance, debounce } from "@/utils";
+import { axiosInstance, debounce, formatDate } from "@/utils";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import StarIcon from "@mui/icons-material/Star";
@@ -38,6 +38,7 @@ function ProductDetail() {
 	const [replyContent, setReplyContent] = useState<string>();
 	const [category, setCategory] = useState<CategoryCode[]>();
 	const [genre, setGenre] = useState<string>();
+	const [createdAt, setCreatedAt] = useState<string>();
 
 	async function getProduct(id: string) {
 		try {
@@ -46,6 +47,7 @@ function ProductDetail() {
 			);
 			setProduct(response.data.item);
 			setRating(getRating(response.data.item));
+			setCreatedAt(formatDate(response.data.item.createdAt));
 			if (loggedIn) {
 				getUser(Number(localStorage.getItem("_id")!));
 				getOrder(Number(id)!);
@@ -201,7 +203,12 @@ function ProductDetail() {
 				<title>Product Detail - 모두의 오디오 MODI</title>
 			</Helmet>
 			<Heading>상세 페이지</Heading>
-			<ProductDetailComponent product={product} genre={genre} rating={rating} />
+			<ProductDetailComponent
+				product={product}
+				genre={genre}
+				rating={rating}
+				createdAt={createdAt!}
+			/>
 			<ProductDetailExtraLink
 				product={product}
 				order={order}
