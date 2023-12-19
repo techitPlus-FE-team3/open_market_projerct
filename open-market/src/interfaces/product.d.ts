@@ -54,6 +54,9 @@ interface Reply {
 		name: string;
 		_id: number;
 	};
+	extra?: {
+		profileImage: string;
+	};
 }
 
 interface ReplyResponse {
