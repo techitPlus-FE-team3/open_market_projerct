@@ -6,6 +6,7 @@ import ReplyListItem, {
 	ReplyContainer,
 	ReplyInputForm,
 	ReplyTextarea,
+	ReplyUserProfileImage,
 } from "@/components/ReplyComponent";
 import { loggedInState } from "@/states/authState";
 
@@ -99,6 +100,7 @@ function ProductDetail() {
 					product_id: Number(productId),
 					rating: ratingValue,
 					content: replyContent,
+					extra: { profileImage: currentUser?.extra?.profileImage },
 				},
 				{
 					headers: {
@@ -231,7 +233,10 @@ function ProductDetail() {
 						<ReplyInputForm action="submit">
 							<span>
 								{currentUser?.extra?.profileImage ? (
-									currentUser?.extra?.profileImage
+									<ReplyUserProfileImage
+										src={currentUser?.extra?.profileImage}
+										alt={`${currentUser?.name} 프로필 이미지`}
+									/>
 								) : (
 									<AccountCircleIcon />
 								)}
