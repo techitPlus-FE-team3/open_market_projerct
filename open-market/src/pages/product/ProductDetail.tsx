@@ -26,7 +26,7 @@ function ProductDetail() {
 
 	const loggedIn = useRecoilValue(loggedInState);
 
-	const replyRef = useRef<HTMLTextAreaElement>(null);
+	const replyRef = useRef<HTMLTextAreaElement & HTMLDivElement>(null);
 
 	const [product, setProduct] = useState<Product>();
 	const [rating, setRating] = useState(0);
@@ -263,7 +263,7 @@ function ProductDetail() {
 								<ReplyTextarea
 									id="content"
 									name="content"
-									// ref={replyRef}
+									ref={replyRef}
 									onChange={debounce(
 										(e: {
 											target: { value: SetStateAction<string | undefined> };
