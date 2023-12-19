@@ -44,8 +44,8 @@ const BannerSection = styled.section<bannerProps>`
 
 function Index() {
 	const searchRef = useRef<HTMLInputElement>(null);
-
-	const fetchedProductList = useRecoilValue(fetchProductListState);
+	const [limit, setLimit] = useState(4);
+	const fetchedProductList = useRecoilValue(fetchProductListState(limit));
 	const [productList, setProductList] = useRecoilState(productListState);
 	const [searchKeyword, setSearchKeyword] =
 		useRecoilState<string>(searchKeywordState);
@@ -63,6 +63,23 @@ function Index() {
 			searchRef.current!.value.split(" ").join("").toLowerCase(),
 		);
 	}
+
+	useEffect(() => {
+		setProductList(fetchedProductList!);
+
+		async function fetchCategory() {
+			try {
+				const response = await axiosInstance.get(`/codes/productCategory`);
+				const responseData = response.data.item;
+				const categoryCodeList = responseData.productCategory.codes;
+				setCategory(categoryCodeList);
+			} catch (error) {
+				console.error("상품 리스트 조회 실패:", error);
+			}
+		}
+
+		fetchCategory();
+	}, [limit]);
 
 	useEffect(() => {
 		setProductList(fetchedProductList!);
@@ -185,7 +202,7 @@ function Index() {
 								})
 							)
 						) : (
-							productList?.slice(0, 4).map((product) => {
+							fetchedProductList?.map((product) => {
 								return (
 									<ProductListItem
 										key={product._id}
@@ -196,7 +213,13 @@ function Index() {
 							})
 						)}
 					</ProductList>
-					<button type="submit" className="moreButton">
+					<button
+						type="submit"
+						className="moreButton"
+						onClick={() => {
+							setLimit(limit + 4);
+						}}
+					>
 						더보기
 					</button>
 				</ProductContainer>

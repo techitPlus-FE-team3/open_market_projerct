@@ -25,7 +25,6 @@ export const fetchProductListState = selectorFamily({
 		}
 	},
 });
-
 export const searchKeywordState = atom<string>({
 	key: "searchKeywordState",
 	default: "",
