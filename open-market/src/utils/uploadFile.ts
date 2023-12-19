@@ -24,6 +24,8 @@ export async function uploadFile(
 		const filePath = `${API_KEY}${response.data.file.path}`;
 		const name = response.data.file.name;
 		const originalname = response.data.file.originalname;
+		const duration =
+			itemType === "soundFile" ? await loadAudio(filePath) : null;
 
 		// 상태 업데이트
 		setItemCallback((prevItem) => {
@@ -47,6 +49,7 @@ export async function uploadFile(
 							path: filePath,
 							name: name,
 							originalname: originalname,
+							duration: duration,
 						},
 					},
 				};
@@ -61,10 +64,33 @@ export async function uploadFile(
 				"aria-live": "polite",
 			},
 		});
-
 		return filePath;
 	} catch (error) {
 		console.error("에러 발생:", error);
 		return null;
+	}
+}
+
+async function loadAudio(filePath: string) {
+	try {
+		// Load an audio file
+		const response = await fetch(filePath);
+		// Decode it
+		const buffer = await response.arrayBuffer();
+		return new Promise((resolve, reject) => {
+			const audioContext = new (window.AudioContext || window.AudioContext)();
+			audioContext.decodeAudioData(
+				buffer,
+				(decodedData) => {
+					resolve(decodedData.duration);
+				},
+				(err) => {
+					console.error("Error decoding audio data:", err);
+					reject(err);
+				},
+			);
+		});
+	} catch (error) {
+		console.error(error);
 	}
 }
