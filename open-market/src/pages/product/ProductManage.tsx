@@ -168,6 +168,7 @@ function ProductManage() {
 	function handleProductDelete(e: { preventDefault: () => void }) {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
+		const userId = localStorage.getItem("_id");
 		const result = confirm("상품을 정말로 삭제하시겠습니까?");
 		if (!result) return;
 		try {
@@ -184,7 +185,7 @@ function ProductManage() {
 							"aria-live": "polite",
 						},
 					});
-					navigate(-1);
+					navigate(`/user/${userId}/products`);
 				})
 				.catch((error) => {
 					console.error("에러 발생:", error);
