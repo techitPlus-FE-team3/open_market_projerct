@@ -13,7 +13,7 @@ import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import {
 	categoryKeywordState,
-	fetchproductListState,
+	fetchProductListState,
 	productListState,
 	searchKeywordState,
 	searchedProductListState,
@@ -45,7 +45,7 @@ const BannerSection = styled.section<bannerProps>`
 function Index() {
 	const searchRef = useRef<HTMLInputElement>(null);
 
-	const fetchedProductList = useRecoilValue(fetchproductListState);
+	const fetchedProductList = useRecoilValue(fetchProductListState);
 	const [productList, setProductList] = useRecoilState(productListState);
 	const [searchKeyword, setSearchKeyword] =
 		useRecoilState<string>(searchKeywordState);
