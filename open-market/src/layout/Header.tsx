@@ -243,6 +243,7 @@ const Header = () => {
 							setSearchKeyword("");
 							setCategoryFilter("all");
 							localStorage.removeItem("userProductsInfo");
+							localStorage.removeItem("searchOrderKeyword");
 						}}
 					>
 						<img
@@ -313,6 +314,7 @@ const Header = () => {
 								onClick={() => {
 									handleMenuClose();
 									localStorage.removeItem("userProductsInfo");
+									localStorage.removeItem("searchOrderKeyword");
 								}}
 							>
 								마이페이지
