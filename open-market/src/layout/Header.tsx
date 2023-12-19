@@ -24,7 +24,7 @@ import { KeyboardEvent, useEffect, useState } from "react";
 import { loggedInState } from "@/states/authState";
 import {
 	categoryKeywordState,
-	fetchproductListState,
+	fetchProductListState,
 	productListState,
 	searchKeywordState,
 	searchedProductListState,
@@ -133,7 +133,7 @@ const Header = () => {
 	const [isLogoLoaded, setIsLogoLoaded] = useState(false); // 로고 로딩 상태 관리
 
 	const [productList, setProductList] = useRecoilState(productListState);
-	const fetchedProductList = useRecoilValue(fetchproductListState);
+	const fetchedProductList = useRecoilValue(fetchProductListState(0));
 
 	const { refetch } = useQuery(["productList", productList], fetchProductList, {
 		onSuccess: (data) => {
