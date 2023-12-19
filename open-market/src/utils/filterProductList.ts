@@ -5,6 +5,8 @@ export function searchProductList({
 	searchKeyword: string;
 	productList: Product[];
 }) {
+	searchKeyword = searchKeyword.toLowerCase();
+
 	const filteredList = productList.filter((product) => {
 		const name = product.name.split(" ").join("").toLowerCase();
 		const genre = product.extra?.category;

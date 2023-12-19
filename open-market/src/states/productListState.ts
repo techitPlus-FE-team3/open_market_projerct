@@ -1,24 +1,30 @@
 import { axiosInstance } from "@/utils";
-import { atom, selector } from "recoil";
+import { atom, selectorFamily } from "recoil";
 
 export const productListState = atom<Product[]>({
 	key: "productListState",
 	default: [],
 });
 
-export const fetchproductListState = selector({
-	key: "fetchproductListState",
-	get: async () => {
+export const fetchProductListState = selectorFamily({
+	key: "fetchProductListState",
+	get: (limit) => async () => {
 		try {
-			const response =
-				await axiosInstance.get<ProductListResponse>("/products");
+			const response = await axiosInstance.get<ProductListResponse>(
+				"/products",
+				{
+					params: {
+						page: 1,
+						limit,
+					},
+				},
+			);
 			return response.data.item;
 		} catch (err) {
 			console.error(err);
 		}
 	},
 });
-
 export const searchKeywordState = atom<string>({
 	key: "searchKeywordState",
 	default: "",

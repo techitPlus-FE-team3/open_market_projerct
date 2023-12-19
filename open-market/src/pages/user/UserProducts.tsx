@@ -56,6 +56,19 @@ function UserProducts() {
 		}
 	}
 
+	function handleSearchKeyword(e: { preventDefault: () => void }) {
+		e.preventDefault();
+
+		if (searchRef.current?.value) {
+			setSearchKeyword(
+				searchRef.current.value.split(" ").join("").toLowerCase(),
+			);
+		} else {
+			setSearchKeyword("");
+			fetchUserProductsInfo();
+		}
+	}
+
 	const handleSortByProfit = useCallback(() => {
 		let sortedProductList =
 			searchedList.length > 0
@@ -85,19 +98,6 @@ function UserProducts() {
 
 		setItemWithExpireTime("userProductsInfo", sortedProductList, 5000 * 100);
 	}, [userProductsInfo, searchedList]);
-
-	const handleSearchKeyword = (e: { preventDefault: () => void }) => {
-		e.preventDefault();
-
-		if (searchRef.current?.value) {
-			setSearchKeyword(
-				searchRef.current.value.split(" ").join("").toLowerCase(),
-			);
-		} else {
-			setSearchKeyword("");
-			fetchUserProductsInfo();
-		}
-	};
 
 	useEffect(() => {
 		// 로컬 스토리지에서 데이터를 가져와 시도

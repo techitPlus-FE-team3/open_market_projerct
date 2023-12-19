@@ -24,7 +24,7 @@ import { KeyboardEvent, useEffect, useState } from "react";
 import { loggedInState } from "@/states/authState";
 import {
 	categoryKeywordState,
-	fetchproductListState,
+	fetchProductListState,
 	productListState,
 	searchKeywordState,
 	searchedProductListState,
@@ -133,7 +133,7 @@ const Header = () => {
 	const [isLogoLoaded, setIsLogoLoaded] = useState(false); // 로고 로딩 상태 관리
 
 	const [productList, setProductList] = useRecoilState(productListState);
-	const fetchedProductList = useRecoilValue(fetchproductListState);
+	const fetchedProductList = useRecoilValue(fetchProductListState(0));
 
 	const { refetch } = useQuery(["productList", productList], fetchProductList, {
 		onSuccess: (data) => {
@@ -187,9 +187,8 @@ const Header = () => {
 	}
 
 	function handleLogout() {
-		localStorage.removeItem("accessToken");
-		localStorage.removeItem("refreshToken");
-		localStorage.removeItem("_id");
+		localStorage.clear();
+		sessionStorage.clear();
 		setLoggedIn(false);
 
 		toast.success(`로그아웃 되었습니다.`);
@@ -243,6 +242,8 @@ const Header = () => {
 						onClick={() => {
 							setSearchKeyword("");
 							setCategoryFilter("all");
+							localStorage.removeItem("userProductsInfo");
+							localStorage.removeItem("searchOrderKeyword");
 						}}
 					>
 						<img
@@ -307,7 +308,15 @@ const Header = () => {
 							open={Boolean(anchorEl)}
 							onClose={handleMenuClose}
 						>
-							<MenuItem component={Link} to="/mypage" onClick={handleMenuClose}>
+							<MenuItem
+								component={Link}
+								to="/mypage"
+								onClick={() => {
+									handleMenuClose();
+									localStorage.removeItem("userProductsInfo");
+									localStorage.removeItem("searchOrderKeyword");
+								}}
+							>
 								마이페이지
 							</MenuItem>
 							<MenuItem onClick={handleLogout}>

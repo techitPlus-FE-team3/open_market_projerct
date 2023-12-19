@@ -44,13 +44,15 @@ interface ProductFiles {
 interface Reply {
 	_id: number;
 	order_id: number;
-	user_id: number;
 	product_id: number;
 	rating: number;
 	content: string;
 	createdAt: string;
-	userName: string;
 	product: Product;
+	user: {
+		name: string;
+		_id: number;
+	};
 }
 
 interface ReplyResponse {

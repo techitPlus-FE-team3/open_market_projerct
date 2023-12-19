@@ -8,6 +8,7 @@ interface SearchBarProps {
 	onClick: MouseEventHandler<HTMLButtonElement>;
 	searchRef?: React.LegacyRef<HTMLInputElement> | undefined;
 	showable?: boolean;
+	onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 interface DisplayProps {

@@ -299,7 +299,7 @@ function UserEdit() {
 				});
 
 				if (response.data.ok) {
-					const filePath = `${API_KEY.response.data.file.path}`;
+					const filePath = `${API_KEY}${response.data.file.path}`;
 					// 상태 업데이트로 이미지 경로 저장
 					setUserData((prevUserData) => ({
 						...prevUserData,

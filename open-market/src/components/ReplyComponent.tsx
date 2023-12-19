@@ -156,13 +156,12 @@ export function ShowStarRating({ rating }: { rating: number }) {
 		/>
 	);
 }
-
 function ReplyListItem({ reply }: { reply: Reply }) {
 	return (
 		<StyledReplyListItem key={reply._id}>
 			<div>
 				<AccountCircleIcon />
-				<ReplyBlock user>{reply.userName}</ReplyBlock>
+				<ReplyBlock user>{reply.user.name}</ReplyBlock>
 			</div>
 			<ReplyBlock>
 				<span>{reply.content}</span>

@@ -166,7 +166,7 @@ function ProductPurchase() {
 				);
 				if (response.data.ok) {
 					toast.success("성공적으로 구매했습니다!");
-					navigate("/");
+					navigate(`/orders`);
 				}
 			} catch (err) {
 				console.error(err);
