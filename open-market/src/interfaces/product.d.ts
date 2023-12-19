@@ -38,6 +38,7 @@ interface ProductFiles {
 	path: string;
 	name: string;
 	originalname: string;
+	duration?: number;
 }
 
 // Reply

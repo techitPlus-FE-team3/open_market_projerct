@@ -2,6 +2,7 @@ import FormInput from "@/components/FormInput";
 import FunctionalButton from "@/components/FunctionalButton";
 import SelectGenre from "@/components/SelectGenre";
 import Textarea from "@/components/Textarea";
+import UploadLoadingSpinner from "@/components/UploadLoadingSpinner";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
@@ -185,6 +186,9 @@ function ProductEdit() {
 			soundFile: { path: "", name: "", originalname: "" },
 		},
 	});
+	const [imageLoading, setImageLoading] = useState<boolean>(false);
+	const [audioLoading, setAudioLoading] = useState<boolean>(false);
+
 	useRequireAuth();
 
 	function handleEditProduct(e: { preventDefault: () => void }) {
@@ -318,13 +322,23 @@ function ProductEdit() {
 								type="file"
 								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
 								onChange={(e: { target: { files: any } }) => {
-									uploadFile(e.target.files[0], setPostItem, "image");
+									setImageLoading(true);
+									uploadFile(e.target.files[0], setPostItem, "image")
+										.then(() => {
+											setImageLoading(false);
+										})
+										.catch((error) => {
+											console.log(error);
+											setImageLoading(false);
+										});
 								}}
 								className="PostImage"
 								name="photo"
 								id="photo"
 							/>
-							{postItem?.mainImages[0].path !== "" ? (
+							{imageLoading ? (
+								<UploadLoadingSpinner width="300px" height="300px" />
+							) : postItem?.mainImages[0].path !== "" ? (
 								<img
 									className="UploadImage"
 									src={postItem?.mainImages[0].path}
@@ -390,11 +404,21 @@ function ProductEdit() {
 										name="mp3"
 										className="PostAudio"
 										id="mp3"
-										onChange={(e: { target: { files: any } }) =>
+										onChange={(e: { target: { files: any } }) => {
+											setAudioLoading(true);
 											uploadFile(e.target.files[0], setPostItem, "soundFile")
-										}
+												.then(() => {
+													setAudioLoading(false);
+												})
+												.catch((error) => {
+													console.log(error);
+													setAudioLoading(false);
+												});
+										}}
 									/>
-									{postItem?.extra.soundFile.path !== "" ? (
+									{audioLoading ? (
+										<UploadLoadingSpinner width="211px" height="116px" />
+									) : postItem?.extra.soundFile.path !== "" ? (
 										<span className="UploadAudioFile">
 											{postItem?.extra.soundFile.name}
 										</span>
