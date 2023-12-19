@@ -6,8 +6,8 @@ export const productListState = atom<Product[]>({
 	default: [],
 });
 
-export const fetchproductListState = selector({
-	key: "fetchproductListState",
+export const fetchProductListState = selector({
+	key: "fetchProductListState",
 	get: async () => {
 		try {
 			const response =
