@@ -12,6 +12,11 @@ import {
 	useState,
 } from "react";
 
+interface MusicPlayerProps {
+	soundFile: ProductFiles;
+	showable?: boolean;
+}
+
 interface WidthProps {
 	showable?: boolean;
 }
@@ -34,7 +39,7 @@ const PlayButton = styled.button`
 	border: none;
 `;
 
-function MusicPlayer({ src, showable }: { src: string; showable?: boolean }) {
+function MusicPlayer({ soundFile, showable }: MusicPlayerProps) {
 	const [percentage, setPercentage] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [duration, setDuration] = useState(0);
@@ -66,7 +71,7 @@ function MusicPlayer({ src, showable }: { src: string; showable?: boolean }) {
 
 	function getCurrentDuration(e: SyntheticEvent<HTMLAudioElement>) {
 		const percent = (
-			(e.currentTarget.currentTime / e.currentTarget.duration) *
+			(e.currentTarget.currentTime / soundFile.duration!) *
 			100
 		).toFixed(2);
 		const time = e.currentTarget.currentTime;
@@ -102,10 +107,10 @@ function MusicPlayer({ src, showable }: { src: string; showable?: boolean }) {
 			<audio
 				ref={audioRef}
 				onTimeUpdate={getCurrentDuration}
-				onLoadedData={(e) => {
-					setDuration(+e.currentTarget.duration.toFixed(2));
+				onLoadedData={() => {
+					setDuration(+soundFile.duration!.toFixed(2));
 				}}
-				src={src}
+				src={soundFile.path}
 			/>
 			<ControlPanel
 				duration={duration}
