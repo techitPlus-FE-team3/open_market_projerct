@@ -210,7 +210,7 @@ function ProductDetailComponent({
 			</ProductMediaContainer>
 			<ProductDetailInfo>
 				<span className="title">{product?.name}</span>
-				<span className="seller">{product?.seller_id}</span>
+				<span className="seller">{product?.extra?.sellerName}</span>
 				<span>{createdAt}</span>
 				<ProductDetailContentContainer>
 					<span className="genre">{genre}</span>
