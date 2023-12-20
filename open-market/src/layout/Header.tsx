@@ -149,7 +149,7 @@ const Header = () => {
 	);
 	const [__, setCategoryFilter] = useRecoilState<string>(categoryKeywordState);
 
-	const currentUser = useRecoilValue(currentUserState);
+	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 
 	const navigate = useNavigate();
 
@@ -188,7 +188,9 @@ const Header = () => {
 	}
 
 	function handleLogout() {
-		localStorage.clear();
+		setCurrentUser(null);
+		localStorage.removeItem('accessToken');
+		localStorage.removeItem('refreshToken');
 		sessionStorage.clear();
 
 		toast.success(`로그아웃 되었습니다.`);
