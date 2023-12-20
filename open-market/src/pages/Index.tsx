@@ -21,9 +21,8 @@ import {
 } from "@/states/productListState";
 import { Common } from "@/styles/common";
 import {
-    axiosInstance,
     categoryFilterProductList,
-    searchProductList,
+    searchProductList
 } from "@/utils";
 import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
