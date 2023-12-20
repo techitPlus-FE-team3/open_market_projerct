@@ -155,7 +155,7 @@ const Image = styled.img`
 // API 호출을 위한 함수
 async function fetchUserInfo(userId: string) {
 	const accessToken = localStorage.getItem("accessToken");
-	const response = await axiosInstance.get(`/users/${currentUser!._id}`, {
+	const response = await axiosInstance.get(`/users/${userId}`, {
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
