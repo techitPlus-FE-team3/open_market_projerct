@@ -12,14 +12,13 @@ import {
 import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import { useCategoryFilterProductList } from "@/hooks/useCategoryFilterProductList";
-import { useSearchProductList } from "@/hooks/useSearchProductList";
 import { codeState } from "@/states/categoryState";
 import {
 	categoryValueState,
 	searchKeywordState,
 } from "@/states/productListState";
 import { Common } from "@/styles/common";
-import { axiosInstance } from "@/utils";
+import { axiosInstance, searchProductList } from "@/utils";
 import styled from "@emotion/styled";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
@@ -100,11 +99,6 @@ function Index() {
 
 	const fetchedFilterProductList = categoryFilterData?.item;
 
-	const { data: searchResult } = useSearchProductList({
-		resource: "products",
-		searchKeyword,
-	});
-
 	function handleSearchKeyword() {
 		setSearchKeyword(
 			searchRef.current!.value.split(" ").join("").toLowerCase(),
@@ -124,8 +118,18 @@ function Index() {
 	}, [categoryValue]);
 
 	useEffect(() => {
-		setSearchedProductList(searchResult);
-	}, [searchKeyword, searchResult]);
+		// 별도의 비동기 함수를 선언합니다.
+		const fetchSearchResult = async () => {
+			const searchResult = await searchProductList({
+				resource: "products",
+				searchKeyword,
+			});
+			setSearchedProductList(searchResult);
+		};
+
+		// 선언한 비동기 함수를 호출합니다.
+		fetchSearchResult();
+	}, [searchKeyword]);
 
 	// 로딩 중일 때
 	if (isLoading || categoryFilterLoading) {
