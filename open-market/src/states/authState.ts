@@ -1,6 +1,13 @@
 import { atom } from "recoil";
+import { recoilPersist } from "recoil-persist";
 
-export const loggedInState = atom({
-	key: "loggedInState",
-	default: false,
+const { persistAtom } = recoilPersist({
+	key: "currentUser",
+	storage: localStorage,
+});
+
+export const currentUserState = atom<CurrentUser | null>({
+	key: "currentUserState",
+	default: null,
+	effects: [persistAtom],
 });
