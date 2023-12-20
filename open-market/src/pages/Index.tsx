@@ -1,33 +1,33 @@
 import {
-	FilterButton,
-	FilterContainer,
-	FilterSelect,
+    FilterButton,
+    FilterContainer,
+    FilterSelect,
 } from "@/components/FilterComponent";
 import {
-	Heading,
-	ProductContainer,
-	ProductList,
-	ProductSection,
+    Heading,
+    ProductContainer,
+    ProductList,
+    ProductSection,
 } from "@/components/ProductListComponent";
 import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import {
-	categoryKeywordState,
-	fetchProductListState,
-	productListState,
-	searchKeywordState,
-	searchedProductListState,
+    categoryKeywordState,
+    fetchProductListState,
+    productListState,
+    searchKeywordState,
+    searchedProductListState,
 } from "@/states/productListState";
+import { Common } from "@/styles/common";
 import {
-	axiosInstance,
-	categoryFilterProductList,
-	searchProductList,
+    axiosInstance,
+    categoryFilterProductList,
+    searchProductList,
 } from "@/utils";
 import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { Common } from "@/styles/common";
 
 interface bannerProps {
 	showable?: boolean;
