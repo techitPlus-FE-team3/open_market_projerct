@@ -1,6 +1,7 @@
 import FunctionalButton from "@/components/FunctionalButton";
 import Textarea from "@/components/Textarea";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import { axiosInstance, numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
@@ -14,6 +15,7 @@ import { Helmet } from "react-helmet-async";
 
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 interface FlexLayoutProps {
 	right?: boolean;
@@ -158,6 +160,7 @@ const LinkedEditButton = styled(Link)`
 function ProductManage() {
 	const navigate = useNavigate();
 	const { productId } = useParams();
+	const currentUser = useRecoilValue(currentUserState);
 	const [userProductInfo, setUserProductInfo] = useState<Product>();
 	const [category, setCategory] = useState<CategoryCode[]>();
 	const [genre, setGenre] = useState<string>();
@@ -168,7 +171,6 @@ function ProductManage() {
 	function handleProductDelete(e: { preventDefault: () => void }) {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
-		const userId = localStorage.getItem("_id");
 		const result = confirm("상품을 정말로 삭제하시겠습니까?");
 		if (!result) return;
 		try {
@@ -185,7 +187,7 @@ function ProductManage() {
 							"aria-live": "polite",
 						},
 					});
-					navigate(`/user/${userId}/products`);
+					navigate(`/user/${currentUser?._id}/products`);
 				})
 				.catch((error) => {
 					console.error("에러 발생:", error);

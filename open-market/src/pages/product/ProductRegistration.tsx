@@ -200,20 +200,6 @@ function ProductRegistration() {
 	//비로그인 상태 체크
 	useRequireAuth();
 
-	async function getUser(id: number) {
-		const accessToken = localStorage.getItem("accessToken");
-		try {
-			const response = await axiosInstance.get<UserResponse>(`/users/${id}`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			});
-			setSellerName(response.data.item.name);
-		} catch (err) {
-			console.error(err);
-		}
-	}
-
 	function handlePostProductRegist(e: { preventDefault: () => void }) {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
@@ -280,7 +266,6 @@ function ProductRegistration() {
 
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");
-		const userId = localStorage.getItem("_id");
 
 		async function fetchCategory() {
 			try {
@@ -301,7 +286,6 @@ function ProductRegistration() {
 		}
 
 		fetchCategory();
-		getUser(+userId!);
 	}, []);
 
 	useEffect(() => {

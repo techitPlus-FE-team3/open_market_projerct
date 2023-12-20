@@ -1,5 +1,6 @@
 import MyPageList from "@/components/MyPageList";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
@@ -7,6 +8,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 const Section = styled.section`
 	width: 1440px;
@@ -156,7 +158,7 @@ function MyPage() {
 
 	const [bookmarkDetails, setBookmarkDetails] = useState<any[]>([]);
 
-	const userId = localStorage.getItem("_id");
+	const currentUser = useRecoilValue(currentUserState);
 	const accessToken = localStorage.getItem("accessToken");
 	const historyList = JSON.parse(
 		sessionStorage.getItem("historyList") as string,
@@ -169,7 +171,7 @@ function MyPage() {
 		async function fetchUserInfo() {
 			try {
 				const response = await axiosInstance.get<UserResponse>(
-					`/users/${userId}`,
+					`/users/${currentUser!._id}`,
 					{
 						headers: {
 							Authorization: `Bearer ${accessToken}`,
@@ -266,7 +268,9 @@ function MyPage() {
 								<p>{userInfo.phone}</p>
 							</div>
 						</PersonalInfoItem>
-						<StyledLink to={`/useredit/${userId}`}>회원정보 수정</StyledLink>
+						<StyledLink to={`/useredit/${currentUser!._id}`}>
+							회원정보 수정
+						</StyledLink>
 					</PersonalInfo>
 					<Comment>
 						<Title>내가 쓴 댓글</Title>
@@ -335,7 +339,7 @@ function MyPage() {
 					</Link>
 				)}
 				linkText="전체보기"
-				linkUrl={`/user/${userId}/products`}
+				linkUrl={`/user/${currentUser!._id}/products`}
 			/>
 		</Section>
 	);
