@@ -4,9 +4,9 @@ import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import Skeleton from "@mui/material/Skeleton";
 import { Helmet } from "react-helmet-async";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
@@ -81,8 +81,9 @@ const PersonalInfoItem = styled.div`
 `;
 
 const UserImage = styled.img`
-	width: 100%;
-	height: 100%;
+	width: 200px;
+	height: 200px;
+	object-fit: cover;
 	border-radius: 50%;
 `;
 
@@ -151,97 +152,94 @@ const Image = styled.img`
 	object-fit: cover;
 `;
 
-function MyPage() {
-	const [userInfo, setUserInfo] = useState<User | null>(null);
-	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
-	const [userOrdersInfo, setUserOrdersInfo] = useState<Order[]>([]);
-
-	const [bookmarkDetails, setBookmarkDetails] = useState<any[]>([]);
-
-	const currentUser = useRecoilValue(currentUserState);
+// API 호출을 위한 함수
+async function fetchUserInfo(userId: string) {
 	const accessToken = localStorage.getItem("accessToken");
+	const response = await axiosInstance.get(`/users/${currentUser!._id}`, {
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+	return response.data.item;
+}
+
+async function fetchUserProductsInfo(accessToken: string) {
+	const response = await axiosInstance.get(`/seller/products/`, {
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+	return response.data.item;
+}
+
+async function fetchUserOrderInfo(accessToken: string) {
+	const response = await axiosInstance.get(`/orders`, {
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+	return response.data.item;
+}
+
+async function fetchBookmarks(accessToken: string) {
+	const response = await axiosInstance.get(`/bookmarks`, {
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+	return response.data.item;
+}
+
+function MyPage() {
+	const currentUser = useRecoilValue(currentUserState);
+	const accessToken = localStorage.getItem("accessToken") || "";
+
 	const historyList = JSON.parse(
 		sessionStorage.getItem("historyList") as string,
 	);
 
+	const { data: userInfo, isLoading: isLoadingUserInfo } = useQuery({
+		queryKey: ["userInfo", currentUser!._id.toString()],
+		queryFn: () => fetchUserInfo(currentUser!._id.toString()),
+	});
+	const { data: userProductsInfo, isLoading: isLoadingProductsInfo } = useQuery(
+		{
+			queryKey: ["userProducts", currentUser!._id.toString()],
+			queryFn: () => fetchUserProductsInfo(accessToken),
+		},
+	);
+	const { data: userOrdersInfo, isLoading: isLoadingOrdersInfo } = useQuery({
+		queryKey: ["userOrders", currentUser!._id.toString()],
+		queryFn: () => fetchUserOrderInfo(accessToken),
+	});
+	const { data: bookmarkDetails, isLoading: isLoadingBookmarks } = useQuery({
+		queryKey: ["bookmarks", currentUser!._id.toString()],
+		queryFn: () => fetchBookmarks(accessToken),
+	});
+
 	// 비로그인 상태 체크
 	useRequireAuth();
 
-	useEffect(() => {
-		async function fetchUserInfo() {
-			try {
-				const response = await axiosInstance.get<UserResponse>(
-					`/users/${currentUser!._id}`,
-					{
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
-						},
-					},
-				);
-				setUserInfo(response.data.item);
-			} catch (error) {
-				if (axios.isAxiosError(error)) {
-					console.error("회원 정보 조회 실패:", error);
-				} else {
-					// 에러가 AxiosError가 아닌 경우
-					console.error("Unexpected error:", error);
-				}
-			}
-		}
+	const UserInfoSkeleton = () => (
+		<>
+			<Skeleton variant="circular" width={200} height={200} />
+			<Info>
+				<PersonalInfo>
+					<Skeleton variant="text" width={100} height={24} />
+					<Skeleton variant="text" width={960} height={12} />
+					<Skeleton variant="text" width={960} height={12} />
+				</PersonalInfo>
+				<Comment>
+					<Skeleton variant="text" width={100} height={24} />
+					<Skeleton variant="text" width={960} height={12} />
+					<Skeleton variant="text" width={960} height={12} />
+				</Comment>
+			</Info>
+		</>
+	);
 
-		async function fetchUserProductsInfo() {
-			try {
-				const response = await axiosInstance.get<ProductListResponse>(
-					`/seller/products/`,
-					{
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
-						},
-					},
-				);
-				setUserProductsInfo(response.data.item);
-			} catch (error) {
-				console.error("회원 정보 조회 실패:", error);
-			}
-		}
+	const profileImageUrl = userInfo?.extra?.profileImage || "public/user.svg";
 
-		async function fetchUserOrderInfo() {
-			try {
-				const response = await axiosInstance.get<OrderListResponse>("/orders", {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				});
-				setUserOrdersInfo(response.data.item);
-			} catch (err) {
-				console.error(err);
-			}
-		}
-
-		async function fetchBookmarks() {
-			try {
-				const response = await axiosInstance.get(`/bookmarks`, {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				});
-				setBookmarkDetails(response.data.item || []);
-			} catch (error) {
-				console.error("북마크 정보 조회 실패:", error);
-			}
-		}
-
-		fetchUserInfo();
-		fetchUserProductsInfo();
-		fetchUserOrderInfo();
-		fetchBookmarks();
-	}, [accessToken]);
-
-	if (!userInfo) {
-		return <div>Loading...</div>; // 로딩 처리
-	}
-
-	const profileImageUrl = userInfo.extra?.profileImage || "public/user.svg";
 	return (
 		<Section>
 			<Helmet>
@@ -250,60 +248,75 @@ function MyPage() {
 			<MainTitle>마이페이지</MainTitle>
 			<Article>
 				<InfoTitle>내 정보</InfoTitle>
-				<UserImage src={profileImageUrl} alt="회원 썸네일" />
-				<Info>
-					<PersonalInfo>
-						<Title>회원정보</Title>
-						<PersonalInfoItem>
-							<div>
-								<h5>이메일</h5>
-								<p>{userInfo.email}</p>
-							</div>
-							<div>
-								<h5>이름</h5>
-								<p>{userInfo.name}</p>
-							</div>
-							<div>
-								<h5>휴대폰 번호</h5>
-								<p>{userInfo.phone}</p>
-							</div>
-						</PersonalInfoItem>
-						<StyledLink to={`/useredit/${currentUser!._id}`}>
-							회원정보 수정
-						</StyledLink>
-					</PersonalInfo>
-					<Comment>
-						<Title>내가 쓴 댓글</Title>
-						<CommentInfo>
-							<div>
-								<h5>게시글 제목</h5>
-								<p>내용</p>
-							</div>
-							<div>
-								<h5>게시글 제목</h5>
-								<p>내용</p>
-							</div>
-							<div>
-								<h5>게시글 제목</h5>
-								<p>내용</p>
-							</div>
-						</CommentInfo>
-						<StyledLink to="/">전체보기</StyledLink>
-					</Comment>
-				</Info>
-			</Article>
-			<MyPageList
-				title="북마크"
-				data={bookmarkDetails.length !== 0 ? bookmarkDetails.slice(0, 5) : []}
-				emptyMessage="북마크가 없습니다."
-				renderItem={(item) => (
-					<Link to={`/productdetail/${item.product_id}`}>
-						<Image src={`${item.product.image.path}`} alt="앨범아트" />
-					</Link>
+				{isLoadingUserInfo ? (
+					<UserInfoSkeleton />
+				) : (
+					<>
+						<UserImage src={profileImageUrl} alt="회원 썸네일" />
+						<Info>
+							<PersonalInfo>
+								<Title>회원정보</Title>
+								<PersonalInfoItem>
+									<div>
+										<h5>이메일</h5>
+										<p>{userInfo.email}</p>
+									</div>
+									<div>
+										<h5>이름</h5>
+										<p>{userInfo.name}</p>
+									</div>
+									<div>
+										<h5>휴대폰 번호</h5>
+										<p>{userInfo.phone}</p>
+									</div>
+								</PersonalInfoItem>
+								<StyledLink to={`/useredit/${currentUser!._id}`}>
+									회원정보 수정
+								</StyledLink>
+							</PersonalInfo>
+							<Comment>
+								<Title>내가 쓴 댓글</Title>
+								<CommentInfo>
+									<div>
+										<h5>게시글 제목</h5>
+										<p>내용</p>
+									</div>
+									<div>
+										<h5>게시글 제목</h5>
+										<p>내용</p>
+									</div>
+									<div>
+										<h5>게시글 제목</h5>
+										<p>내용</p>
+									</div>
+								</CommentInfo>
+								<StyledLink to="/">전체보기</StyledLink>
+							</Comment>
+						</Info>
+					</>
 				)}
-				linkText="전체보기"
-				linkUrl="/"
-			/>
+			</Article>
+			{isLoadingBookmarks ? (
+				<Skeleton
+					variant="rounded"
+					width="100%"
+					height={241}
+					animation="wave"
+				/>
+			) : (
+				<MyPageList
+					title="북마크"
+					data={isLoadingBookmarks ? [] : (bookmarkDetails || []).slice(0, 5)}
+					emptyMessage="북마크가 없습니다."
+					renderItem={(item) => (
+						<Link to={`/productdetail/${item.product_id}`}>
+							<Image src={`${item.product.image.path}`} alt="앨범아트" />
+						</Link>
+					)}
+					linkText="전체보기"
+					linkUrl="/"
+				/>
+			)}
 			<MyPageList
 				title="히스토리"
 				data={historyList ? historyList.slice(0, 5) : []}
@@ -314,33 +327,53 @@ function MyPage() {
 					</Link>
 				)}
 			/>
-			<MyPageList
-				title="구매내역"
-				data={userOrdersInfo.length !== 0 ? userOrdersInfo.slice(0, 5) : []}
-				emptyMessage="구매내역이 없습니다."
-				renderItem={(item) => (
-					<Link to={`/productdetail/${item.products[0]._id}`}>
-						<Image
-							src={item.products[0].image.path}
-							alt={`${item.products[0].name} 사진`}
-						/>
-					</Link>
-				)}
-				linkText="전체보기"
-				linkUrl="/orders"
-			/>
-			<MyPageList
-				title="판매상품관리"
-				data={userProductsInfo.length !== 0 ? userProductsInfo.slice(0, 5) : []}
-				emptyMessage="판매내역이 없습니다."
-				renderItem={(item) => (
-					<Link to={`/productmanage/${item._id}`}>
-						<Image src={`${item.mainImages[0].path}`} alt="앨범아트" />
-					</Link>
-				)}
-				linkText="전체보기"
-				linkUrl={`/user/${currentUser!._id}/products`}
-			/>
+			{isLoadingProductsInfo ? (
+				<Skeleton
+					variant="rounded"
+					width="100%"
+					height={241}
+					animation="wave"
+				/>
+			) : (
+				<MyPageList
+					title="구매내역"
+					data={isLoadingOrdersInfo ? [] : (userOrdersInfo || []).slice(0, 5)}
+					emptyMessage="구매내역이 없습니다."
+					renderItem={(item) => (
+						<Link to={`/productdetail/${item.products[0]._id}`}>
+							<Image
+								src={item.products[0].image.path}
+								alt={`${item.products[0].name} 사진`}
+							/>
+						</Link>
+					)}
+					linkText="전체보기"
+					linkUrl="/orders"
+				/>
+			)}
+			{isLoadingOrdersInfo ? (
+				<Skeleton
+					variant="rounded"
+					width="100%"
+					height={241}
+					animation="wave"
+				/>
+			) : (
+				<MyPageList
+					title="판매상품관리"
+					data={
+						isLoadingProductsInfo ? [] : (userProductsInfo || []).slice(0, 5)
+					}
+					emptyMessage="판매내역이 없습니다."
+					renderItem={(item) => (
+						<Link to={`/productmanage/${item._id}`}>
+							<Image src={`${item.mainImages[0].path}`} alt="앨범아트" />
+						</Link>
+					)}
+					linkText="전체보기"
+					linkUrl={`/user/${currentUser!._id}/products`}
+				/>
+			)}
 		</Section>
 	);
 }

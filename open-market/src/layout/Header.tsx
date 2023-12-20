@@ -31,7 +31,7 @@ import {
 } from "@/states/productListState";
 import { axiosInstance, searchProductList } from "@/utils";
 import toast from "react-hot-toast";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import logoImage from "/logo/logo2.svg";
@@ -135,10 +135,12 @@ const Header = () => {
 	const [productList, setProductList] = useRecoilState(productListState);
 	const fetchedProductList = useRecoilValue(fetchProductListState(0));
 
-	const { refetch } = useQuery(["productList", productList], fetchProductList, {
-		onSuccess: (data) => {
-			setProductList(data?.data.item);
-		},
+	const { refetch } = useQuery({
+		queryKey: ["productList", productList],
+		queryFn: fetchProductList,
+		// onSuccess: (data) => {
+		// 	setProductList(data?.data.item);
+		// },
 		refetchOnWindowFocus: false,
 	});
 

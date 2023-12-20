@@ -6,7 +6,7 @@ import { Common } from "./styles/common";
 
 import { codeState } from "@/states/categoryState";
 import { useEffect } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useSetRecoilState } from "recoil";
 import { axiosInstance } from "./utils";
 

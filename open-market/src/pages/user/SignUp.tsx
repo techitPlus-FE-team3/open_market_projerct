@@ -9,7 +9,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import logoImage from "/logo/logo1.svg";
 
@@ -316,48 +316,44 @@ function SignUp() {
 	};
 
 	// 회원가입 요청 처리
-	const signUpMutation = useMutation(
-		async (newUser: SignUpRequest) => {
+	const signUpMutation = useMutation({
+		mutationFn: async (newUser: SignUpRequest) => {
 			const response = await axiosInstance.post("/users/", newUser);
 			return response.data;
 		},
-		{
-			onSuccess: () => {
-				// 토스트 표시
-				toast.success("회원가입이 완료되었습니다.");
+		onSuccess: () => {
+			// 토스트 표시
+			toast.success("회원가입이 완료되었습니다.");
 
-				navigate("/signin");
-			},
-			onError: (error: any) => {
-				console.error(error);
-
-				if (error.response) {
-					switch (error.response.status) {
-						case 409:
-							toast.error(
-								error.response.data.message || "이미 등록된 이메일입니다.",
-							);
-							break;
-						case 422:
-							const errorMessages = error.response.data.errors
-								.map((err: { msg: string }) => `${err.msg}`)
-								.join("\n");
-							toast.error(`회원가입 실패: ${errorMessages}`);
-							break;
-						case 500:
-							toast.error(
-								"서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-							);
-							break;
-						default:
-							toast.error("회원가입 중 알 수 없는 오류가 발생했습니다.");
-					}
-				} else {
-					toast.error("회원가입 중 알 수 없는 오류가 발생했습니다.");
-				}
-			},
+			navigate("/signin");
 		},
-	);
+		onError: (error: any) => {
+			console.error(error);
+
+			if (error.response) {
+				switch (error.response.status) {
+					case 409:
+						toast.error(
+							error.response.data.message || "이미 등록된 이메일입니다.",
+						);
+						break;
+					case 422:
+						const errorMessages = error.response.data.errors
+							.map((err: { msg: string }) => `${err.msg}`)
+							.join("\n");
+						toast.error(`회원가입 실패: ${errorMessages}`);
+						break;
+					case 500:
+						toast.error("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+						break;
+					default:
+						toast.error("회원가입 중 알 수 없는 오류가 발생했습니다.");
+				}
+			} else {
+				toast.error("회원가입 중 알 수 없는 오류가 발생했습니다.");
+			}
+		},
+	});
 	// 폼 제출 처리
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
