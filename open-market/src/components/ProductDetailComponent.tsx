@@ -1,6 +1,6 @@
 import {
-	DetailBadge,
-	DetailBadgeContainer,
+    DetailBadge,
+    DetailBadgeContainer,
 } from "@/components/ProductDetailBadgeComponent";
 import { ShowStarRating } from "@/components/ReplyComponent";
 import { Common } from "@/styles/common";
@@ -27,6 +27,7 @@ const ProductDetailArticle = styled.article`
 	align-items: center;
 	gap: ${Common.space.spacingXl};
 	background-color: ${Common.colors.black};
+	padding-top: 100px;
 `;
 
 const ProductMediaContainer = styled.div`

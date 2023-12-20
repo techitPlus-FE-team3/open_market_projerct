@@ -27,6 +27,7 @@ import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { Common } from "@/styles/common";
 
 interface bannerProps {
 	showable?: boolean;
@@ -36,9 +37,13 @@ const BannerSection = styled.section<bannerProps>`
 	display: ${(props) => (props.showable ? "block" : "none")};
 	width: 100%;
 	height: 400px;
-
-	img {
-		object-fit: cover;
+	background-color: ${Common.colors.black};
+	div {
+		width: 1440px;
+		margin: 0 auto;
+		img {
+			object-fit: cover;
+		}
 	}
 `;
 
@@ -138,7 +143,9 @@ function Index() {
 				<title>Home - 모두의 오디오 MODI</title>
 			</Helmet>
 			<BannerSection showable={searchKeyword ? false : true}>
-				<img src="/banner.svg" alt="배너 이미지" />
+				<div>
+					<img src="/banner.svg" alt="배너 이미지" />
+				</div>
 			</BannerSection>
 			<ProductSection>
 				<Heading>메인페이지</Heading>
@@ -164,7 +171,7 @@ function Index() {
 										<option key={item.code} value={item.value}>
 											{item.value}
 										</option>
-								  ))
+									))
 								: undefined}
 						</select>
 					</FilterSelect>
