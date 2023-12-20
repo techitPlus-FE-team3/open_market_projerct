@@ -42,7 +42,8 @@ export const DetailBadge = styled.div<BadgeProps>`
 const ProductExtraLinkContainer = styled.article`
 	width: 1440px;
 	height: 80px;
-	margin-bottom: 50px;
+	margin: 0 auto;
+	margin-bottom: 70px;
 	display: flex;
 	flex-flow: row nowrap;
 	justify-content: center;

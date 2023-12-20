@@ -2,7 +2,7 @@ import FunctionalButton from "@/components/FunctionalButton";
 import Textarea from "@/components/Textarea";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { Common } from "@/styles/common";
-import { axiosInstance } from "@/utils";
+import { axiosInstance, numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
 import CircleIcon from "@mui/icons-material/Circle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
@@ -168,6 +168,7 @@ function ProductManage() {
 	function handleProductDelete(e: { preventDefault: () => void }) {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
+		const userId = localStorage.getItem("_id");
 		const result = confirm("상품을 정말로 삭제하시겠습니까?");
 		if (!result) return;
 		try {
@@ -184,7 +185,7 @@ function ProductManage() {
 							"aria-live": "polite",
 						},
 					});
-					navigate(-1);
+					navigate(`/user/${userId}/products`);
 				})
 				.catch((error) => {
 					console.error("에러 발생:", error);
@@ -279,7 +280,11 @@ function ProductManage() {
 				</FormTopLayout>
 				<FlexLayout>
 					<ProductItemWrapper large>
-						<ProductLabel>판매 수익</ProductLabel>
+						<ProductLabel>
+							판매 수익 (판매 가격:
+							<span> {numberWithComma(userProductInfo?.price!)}₩</span>)
+						</ProductLabel>
+
 						<ProductValue large>
 							{typeof userProductInfo?.buyQuantity !== "undefined"
 								? userProductInfo?.buyQuantity * userProductInfo?.price

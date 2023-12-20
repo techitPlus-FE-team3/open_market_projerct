@@ -33,6 +33,7 @@ interface ProductRegistForm {
 	quantity: number;
 	buyQuantity: number;
 	extra: {
+		sellerName: string;
 		isNew: boolean;
 		isBest: boolean;
 		category: string;
@@ -172,6 +173,7 @@ const StyledRadio = muiStyled((props: RadioProps) => (
 function ProductRegistration() {
 	const navigate = useNavigate();
 
+	const [sellerName, setSellerName] = useState<string>("");
 	const [postItem, setPostItem] = useState<ProductRegistForm>({
 		show: true,
 		active: true,
@@ -183,6 +185,7 @@ function ProductRegistration() {
 		quantity: Number.MAX_SAFE_INTEGER,
 		buyQuantity: 0,
 		extra: {
+			sellerName: "",
 			isNew: true,
 			isBest: false,
 			category: "",
@@ -196,6 +199,20 @@ function ProductRegistration() {
 
 	//비로그인 상태 체크
 	useRequireAuth();
+
+	async function getUser(id: number) {
+		const accessToken = localStorage.getItem("accessToken");
+		try {
+			const response = await axiosInstance.get<UserResponse>(`/users/${id}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			});
+			setSellerName(response.data.item.name);
+		} catch (err) {
+			console.error(err);
+		}
+	}
 
 	function handlePostProductRegist(e: { preventDefault: () => void }) {
 		e.preventDefault();
@@ -263,6 +280,7 @@ function ProductRegistration() {
 
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");
+		const userId = localStorage.getItem("_id");
 
 		async function fetchCategory() {
 			try {
@@ -283,7 +301,15 @@ function ProductRegistration() {
 		}
 
 		fetchCategory();
+		getUser(+userId!);
 	}, []);
+
+	useEffect(() => {
+		setPostItem({
+			...postItem,
+			extra: { ...postItem.extra, sellerName: sellerName },
+		});
+	}, [sellerName]);
 
 	return (
 		<ProductRegistSection>
