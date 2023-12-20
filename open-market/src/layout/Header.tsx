@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { KeyboardEvent, useEffect, useState } from "react";
 
-import { loggedInState } from "@/states/authState";
+import { currentUserState } from "@/states/authState";
 import {
 	categoryKeywordState,
 	fetchProductListState,
@@ -154,7 +154,8 @@ const Header = () => {
 	);
 	const [__, setCategoryFilter] = useRecoilState<string>(categoryKeywordState);
 
-	const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
+	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
+
 	const navigate = useNavigate();
 
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -192,9 +193,10 @@ const Header = () => {
 	}
 
 	function handleLogout() {
-		localStorage.clear();
+		setCurrentUser(null);
+		localStorage.removeItem('accessToken');
+		localStorage.removeItem('refreshToken');
 		sessionStorage.clear();
-		setLoggedIn(false);
 
 		toast.success(`로그아웃 되었습니다.`);
 		navigate("/");
@@ -281,7 +283,7 @@ const Header = () => {
 					}}
 					sx={{ m: 2 }}
 				/>
-				{loggedIn && (
+				{currentUser && (
 					<ButtonWrapper>
 						<UploadButton
 							startIcon={<FileUpload />}
@@ -332,7 +334,7 @@ const Header = () => {
 						</Menu>
 					</ButtonWrapper>
 				)}
-				{!loggedIn && (
+				{!currentUser && (
 					<ButtonWrapper>
 						<UserButton onClick={handleProfileMenuOpen}>
 							<AccountCircle />

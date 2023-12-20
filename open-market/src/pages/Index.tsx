@@ -11,6 +11,7 @@ import {
 } from "@/components/ProductListComponent";
 import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
+import { codeState } from "@/states/categoryState";
 import {
     categoryKeywordState,
     fetchProductListState,
@@ -50,17 +51,19 @@ const BannerSection = styled.section<bannerProps>`
 function Index() {
 	const searchRef = useRef<HTMLInputElement>(null);
 	const [limit, setLimit] = useState(4);
+
 	const fetchedProductList = useRecoilValue(fetchProductListState(limit));
+	const category = useRecoilValue(codeState);
+
 	const [productList, setProductList] = useRecoilState(productListState);
 	const [searchKeyword, setSearchKeyword] =
 		useRecoilState<string>(searchKeywordState);
 	const [searchedProductList, setSearchedProductList] = useRecoilState<
 		Product[]
 	>(searchedProductListState);
-
-	const [category, setCategory] = useState<CategoryCode[]>();
 	const [categoryFilter, setCategoryFilter] =
 		useRecoilState<string>(categoryKeywordState);
+
 	const [filteredProductList, setFilteredProductList] = useState<Product[]>();
 
 	function handleSearchKeyword() {
@@ -71,36 +74,10 @@ function Index() {
 
 	useEffect(() => {
 		setProductList(fetchedProductList!);
-
-		async function fetchCategory() {
-			try {
-				const response = await axiosInstance.get(`/codes/productCategory`);
-				const responseData = response.data.item;
-				const categoryCodeList = responseData.productCategory.codes;
-				setCategory(categoryCodeList);
-			} catch (error) {
-				console.error("상품 리스트 조회 실패:", error);
-			}
-		}
-
-		fetchCategory();
 	}, [limit]);
 
 	useEffect(() => {
 		setProductList(fetchedProductList!);
-
-		async function fetchCategory() {
-			try {
-				const response = await axiosInstance.get(`/codes/productCategory`);
-				const responseData = response.data.item;
-				const categoryCodeList = responseData.productCategory.codes;
-				setCategory(categoryCodeList);
-			} catch (error) {
-				console.error("상품 리스트 조회 실패:", error);
-			}
-		}
-
-		fetchCategory();
 	}, []);
 
 	useEffect(() => {
@@ -109,7 +86,7 @@ function Index() {
 				return value;
 			}
 			if (value !== undefined && category !== undefined) {
-				return category.find((item) => item.value === value)?.code;
+				return category?.find((item) => item.value === value)?.code;
 			}
 		}
 

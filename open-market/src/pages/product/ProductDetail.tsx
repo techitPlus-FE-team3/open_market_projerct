@@ -8,8 +8,8 @@ import ReplyListItem, {
     ReplyTextarea,
     ReplyUserProfileImage,
 } from "@/components/ReplyComponent";
-import { loggedInState } from "@/states/authState";
-
+import { currentUserState } from "@/states/authState";
+import { codeState } from "@/states/categoryState";
 import { axiosInstance, debounce, formatDate } from "@/utils";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
@@ -25,19 +25,17 @@ function ProductDetail() {
 	const navigate = useNavigate();
 	const { productId } = useParams();
 
-	const loggedIn = useRecoilValue(loggedInState);
+	const currentUser = useRecoilValue(currentUserState);
+	const category = useRecoilValue(codeState);
 
 	const replyRef = useRef<HTMLTextAreaElement & HTMLDivElement>(null);
 
 	const [product, setProduct] = useState<Product>();
 	const [rating, setRating] = useState(0);
-	const [currentUser, setCurrentUser] = useState<User | undefined>();
-	const [logState, setLogState] = useState<number | undefined>();
 	const [order, setOrder] = useState<Order[]>();
 	const [ratingValue, setRatingValue] = useState<number>(3);
 	const [_, setHover] = useState(-1);
 	const [replyContent, setReplyContent] = useState<string>();
-	const [category, setCategory] = useState<CategoryCode[]>();
 	const [genre, setGenre] = useState<string>();
 	const [createdAt, setCreatedAt] = useState<string>();
 
@@ -49,8 +47,7 @@ function ProductDetail() {
 			setProduct(response.data.item);
 			setRating(getRating(response.data.item));
 			setCreatedAt(formatDate(response.data.item.createdAt));
-			if (loggedIn) {
-				getUser(Number(localStorage.getItem("_id")!));
+			if (currentUser) {
 				getOrder(Number(id)!);
 			}
 		} catch (err) {
@@ -75,20 +72,6 @@ function ProductDetail() {
 		}
 	}
 
-	async function getUser(id: number) {
-		const accessToken = localStorage.getItem("accessToken");
-		try {
-			const response = await axiosInstance.get<UserResponse>(`/users/${id}`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			});
-			setCurrentUser(response.data.item);
-		} catch (err) {
-			console.error(err);
-		}
-	}
-
 	async function handleReplySubmit(e: { preventDefault: () => void }) {
 		e.preventDefault();
 		const accessToken = localStorage.getItem("accessToken");
@@ -100,7 +83,7 @@ function ProductDetail() {
 					product_id: Number(productId),
 					rating: ratingValue,
 					content: replyContent,
-					extra: { profileImage: currentUser?.extra?.profileImage },
+					extra: { profileImage: currentUser?.profileImage },
 				},
 				{
 					headers: {
@@ -142,33 +125,11 @@ function ProductDetail() {
 	}, []);
 
 	useEffect(() => {
-		if (loggedIn) {
-			setLogState(Number(localStorage.getItem("_id")!));
-		}
-	}, []);
-
-	useEffect(() => {
-		async function fetchCategory() {
-			try {
-				const response = await axiosInstance.get(`/codes/productCategory`);
-				const responseData = response.data.item;
-				const categoryCodeList = responseData.productCategory.codes;
-				setCategory(categoryCodeList);
-			} catch (error) {
-				console.error("상품 리스트 조회 실패:", error);
-			}
-		}
-
-		fetchCategory();
-	}, []);
-
-	useEffect(() => {
 		getProduct(productId!);
-		if (loggedIn) {
-			getUser(Number(localStorage.getItem("_id")!));
+		if (currentUser) {
 			getOrder(Number(productId)!);
 		}
-	}, [productId, loggedIn]);
+	}, [productId]);
 
 	useEffect(() => {
 		let sessionHistory: Product[] = JSON.parse(
@@ -193,7 +154,7 @@ function ProductDetail() {
 				category !== undefined &&
 				product !== undefined
 			) {
-				return category.find((item) => item.code === code)?.value;
+				return category?.find((item) => item.code === code)?.value;
 			}
 		}
 		setGenre(translateCodeToValue(product?.extra?.category!));
@@ -214,8 +175,7 @@ function ProductDetail() {
 			<ProductDetailExtraLink
 				product={product}
 				order={order}
-				loggedIn={loggedIn}
-				logState={logState}
+				currentUser={currentUser}
 			/>
 			<ReplyContainer>
 				<h3>
@@ -223,18 +183,18 @@ function ProductDetail() {
 					댓글
 				</h3>
 				<div>
-					{!loggedIn ? (
+					{!currentUser ? (
 						<p>로그인 후 댓글을 작성할 수 있습니다.</p>
-					) : loggedIn && logState === product?.seller_id ? (
+					) : currentUser && currentUser?._id === product?.seller_id ? (
 						<p>내 상품에는 댓글을 작성할 수 없습니다.</p>
-					) : (loggedIn && order?.length === 0) || order === undefined ? (
+					) : (currentUser && order?.length === 0) || order === undefined ? (
 						<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
 					) : (
 						<ReplyInputForm action="submit">
 							<span>
-								{currentUser?.extra?.profileImage ? (
+								{currentUser?.profileImage ? (
 									<ReplyUserProfileImage
-										src={currentUser?.extra?.profileImage}
+										src={currentUser?.profileImage}
 										alt={`${currentUser?.name} 프로필 이미지`}
 									/>
 								) : (
