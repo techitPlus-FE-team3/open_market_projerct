@@ -11,6 +11,7 @@ import {
 } from "@/components/ProductListComponent";
 import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
+import { useCategoryFilterProductList } from "@/hooks/useCategoryFilterProductList";
 import { useSearchProductList } from "@/hooks/useSearchProductList";
 import { codeState } from "@/states/categoryState";
 import {
@@ -18,7 +19,7 @@ import {
 	searchKeywordState,
 } from "@/states/productListState";
 import { Common } from "@/styles/common";
-import { axiosInstance, categoryFilterProductList } from "@/utils";
+import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
@@ -54,8 +55,6 @@ function Index() {
 	const [selectedCode, setSelectedCode] = useState("");
 	const category = useRecoilValue(codeState);
 
-	const [filteredProductList, setFilteredProductList] = useState<Product[]>();
-
 	const fetchProducts = async ({ pageParam = 1 }) => {
 		try {
 			const { data } = await axiosInstance.get(
@@ -87,11 +86,24 @@ function Index() {
 				: null,
 	});
 
+	const fetchedProductList = data?.pages.map((page) => page.item).flat();
+
+	const {
+		data: categoryFilterData,
+		error: categoryFilterError,
+		isLoading: categoryFilterLoading,
+		isError: categoryFilterIsError,
+	} = useCategoryFilterProductList({
+		resource: "products",
+		category: selectedCode,
+	});
+
+	const fetchedFilterProductList = categoryFilterData?.item;
+
 	const { data: searchResult } = useSearchProductList({
 		resource: "products",
 		searchKeyword,
 	});
-	const fetchedProductList = data?.pages.map((page) => page.item).flat();
 
 	function handleSearchKeyword() {
 		setSearchKeyword(
@@ -112,34 +124,23 @@ function Index() {
 	}, [categoryValue]);
 
 	useEffect(() => {
-		// selectedCode가 변화할 때마다 categoryFilterProductList 함수를 호출합니다.
-		const fetchFilteredProductsData = async () => {
-			if (selectedCode) {
-				// selectedCode 존재 여부를 체크합니다.
-				const result = await categoryFilterProductList({
-					resource: "products",
-					category: selectedCode,
-				});
-
-				setFilteredProductList([...result]);
-			}
-		};
-		fetchFilteredProductsData();
-	}, [selectedCode]);
-
-	useEffect(() => {
 		setSearchedProductList(searchResult);
 	}, [searchKeyword, searchResult]);
 
 	// 로딩 중일 때
-	if (isLoading) {
+	if (isLoading || categoryFilterLoading) {
 		return <div>상품들을 불러오는 중...</div>;
 	}
 
 	// 에러가 발생했을 때
-	if (isError) {
-		const err = error as Error; // Error 타입으로 변환
-		return <div>에러가 발생했습니다: {err.message}</div>;
+	if (isError || categoryFilterIsError) {
+		if (isError) {
+			const err = error as Error; // Error 타입으로 변환
+			return <div>에러가 발생했습니다: {err.message}</div>;
+		} else {
+			const err = categoryFilterError as Error; // Error 타입으로 변환
+			return <div>에러가 발생했습니다: {err.message}</div>;
+		}
 	}
 
 	return (
@@ -199,11 +200,11 @@ function Index() {
 							)
 						) : !searchKeyword &&
 						  categoryValue !== "all" &&
-						  filteredProductList !== undefined ? (
-							filteredProductList.length === 0 ? (
+						  fetchedFilterProductList !== undefined ? (
+							fetchedFilterProductList.length === 0 ? (
 								<span className="emptyList">해당하는 상품이 없습니다.</span>
 							) : (
-								filteredProductList.map((product) => {
+								fetchedFilterProductList.map((product: Product) => {
 									return (
 										<ProductListItem
 											key={product._id}
