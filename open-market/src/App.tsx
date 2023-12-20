@@ -6,7 +6,7 @@ import { useSetRecoilState } from "recoil";
 import router from "./routes";
 import { Common } from "./styles/common";
 
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { loggedInState } from "@/states/authState";
 
