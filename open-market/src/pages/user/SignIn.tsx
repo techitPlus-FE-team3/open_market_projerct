@@ -1,5 +1,5 @@
 import AuthInput from "@/components/AuthInput";
-import { loggedInState } from "@/states/authState";
+import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
 import styled from "@emotion/styled";
@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import logoImage from "/logo/logo1.svg";
 
 const Title = styled.h2`
@@ -97,7 +97,7 @@ const Ul = styled.ul`
 `;
 
 function SignIn() {
-	const [_, setLoggedIn] = useRecoilState(loggedInState);
+	const setCurrentUser = useSetRecoilState(currentUserState);
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -107,26 +107,29 @@ function SignIn() {
 		e.preventDefault();
 
 		try {
-			const response = await axiosInstance.post("/users/login", {
+			const response = await axiosInstance.post<UserResponse>("/users/login", {
 				email,
 				password,
 			});
 
 			// 로그인 성공 시 토큰을 localStorage에 저장(임시)
 			if (response.data.ok && response.data.item.token) {
-				localStorage.setItem(
-					"accessToken",
-					response.data.item.token.accessToken,
-				);
-				localStorage.setItem(
-					"refreshToken",
-					response.data.item.token.refreshToken,
-				);
-				localStorage.setItem("_id", response.data.item._id);
+				const userInfo = response.data.item;
+
+				localStorage.setItem("accessToken", userInfo.token.accessToken);
+				localStorage.setItem("refreshToken", userInfo.token.refreshToken);
 
 				// 로그인 성공 이후 홈 페이지로 이동.
 				toast.success("로그인 성공!");
-				setLoggedIn(true);
+
+				setCurrentUser({
+					_id: userInfo._id,
+					name: userInfo.name,
+					profileImage: userInfo.extra?.profileImage
+						? userInfo.extra?.profileImage
+						: null,
+				});
+
 				navigate("/");
 			}
 		} catch (error: any) {

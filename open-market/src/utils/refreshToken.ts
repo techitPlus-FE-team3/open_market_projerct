@@ -45,9 +45,7 @@ async function refreshToken() {
 function handleTokenRefreshError(error: any) {
 	console.error("Error refreshing token:", error);
 	toast.error("토큰이 만료되었습니다. 다시 로그인해주세요.");
-	localStorage.removeItem("accessToken");
-	localStorage.removeItem("refreshToken");
-	localStorage.removeItem("_id");
+	localStorage.clear();
 }
 
 // 응답 인터셉터 설정

@@ -1,5 +1,6 @@
 import AuthInput from "@/components/AuthInput";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
@@ -10,6 +11,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 const API_KEY = import.meta.env.VITE_API_SERVER;
 
@@ -181,7 +183,7 @@ function UserEdit() {
 		},
 	});
 	const navigate = useNavigate();
-	const userId = localStorage.getItem("_id");
+	const currentUser = useRecoilValue(currentUserState);
 	const accessToken = localStorage.getItem("accessToken");
 	const [uploadedFileName, setUploadedFileName] = useState("");
 
@@ -192,7 +194,7 @@ function UserEdit() {
 		// 사용자 정보 불러오기
 		async function fetchUserInfo() {
 			try {
-				const response = await axiosInstance.get(`/users/${userId}`, {
+				const response = await axiosInstance.get(`/users/${currentUser?._id}`, {
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
 					},
@@ -222,7 +224,7 @@ function UserEdit() {
 		}
 
 		fetchUserInfo();
-	}, [userId, accessToken]);
+	}, [currentUser, accessToken]);
 
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -246,11 +248,15 @@ function UserEdit() {
 
 		// 정보 수정 요청
 		try {
-			const response = await axiosInstance.patch(`/users/${userId}`, payload, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
+			const response = await axiosInstance.patch(
+				`/users/${currentUser?._id}`,
+				payload,
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
 				},
-			});
+			);
 			if (response.data.ok) {
 				toast.success("회원 정보가 수정되었습니다.");
 				navigate("/mypage");
