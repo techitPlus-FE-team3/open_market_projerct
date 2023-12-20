@@ -9,6 +9,7 @@ import ReplyListItem, {
 	ReplyUserProfileImage,
 } from "@/components/ReplyComponent";
 import { currentUserState } from "@/states/authState";
+import { codeState } from "@/states/categoryState";
 import { axiosInstance, debounce, formatDate } from "@/utils";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
@@ -25,6 +26,7 @@ function ProductDetail() {
 	const { productId } = useParams();
 
 	const currentUser = useRecoilValue(currentUserState);
+	const category = useRecoilValue(codeState);
 
 	const replyRef = useRef<HTMLTextAreaElement & HTMLDivElement>(null);
 
@@ -34,7 +36,6 @@ function ProductDetail() {
 	const [ratingValue, setRatingValue] = useState<number>(3);
 	const [_, setHover] = useState(-1);
 	const [replyContent, setReplyContent] = useState<string>();
-	const [category, setCategory] = useState<CategoryCode[]>();
 	const [genre, setGenre] = useState<string>();
 	const [createdAt, setCreatedAt] = useState<string>();
 
@@ -124,21 +125,6 @@ function ProductDetail() {
 	}, []);
 
 	useEffect(() => {
-		async function fetchCategory() {
-			try {
-				const response = await axiosInstance.get(`/codes/productCategory`);
-				const responseData = response.data.item;
-				const categoryCodeList = responseData.productCategory.codes;
-				setCategory(categoryCodeList);
-			} catch (error) {
-				console.error("상품 리스트 조회 실패:", error);
-			}
-		}
-
-		fetchCategory();
-	}, []);
-
-	useEffect(() => {
 		getProduct(productId!);
 		if (currentUser) {
 			getOrder(Number(productId)!);
@@ -168,7 +154,7 @@ function ProductDetail() {
 				category !== undefined &&
 				product !== undefined
 			) {
-				return category.find((item) => item.code === code)?.value;
+				return category?.find((item) => item.code === code)?.value;
 			}
 		}
 		setGenre(translateCodeToValue(product?.extra?.category!));
