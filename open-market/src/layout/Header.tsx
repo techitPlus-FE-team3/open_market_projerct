@@ -3,7 +3,6 @@ import {
 	fetchProductListState,
 	productListState,
 	searchKeywordState,
-	searchedProductListState,
 } from "@/states/productListState";
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
@@ -144,11 +143,8 @@ const Header = () => {
 		refetchOnWindowFocus: false,
 	});
 
-	const [searchKeyword, setSearchKeyword] =
-		useRecoilState<string>(searchKeywordState);
-	const [_, setSearchedProductList] = useRecoilState<Product[]>(
-		searchedProductListState,
-	);
+	const [_, setSearchKeyword] = useRecoilState<string>(searchKeywordState);
+
 	const [__, setCategoryValue] = useRecoilState<string>(categoryValueState);
 
 	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
@@ -236,6 +232,7 @@ const Header = () => {
 						to="/"
 						onClick={() => {
 							setSearchKeyword("");
+							setCategoryValue("all");
 							localStorage.removeItem("userProductsInfo");
 							localStorage.removeItem("searchOrderKeyword");
 						}}
