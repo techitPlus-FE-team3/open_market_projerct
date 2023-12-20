@@ -26,3 +26,9 @@ interface UserResponse {
 	ok: number;
 	item: User;
 }
+
+interface CurrentUser {
+	_id: number;
+	name: string;
+	profileImage: string | null;
+}
