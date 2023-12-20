@@ -43,7 +43,8 @@ interface ProductRegistForm {
 }
 const ProductRegistSection = styled.section`
 	background-color: ${Common.colors.white};
-	padding: 0 56px;
+	padding-top: 100px;
+	padding-bottom: 20px;
 
 	.a11yHidden {
 		display: ${Common.a11yHidden};
@@ -53,6 +54,7 @@ const ProductRegistSection = styled.section`
 		background-color: ${Common.colors.gray2};
 		padding: 40px;
 		width: 1328px;
+		margin: 0 auto;
 		border-radius: 10px;
 		display: flex;
 		flex-direction: column;
