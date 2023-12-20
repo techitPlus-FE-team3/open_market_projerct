@@ -4,6 +4,7 @@ import SelectGenre from "@/components/SelectGenre";
 import Textarea from "@/components/Textarea";
 import UploadLoadingSpinner from "@/components/UploadLoadingSpinner";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
 import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
@@ -176,8 +177,8 @@ function ProductRegistration() {
 	const navigate = useNavigate();
 
 	const category = useRecoilValue(codeState);
+	const currentUser = useRecoilValue(currentUserState);
 
-	const [sellerName, setSellerName] = useState<string>("");
 	const [postItem, setPostItem] = useState<ProductRegistForm>({
 		show: true,
 		active: true,
@@ -189,7 +190,7 @@ function ProductRegistration() {
 		quantity: Number.MAX_SAFE_INTEGER,
 		buyQuantity: 0,
 		extra: {
-			sellerName: "",
+			sellerName: currentUser?.name!,
 			isNew: true,
 			isBest: false,
 			category: "",
@@ -267,13 +268,6 @@ function ProductRegistration() {
 			navigate(-1);
 		}
 	}
-
-	useEffect(() => {
-		setPostItem({
-			...postItem,
-			extra: { ...postItem.extra, sellerName: sellerName },
-		});
-	}, [sellerName]);
 
 	return (
 		<ProductRegistSection>
