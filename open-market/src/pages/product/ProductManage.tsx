@@ -1,8 +1,10 @@
 import FunctionalButton from "@/components/FunctionalButton";
 import Textarea from "@/components/Textarea";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { currentUserState } from "@/states/authState";
+import { codeState } from "@/states/categoryState";
 import { Common } from "@/styles/common";
-import { axiosInstance } from "@/utils";
+import { axiosInstance, numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
 import CircleIcon from "@mui/icons-material/Circle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
@@ -14,6 +16,7 @@ import { Helmet } from "react-helmet-async";
 
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 interface FlexLayoutProps {
 	right?: boolean;
@@ -31,7 +34,9 @@ interface LabelProps {
 
 const ProductManagementSection = styled.section`
 	background-color: ${Common.colors.white};
-	padding: 0 56px;
+	width: 1440px;
+	margin: 0 auto;
+	padding-top: 100px;
 
 	.a11yHidden {
 		display: ${Common.a11yHidden};
@@ -41,6 +46,8 @@ const ProductManagementSection = styled.section`
 		background-color: ${Common.colors.gray2};
 		padding: 40px;
 		width: 1328px;
+		margin: 0 auto;
+		margin-bottom: 20px;
 		border-radius: 10px;
 		display: flex;
 		flex-direction: column;
@@ -158,8 +165,9 @@ const LinkedEditButton = styled(Link)`
 function ProductManage() {
 	const navigate = useNavigate();
 	const { productId } = useParams();
+	const currentUser = useRecoilValue(currentUserState);
+	const category = useRecoilValue(codeState);
 	const [userProductInfo, setUserProductInfo] = useState<Product>();
-	const [category, setCategory] = useState<CategoryCode[]>();
 	const [genre, setGenre] = useState<string>();
 
 	// 비로그인 상태 체크
@@ -184,7 +192,7 @@ function ProductManage() {
 							"aria-live": "polite",
 						},
 					});
-					navigate(-1);
+					navigate(`/user/${currentUser?._id}/products`);
 				})
 				.catch((error) => {
 					console.error("에러 발생:", error);
@@ -217,28 +225,13 @@ function ProductManage() {
 	}, []);
 
 	useEffect(() => {
-		async function fetchCategory() {
-			try {
-				const response = await axiosInstance.get(`/codes/productCategory`);
-				const responseData = response.data.item;
-				const categoryCodeList = responseData.productCategory.codes;
-				setCategory(categoryCodeList);
-			} catch (error) {
-				console.error("상품 리스트 조회 실패:", error);
-			}
-		}
-
-		fetchCategory();
-	}, []);
-
-	useEffect(() => {
 		function translateCodeToValue(code: string) {
 			if (
 				code !== undefined &&
 				category !== undefined &&
 				userProductInfo !== undefined
 			) {
-				return category.find((item) => item.code === code)?.value;
+				return category!.find((item) => item.code === code)?.value;
 			}
 		}
 		setGenre(translateCodeToValue(userProductInfo?.extra?.category!));
@@ -279,7 +272,11 @@ function ProductManage() {
 				</FormTopLayout>
 				<FlexLayout>
 					<ProductItemWrapper large>
-						<ProductLabel>판매 수익</ProductLabel>
+						<ProductLabel>
+							판매 수익 (판매 가격:
+							<span> {numberWithComma(userProductInfo?.price!)}₩</span>)
+						</ProductLabel>
+
 						<ProductValue large>
 							{typeof userProductInfo?.buyQuantity !== "undefined"
 								? userProductInfo?.buyQuantity * userProductInfo?.price

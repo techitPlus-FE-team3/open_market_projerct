@@ -128,7 +128,7 @@ export function ProductListItem({
 				/>
 				<span title={product.name}>{product.name}</span>
 			</StyledLink>
-			<MusicPlayer src={product.extra?.soundFile?.path!} showable />
+			<MusicPlayer soundFile={product.extra?.soundFile!} showable />
 			{"image" in product ? (
 				<a
 					href={`${API_KEY}/${product?.extra?.soundFile.name}?name=${product?.extra?.soundFile.originalname}`}
@@ -164,7 +164,7 @@ export function UserProductListItem({ product }: { product: Product }) {
 				<img src={product?.mainImages[0]?.path} alt={`${product?.name} 사진`} />
 				<span title={product?.name}>{product?.name}</span>
 			</StyledTitleSpan>
-			<MusicPlayer src={product?.extra?.soundFile?.path!} />
+			<MusicPlayer soundFile={product.extra?.soundFile!} />
 			<StyledElementSpan>
 				판매 개수: <span>{product?.buyQuantity}</span>
 			</StyledElementSpan>

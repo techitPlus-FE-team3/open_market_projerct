@@ -1,4 +1,3 @@
-import { loggedInState } from "@/states/authState";
 import {
 	categoryValueState,
 	fetchProductListState,
@@ -7,7 +6,6 @@ import {
 	searchedProductListState,
 } from "@/states/productListState";
 import { Common } from "@/styles/common";
-import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
 import {
 	AccountCircle,
@@ -30,6 +28,9 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { KeyboardEvent, useEffect, useState } from "react";
+
+import { currentUserState } from "@/states/authState";
+import { axiosInstance } from "@/utils";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -40,10 +41,13 @@ const HeaderContainer = styled(AppBar)`
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	width: 100%;
 	align-items: center;
+	position: fixed;
+	z-index: 100;
 `;
 
 const HeaderWrapper = styled(Toolbar)`
 	width: 1440px;
+	height: 80px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -147,7 +151,8 @@ const Header = () => {
 	);
 	const [__, setCategoryValue] = useRecoilState<string>(categoryValueState);
 
-	const [loggedIn, setLoggedIn] = useRecoilState(loggedInState);
+	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
+
 	const navigate = useNavigate();
 
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -185,9 +190,10 @@ const Header = () => {
 	}
 
 	function handleLogout() {
-		localStorage.clear();
+		setCurrentUser(null);
+		localStorage.removeItem("accessToken");
+		localStorage.removeItem("refreshToken");
 		sessionStorage.clear();
-		setLoggedIn(false);
 
 		toast.success(`로그아웃 되었습니다.`);
 		navigate("/");
@@ -264,7 +270,7 @@ const Header = () => {
 					}}
 					sx={{ m: 2 }}
 				/>
-				{loggedIn && (
+				{currentUser && (
 					<ButtonWrapper>
 						<UploadButton
 							startIcon={<FileUpload />}
@@ -314,7 +320,7 @@ const Header = () => {
 						</Menu>
 					</ButtonWrapper>
 				)}
-				{!loggedIn && (
+				{!currentUser && (
 					<ButtonWrapper>
 						<UserButton onClick={handleProfileMenuOpen}>
 							<AccountCircle />

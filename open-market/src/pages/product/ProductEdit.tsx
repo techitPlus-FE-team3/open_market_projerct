@@ -2,7 +2,9 @@ import FormInput from "@/components/FormInput";
 import FunctionalButton from "@/components/FunctionalButton";
 import SelectGenre from "@/components/SelectGenre";
 import Textarea from "@/components/Textarea";
+import UploadLoadingSpinner from "@/components/UploadLoadingSpinner";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { codeState } from "@/states/categoryState";
 import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
@@ -16,6 +18,7 @@ import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 interface FlexLayoutProps {
 	right?: boolean;
@@ -37,8 +40,8 @@ interface ProductEditForm {
 }
 const ProductEditSection = styled.section`
 	background-color: ${Common.colors.white};
-	padding: 0 56px;
-
+	padding-top: 100px;
+	padding-bottom: 20px;
 	.a11yHidden {
 		display: ${Common.a11yHidden};
 	}
@@ -47,6 +50,7 @@ const ProductEditSection = styled.section`
 		background-color: ${Common.colors.gray2};
 		padding: 40px;
 		width: 1328px;
+		margin: 0 auto;
 		border-radius: 10px;
 		display: flex;
 		flex-direction: column;
@@ -169,8 +173,10 @@ function ProductEdit() {
 	const navigate = useNavigate();
 
 	const { productId } = useParams();
+
+	const category = useRecoilValue(codeState);
+
 	const [userProductInfo, setUserProductInfo] = useState<Product>();
-	const [category, setCategory] = useState<CategoryCode[]>();
 	const [postItem, setPostItem] = useState<ProductEditForm>({
 		show: false,
 		name: "",
@@ -185,6 +191,9 @@ function ProductEdit() {
 			soundFile: { path: "", name: "", originalname: "" },
 		},
 	});
+	const [imageLoading, setImageLoading] = useState<boolean>(false);
+	const [audioLoading, setAudioLoading] = useState<boolean>(false);
+
 	useRequireAuth();
 
 	function handleEditProduct(e: { preventDefault: () => void }) {
@@ -282,25 +291,6 @@ function ProductEdit() {
 				console.error("상품 정보 조회 실패:", error);
 			}
 		};
-		async function fetchCategory() {
-			try {
-				const response = await axiosInstance.get(`/codes/productCategory`, {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				});
-				const responseData = response.data.item;
-				const categoryCodeList = responseData.productCategory.codes;
-				setCategory(categoryCodeList);
-
-				// 데이터를 로컬 스토리지에 저장
-			} catch (error) {
-				// 에러 처리
-				console.error("상품 리스트 조회 실패:", error);
-			}
-		}
-
-		fetchCategory();
 		fetchUserProductInfo();
 	}, [productId]);
 
@@ -318,13 +308,23 @@ function ProductEdit() {
 								type="file"
 								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
 								onChange={(e: { target: { files: any } }) => {
-									uploadFile(e.target.files[0], setPostItem, "image");
+									setImageLoading(true);
+									uploadFile(e.target.files[0], setPostItem, "image")
+										.then(() => {
+											setImageLoading(false);
+										})
+										.catch((error) => {
+											console.log(error);
+											setImageLoading(false);
+										});
 								}}
 								className="PostImage"
 								name="photo"
 								id="photo"
 							/>
-							{postItem?.mainImages[0].path !== "" ? (
+							{imageLoading ? (
+								<UploadLoadingSpinner width="300px" height="300px" />
+							) : postItem?.mainImages[0].path !== "" ? (
 								<img
 									className="UploadImage"
 									src={postItem?.mainImages[0].path}
@@ -359,7 +359,7 @@ function ProductEdit() {
 										extra: { ...postItem.extra, category: e.target.value },
 									});
 								}}
-								category={category}
+								category={category!}
 							/>
 							<FormInput
 								name="hashTag"
@@ -390,11 +390,21 @@ function ProductEdit() {
 										name="mp3"
 										className="PostAudio"
 										id="mp3"
-										onChange={(e: { target: { files: any } }) =>
+										onChange={(e: { target: { files: any } }) => {
+											setAudioLoading(true);
 											uploadFile(e.target.files[0], setPostItem, "soundFile")
-										}
+												.then(() => {
+													setAudioLoading(false);
+												})
+												.catch((error) => {
+													console.log(error);
+													setAudioLoading(false);
+												});
+										}}
 									/>
-									{postItem?.extra.soundFile.path !== "" ? (
+									{audioLoading ? (
+										<UploadLoadingSpinner width="211px" height="116px" />
+									) : postItem?.extra.soundFile.path !== "" ? (
 										<span className="UploadAudioFile">
 											{postItem?.extra.soundFile.name}
 										</span>

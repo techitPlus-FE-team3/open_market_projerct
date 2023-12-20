@@ -133,6 +133,14 @@ export const ReplyInputForm = styled.form`
 	}
 `;
 
+export const ReplyUserProfileImage = styled.img`
+	width: 25px;
+	height: 25px;
+	border: 2px solid ${Common.colors.black};
+	border-radius: 50%;
+	object-fit: cover;
+`;
+
 export const ReplyTextarea = styled(ReplyBlock)`
 	height: 50px;
 	line-height: normal;
@@ -156,11 +164,20 @@ export function ShowStarRating({ rating }: { rating: number }) {
 		/>
 	);
 }
+
 function ReplyListItem({ reply }: { reply: Reply }) {
 	return (
 		<StyledReplyListItem key={reply._id}>
 			<div>
-				<AccountCircleIcon />
+				{reply?.extra?.profileImage ? (
+					<ReplyUserProfileImage
+						src={reply.extra?.profileImage}
+						alt={`${reply.user.name} 프로필 이미지`}
+					/>
+				) : (
+					<AccountCircleIcon />
+				)}
+
 				<ReplyBlock user>{reply.user.name}</ReplyBlock>
 			</div>
 			<ReplyBlock>

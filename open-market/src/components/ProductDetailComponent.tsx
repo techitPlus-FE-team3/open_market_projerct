@@ -1,6 +1,6 @@
 import {
-	DetailBadge,
-	DetailBadgeContainer,
+    DetailBadge,
+    DetailBadgeContainer,
 } from "@/components/ProductDetailBadgeComponent";
 import { ShowStarRating } from "@/components/ReplyComponent";
 import { Common } from "@/styles/common";
@@ -14,6 +14,7 @@ interface DetailProps {
 	product: Product | undefined;
 	genre: string | undefined;
 	rating: number;
+	createdAt: string;
 }
 
 const ProductDetailArticle = styled.article`
@@ -26,6 +27,7 @@ const ProductDetailArticle = styled.article`
 	align-items: center;
 	gap: ${Common.space.spacingXl};
 	background-color: ${Common.colors.black};
+	padding-top: 100px;
 `;
 
 const ProductMediaContainer = styled.div`
@@ -165,7 +167,12 @@ const ProductDetailExtra = styled.div`
 	}
 `;
 
-function ProductDetailComponent({ product, genre, rating }: DetailProps) {
+function ProductDetailComponent({
+	product,
+	genre,
+	rating,
+	createdAt,
+}: DetailProps) {
 	const audioRef = useRef(null);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const audio = audioRef.current! as HTMLAudioElement;
@@ -204,8 +211,8 @@ function ProductDetailComponent({ product, genre, rating }: DetailProps) {
 			</ProductMediaContainer>
 			<ProductDetailInfo>
 				<span className="title">{product?.name}</span>
-				<span className="seller">{product?.seller_id}</span>
-				<span>{product?.createdAt}</span>
+				<span className="seller">{product?.extra?.sellerName}</span>
+				<span>{createdAt}</span>
 				<ProductDetailContentContainer>
 					<span className="genre">{genre}</span>
 					<span className="tags">

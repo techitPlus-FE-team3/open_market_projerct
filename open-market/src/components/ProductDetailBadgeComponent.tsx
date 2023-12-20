@@ -42,7 +42,8 @@ export const DetailBadge = styled.div<BadgeProps>`
 const ProductExtraLinkContainer = styled.article`
 	width: 1440px;
 	height: 80px;
-	margin-bottom: 50px;
+	margin: 0 auto;
+	margin-bottom: 70px;
 	display: flex;
 	flex-flow: row nowrap;
 	justify-content: center;
@@ -94,13 +95,11 @@ const NoUserPurchaseButton = styled(ProductExtraBadgeStyle)`
 function ProductDetailExtraLink({
 	product,
 	order,
-	loggedIn,
-	logState,
+	currentUser,
 }: {
 	product: Product | undefined;
 	order: Order[] | undefined;
-	loggedIn: boolean;
-	logState: number | undefined;
+	currentUser: CurrentUser | null;
 }) {
 	const navigate = useNavigate();
 
@@ -118,18 +117,18 @@ function ProductDetailExtraLink({
 					북마크
 					{product?.bookmarks ? product?.bookmarks.length : 0}
 				</BookmarkButton>
-				{!loggedIn ? (
+				{!currentUser ? (
 					<NoUserPurchaseButton type="button" onClick={handelSignIn}>
 						<CheckIcon />
 						구매하기
 						{product?.buyQuantity ? product?.buyQuantity : 0}
 					</NoUserPurchaseButton>
-				) : loggedIn && logState === product?.seller_id ? (
+				) : currentUser && currentUser._id === product?.seller_id ? (
 					<ProductExtraLink to={`/productmanage/${product?._id}`}>
 						<CheckIcon />
 						상품 관리
 					</ProductExtraLink>
-				) : (loggedIn && order?.length === 0) || order === undefined ? (
+				) : (currentUser && order?.length === 0) || order === undefined ? (
 					<ProductExtraLink to={`/productpurchase/${product?._id}`}>
 						<CheckIcon />
 						구매하기

@@ -11,19 +11,19 @@ import {
 } from "@/components/ProductListComponent";
 import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
-import { useCategoryQuery } from "@/hooks/useCategoryQuery";
-// import useCategoryQuery from "@/hooks/useCategoryQuery";
 import { useSearchProductList } from "@/hooks/useSearchProductList";
+import { codeState } from "@/states/categoryState";
 import {
 	categoryValueState,
 	searchKeywordState,
 } from "@/states/productListState";
+import { Common } from "@/styles/common";
 import { axiosInstance, categoryFilterProductList } from "@/utils";
 import styled from "@emotion/styled";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Key, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 interface bannerProps {
 	showable?: boolean;
@@ -33,9 +33,13 @@ const BannerSection = styled.section<bannerProps>`
 	display: ${(props) => (props.showable ? "block" : "none")};
 	width: 100%;
 	height: 400px;
-
-	img {
-		object-fit: cover;
+	background-color: ${Common.colors.black};
+	div {
+		width: 1440px;
+		margin: 0 auto;
+		img {
+			object-fit: cover;
+		}
 	}
 `;
 
@@ -48,6 +52,7 @@ function Index() {
 	const [categoryValue, setCategoryValue] =
 		useRecoilState<string>(categoryValueState);
 	const [selectedCode, setSelectedCode] = useState("");
+	const category = useRecoilValue(codeState);
 
 	const [filteredProductList, setFilteredProductList] = useState<Product[]>();
 
@@ -88,13 +93,6 @@ function Index() {
 	});
 	const fetchedProductList = data?.pages.map((page) => page.item).flat();
 
-	const {
-		data: fetchedCategory,
-		error: categoryError,
-		isLoading: categoryIsLoading,
-		isError: categoryIsError,
-	} = useCategoryQuery();
-
 	function handleSearchKeyword() {
 		setSearchKeyword(
 			searchRef.current!.value.split(" ").join("").toLowerCase(),
@@ -103,8 +101,8 @@ function Index() {
 
 	useEffect(() => {
 		// categoryFilter 또는 category가 변화할 때마다 selectedCode를 업데이트 합니다.
-		if (fetchedCategory) {
-			const selectedCategory = fetchedCategory.find(
+		if (category) {
+			const selectedCategory = category.find(
 				(item: { value: string }) => item.value === categoryValue,
 			);
 			if (selectedCategory) {
@@ -134,12 +132,12 @@ function Index() {
 	}, [searchKeyword, searchResult]);
 
 	// 로딩 중일 때
-	if (isLoading || categoryIsLoading) {
+	if (isLoading) {
 		return <div>상품들을 불러오는 중...</div>;
 	}
 
 	// 에러가 발생했을 때
-	if (isError || categoryIsError) {
+	if (isError) {
 		const err = error as Error; // Error 타입으로 변환
 		return <div>에러가 발생했습니다: {err.message}</div>;
 	}
@@ -150,7 +148,9 @@ function Index() {
 				<title>Home - 모두의 오디오 MODI</title>
 			</Helmet>
 			<BannerSection showable={searchKeyword ? false : true}>
-				<img src="/banner.svg" alt="배너 이미지" />
+				<div>
+					<img src="/banner.svg" alt="배너 이미지" />
+				</div>
 			</BannerSection>
 			<ProductSection>
 				<Heading>메인페이지</Heading>
@@ -171,14 +171,12 @@ function Index() {
 								장르 선택
 							</option>
 							<option value="all">전체 보기</option>
-							{fetchedCategory && fetchedCategory.length !== 0
-								? fetchedCategory.map(
-										(item: { code: Key | null | undefined; value: string }) => (
-											<option key={item.code} value={item.value}>
-												{item.value}
-											</option>
-										),
-								  )
+							{category && category.length !== 0
+								? category.map((item) => (
+										<option key={item.code} value={item.value}>
+											{item.value}
+										</option>
+								  ))
 								: undefined}
 						</select>
 					</FilterSelect>
