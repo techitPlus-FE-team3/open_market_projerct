@@ -5,7 +5,7 @@ import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
 import Skeleton from "@mui/material/Skeleton";
 import { Helmet } from "react-helmet-async";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
 const Section = styled.section`
@@ -79,8 +79,9 @@ const PersonalInfoItem = styled.div`
 `;
 
 const UserImage = styled.img`
-	width: 100%;
-	height: 100%;
+	width: 200px;
+	height: 200px;
+	object-fit: cover;
 	border-radius: 50%;
 `;
 
@@ -195,22 +196,24 @@ function MyPage() {
 		sessionStorage.getItem("historyList") as string,
 	);
 
-	const { data: userInfo, isLoading: isLoadingUserInfo } = useQuery(
-		["userInfo", userId],
-		() => fetchUserInfo(userId),
-	);
+	const { data: userInfo, isLoading: isLoadingUserInfo } = useQuery({
+		queryKey: ["userInfo", userId],
+		queryFn: () => fetchUserInfo(userId),
+	});
 	const { data: userProductsInfo, isLoading: isLoadingProductsInfo } = useQuery(
-		["userProducts", userId],
-		() => fetchUserProductsInfo(accessToken),
+		{
+			queryKey: ["userProducts", userId],
+			queryFn: () => fetchUserProductsInfo(accessToken),
+		},
 	);
-	const { data: userOrdersInfo, isLoading: isLoadingOrdersInfo } = useQuery(
-		["userOrders", userId],
-		() => fetchUserOrderInfo(accessToken),
-	);
-	const { data: bookmarkDetails, isLoading: isLoadingBookmarks } = useQuery(
-		["bookmarks", userId],
-		() => fetchBookmarks(accessToken),
-	);
+	const { data: userOrdersInfo, isLoading: isLoadingOrdersInfo } = useQuery({
+		queryKey: ["userOrders", userId],
+		queryFn: () => fetchUserOrderInfo(accessToken),
+	});
+	const { data: bookmarkDetails, isLoading: isLoadingBookmarks } = useQuery({
+		queryKey: ["bookmarks", userId],
+		queryFn: () => fetchBookmarks(accessToken),
+	});
 
 	// 비로그인 상태 체크
 	useRequireAuth();
