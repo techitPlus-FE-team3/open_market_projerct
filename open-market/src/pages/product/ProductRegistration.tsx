@@ -15,7 +15,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { Radio, RadioProps } from "@mui/material";
 import { styled as muiStyled } from "@mui/system";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
