@@ -1,10 +1,12 @@
 import FunctionalButton from "@/components/FunctionalButton";
 import Textarea from "@/components/Textarea";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
 import { Common } from "@/styles/common";
 import { axiosInstance, numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
@@ -131,6 +133,7 @@ function ProductPurchase() {
 	const navigate = useNavigate();
 	const { productId } = useParams();
 	const category = useRecoilValue(codeState);
+	const currentUser = useRecoilValue(currentUserState);
 	const [product, setProduct] = useState<Product>();
 	const [genre, setGenre] = useState<string>();
 
@@ -142,7 +145,40 @@ function ProductPurchase() {
 			const response = await axiosInstance.get<ProductResponse>(
 				`/products/${id}`,
 			);
-			setProduct(response.data.item);
+			if (currentUser?._id === response.data.item?.seller_id) {
+				toast.error("비정상적인 접근입니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
+				return navigate("/", { replace: true });
+			}
+			fetchOrder(+id).then(() => {
+				setProduct(response.data.item);
+			});
+		} catch (err) {
+			if (err instanceof AxiosError && err.response?.status === 404) {
+				return navigate("/err", { replace: true });
+			}
+			console.error(err);
+		}
+	}
+
+	async function fetchOrder(productId: number) {
+		try {
+			const response = await axiosInstance.get<OrderListResponse>(`/orders`);
+			if (
+				response.data.item.some((order) => order.products[0]._id === productId)
+			) {
+				toast.error("비정상적인 접근입니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
+				return navigate("/", { replace: true });
+			}
 		} catch (err) {
 			console.error(err);
 		}
@@ -207,7 +243,7 @@ function ProductPurchase() {
 				<FormTopLayout>
 					<img
 						src={`${product?.mainImages[0].path}`}
-						alt={`${product?.name} 앨범 아트`}
+						alt={product?.name ? `${product.name} 앨범 아트` : ""}
 						className="ProductImage"
 					/>
 					<FormTopRightLayout>

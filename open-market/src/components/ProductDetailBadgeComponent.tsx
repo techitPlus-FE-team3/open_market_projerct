@@ -4,6 +4,7 @@ import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
 import CheckIcon from "@mui/icons-material/Check";
 import DownloadIcon from "@mui/icons-material/Download";
 import { Link, useNavigate } from "react-router-dom";
+const API_KEY = import.meta.env.VITE_API_SERVER;
 
 interface BadgeProps {
 	isNew?: boolean;
@@ -98,7 +99,7 @@ function ProductDetailExtraLink({
 	currentUser,
 }: {
 	product: Product | undefined;
-	order: Order[] | undefined;
+	order: Order | undefined;
 	currentUser: CurrentUser | null;
 }) {
 	const navigate = useNavigate();
@@ -128,7 +129,7 @@ function ProductDetailExtraLink({
 						<CheckIcon />
 						상품 관리
 					</ProductExtraLink>
-				) : (currentUser && order?.length === 0) || order === undefined ? (
+				) : (currentUser && !order) || order === undefined ? (
 					<ProductExtraLink to={`/productpurchase/${product?._id}`}>
 						<CheckIcon />
 						구매하기
@@ -136,7 +137,7 @@ function ProductDetailExtraLink({
 					</ProductExtraLink>
 				) : (
 					<DownloadLink
-						href={`https://localhost/api/files/download/${product?.extra?.soundFile.name}?name=${product?.extra?.soundFile.originalname}`}
+						href={`${API_KEY}/files/download/${product?.extra?.soundFile.name}?name=${product?.extra?.soundFile.originalname}`}
 						download={true}
 					>
 						<DownloadIcon />

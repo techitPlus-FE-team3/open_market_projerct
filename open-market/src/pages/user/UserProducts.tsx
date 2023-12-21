@@ -10,10 +10,10 @@ import SearchBar from "@/components/SearchBar";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
 	axiosInstance,
-	getItemWithExpireTime,
 	searchProductList,
 	setItemWithExpireTime,
 } from "@/utils";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 
@@ -31,103 +31,123 @@ function UserProducts() {
 	const accessToken = localStorage.getItem("accessToken");
 	const searchRef = useRef<HTMLInputElement>(null);
 	const [searchKeyword, setSearchKeyword] = useState("");
-	const [searchedList, setSearchedList] = useState<Product[]>([]);
 	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
-
+	const [searchedProductList, setSearchedProductList] = useState<Product[]>();
+	const paginationButtonRef = useRef(null);
 	//비로그인 상태 체크
 	useRequireAuth();
 
-	async function fetchUserProductsInfo() {
+	async function fetchUserProductsInfo({ pageParam = 1 }) {
 		try {
-			const response = await axiosInstance.get<ProductListResponse>(
-				`/seller/products/`,
+			const { data } = await axiosInstance.get(
+				`/seller/products?page=${pageParam}&limit=8`,
 				{
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
 					},
 				},
 			);
-			const responseData = response.data.item;
-			setUserProductsInfo(responseData);
+			return data;
+
 			// 데이터를 로컬 스토리지에 저장
 		} catch (error) {
 			// 에러 처리
 			console.error("상품 리스트 조회 실패:", error);
+			return [];
 		}
 	}
+
+	const {
+		data,
+		error,
+		isLoading,
+		isError,
+		hasNextPage,
+		fetchNextPage,
+		isFetchingNextPage,
+	} = useInfiniteQuery({
+		queryKey: ["seller/products"],
+		queryFn: fetchUserProductsInfo,
+		initialPageParam: 1,
+		getNextPageParam: (lastPage) =>
+			lastPage.pagination.page < lastPage.pagination.totalPages
+				? lastPage.pagination.page + 1
+				: null,
+	});
+	const fetchedProductList = data?.pages.flatMap((page) => page.item) || [];
 
 	function handleSearchKeyword(e: { preventDefault: () => void }) {
 		e.preventDefault();
 
-		if (searchRef.current?.value) {
-			setSearchKeyword(
-				searchRef.current.value.split(" ").join("").toLowerCase(),
-			);
-		} else {
-			setSearchKeyword("");
-			fetchUserProductsInfo();
-		}
+		const keyword =
+			searchRef.current?.value.split(" ").join("").toLowerCase() || "";
+		setSearchKeyword(keyword);
 	}
 
 	const handleSortByProfit = useCallback(() => {
-		let sortedProductList =
-			searchedList.length > 0
-				? sortByProfitProductList([...searchedList])
-				: sortByProfitProductList([...userProductsInfo]);
+		if (fetchedProductList.length === 0) return;
 
-		if (searchedList.length > 0) {
-			setSearchedList(sortedProductList);
+		let sortedProductList;
+		// searchedProductList가 존재하면 해당 리스트를 정렬하고, 그렇지 않으면 전체 리스트를 정렬합니다.
+		sortedProductList =
+			searchedProductList && searchedProductList.length > 0
+				? sortByProfitProductList([...searchedProductList])
+				: sortByProfitProductList([...fetchedProductList]);
+
+		// 정렬된 리스트를 상태에 반영합니다.
+		if (searchedProductList && searchedProductList.length > 0) {
+			setSearchedProductList(sortedProductList);
 		} else {
 			setUserProductsInfo(sortedProductList);
 		}
 
 		setItemWithExpireTime("userProductsInfo", sortedProductList, 5000 * 100);
-	}, [userProductsInfo, searchedList]);
+	}, [fetchedProductList, searchedProductList]);
 
 	const handleSortByNewest = useCallback(() => {
-		let sortedProductList =
-			searchedList.length > 0
-				? sortByNewestProductList([...searchedList])
-				: sortByNewestProductList([...userProductsInfo]);
+		if (fetchedProductList.length === 0) return;
 
-		if (searchedList.length > 0) {
-			setSearchedList(sortedProductList);
+		// 최신순으로 정렬된 상품 리스트를 가져옵니다.
+		let sortedProductList =
+			searchedProductList && searchedProductList.length > 0
+				? sortByNewestProductList([...searchedProductList])
+				: sortByNewestProductList([...fetchedProductList]);
+
+		// 정렬된 리스트를 상태에 반영합니다.
+		if (searchedProductList && searchedProductList.length > 0) {
+			setSearchedProductList(sortedProductList);
 		} else {
 			setUserProductsInfo(sortedProductList);
 		}
 
 		setItemWithExpireTime("userProductsInfo", sortedProductList, 5000 * 100);
-	}, [userProductsInfo, searchedList]);
+	}, [fetchedProductList, searchedProductList]);
 
 	useEffect(() => {
-		// 로컬 스토리지에서 데이터를 가져와 시도
-		const storedUserProductsInfo = getItemWithExpireTime("userProductsInfo");
+		// 별도의 비동기 함수를 선언합니다.
+		const fetchSearchResult = async () => {
+			const searchResult = await searchProductList({
+				resource: "seller/products",
+				searchKeyword,
+			});
 
-		if (storedUserProductsInfo) {
-			setUserProductsInfo(storedUserProductsInfo);
-		} else {
-			fetchUserProductsInfo();
-		}
-	}, []);
+			setSearchedProductList(searchResult);
+		};
 
-	useEffect(() => {
-		const filteredProductList = searchProductList({
-			searchKeyword: searchKeyword,
-			productList: userProductsInfo,
-		});
-
-		if (searchKeyword.length === 0) {
-			setSearchedList([]);
-			return;
-		} else {
-			setItemWithExpireTime(
-				"userProductsInfo",
-				filteredProductList,
-				5000 * 100,
-			);
-			setSearchedList(filteredProductList);
-		}
+		// 선언한 비동기 함수를 호출합니다.
+		fetchSearchResult();
 	}, [searchKeyword]);
+
+	// 로딩 중일 때
+	if (isLoading) {
+		return <div>상품들을 불러오는 중...</div>;
+	}
+
+	// 에러가 발생했을 때
+	if (isError) {
+		const err = error as Error; // Error 타입으로 변환
+		return <div>에러가 발생했습니다: {err.message}</div>;
+	}
 
 	return (
 		<ProductSection>
@@ -152,21 +172,34 @@ function UserProducts() {
 					</FilterContainer>
 					<ProductContainer height="633px">
 						<ProductList>
-							{searchKeyword && searchedList.length === 0 ? (
+							{searchKeyword && searchedProductList?.length === 0 ? (
 								<span className="emptyList">해당하는 상품이 없습니다.</span>
-							) : searchKeyword && searchedList.length !== 0 ? (
-								searchedList.map((item) => (
-									<UserProductListItem product={item} />
+							) : searchKeyword && searchedProductList?.length !== 0 ? (
+								searchedProductList?.map((item) => (
+									<UserProductListItem key={item._id} product={item} />
 								))
-							) : Array.isArray(userProductsInfo) ? (
+							) : Array.isArray(userProductsInfo) &&
+							  userProductsInfo.length > 0 ? (
 								userProductsInfo.map((item) => (
-									<UserProductListItem product={item} />
+									<UserProductListItem key={item._id} product={item} />
 								))
 							) : (
-								<span>데이터가 없습니다.</span>
+								fetchedProductList?.map((item) => (
+									<UserProductListItem key={item.id} product={item} />
+								))
 							)}
 						</ProductList>
-						<button type="submit" className="moreButton">
+						<button
+							type="submit"
+							className="moreButton"
+							ref={paginationButtonRef}
+							onClick={() => {
+								setSearchedProductList([]);
+								setUserProductsInfo([]);
+								fetchNextPage();
+							}}
+							disabled={!hasNextPage || isFetchingNextPage}
+						>
 							더보기
 						</button>
 					</ProductContainer>
