@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 
 const API_KEY = import.meta.env.VITE_API_SERVER;
 
@@ -183,7 +183,8 @@ function UserEdit() {
 		},
 	});
 	const navigate = useNavigate();
-	const currentUser = useRecoilValue(currentUserState);
+	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
+	const accessToken = localStorage.getItem("accessToken");
 	const [uploadedFileName, setUploadedFileName] = useState("");
 
 	// 비로그인 상태 체크
@@ -249,6 +250,10 @@ function UserEdit() {
 			);
 			if (response.data.ok) {
 				toast.success("회원 정보가 수정되었습니다.");
+				setCurrentUser({
+					...currentUser!,
+					profileImage: userData.extra.profileImage,
+				});
 				navigate("/mypage");
 			}
 		} catch (error) {
