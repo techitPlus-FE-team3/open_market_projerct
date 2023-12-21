@@ -22,6 +22,7 @@ const Title = styled.h2`
 const Backgroud = styled.section`
 	width: 100vw;
 	height: 100vh;
+	padding: 100px auto;
 	background-color: ${Common.colors.black};
 	display: flex;
 	flex-direction: column;
@@ -348,7 +349,11 @@ function UserEdit() {
 								/>
 							</div>
 						</UserImageWrapper>
-						<li>
+						<li
+							onClick={() =>
+								toast("이름은 수정 불가능합니다.", { duration: 2000 })
+							}
+						>
 							<AuthInput
 								id="name"
 								name="name"
@@ -357,6 +362,7 @@ function UserEdit() {
 								onChange={handleInputChange}
 								placeholder="이름을 입력하세요"
 								required={true}
+								readonly={true}
 							/>
 						</li>
 						<li
