@@ -15,6 +15,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import StarIcon from "@mui/icons-material/Star";
 import { Rating } from "@mui/material";
+import { AxiosError } from "axios";
 import { SetStateAction, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
@@ -51,6 +52,9 @@ function ProductDetail() {
 				fetchOrder(Number(id)!);
 			}
 		} catch (err) {
+			if (err instanceof AxiosError && err.response?.status === 404) {
+				return navigate("/err", { replace: true });
+			}
 			console.error(err);
 		}
 	}
