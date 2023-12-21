@@ -168,6 +168,7 @@ const Cancle = styled(Link)`
 `;
 
 function UserEdit() {
+	const [confirmAge, setConfirmAge] = useState(false);
 	const [userData, setUserData] = useState({
 		email: "",
 		name: "",
@@ -178,7 +179,7 @@ function UserEdit() {
 			profileImage: "",
 			terms: {
 				recievingMarketingInformation: false,
-				confirmAge: false,
+				confirmAge: confirmAge,
 			},
 		},
 	});
@@ -210,6 +211,7 @@ function UserEdit() {
 						password: "", // 비밀번호 필드 초기화
 						confirmPassword: "", // 비밀번호 확인 필드 초기화
 					};
+					setConfirmAge(response.data.item.extra.terms.confirmAge);
 					setUserData(fetchedData);
 				}
 			} catch (error) {
@@ -461,7 +463,7 @@ function UserEdit() {
 								</label>
 							</div>
 						</li>
-						{userData.extra.terms.confirmAge ? (
+						{confirmAge ? (
 							<></>
 						) : (
 							<li>
