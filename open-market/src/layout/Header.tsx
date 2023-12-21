@@ -1,3 +1,9 @@
+import {
+	categoryValueState,
+	fetchProductListState,
+	productListState,
+	searchKeywordState,
+} from "@/states/productListState";
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 import {
@@ -19,19 +25,12 @@ import {
 	TextField,
 	Toolbar,
 } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import { KeyboardEvent, useEffect, useState } from "react";
 
 import { currentUserState } from "@/states/authState";
-import {
-	categoryKeywordState,
-	fetchProductListState,
-	productListState,
-	searchKeywordState,
-	searchedProductListState,
-} from "@/states/productListState";
-import { axiosInstance, searchProductList } from "@/utils";
+import { axiosInstance } from "@/utils";
 import toast from "react-hot-toast";
-import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import logoImage from "/logo/logo2.svg";
@@ -141,18 +140,12 @@ const Header = () => {
 	const { refetch } = useQuery({
 		queryKey: ["productList", productList],
 		queryFn: fetchProductList,
-		// onSuccess: (data) => {
-		// 	setProductList(data?.data.item);
-		// },
 		refetchOnWindowFocus: false,
 	});
 
-	const [searchKeyword, setSearchKeyword] =
-		useRecoilState<string>(searchKeywordState);
-	const [_, setSearchedProductList] = useRecoilState<Product[]>(
-		searchedProductListState,
-	);
-	const [__, setCategoryFilter] = useRecoilState<string>(categoryKeywordState);
+	const [_, setSearchKeyword] = useRecoilState<string>(searchKeywordState);
+
+	const [__, setCategoryValue] = useRecoilState<string>(categoryValueState);
 
 	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 
@@ -194,8 +187,8 @@ const Header = () => {
 
 	function handleLogout() {
 		setCurrentUser(null);
-		localStorage.removeItem('accessToken');
-		localStorage.removeItem('refreshToken');
+		localStorage.removeItem("accessToken");
+		localStorage.removeItem("refreshToken");
 		sessionStorage.clear();
 
 		toast.success(`로그아웃 되었습니다.`);
@@ -208,7 +201,7 @@ const Header = () => {
 			e.preventDefault();
 			setSearchKeyword(target.value);
 			setSearchInput("");
-			setCategoryFilter("all");
+			setCategoryValue("all");
 		}
 	}
 
@@ -219,15 +212,6 @@ const Header = () => {
 	useEffect(() => {
 		refetch();
 	}, [productList]);
-
-	useEffect(() => {
-		setSearchedProductList(
-			searchProductList({
-				searchKeyword: searchKeyword,
-				productList: productList!,
-			}),
-		);
-	}, [searchKeyword]);
 
 	const handleSearchInputChange = (
 		event: React.ChangeEvent<HTMLInputElement>,
@@ -248,7 +232,7 @@ const Header = () => {
 						to="/"
 						onClick={() => {
 							setSearchKeyword("");
-							setCategoryFilter("all");
+							setCategoryValue("all");
 							localStorage.removeItem("userProductsInfo");
 							localStorage.removeItem("searchOrderKeyword");
 						}}
@@ -327,7 +311,6 @@ const Header = () => {
 								마이페이지
 							</MenuItem>
 							<MenuItem onClick={handleLogout}>
-								{" "}
 								<ExitToApp />
 								로그아웃
 							</MenuItem>

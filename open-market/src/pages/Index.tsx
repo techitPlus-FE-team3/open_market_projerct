@@ -11,17 +11,16 @@ import {
 } from "@/components/ProductListComponent";
 import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
+import { useCategoryFilterProductList } from "@/hooks/useCategoryFilterProductList";
 import { codeState } from "@/states/categoryState";
 import {
-	categoryKeywordState,
-	fetchProductListState,
-	productListState,
+	categoryValueState,
 	searchKeywordState,
-	searchedProductListState,
 } from "@/states/productListState";
 import { Common } from "@/styles/common";
-import { categoryFilterProductList, searchProductList } from "@/utils";
+import { axiosInstance, searchProductList } from "@/utils";
 import styled from "@emotion/styled";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -58,26 +57,59 @@ const fetchProducts = async (limit) => {
 
 function Index() {
 	const searchRef = useRef<HTMLInputElement>(null);
-	const [limit, setLimit] = useState(4);
-
-	const fetchedProductList = useRecoilValue(fetchProductListState(limit));
-	const category = useRecoilValue(codeState);
-
-	const [productList, setProductList] = useRecoilState(productListState);
+	const paginationButtonRef = useRef(null);
+	const [searchedProductList, setSearchedProductList] = useState<Product[]>();
 	const [searchKeyword, setSearchKeyword] =
 		useRecoilState<string>(searchKeywordState);
-	const [searchedProductList, setSearchedProductList] = useRecoilState<
-		Product[]
-	>(searchedProductListState);
-	const [categoryFilter, setCategoryFilter] =
-		useRecoilState<string>(categoryKeywordState);
+	const [categoryValue, setCategoryValue] =
+		useRecoilState<string>(categoryValueState);
+	const [selectedCode, setSelectedCode] = useState("");
+	const category = useRecoilValue(codeState);
 
-	const [filteredProductList, setFilteredProductList] = useState<Product[]>();
+	const fetchProducts = async ({ pageParam = 1 }) => {
+		try {
+			const { data } = await axiosInstance.get(
+				`/products?page=${pageParam}&limit=4`,
+			);
 
-	const { data, isLoading, error } = useQuery({
-		queryKey: ["products", limit],
-		queryFn: () => fetchProducts(limit),
+			return data;
+		} catch (error) {
+			console.error("Error fetching products:", error);
+			throw error;
+		}
+	};
+
+	const {
+		data,
+		error,
+		isLoading,
+		isError,
+		hasNextPage,
+		fetchNextPage,
+		isFetchingNextPage,
+	} = useInfiniteQuery({
+		queryKey: ["products"],
+		queryFn: fetchProducts,
+		initialPageParam: 1,
+		getNextPageParam: (lastPage) =>
+			lastPage.pagination.page < lastPage.pagination.totalPages
+				? lastPage.pagination.page + 1
+				: null,
 	});
+
+	const fetchedProductList = data?.pages.map((page) => page.item).flat();
+
+	const {
+		data: categoryFilterData,
+		error: categoryFilterError,
+		isLoading: categoryFilterLoading,
+		isError: categoryFilterIsError,
+	} = useCategoryFilterProductList({
+		resource: "products",
+		category: selectedCode,
+	});
+
+	const fetchedFilterProductList = categoryFilterData?.item;
 
 	function handleSearchKeyword() {
 		setSearchKeyword(
@@ -85,55 +117,47 @@ function Index() {
 		);
 	}
 
-	// useEffect(() => {
-	// 	setProductList(fetchedProductList!);
-	// }, [limit]);
-
-	// useEffect(() => {
-	// 	setProductList(fetchedProductList!);
-	// }, []);
-
 	useEffect(() => {
-		if (data) {
-			setProductList(data);
-		}
-	}, [data]);
-	if (isLoading) return <div>로딩 중...</div>;
-	if (error) return <div>오류: {error.message}</div>;
-
-	useEffect(() => {
-		function translateValueToCode(value: string) {
-			if (value === "all") {
-				return value;
-			}
-			if (value !== undefined && category !== undefined) {
-				return category?.find((item) => item.value === value)?.code;
+		// categoryFilter 또는 category가 변화할 때마다 selectedCode를 업데이트 합니다.
+		if (category) {
+			const selectedCategory = category.find(
+				(item: { value: string }) => item.value === categoryValue,
+			);
+			if (selectedCategory) {
+				setSelectedCode(selectedCategory.code);
 			}
 		}
-
-		const selectedCode = translateValueToCode(categoryFilter)!;
-
-		setFilteredProductList(
-			categoryFilterProductList({
-				code: selectedCode,
-				productList: productList,
-			}),
-		);
-	}, [categoryFilter, category]);
+	}, [categoryValue]);
 
 	useEffect(() => {
-		const list =
-			categoryFilter !== "all" && filteredProductList !== undefined
-				? filteredProductList
-				: productList;
-		setSearchedProductList(
-			searchProductList({
-				searchKeyword: searchKeyword,
-				productList: list!,
-			}),
-		);
-		searchRef.current!.value = searchKeyword;
-	}, [searchKeyword, filteredProductList]);
+		// 별도의 비동기 함수를 선언합니다.
+		const fetchSearchResult = async () => {
+			const searchResult = await searchProductList({
+				resource: "products",
+				searchKeyword,
+			});
+			setSearchedProductList(searchResult);
+		};
+
+		// 선언한 비동기 함수를 호출합니다.
+		fetchSearchResult();
+	}, [searchKeyword]);
+
+	// 로딩 중일 때
+	if (isLoading || categoryFilterLoading) {
+		return <div>상품들을 불러오는 중...</div>;
+	}
+
+	// 에러가 발생했을 때
+	if (isError || categoryFilterIsError) {
+		if (isError) {
+			const err = error as Error; // Error 타입으로 변환
+			return <div>에러가 발생했습니다: {err.message}</div>;
+		} else {
+			const err = categoryFilterError as Error; // Error 타입으로 변환
+			return <div>에러가 발생했습니다: {err.message}</div>;
+		}
+	}
 
 	return (
 		<>
@@ -155,10 +179,10 @@ function Index() {
 				<FilterContainer>
 					<FilterButton type="submit">인기순</FilterButton>
 					<FilterButton type="submit">최신순</FilterButton>
-					<FilterSelect showable={searchKeyword ? true : false}>
+					<FilterSelect showable={!searchKeyword ? true : false}>
 						<select
-							value={categoryFilter}
-							onChange={(e) => setCategoryFilter(e.target.value)}
+							value={categoryValue}
+							onChange={(e) => setCategoryValue(e.target.value)}
 						>
 							<option value="none" disabled hidden>
 								장르 선택
@@ -169,7 +193,7 @@ function Index() {
 										<option key={item.code} value={item.value}>
 											{item.value}
 										</option>
-									))
+								  ))
 								: undefined}
 						</select>
 					</FilterSelect>
@@ -180,7 +204,7 @@ function Index() {
 							searchedProductList.length === 0 ? (
 								<span className="emptyList">해당하는 상품이 없습니다.</span>
 							) : (
-								searchedProductList.slice(0, 4).map((product) => {
+								searchedProductList.map((product) => {
 									return (
 										<ProductListItem
 											key={product._id}
@@ -191,12 +215,12 @@ function Index() {
 								})
 							)
 						) : !searchKeyword &&
-						  categoryFilter !== "all" &&
-						  filteredProductList !== undefined ? (
-							filteredProductList.length === 0 ? (
+						  categoryValue !== "all" &&
+						  fetchedFilterProductList !== undefined ? (
+							fetchedFilterProductList.length === 0 ? (
 								<span className="emptyList">해당하는 상품이 없습니다.</span>
 							) : (
-								filteredProductList.slice(0, 4).map((product) => {
+								fetchedFilterProductList.map((product: Product) => {
 									return (
 										<ProductListItem
 											key={product._id}
@@ -207,7 +231,7 @@ function Index() {
 								})
 							)
 						) : (
-							fetchedProductList?.map((product) => {
+							fetchedProductList?.map((product: Product) => {
 								return (
 									<ProductListItem
 										key={product._id}
@@ -221,9 +245,11 @@ function Index() {
 					<button
 						type="submit"
 						className="moreButton"
+						ref={paginationButtonRef}
 						onClick={() => {
-							setLimit(limit + 4);
+							fetchNextPage();
 						}}
+						disabled={!hasNextPage || isFetchingNextPage}
 					>
 						더보기
 					</button>
