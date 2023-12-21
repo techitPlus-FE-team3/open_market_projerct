@@ -269,9 +269,15 @@ function ProductManage() {
 						<ProductItemWrapper>
 							<ProductLabel bar>제목</ProductLabel>
 							<ProductValue>{userProductInfo?.name}</ProductValue>
-							<ProductDetailLink to={`/productdetail/${userProductInfo?._id}`}>
-								상세 페이지 확인
-							</ProductDetailLink>
+							{userProductInfo?.show ? (
+								<ProductDetailLink
+									to={`/productdetail/${userProductInfo?._id}`}
+								>
+									상세 페이지 확인
+								</ProductDetailLink>
+							) : (
+								<></>
+							)}
 						</ProductItemWrapper>
 						<FlexLayout>
 							<ProductItemWrapper>
