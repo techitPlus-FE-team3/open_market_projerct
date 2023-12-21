@@ -1,25 +1,29 @@
 import {
-	FilterButton,
-	FilterContainer,
-	FilterSelect,
+    FilterButton,
+    FilterContainer,
+    FilterSelect,
 } from "@/components/FilterComponent";
 import {
-	Heading,
-	ProductContainer,
-	ProductList,
-	ProductSection,
+    Heading,
+    ProductContainer,
+    ProductList,
+    ProductSection,
 } from "@/components/ProductListComponent";
 import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import { codeState } from "@/states/categoryState";
 import {
-	categoryKeywordState,
-	fetchProductListState,
-	productListState,
-	searchKeywordState,
-	searchedProductListState,
+    categoryKeywordState,
+    fetchProductListState,
+    productListState,
+    searchKeywordState,
+    searchedProductListState,
 } from "@/states/productListState";
-import { categoryFilterProductList, searchProductList } from "@/utils";
+import { Common } from "@/styles/common";
+import {
+    categoryFilterProductList,
+    searchProductList
+} from "@/utils";
 import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
@@ -33,9 +37,13 @@ const BannerSection = styled.section<bannerProps>`
 	display: ${(props) => (props.showable ? "block" : "none")};
 	width: 100%;
 	height: 400px;
-
-	img {
-		object-fit: cover;
+	background-color: ${Common.colors.black};
+	div {
+		width: 1440px;
+		margin: 0 auto;
+		img {
+			object-fit: cover;
+		}
 	}
 `;
 
@@ -111,7 +119,9 @@ function Index() {
 				<title>Home - 모두의 오디오 MODI</title>
 			</Helmet>
 			<BannerSection showable={searchKeyword ? false : true}>
-				<img src="/banner.svg" alt="배너 이미지" />
+				<div>
+					<img src="/banner.svg" alt="배너 이미지" />
+				</div>
 			</BannerSection>
 			<ProductSection>
 				<Heading>메인페이지</Heading>
@@ -137,7 +147,7 @@ function Index() {
 										<option key={item.code} value={item.value}>
 											{item.value}
 										</option>
-								  ))
+									))
 								: undefined}
 						</select>
 					</FilterSelect>

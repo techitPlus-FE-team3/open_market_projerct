@@ -41,10 +41,13 @@ const HeaderContainer = styled(AppBar)`
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	width: 100%;
 	align-items: center;
+	position: fixed;
+	z-index: 100;
 `;
 
 const HeaderWrapper = styled(Toolbar)`
 	width: 1440px;
+	height: 80px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;

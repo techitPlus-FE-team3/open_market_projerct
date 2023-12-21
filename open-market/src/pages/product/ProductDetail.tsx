@@ -2,11 +2,11 @@ import ProductDetailExtraLink from "@/components/ProductDetailBadgeComponent";
 import ProductDetailComponent from "@/components/ProductDetailComponent";
 import { Heading } from "@/components/ProductListComponent";
 import ReplyListItem, {
-	ReplyBlock,
-	ReplyContainer,
-	ReplyInputForm,
-	ReplyTextarea,
-	ReplyUserProfileImage,
+    ReplyBlock,
+    ReplyContainer,
+    ReplyInputForm,
+    ReplyTextarea,
+    ReplyUserProfileImage,
 } from "@/components/ReplyComponent";
 import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";

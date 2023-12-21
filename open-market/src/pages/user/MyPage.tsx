@@ -16,6 +16,7 @@ const Section = styled.section`
 	background-color: ${Common.colors.white};
 	padding: 56px;
 	margin: 0 auto;
+	padding-top: 100px;
 `;
 
 const MainTitle = styled.h2`
@@ -133,6 +134,10 @@ const StyledLink = styled(Link)`
 	line-height: 18px;
 	font-size: ${Common.font.size.sm};
 	border-radius: 10px;
+	color: inherit;
+	& > visited {
+		color: inherit;
+	}
 `;
 
 const InfoTitle = styled.h3`

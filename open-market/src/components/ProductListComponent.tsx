@@ -1,7 +1,6 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 
-
 interface HeightProps {
 	height: string;
 }
@@ -14,6 +13,7 @@ export const ProductSection = styled.section`
 	width: 1160px;
 	margin: 0 auto;
 	padding: ${Common.space.spacingLg};
+	padding-top: 100px;
 	display: flex;
 	flex-flow: column nowrap;
 	justify-content: center;
