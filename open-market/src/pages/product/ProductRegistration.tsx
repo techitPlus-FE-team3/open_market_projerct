@@ -211,7 +211,7 @@ function ProductRegistration() {
 		e.preventDefault();
 
 		if (postItem.mainImages.length === 0) {
-			toast.error("앨범아트를 업로드해야 합니다", {
+			toast.error("앨범아트를 업로드해야 합니다.", {
 				ariaProps: {
 					role: "status",
 					"aria-live": "polite",
@@ -221,7 +221,7 @@ function ProductRegistration() {
 		}
 
 		if (postItem.extra.soundFile.path === "") {
-			toast.error("음원을 업로드해야 합니다", {
+			toast.error("음원을 업로드해야 합니다.", {
 				ariaProps: {
 					role: "status",
 					"aria-live": "polite",
@@ -234,7 +234,7 @@ function ProductRegistration() {
 			axiosInstance
 				.post(`/seller/products`, postItem)
 				.then((response) => {
-					toast.success("상품이 성공적으로 올라갔습니다", {
+					toast.success("상품 등록 성공!", {
 						ariaProps: {
 							role: "status",
 							"aria-live": "polite",
@@ -395,9 +395,15 @@ function ProductRegistration() {
 						name="price"
 						label="가격"
 						type="number"
-						handleFn={debounce((e: { target: { value: string | number } }) =>
-							setPostItem({ ...postItem, price: +e.target.value }),
-						)}
+						handleFn={debounce((e: { target: { value: number } }) => {
+							if (e.target.value < 0) {
+								e.target.value = 0;
+							}
+							setPostItem({
+								...postItem,
+								price: +e.target.value,
+							});
+						})}
 					/>
 					<ProductRadioButtonWrapper>
 						<span>공개여부</span>

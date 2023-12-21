@@ -55,7 +55,7 @@ export async function uploadFile(
 			}
 		});
 
-		toast.success("파일이 성공적으로 올라갔습니다", {
+		toast.success("파일 업로드 성공!", {
 			ariaProps: {
 				role: "status",
 				"aria-live": "polite",

@@ -147,6 +147,7 @@ export const ReplyTextarea = styled(ReplyBlock)`
 	word-break: normal;
 	border-width: 0;
 	background-color: ${Common.colors.white};
+	resize: none;
 `.withComponent("textarea");
 
 export function ShowStarRating({ rating }: { rating: number }) {

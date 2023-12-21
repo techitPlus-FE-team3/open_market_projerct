@@ -51,6 +51,7 @@ const ProductManagementSection = styled.section`
 		border-radius: 10px;
 		display: flex;
 		flex-direction: column;
+		position: relative;
 		gap: ${Common.space.spacingXl};
 	}
 	.ProductImage {
@@ -77,15 +78,14 @@ const FormTopRightLayout = styled.div`
 `;
 const ProductItemWrapper = styled.div<StyleProps>`
 	display: flex;
+	position: relative;
 	border-radius: 10px;
 	background-color: ${Common.colors.white};
 	padding: ${Common.space.spacingLg} ${Common.space.spacingMd};
 	${(props) => (props.wide ? "width: 677px;" : "flex-grow: 1;")}
 
 	${(props) =>
-		props.large
-			? `height: 290px; position: relative;`
-			: "height: 72px; 	align-items: center;"}
+		props.large ? `height: 290px;` : "height: 72px; 	align-items: center;"}
 `;
 
 const ProductLabel = styled.span<LabelProps>`
@@ -162,6 +162,30 @@ const LinkedEditButton = styled(Link)`
 	color: ${Common.colors.white};
 `;
 
+const ProductDetailLink = styled(Link)`
+	width: auto;
+	height: auto;
+	padding: 8px;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	right: ${Common.space.spacingLg};
+	font-size: ${Common.font.size.sm};
+	color: ${Common.colors.black};
+	text-decoration: none;
+	background-color: ${Common.colors.emphasize};
+	border-radius: 10px;
+`;
+
+const UserProductListLink = styled(Link)`
+	position: absolute;
+	top: 12px;
+	text-decoration: none;
+	color: rgb(40, 40, 44, 0.7);
+`;
+
 function ProductManage() {
 	const navigate = useNavigate();
 	const { productId } = useParams();
@@ -181,7 +205,7 @@ function ProductManage() {
 			axiosInstance
 				.delete(`/seller/products/${productId}`)
 				.then(() => {
-					toast.success("상품이 성공적으로 삭제되었습니다", {
+					toast.success("상품 삭제 완료", {
 						ariaProps: {
 							role: "status",
 							"aria-live": "polite",
@@ -232,6 +256,9 @@ function ProductManage() {
 			</Helmet>
 			<h2 className="a11yHidden">상품 관리</h2>
 			<div className="ProductInfoWrapper">
+				<UserProductListLink to={`/user/${currentUser!._id}/products`}>
+					&gt; 판매 상품 목록
+				</UserProductListLink>
 				<FormTopLayout>
 					<img
 						src={userProductInfo?.mainImages[0].path}
@@ -242,6 +269,15 @@ function ProductManage() {
 						<ProductItemWrapper>
 							<ProductLabel bar>제목</ProductLabel>
 							<ProductValue>{userProductInfo?.name}</ProductValue>
+							{userProductInfo?.show ? (
+								<ProductDetailLink
+									to={`/productdetail/${userProductInfo?._id}`}
+								>
+									상세 페이지 확인
+								</ProductDetailLink>
+							) : (
+								<></>
+							)}
 						</ProductItemWrapper>
 						<FlexLayout>
 							<ProductItemWrapper>
@@ -267,7 +303,9 @@ function ProductManage() {
 
 						<ProductValue large>
 							{typeof userProductInfo?.buyQuantity !== "undefined"
-								? userProductInfo?.buyQuantity * userProductInfo?.price
+								? numberWithComma(
+										userProductInfo?.buyQuantity * userProductInfo?.price,
+									)
 								: "0"}
 							₩
 						</ProductValue>

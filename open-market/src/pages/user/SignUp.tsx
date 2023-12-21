@@ -19,8 +19,7 @@ const Title = styled.h2`
 
 const Backgroud = styled.section`
 	width: 100vw;
-	height: 100vh;
-	padding: 100px auto;
+	padding: 100px;
 	background-color: ${Common.colors.black};
 	display: flex;
 	flex-direction: column;
@@ -324,7 +323,12 @@ function SignUp() {
 		},
 		onSuccess: () => {
 			// 토스트 표시
-			toast.success("회원가입이 완료되었습니다.");
+			toast.success("회원가입 완료!", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
 
 			navigate("/signin");
 		},
@@ -342,16 +346,39 @@ function SignUp() {
 						const errorMessages = error.response.data.errors
 							.map((err: { msg: string }) => `${err.msg}`)
 							.join("\n");
-						toast.error(`회원가입 실패: ${errorMessages}`);
+						toast.error(`회원가입 실패: ${errorMessages}`, {
+							ariaProps: {
+								role: "status",
+								"aria-live": "polite",
+							},
+						});
 						break;
 					case 500:
-						toast.error("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+						toast.error(
+							"서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+							{
+								ariaProps: {
+									role: "status",
+									"aria-live": "polite",
+								},
+							},
+						);
 						break;
 					default:
-						toast.error("회원가입 중 알 수 없는 오류가 발생했습니다.");
+						toast.error("회원가입 중 알 수 없는 오류가 발생했습니다.", {
+							ariaProps: {
+								role: "status",
+								"aria-live": "polite",
+							},
+						});
 				}
 			} else {
-				toast.error("회원가입 중 알 수 없는 오류가 발생했습니다.");
+				toast.error("회원가입 중 알 수 없는 오류가 발생했습니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
 			}
 		},
 	});
@@ -359,7 +386,12 @@ function SignUp() {
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (form.password !== form.confirmPassword) {
-			toast.error("비밀번호가 일치하지 않습니다.");
+			toast.error("비밀번호가 일치하지 않습니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
 			return;
 		}
 		const userObject = createUserObject();

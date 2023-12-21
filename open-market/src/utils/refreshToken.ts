@@ -50,7 +50,12 @@ async function refreshToken() {
 
 function handleTokenRefreshError(error: any) {
 	console.error("Error refreshing token:", error);
-	toast.error("토큰이 만료되었습니다. 다시 로그인해주세요.");
+	toast.error("토큰이 만료되었습니다. 다시 로그인해주세요.", {
+		ariaProps: {
+			role: "status",
+			"aria-live": "polite",
+		},
+	});
 	localStorage.clear();
 }
 

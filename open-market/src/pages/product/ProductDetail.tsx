@@ -83,7 +83,12 @@ function ProductDetail() {
 				extra: { profileImage: currentUser?.profileImage },
 			});
 			if (response.data.ok) {
-				toast.success("댓글을 작성했습니다.");
+				toast.success("댓글을 작성했습니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
 				replyRef.current!.value = "";
 				setRatingValue(3);
 				getProduct(productId!);

@@ -21,8 +21,7 @@ const Title = styled.h2`
 
 const Backgroud = styled.section`
 	width: 100vw;
-	height: 100vh;
-	padding: 100px auto;
+	padding: 100px;
 	background-color: ${Common.colors.black};
 	display: flex;
 	flex-direction: column;
@@ -169,6 +168,7 @@ const Cancle = styled(Link)`
 `;
 
 function UserEdit() {
+	const [confirmAge, setConfirmAge] = useState(false);
 	const [userData, setUserData] = useState({
 		email: "",
 		name: "",
@@ -179,7 +179,7 @@ function UserEdit() {
 			profileImage: "",
 			terms: {
 				recievingMarketingInformation: false,
-				confirmAge: false,
+				confirmAge: confirmAge,
 			},
 		},
 	});
@@ -211,11 +211,17 @@ function UserEdit() {
 						password: "", // 비밀번호 필드 초기화
 						confirmPassword: "", // 비밀번호 확인 필드 초기화
 					};
+					setConfirmAge(response.data.item.extra.terms.confirmAge);
 					setUserData(fetchedData);
 				}
 			} catch (error) {
 				console.error("Error fetching user info:", error);
-				toast.error("회원 정보를 불러오는데 실패했습니다.");
+				toast.error("회원 정보를 불러오는데 실패했습니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
 			}
 		}
 
@@ -227,13 +233,23 @@ function UserEdit() {
 
 		// 비밀번호 길이 확인
 		if (userData.password && userData.password.length < 8) {
-			toast.error("비밀번호는 8자 이상이어야 합니다.");
+			toast.error("비밀번호는 8자 이상이어야 합니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
 			return;
 		}
 
 		// 비밀번호 확인 로직
 		if (userData.password !== userData.confirmPassword) {
-			toast.error("비밀번호가 일치하지 않습니다.");
+			toast.error("비밀번호가 일치하지 않습니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
 			return;
 		}
 
@@ -249,7 +265,12 @@ function UserEdit() {
 				payload,
 			);
 			if (response.data.ok) {
-				toast.success("회원 정보가 수정되었습니다.");
+				toast.success("회원 정보가 수정되었습니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
 				setCurrentUser({
 					...currentUser!,
 					profileImage: userData.extra.profileImage,
@@ -258,7 +279,12 @@ function UserEdit() {
 			}
 		} catch (error) {
 			console.error("Error updating user info:", error);
-			toast.error("회원 정보 수정에 실패했습니다.");
+			toast.error("회원 정보 수정에 실패했습니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
 		}
 	}
 
@@ -311,7 +337,12 @@ function UserEdit() {
 				}
 			} catch (error) {
 				console.error("Image upload failed:", error);
-				toast.error("이미지 업로드에 실패했습니다.");
+				toast.error("이미지 업로드에 실패했습니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
 			}
 		}
 	}
@@ -432,24 +463,28 @@ function UserEdit() {
 								</label>
 							</div>
 						</li>
-						<li>
-							<div>
-								<StyledCheckbox
-									id="confirmAge"
-									checked={!!userData.extra.terms.confirmAge}
-									onChange={handleInputChange}
-									icon={<CheckCircleOutlineIcon />}
-									checkedIcon={<CheckCircleIcon />}
-									sx={{
-										color: Common.colors.gray,
-										"&.Mui-checked": {
-											color: Common.colors.emphasize,
-										},
-									}}
-								/>
-								<label htmlFor="confirmAge">본인은 만 14세 이상입니다.</label>
-							</div>
-						</li>
+						{confirmAge ? (
+							<></>
+						) : (
+							<li>
+								<div>
+									<StyledCheckbox
+										id="confirmAge"
+										checked={!!userData.extra.terms.confirmAge}
+										onChange={handleInputChange}
+										icon={<CheckCircleOutlineIcon />}
+										checkedIcon={<CheckCircleIcon />}
+										sx={{
+											color: Common.colors.gray,
+											"&.Mui-checked": {
+												color: Common.colors.emphasize,
+											},
+										}}
+									/>
+									<label htmlFor="confirmAge">본인은 만 14세 이상입니다.</label>
+								</div>
+							</li>
+						)}
 					</ul>
 				</Fieldset>
 				<Submit type="submit">수정하기</Submit>
