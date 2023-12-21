@@ -18,6 +18,7 @@ const Title = styled.h2`
 const Backgroud = styled.section`
 	width: 100vw;
 	height: 100vh;
+	padding: 100px auto;
 	background-color: ${Common.colors.black};
 	display: flex;
 	flex-direction: column;
