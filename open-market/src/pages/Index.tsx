@@ -1,33 +1,31 @@
 import {
-    FilterButton,
-    FilterContainer,
-    FilterSelect,
+	FilterButton,
+	FilterContainer,
+	FilterSelect,
 } from "@/components/FilterComponent";
 import {
-    Heading,
-    ProductContainer,
-    ProductList,
-    ProductSection,
+	Heading,
+	ProductContainer,
+	ProductList,
+	ProductSection,
 } from "@/components/ProductListComponent";
 import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import { codeState } from "@/states/categoryState";
 import {
-    categoryKeywordState,
-    fetchProductListState,
-    productListState,
-    searchKeywordState,
-    searchedProductListState,
+	categoryKeywordState,
+	fetchProductListState,
+	productListState,
+	searchKeywordState,
+	searchedProductListState,
 } from "@/states/productListState";
 import { Common } from "@/styles/common";
-import {
-    categoryFilterProductList,
-    searchProductList
-} from "@/utils";
+import { categoryFilterProductList, searchProductList } from "@/utils";
 import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { useQuery } from "@tanstack/react-query";
 
 interface bannerProps {
 	showable?: boolean;
@@ -47,6 +45,17 @@ const BannerSection = styled.section<bannerProps>`
 	}
 `;
 
+const fetchProducts = async (limit) => {
+	const response = await fetch(`/api/products?limit=${limit}`);
+	if (!response.ok) {
+		throw new Error(`서버 오류: ${response.status}`);
+	}
+	if (!response.headers.get("content-type")?.includes("application/json")) {
+		throw new Error("잘못된 형식의 응답");
+	}
+	return response.json();
+};
+
 function Index() {
 	const searchRef = useRef<HTMLInputElement>(null);
 	const [limit, setLimit] = useState(4);
@@ -65,19 +74,32 @@ function Index() {
 
 	const [filteredProductList, setFilteredProductList] = useState<Product[]>();
 
+	const { data, isLoading, error } = useQuery({
+		queryKey: ["products", limit],
+		queryFn: () => fetchProducts(limit),
+	});
+
 	function handleSearchKeyword() {
 		setSearchKeyword(
 			searchRef.current!.value.split(" ").join("").toLowerCase(),
 		);
 	}
 
-	useEffect(() => {
-		setProductList(fetchedProductList!);
-	}, [limit]);
+	// useEffect(() => {
+	// 	setProductList(fetchedProductList!);
+	// }, [limit]);
+
+	// useEffect(() => {
+	// 	setProductList(fetchedProductList!);
+	// }, []);
 
 	useEffect(() => {
-		setProductList(fetchedProductList!);
-	}, []);
+		if (data) {
+			setProductList(data);
+		}
+	}, [data]);
+	if (isLoading) return <div>로딩 중...</div>;
+	if (error) return <div>오류: {error.message}</div>;
 
 	useEffect(() => {
 		function translateValueToCode(value: string) {
