@@ -50,24 +50,3 @@ export async function categoryFilterProductList({
 		console.error("상품 리스트 조회 실패:", error);
 	}
 }
-
-export function searchOrderList({
-	searchKeyword,
-	orderList,
-}: {
-	searchKeyword: string;
-	orderList: Order[];
-}) {
-	const filteredList = orderList.filter((order) => {
-		const name = order.products[0].name.split(" ").join("").toLowerCase();
-		const genre = order.products[0].extra?.category;
-		const tags = order.products[0].extra?.tags;
-		if (name.includes(searchKeyword) || genre?.includes(searchKeyword)) {
-			return true;
-		} else if (tags?.some((tag) => tag.toLowerCase().includes(searchKeyword))) {
-			return true;
-		}
-		return false;
-	});
-	return filteredList;
-}
