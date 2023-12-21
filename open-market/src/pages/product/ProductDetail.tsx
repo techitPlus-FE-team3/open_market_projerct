@@ -2,11 +2,11 @@ import ProductDetailExtraLink from "@/components/ProductDetailBadgeComponent";
 import ProductDetailComponent from "@/components/ProductDetailComponent";
 import { Heading } from "@/components/ProductListComponent";
 import ReplyListItem, {
-    ReplyBlock,
-    ReplyContainer,
-    ReplyInputForm,
-    ReplyTextarea,
-    ReplyUserProfileImage,
+	ReplyBlock,
+	ReplyContainer,
+	ReplyInputForm,
+	ReplyTextarea,
+	ReplyUserProfileImage,
 } from "@/components/ReplyComponent";
 import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
@@ -21,6 +21,7 @@ import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import _ from "lodash";
 
 function ProductDetail() {
 	const navigate = useNavigate();
@@ -35,7 +36,7 @@ function ProductDetail() {
 	const [rating, setRating] = useState(0);
 	const [order, setOrder] = useState<Order>();
 	const [ratingValue, setRatingValue] = useState<number>(3);
-	const [_, setHover] = useState(-1);
+	const [__, setHover] = useState(-1);
 	const [replyContent, setReplyContent] = useState<string>();
 	const [genre, setGenre] = useState<string>();
 	const [createdAt, setCreatedAt] = useState<string>();
@@ -107,18 +108,7 @@ function ProductDetail() {
 	}
 
 	function getRating(product: Product) {
-		if (product.replies?.length === 0) {
-			return 0;
-		} else {
-			const ratingSum = product.replies?.reduce(
-				(acc, cur) => acc + Number(cur.rating),
-				0,
-			)!;
-			const ratingAvg = Number(
-				(ratingSum / product.replies?.length!).toFixed(2),
-			);
-			return ratingAvg;
-		}
+		return +_.meanBy(product.replies, "rating").toFixed(2) || 0;
 	}
 
 	useEffect(() => {
