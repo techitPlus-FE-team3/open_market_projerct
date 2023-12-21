@@ -7,12 +7,14 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import DownloadIcon from "@mui/icons-material/Download";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import LockIcon from "@mui/icons-material/Lock";
+
 const API_KEY = import.meta.env.VITE_API_SERVER;
 
 const theme = createTheme({
 	palette: {
-		primary: { main: "#FFB258" },
-		secondary: { main: "#D9D9D9" },
+		primary: { main: "#FFB258", light: "#D9D9D9", dark: "#828280" },
 	},
 });
 
@@ -136,7 +138,7 @@ export function ProductListItem({
 					className="download"
 				>
 					<ThemeProvider theme={theme}>
-						<DownloadIcon color="primary" />
+						<DownloadIcon sx={{ color: `primary.main` }} />
 					</ThemeProvider>
 					다운로드
 				</a>
@@ -146,9 +148,9 @@ export function ProductListItem({
 			<button type="submit" className="bookmark">
 				<ThemeProvider theme={theme}>
 					{bookmark ? (
-						<BookmarkIcon color="primary" />
+						<BookmarkIcon sx={{ color: `primary.main` }} />
 					) : (
-						<BookmarkBorderIcon color="secondary" />
+						<BookmarkBorderIcon sx={{ color: `primary.light` }} />
 					)}
 				</ThemeProvider>
 				<span>북마크</span>
@@ -180,6 +182,13 @@ export function UserProductListItem({ product }: { product: Product }) {
 				북마크 수:
 				<span>{product?.bookmarks ? product?.bookmarks.length : 0}</span>
 			</StyledElementSpan>
+			<ThemeProvider theme={theme}>
+				{product.show ? (
+					<LockOpenIcon sx={{ color: `primary.dark` }} />
+				) : (
+					<LockIcon sx={{ color: `primary.main` }} />
+				)}
+			</ThemeProvider>
 			<Link className="manageLink" to={`/productmanage/${product?._id}`}>
 				상세보기
 			</Link>
