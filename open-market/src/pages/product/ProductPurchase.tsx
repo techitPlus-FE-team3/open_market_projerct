@@ -250,7 +250,7 @@ function ProductPurchase() {
 						<FlexLayout>
 							<ProductItemWrapper wide>
 								<ProductLabel bar>아티스트</ProductLabel>
-								<ProductValue> {product?.seller_id}</ProductValue>
+								<ProductValue> {product?.extra?.sellerName}</ProductValue>
 							</ProductItemWrapper>
 							<ProductItemWrapper>
 								<ProductLabel bar>장르</ProductLabel>
