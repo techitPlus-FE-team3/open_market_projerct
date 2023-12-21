@@ -11,69 +11,93 @@ import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
 	axiosInstance,
 	getItemWithExpireTime,
-	searchOrderList,
-	setItemWithExpireTime,
+	searchProductList,
 } from "@/utils";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 
 function UserOrders() {
 	const searchRef = useRef<HTMLInputElement>(null);
+	const paginationButtonRef = useRef(null);
 
-	const [orderList, setOrderList] = useState<Order[]>([]);
-	const [searchKeyword, setSearchKeyword] = useState<string>();
+	const [searchKeyword, setSearchKeyword] = useState<string>("");
 	const [searchedOrderList, setSearchedOrderList] = useState<Order[]>();
 
 	//비로그인 상태 체크
 	useRequireAuth();
 
-	async function getOrderList() {
+	async function fetchOrderProductsInfo({ pageParam = 1 }) {
 		const accessToken = localStorage.getItem("accessToken");
 		try {
-			const response = await axiosInstance.get<OrderListResponse>("/orders", {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
+			const { data } = await axiosInstance.get(
+				`/orders?page=${pageParam}&limit=8`,
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
 				},
-			});
-			setOrderList(response.data.item);
+			);
+
+			return data;
 		} catch (err) {
 			console.error(err);
 		}
 	}
 
-	function handleSearchKeyword() {
-		setSearchKeyword(
-			searchRef.current!.value.split(" ").join("").toLowerCase(),
-		);
+	const {
+		data,
+		error,
+		isLoading,
+		isError,
+		hasNextPage,
+		fetchNextPage,
+		isFetchingNextPage,
+	} = useInfiniteQuery({
+		queryKey: ["orders"],
+		queryFn: fetchOrderProductsInfo,
+		initialPageParam: 1,
+		getNextPageParam: (lastPage) =>
+			lastPage.pagination.page < lastPage.pagination.totalPages
+				? lastPage.pagination.page + 1
+				: null,
+	});
+	const fetchedOrderProductList =
+		data?.pages.flatMap((page) => page.item) || [];
+
+	function handleSearchKeyword(e: { preventDefault: () => void }) {
+		e.preventDefault();
+
+		const keyword =
+			searchRef.current?.value.split(" ").join("").toLowerCase() || "";
+		setSearchKeyword(keyword);
 	}
 
 	useEffect(() => {
-		getOrderList();
-	}, []);
-
-	useEffect(() => {
 		setSearchKeyword(getItemWithExpireTime("searchOrderKeyword"));
-		setSearchedOrderList(
-			searchOrderList({
-				searchKeyword: searchKeyword!,
-				orderList: orderList!,
-			}),
-		);
-	}, [orderList]);
+		// 별도의 비동기 함수를 선언합니다.
+		const fetchSearchResult = async () => {
+			const searchResult = await searchProductList({
+				resource: "orders",
+				searchKeyword,
+			});
+			setSearchedOrderList(searchResult);
+		};
 
-	useEffect(() => {
-		setSearchedOrderList(
-			searchOrderList({
-				searchKeyword: searchKeyword!,
-				orderList: orderList!,
-			}),
-		);
-		if (searchKeyword !== undefined && searchKeyword !== null) {
-			setItemWithExpireTime("searchOrderKeyword", searchKeyword, 5000 * 100);
-		}
-		searchRef.current!.value = searchKeyword ? searchKeyword : "";
+		// 선언한 비동기 함수를 호출합니다.
+		fetchSearchResult();
 	}, [searchKeyword]);
 
+	// 로딩 중일 때
+	if (isLoading) {
+		return <div>상품들을 불러오는 중...</div>;
+	}
+
+	// 에러가 발생했을 때
+	if (isError) {
+		const err = error as Error; // Error 타입으로 변환
+		return <div>에러가 발생했습니다: {err.message}</div>;
+	}
 	return (
 		<ProductSection>
 			<Helmet>
@@ -87,23 +111,18 @@ function UserOrders() {
 			</FilterContainer>
 			<ProductContainer height={"633px"}>
 				<ProductList>
-					{searchKeyword ? (
-						searchedOrderList !== undefined &&
-						searchedOrderList.length !== 0 ? (
-							searchedOrderList.map((order) => {
-								return (
-									<ProductListItem
-										key={order._id}
-										product={order.products[0]}
-										bookmark={false}
-									/>
-								);
-							})
-						) : (
-							<span className="emptyList">해당하는 구매내역이 없습니다.</span>
-						)
-					) : orderList !== undefined && orderList.length !== 0 ? (
-						orderList.map((order) => {
+					{searchKeyword && searchedOrderList?.length === 0 ? (
+						<span className="emptyList">해당하는 구매내역이 없습니다.</span>
+					) : searchedOrderList && searchedOrderList.length !== 0 ? (
+						searchedOrderList.map((order) => (
+							<ProductListItem
+								key={order._id}
+								product={order.products[0]}
+								bookmark={false}
+							/>
+						))
+					) : (
+						fetchedOrderProductList.map((order) => {
 							return (
 								<ProductListItem
 									key={order._id}
@@ -112,11 +131,15 @@ function UserOrders() {
 								/>
 							);
 						})
-					) : (
-						<span className="emptyList">구매내역이 없습니다.</span>
 					)}
 				</ProductList>
-				<button type="button" className="moreButton">
+				<button
+					type="submit"
+					className="moreButton"
+					ref={paginationButtonRef}
+					onClick={() => fetchNextPage()}
+					disabled={!hasNextPage || isFetchingNextPage}
+				>
 					더보기
 				</button>
 			</ProductContainer>

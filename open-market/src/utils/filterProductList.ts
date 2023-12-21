@@ -1,60 +1,52 @@
-export function searchProductList({
-	searchKeyword,
-	productList,
-}: {
-	searchKeyword: string;
-	productList: Product[];
-}) {
-	searchKeyword = searchKeyword.toLowerCase();
+import { axiosInstance } from ".";
 
-	const filteredList = productList.filter((product) => {
-		const name = product.name.split(" ").join("").toLowerCase();
-		const genre = product.extra?.category;
-		const tags = product.extra?.tags;
-		if (name.includes(searchKeyword) || genre?.includes(searchKeyword)) {
-			return true;
-		} else if (tags?.some((tag) => tag.toLowerCase().includes(searchKeyword))) {
-			return true;
+export async function searchProductList({
+	resource,
+	searchKeyword,
+}: {
+	resource: string;
+	searchKeyword: string;
+}) {
+	if (resource && searchKeyword) {
+		try {
+			const [responseKeyword, responseTags] = await Promise.all([
+				axiosInstance.get(`/${resource}?keyword=${searchKeyword}`),
+				axiosInstance.get(
+					`/${resource}?custom={"extra.tags":"${searchKeyword}"}`,
+				),
+			]);
+
+			const searchedKeywordData = responseKeyword.data.item;
+			const searchedTagsData = responseTags.data.item;
+
+			const combinedData = [...searchedKeywordData, ...searchedTagsData];
+
+			const uniqueData = combinedData.filter((item, index) => {
+				return combinedData.findIndex((i) => i._id === item._id) === index;
+			});
+
+			return uniqueData;
+		} catch (error) {
+			console.error("상품 리스트 조회 실패:", error);
 		}
-		return false;
-	});
-	return filteredList;
+	}
 }
 
-export function categoryFilterProductList({
-	code,
-	productList,
+export async function categoryFilterProductList({
+	resource,
+	category,
 }: {
-	code: string;
-	productList: Product[];
+	resource: string;
+	category: string;
 }) {
-	const filteredList = productList.filter((product) => {
-		const productCategory = product.extra?.category!;
-		if (productCategory?.includes(code)) {
-			return true;
-		}
-		return false;
-	});
-	return filteredList;
-}
+	try {
+		const responseCategory = await axiosInstance.get(
+			`/${resource}?custom={"extra.category": "${category}"}`,
+		);
+		const filteredCategoryData = responseCategory.data.item;
 
-export function searchOrderList({
-	searchKeyword,
-	orderList,
-}: {
-	searchKeyword: string;
-	orderList: Order[];
-}) {
-	const filteredList = orderList.filter((order) => {
-		const name = order.products[0].name.split(" ").join("").toLowerCase();
-		const genre = order.products[0].extra?.category;
-		const tags = order.products[0].extra?.tags;
-		if (name.includes(searchKeyword) || genre?.includes(searchKeyword)) {
-			return true;
-		} else if (tags?.some((tag) => tag.toLowerCase().includes(searchKeyword))) {
-			return true;
-		}
-		return false;
-	});
-	return filteredList;
+		return filteredCategoryData;
+	} catch (error) {
+		console.error("상품 리스트 조회 실패:", error);
+	}
 }
