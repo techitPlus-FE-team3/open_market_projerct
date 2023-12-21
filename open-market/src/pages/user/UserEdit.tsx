@@ -461,24 +461,28 @@ function UserEdit() {
 								</label>
 							</div>
 						</li>
-						<li>
-							<div>
-								<StyledCheckbox
-									id="confirmAge"
-									checked={!!userData.extra.terms.confirmAge}
-									onChange={handleInputChange}
-									icon={<CheckCircleOutlineIcon />}
-									checkedIcon={<CheckCircleIcon />}
-									sx={{
-										color: Common.colors.gray,
-										"&.Mui-checked": {
-											color: Common.colors.emphasize,
-										},
-									}}
-								/>
-								<label htmlFor="confirmAge">본인은 만 14세 이상입니다.</label>
-							</div>
-						</li>
+						{userData.extra.terms.confirmAge ? (
+							<></>
+						) : (
+							<li>
+								<div>
+									<StyledCheckbox
+										id="confirmAge"
+										checked={!!userData.extra.terms.confirmAge}
+										onChange={handleInputChange}
+										icon={<CheckCircleOutlineIcon />}
+										checkedIcon={<CheckCircleIcon />}
+										sx={{
+											color: Common.colors.gray,
+											"&.Mui-checked": {
+												color: Common.colors.emphasize,
+											},
+										}}
+									/>
+									<label htmlFor="confirmAge">본인은 만 14세 이상입니다.</label>
+								</div>
+							</li>
+						)}
 					</ul>
 				</Fieldset>
 				<Submit type="submit">수정하기</Submit>
