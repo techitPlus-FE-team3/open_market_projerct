@@ -152,11 +152,32 @@ function ProductPurchase() {
 				});
 				return navigate("/", { replace: true });
 			}
-			setProduct(response.data.item);
+			fetchOrder(+id).then(() => {
+				setProduct(response.data.item);
+			});
 		} catch (err) {
-			if (err instanceof AxiosError && err.status === 404) {
+			if (err instanceof AxiosError && err.response?.status === 404) {
 				return navigate("/err", { replace: true });
 			}
+			console.error(err);
+		}
+	}
+
+	async function fetchOrder(productId: number) {
+		try {
+			const response = await axiosInstance.get<OrderListResponse>(`/orders`);
+			if (
+				response.data.item.some((order) => order.products[0]._id === productId)
+			) {
+				toast.error("비정상적인 접근입니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
+				return navigate("/", { replace: true });
+			}
+		} catch (err) {
 			console.error(err);
 		}
 	}
