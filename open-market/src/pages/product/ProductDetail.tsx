@@ -2,11 +2,11 @@ import ProductDetailExtraLink from "@/components/ProductDetailBadgeComponent";
 import ProductDetailComponent from "@/components/ProductDetailComponent";
 import { Heading } from "@/components/ProductListComponent";
 import ReplyListItem, {
-    ReplyBlock,
-    ReplyContainer,
-    ReplyInputForm,
-    ReplyTextarea,
-    ReplyUserProfileImage,
+	ReplyBlock,
+	ReplyContainer,
+	ReplyInputForm,
+	ReplyTextarea,
+	ReplyUserProfileImage,
 } from "@/components/ReplyComponent";
 import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
@@ -21,6 +21,7 @@ import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import _ from "lodash";
 
 function ProductDetail() {
 	const navigate = useNavigate();
@@ -35,7 +36,7 @@ function ProductDetail() {
 	const [rating, setRating] = useState(0);
 	const [order, setOrder] = useState<Order>();
 	const [ratingValue, setRatingValue] = useState<number>(3);
-	const [_, setHover] = useState(-1);
+	const [__, setHover] = useState(-1);
 	const [replyContent, setReplyContent] = useState<string>();
 	const [genre, setGenre] = useState<string>();
 	const [createdAt, setCreatedAt] = useState<string>();
@@ -60,13 +61,8 @@ function ProductDetail() {
 	}
 
 	async function fetchOrder(productId: number) {
-		const accessToken = localStorage.getItem("accessToken");
 		try {
-			const response = await axiosInstance.get<OrderListResponse>(`/orders`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			});
+			const response = await axiosInstance.get<OrderListResponse>(`/orders`);
 			const userOrder = response.data.item.find(
 				(order) => order.products[0]._id === productId,
 			);
@@ -78,23 +74,14 @@ function ProductDetail() {
 
 	async function handleReplySubmit(e: { preventDefault: () => void }) {
 		e.preventDefault();
-		const accessToken = localStorage.getItem("accessToken");
 		try {
-			const response = await axiosInstance.post<ReplyResponse>(
-				`/replies`,
-				{
-					order_id: order!._id,
-					product_id: Number(productId),
-					rating: ratingValue,
-					content: replyContent,
-					extra: { profileImage: currentUser?.profileImage },
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				},
-			);
+			const response = await axiosInstance.post<ReplyResponse>(`/replies`, {
+				order_id: order!._id,
+				product_id: Number(productId),
+				rating: ratingValue,
+				content: replyContent,
+				extra: { profileImage: currentUser?.profileImage },
+			});
 			if (response.data.ok) {
 				toast.success("댓글을 작성했습니다.");
 				replyRef.current!.value = "";
@@ -107,18 +94,7 @@ function ProductDetail() {
 	}
 
 	function getRating(product: Product) {
-		if (product.replies?.length === 0) {
-			return 0;
-		} else {
-			const ratingSum = product.replies?.reduce(
-				(acc, cur) => acc + Number(cur.rating),
-				0,
-			)!;
-			const ratingAvg = Number(
-				(ratingSum / product.replies?.length!).toFixed(2),
-			);
-			return ratingAvg;
-		}
+		return +_.meanBy(product.replies, "rating").toFixed(2) || 0;
 	}
 
 	useEffect(() => {

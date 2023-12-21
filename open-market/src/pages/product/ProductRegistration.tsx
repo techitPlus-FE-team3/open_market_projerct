@@ -209,7 +209,6 @@ function ProductRegistration() {
 
 	function handlePostProductRegist(e: { preventDefault: () => void }) {
 		e.preventDefault();
-		const accessToken = localStorage.getItem("accessToken");
 
 		if (postItem.mainImages.length === 0) {
 			toast.error("앨범아트를 업로드해야 합니다", {
@@ -233,11 +232,7 @@ function ProductRegistration() {
 
 		try {
 			axiosInstance
-				.post(`/seller/products`, postItem, {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				})
+				.post(`/seller/products`, postItem)
 				.then((response) => {
 					toast.success("상품이 성공적으로 올라갔습니다", {
 						ariaProps: {

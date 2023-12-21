@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 
 const API_KEY = import.meta.env.VITE_API_SERVER;
 
@@ -183,8 +183,7 @@ function UserEdit() {
 		},
 	});
 	const navigate = useNavigate();
-	const currentUser = useRecoilValue(currentUserState);
-	const accessToken = localStorage.getItem("accessToken");
+	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 	const [uploadedFileName, setUploadedFileName] = useState("");
 
 	// 비로그인 상태 체크
@@ -194,11 +193,7 @@ function UserEdit() {
 		// 사용자 정보 불러오기
 		async function fetchUserInfo() {
 			try {
-				const response = await axiosInstance.get(`/users/${currentUser?._id}`, {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				});
+				const response = await axiosInstance.get(`/users/${currentUser?._id}`);
 				if (response.data.ok) {
 					// API로부터 불러온 데이터를 기본값과 병합.
 					const fetchedData = {
@@ -224,7 +219,7 @@ function UserEdit() {
 		}
 
 		fetchUserInfo();
-	}, [currentUser, accessToken]);
+	}, [currentUser]);
 
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -251,14 +246,13 @@ function UserEdit() {
 			const response = await axiosInstance.patch(
 				`/users/${currentUser?._id}`,
 				payload,
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				},
 			);
 			if (response.data.ok) {
 				toast.success("회원 정보가 수정되었습니다.");
+				setCurrentUser({
+					...currentUser!,
+					profileImage: userData.extra.profileImage,
+				});
 				navigate("/mypage");
 			}
 		} catch (error) {
@@ -300,7 +294,6 @@ function UserEdit() {
 				const response = await axiosInstance.post("/files", formData, {
 					headers: {
 						"Content-Type": "multipart/form-data",
-						Authorization: `Bearer ${accessToken}`,
 					},
 				});
 

@@ -1,21 +1,21 @@
 import {
-	FilterButton,
-	FilterContainer,
-	FilterSelect,
+    FilterButton,
+    FilterContainer,
+    FilterSelect,
 } from "@/components/FilterComponent";
 import {
-	Heading,
-	ProductContainer,
-	ProductList,
-	ProductSection,
+    Heading,
+    ProductContainer,
+    ProductList,
+    ProductSection,
 } from "@/components/ProductListComponent";
 import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import { useCategoryFilterProductList } from "@/hooks/useCategoryFilterProductList";
 import { codeState } from "@/states/categoryState";
 import {
-	categoryValueState,
-	searchKeywordState,
+    categoryValueState,
+    searchKeywordState,
 } from "@/states/productListState";
 import { Common } from "@/styles/common";
 import { axiosInstance, searchProductList } from "@/utils";

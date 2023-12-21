@@ -186,24 +186,15 @@ function ProductPurchase() {
 
 	async function handleProductOrder() {
 		if (confirm("구매하시겠습니까?")) {
-			const accessToken = localStorage.getItem("accessToken");
 			try {
-				const response = await axiosInstance.post<OrderResponse>(
-					"/orders",
-					{
-						products: [
-							{
-								_id: product?._id,
-								quantity: 1,
-							},
-						],
-					},
-					{
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
+				const response = await axiosInstance.post<OrderResponse>("/orders", {
+					products: [
+						{
+							_id: product?._id,
+							quantity: 1,
 						},
-					},
-				);
+					],
+				});
 				if (response.data.ok) {
 					toast.success("성공적으로 구매했습니다!");
 					navigate(`/orders`);
