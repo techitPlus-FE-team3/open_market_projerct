@@ -77,15 +77,14 @@ const FormTopRightLayout = styled.div`
 `;
 const ProductItemWrapper = styled.div<StyleProps>`
 	display: flex;
+	position: relative;
 	border-radius: 10px;
 	background-color: ${Common.colors.white};
 	padding: ${Common.space.spacingLg} ${Common.space.spacingMd};
 	${(props) => (props.wide ? "width: 677px;" : "flex-grow: 1;")}
 
 	${(props) =>
-		props.large
-			? `height: 290px; position: relative;`
-			: "height: 72px; 	align-items: center;"}
+		props.large ? `height: 290px;` : "height: 72px; 	align-items: center;"}
 `;
 
 const ProductLabel = styled.span<LabelProps>`
@@ -160,6 +159,23 @@ const LinkedEditButton = styled(Link)`
 	background-color: ${Common.colors.emphasize};
 	text-decoration: none;
 	color: ${Common.colors.white};
+`;
+
+const ProductDetailLink = styled(Link)`
+	width: auto;
+	height: auto;
+	padding: 8px;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	right: ${Common.space.spacingLg};
+	font-size: ${Common.font.size.sm};
+	color: ${Common.colors.black};
+	text-decoration: none;
+	background-color: ${Common.colors.emphasize};
+	border-radius: 10px;
 `;
 
 function ProductManage() {
@@ -242,6 +258,9 @@ function ProductManage() {
 						<ProductItemWrapper>
 							<ProductLabel bar>제목</ProductLabel>
 							<ProductValue>{userProductInfo?.name}</ProductValue>
+							<ProductDetailLink to={`/productdetail/${userProductInfo?._id}`}>
+								상세 페이지 확인
+							</ProductDetailLink>
 						</ProductItemWrapper>
 						<FlexLayout>
 							<ProductItemWrapper>
