@@ -1,10 +1,12 @@
 import FunctionalButton from "@/components/FunctionalButton";
 import Textarea from "@/components/Textarea";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
 import { Common } from "@/styles/common";
 import { axiosInstance, numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
@@ -129,6 +131,7 @@ function ProductPurchase() {
 	const navigate = useNavigate();
 	const { productId } = useParams();
 	const category = useRecoilValue(codeState);
+	const currentUser = useRecoilValue(currentUserState);
 	const [product, setProduct] = useState<Product>();
 	const [genre, setGenre] = useState<string>();
 
@@ -140,6 +143,15 @@ function ProductPurchase() {
 			const response = await axiosInstance.get<ProductResponse>(
 				`/products/${id}`,
 			);
+			if (currentUser?._id === response.data.item?.seller_id) {
+				toast.error("비정상적인 접근입니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
+				return navigate("/", { replace: true });
+			}
 			setProduct(response.data.item);
 		} catch (err) {
 			console.error(err);
