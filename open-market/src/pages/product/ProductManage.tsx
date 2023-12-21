@@ -175,16 +175,11 @@ function ProductManage() {
 
 	function handleProductDelete(e: { preventDefault: () => void }) {
 		e.preventDefault();
-		const accessToken = localStorage.getItem("accessToken");
 		const result = confirm("상품을 정말로 삭제하시겠습니까?");
 		if (!result) return;
 		try {
 			axiosInstance
-				.delete(`/seller/products/${productId}`, {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				})
+				.delete(`/seller/products/${productId}`)
 				.then(() => {
 					toast.success("상품이 성공적으로 삭제되었습니다", {
 						ariaProps: {
@@ -203,17 +198,10 @@ function ProductManage() {
 	}
 
 	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-
 		const fetchUserProductInfo = async () => {
 			try {
 				const response = await axiosInstance.get<ProductResponse>(
 					`/seller/products/${productId}`,
-					{
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
-						},
-					},
 				);
 				setUserProductInfo(response.data.item);
 			} catch (error) {

@@ -61,13 +61,8 @@ function ProductDetail() {
 	}
 
 	async function fetchOrder(productId: number) {
-		const accessToken = localStorage.getItem("accessToken");
 		try {
-			const response = await axiosInstance.get<OrderListResponse>(`/orders`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			});
+			const response = await axiosInstance.get<OrderListResponse>(`/orders`);
 			const userOrder = response.data.item.find(
 				(order) => order.products[0]._id === productId,
 			);
@@ -79,23 +74,14 @@ function ProductDetail() {
 
 	async function handleReplySubmit(e: { preventDefault: () => void }) {
 		e.preventDefault();
-		const accessToken = localStorage.getItem("accessToken");
 		try {
-			const response = await axiosInstance.post<ReplyResponse>(
-				`/replies`,
-				{
-					order_id: order!._id,
-					product_id: Number(productId),
-					rating: ratingValue,
-					content: replyContent,
-					extra: { profileImage: currentUser?.profileImage },
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				},
-			);
+			const response = await axiosInstance.post<ReplyResponse>(`/replies`, {
+				order_id: order!._id,
+				product_id: Number(productId),
+				rating: ratingValue,
+				content: replyContent,
+				extra: { profileImage: currentUser?.profileImage },
+			});
 			if (response.data.ok) {
 				toast.success("댓글을 작성했습니다.");
 				replyRef.current!.value = "";

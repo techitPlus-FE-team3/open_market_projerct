@@ -198,7 +198,6 @@ function ProductEdit() {
 
 	function handleEditProduct(e: { preventDefault: () => void }) {
 		e.preventDefault();
-		const accessToken = localStorage.getItem("accessToken");
 
 		if (postItem.mainImages.length === 0) {
 			toast.error("앨범아트를 업로드해야 합니다", {
@@ -222,11 +221,7 @@ function ProductEdit() {
 
 		try {
 			axiosInstance
-				.patch(`/seller/products/${productId}`, postItem, {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				})
+				.patch(`/seller/products/${productId}`, postItem)
 				.then(() => {
 					toast.success("상품이 성공적으로 수정되었습니다", {
 						ariaProps: {
