@@ -3,8 +3,14 @@ import toast from "react-hot-toast";
 
 const API_KEY = import.meta.env.VITE_API_SERVER;
 
+// axios 공통 설정
 export const axiosInstance = axios.create({
 	baseURL: API_KEY,
+	timeout: 1000 * 5, // 5초 타임아웃
+	headers: {
+		"Content-Type": "application/json",
+		accept: "application/json", // 응답받고 싶은 데이터 타입
+	},
 });
 
 let refreshingToken: any = null;
@@ -47,6 +53,21 @@ function handleTokenRefreshError(error: any) {
 	toast.error("토큰이 만료되었습니다. 다시 로그인해주세요.");
 	localStorage.clear();
 }
+
+// 요청 인터셉터
+axiosInstance.interceptors.request.use(
+	(config) => {
+		const token = localStorage.getItem("accessToken");
+		if (token) {
+			config.headers["Authorization"] = `Bearer ${token}`;
+		}
+		return config;
+	},
+	(error) => {
+		console.error("interceptors error", error);
+		return Promise.reject(error);
+	},
+);
 
 // 응답 인터셉터 설정
 axiosInstance.interceptors.response.use(
