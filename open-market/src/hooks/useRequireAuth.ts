@@ -8,7 +8,12 @@ export function useRequireAuth() {
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");
 		if (!accessToken) {
-			toast.error("로그인이 필요한 서비스입니다.");
+			toast.error("로그인이 필요한 서비스입니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
 			navigate("/signin");
 		}
 	}, [navigate]);

@@ -181,7 +181,7 @@ function ProductManage() {
 			axiosInstance
 				.delete(`/seller/products/${productId}`)
 				.then(() => {
-					toast.success("상품이 성공적으로 삭제되었습니다", {
+					toast.success("상품 삭제 완료", {
 						ariaProps: {
 							role: "status",
 							"aria-live": "polite",

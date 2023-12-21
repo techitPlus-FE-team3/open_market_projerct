@@ -214,7 +214,12 @@ function UserEdit() {
 				}
 			} catch (error) {
 				console.error("Error fetching user info:", error);
-				toast.error("회원 정보를 불러오는데 실패했습니다.");
+				toast.error("회원 정보를 불러오는데 실패했습니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
 			}
 		}
 
@@ -226,13 +231,23 @@ function UserEdit() {
 
 		// 비밀번호 길이 확인
 		if (userData.password && userData.password.length < 8) {
-			toast.error("비밀번호는 8자 이상이어야 합니다.");
+			toast.error("비밀번호는 8자 이상이어야 합니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
 			return;
 		}
 
 		// 비밀번호 확인 로직
 		if (userData.password !== userData.confirmPassword) {
-			toast.error("비밀번호가 일치하지 않습니다.");
+			toast.error("비밀번호가 일치하지 않습니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
 			return;
 		}
 
@@ -248,7 +263,12 @@ function UserEdit() {
 				payload,
 			);
 			if (response.data.ok) {
-				toast.success("회원 정보가 수정되었습니다.");
+				toast.success("회원 정보가 수정되었습니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
 				setCurrentUser({
 					...currentUser!,
 					profileImage: userData.extra.profileImage,
@@ -257,7 +277,12 @@ function UserEdit() {
 			}
 		} catch (error) {
 			console.error("Error updating user info:", error);
-			toast.error("회원 정보 수정에 실패했습니다.");
+			toast.error("회원 정보 수정에 실패했습니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
 		}
 	}
 
@@ -310,7 +335,12 @@ function UserEdit() {
 				}
 			} catch (error) {
 				console.error("Image upload failed:", error);
-				toast.error("이미지 업로드에 실패했습니다.");
+				toast.error("이미지 업로드에 실패했습니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
 			}
 		}
 	}

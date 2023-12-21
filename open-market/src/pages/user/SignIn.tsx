@@ -120,7 +120,12 @@ function SignIn() {
 				localStorage.setItem("refreshToken", userInfo.token.refreshToken);
 
 				// 로그인 성공 이후 홈 페이지로 이동.
-				toast.success("로그인 성공!");
+				toast.success("로그인 성공!", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
 
 				setCurrentUser({
 					_id: userInfo._id,
