@@ -51,6 +51,7 @@ const ProductManagementSection = styled.section`
 		border-radius: 10px;
 		display: flex;
 		flex-direction: column;
+		position: relative;
 		gap: ${Common.space.spacingXl};
 	}
 	.ProductImage {
@@ -178,6 +179,13 @@ const ProductDetailLink = styled(Link)`
 	border-radius: 10px;
 `;
 
+const UserProductListLink = styled(Link)`
+	position: absolute;
+	top: 12px;
+	text-decoration: none;
+	color: rgb(40, 40, 44, 0.7);
+`;
+
 function ProductManage() {
 	const navigate = useNavigate();
 	const { productId } = useParams();
@@ -248,6 +256,9 @@ function ProductManage() {
 			</Helmet>
 			<h2 className="a11yHidden">상품 관리</h2>
 			<div className="ProductInfoWrapper">
+				<UserProductListLink to={`/user/${currentUser!._id}/products`}>
+					&gt; 판매 상품 목록
+				</UserProductListLink>
 				<FormTopLayout>
 					<img
 						src={userProductInfo?.mainImages[0].path}
