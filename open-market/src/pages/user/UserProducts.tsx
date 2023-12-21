@@ -28,7 +28,6 @@ function sortByNewestProductList(list: Product[]) {
 }
 
 function UserProducts() {
-	const accessToken = localStorage.getItem("accessToken");
 	const searchRef = useRef<HTMLInputElement>(null);
 	const [searchKeyword, setSearchKeyword] = useState("");
 	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
@@ -41,11 +40,6 @@ function UserProducts() {
 		try {
 			const { data } = await axiosInstance.get(
 				`/seller/products?page=${pageParam}&limit=8`,
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				},
 			);
 			return data;
 

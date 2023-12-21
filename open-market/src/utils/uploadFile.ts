@@ -12,12 +12,9 @@ export async function uploadFile(
 	formData.append("attach", file);
 
 	try {
-		const accessToken = localStorage.getItem("accessToken");
-
 		const response = await axiosInstance.post(`/files`, formData, {
 			headers: {
 				"Content-Type": "multipart/form-data",
-				Authorization: `Bearer ${accessToken}`,
 			},
 		});
 

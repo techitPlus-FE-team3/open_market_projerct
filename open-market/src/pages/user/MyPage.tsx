@@ -159,45 +159,27 @@ const Image = styled.img`
 
 // API 호출을 위한 함수
 async function fetchUserInfo(userId: string) {
-	const accessToken = localStorage.getItem("accessToken");
-	const response = await axiosInstance.get(`/users/${userId}`, {
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-		},
-	});
+	const response = await axiosInstance.get(`/users/${userId}`);
 	return response.data.item;
 }
 
-async function fetchUserProductsInfo(accessToken: string) {
-	const response = await axiosInstance.get(`/seller/products/`, {
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-		},
-	});
+async function fetchUserProductsInfo() {
+	const response = await axiosInstance.get(`/seller/products/`);
 	return response.data.item;
 }
 
-async function fetchUserOrderInfo(accessToken: string) {
-	const response = await axiosInstance.get(`/orders`, {
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-		},
-	});
+async function fetchUserOrderInfo() {
+	const response = await axiosInstance.get(`/orders`);
 	return response.data.item;
 }
 
-async function fetchBookmarks(accessToken: string) {
-	const response = await axiosInstance.get(`/bookmarks`, {
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-		},
-	});
+async function fetchBookmarks() {
+	const response = await axiosInstance.get(`/bookmarks`);
 	return response.data.item;
 }
 
 function MyPage() {
 	const currentUser = useRecoilValue(currentUserState);
-	const accessToken = localStorage.getItem("accessToken") || "";
 
 	const historyList = JSON.parse(
 		sessionStorage.getItem("historyList") as string,
@@ -210,16 +192,16 @@ function MyPage() {
 	const { data: userProductsInfo, isLoading: isLoadingProductsInfo } = useQuery(
 		{
 			queryKey: ["userProducts", currentUser!._id.toString()],
-			queryFn: () => fetchUserProductsInfo(accessToken),
+			queryFn: () => fetchUserProductsInfo(),
 		},
 	);
 	const { data: userOrdersInfo, isLoading: isLoadingOrdersInfo } = useQuery({
 		queryKey: ["userOrders", currentUser!._id.toString()],
-		queryFn: () => fetchUserOrderInfo(accessToken),
+		queryFn: () => fetchUserOrderInfo(),
 	});
 	const { data: bookmarkDetails, isLoading: isLoadingBookmarks } = useQuery({
 		queryKey: ["bookmarks", currentUser!._id.toString()],
-		queryFn: () => fetchBookmarks(accessToken),
+		queryFn: () => fetchBookmarks(),
 	});
 
 	// 비로그인 상태 체크

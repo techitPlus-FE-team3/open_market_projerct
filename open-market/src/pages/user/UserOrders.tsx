@@ -28,15 +28,9 @@ function UserOrders() {
 	useRequireAuth();
 
 	async function fetchOrderProductsInfo({ pageParam = 1 }) {
-		const accessToken = localStorage.getItem("accessToken");
 		try {
 			const { data } = await axiosInstance.get(
 				`/orders?page=${pageParam}&limit=8`,
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				},
 			);
 
 			return data;
