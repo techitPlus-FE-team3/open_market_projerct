@@ -422,9 +422,15 @@ function ProductEdit() {
 						label="가격"
 						type="number"
 						defaultValue={userProductInfo?.price}
-						handleFn={debounce((e: { target: { value: string | number } }) =>
-							setPostItem({ ...postItem, price: +e.target.value }),
-						)}
+						handleFn={debounce((e: { target: { value: number } }) => {
+							if (e.target.value < 0) {
+								e.target.value = 0;
+							}
+							setPostItem({
+								...postItem,
+								price: +e.target.value,
+							});
+						})}
 					/>
 					<ProductRadioButtonWrapper>
 						<span>공개여부</span>
