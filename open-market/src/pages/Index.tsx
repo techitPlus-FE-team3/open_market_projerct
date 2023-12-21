@@ -1,21 +1,21 @@
 import {
-	FilterButton,
-	FilterContainer,
-	FilterSelect,
+    FilterButton,
+    FilterContainer,
+    FilterSelect,
 } from "@/components/FilterComponent";
 import {
-	Heading,
-	ProductContainer,
-	ProductList,
-	ProductSection,
+    Heading,
+    ProductContainer,
+    ProductList,
+    ProductSection,
 } from "@/components/ProductListComponent";
 import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import { useCategoryFilterProductList } from "@/hooks/useCategoryFilterProductList";
 import { codeState } from "@/states/categoryState";
 import {
-	categoryValueState,
-	searchKeywordState,
+    categoryValueState,
+    searchKeywordState,
 } from "@/states/productListState";
 import { Common } from "@/styles/common";
 import { axiosInstance, searchProductList } from "@/utils";
@@ -24,7 +24,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useQuery } from "@tanstack/react-query";
 
 interface bannerProps {
 	showable?: boolean;
@@ -43,17 +42,6 @@ const BannerSection = styled.section<bannerProps>`
 		}
 	}
 `;
-
-const fetchProducts = async (limit) => {
-	const response = await fetch(`/api/products?limit=${limit}`);
-	if (!response.ok) {
-		throw new Error(`서버 오류: ${response.status}`);
-	}
-	if (!response.headers.get("content-type")?.includes("application/json")) {
-		throw new Error("잘못된 형식의 응답");
-	}
-	return response.json();
-};
 
 function Index() {
 	const searchRef = useRef<HTMLInputElement>(null);
@@ -193,7 +181,7 @@ function Index() {
 										<option key={item.code} value={item.value}>
 											{item.value}
 										</option>
-								  ))
+									))
 								: undefined}
 						</select>
 					</FilterSelect>
