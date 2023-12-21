@@ -184,7 +184,6 @@ function UserEdit() {
 	});
 	const navigate = useNavigate();
 	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
-	const accessToken = localStorage.getItem("accessToken");
 	const [uploadedFileName, setUploadedFileName] = useState("");
 
 	// 비로그인 상태 체크
