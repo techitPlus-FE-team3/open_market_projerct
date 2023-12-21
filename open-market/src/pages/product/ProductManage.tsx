@@ -286,7 +286,9 @@ function ProductManage() {
 
 						<ProductValue large>
 							{typeof userProductInfo?.buyQuantity !== "undefined"
-								? userProductInfo?.buyQuantity * userProductInfo?.price
+								? numberWithComma(
+										userProductInfo?.buyQuantity * userProductInfo?.price,
+									)
 								: "0"}
 							₩
 						</ProductValue>
