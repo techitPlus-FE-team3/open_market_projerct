@@ -154,6 +154,9 @@ function ProductPurchase() {
 			}
 			setProduct(response.data.item);
 		} catch (err) {
+			if (err instanceof AxiosError && err.status === 404) {
+				return navigate("/err", { replace: true });
+			}
 			console.error(err);
 		}
 	}
