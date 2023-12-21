@@ -1,27 +1,28 @@
 import {
-	FilterButton,
-	FilterContainer,
-	FilterSelect,
+    FilterButton,
+    FilterContainer,
+    FilterSelect,
 } from "@/components/FilterComponent";
 import {
-	Heading,
-	ProductContainer,
-	ProductList,
-	ProductSection,
+    Heading,
+    ProductContainer,
+    ProductList,
+    ProductSection,
 } from "@/components/ProductListComponent";
 import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
+import { codeState } from "@/states/categoryState";
 import {
-	categoryKeywordState,
-	fetchProductListState,
-	productListState,
-	searchKeywordState,
-	searchedProductListState,
+    categoryKeywordState,
+    fetchProductListState,
+    productListState,
+    searchKeywordState,
+    searchedProductListState,
 } from "@/states/productListState";
+import { Common } from "@/styles/common";
 import {
-	axiosInstance,
-	categoryFilterProductList,
-	searchProductList,
+    categoryFilterProductList,
+    searchProductList
 } from "@/utils";
 import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
@@ -36,26 +37,32 @@ const BannerSection = styled.section<bannerProps>`
 	display: ${(props) => (props.showable ? "block" : "none")};
 	width: 100%;
 	height: 400px;
-
-	img {
-		object-fit: cover;
+	background-color: ${Common.colors.black};
+	div {
+		width: 1440px;
+		margin: 0 auto;
+		img {
+			object-fit: cover;
+		}
 	}
 `;
 
 function Index() {
 	const searchRef = useRef<HTMLInputElement>(null);
 	const [limit, setLimit] = useState(4);
+
 	const fetchedProductList = useRecoilValue(fetchProductListState(limit));
+	const category = useRecoilValue(codeState);
+
 	const [productList, setProductList] = useRecoilState(productListState);
 	const [searchKeyword, setSearchKeyword] =
 		useRecoilState<string>(searchKeywordState);
 	const [searchedProductList, setSearchedProductList] = useRecoilState<
 		Product[]
 	>(searchedProductListState);
-
-	const [category, setCategory] = useState<CategoryCode[]>();
 	const [categoryFilter, setCategoryFilter] =
 		useRecoilState<string>(categoryKeywordState);
+
 	const [filteredProductList, setFilteredProductList] = useState<Product[]>();
 
 	function handleSearchKeyword() {
@@ -66,36 +73,10 @@ function Index() {
 
 	useEffect(() => {
 		setProductList(fetchedProductList!);
-
-		async function fetchCategory() {
-			try {
-				const response = await axiosInstance.get(`/codes/productCategory`);
-				const responseData = response.data.item;
-				const categoryCodeList = responseData.productCategory.codes;
-				setCategory(categoryCodeList);
-			} catch (error) {
-				console.error("상품 리스트 조회 실패:", error);
-			}
-		}
-
-		fetchCategory();
 	}, [limit]);
 
 	useEffect(() => {
 		setProductList(fetchedProductList!);
-
-		async function fetchCategory() {
-			try {
-				const response = await axiosInstance.get(`/codes/productCategory`);
-				const responseData = response.data.item;
-				const categoryCodeList = responseData.productCategory.codes;
-				setCategory(categoryCodeList);
-			} catch (error) {
-				console.error("상품 리스트 조회 실패:", error);
-			}
-		}
-
-		fetchCategory();
 	}, []);
 
 	useEffect(() => {
@@ -104,7 +85,7 @@ function Index() {
 				return value;
 			}
 			if (value !== undefined && category !== undefined) {
-				return category.find((item) => item.value === value)?.code;
+				return category?.find((item) => item.value === value)?.code;
 			}
 		}
 
@@ -138,7 +119,9 @@ function Index() {
 				<title>Home - 모두의 오디오 MODI</title>
 			</Helmet>
 			<BannerSection showable={searchKeyword ? false : true}>
-				<img src="/banner.svg" alt="배너 이미지" />
+				<div>
+					<img src="/banner.svg" alt="배너 이미지" />
+				</div>
 			</BannerSection>
 			<ProductSection>
 				<Heading>메인페이지</Heading>
@@ -164,7 +147,7 @@ function Index() {
 										<option key={item.code} value={item.value}>
 											{item.value}
 										</option>
-								  ))
+									))
 								: undefined}
 						</select>
 					</FilterSelect>

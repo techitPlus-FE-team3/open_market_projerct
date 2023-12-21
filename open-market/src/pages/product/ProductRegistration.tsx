@@ -4,6 +4,8 @@ import SelectGenre from "@/components/SelectGenre";
 import Textarea from "@/components/Textarea";
 import UploadLoadingSpinner from "@/components/UploadLoadingSpinner";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { currentUserState } from "@/states/authState";
+import { codeState } from "@/states/categoryState";
 import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
@@ -13,10 +15,11 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { Radio, RadioProps } from "@mui/material";
 import { styled as muiStyled } from "@mui/system";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 interface FlexLayoutProps {
 	right?: boolean;
@@ -43,7 +46,8 @@ interface ProductRegistForm {
 }
 const ProductRegistSection = styled.section`
 	background-color: ${Common.colors.white};
-	padding: 0 56px;
+	padding-top: 100px;
+	padding-bottom: 20px;
 
 	.a11yHidden {
 		display: ${Common.a11yHidden};
@@ -53,6 +57,7 @@ const ProductRegistSection = styled.section`
 		background-color: ${Common.colors.gray2};
 		padding: 40px;
 		width: 1328px;
+		margin: 0 auto;
 		border-radius: 10px;
 		display: flex;
 		flex-direction: column;
@@ -173,7 +178,9 @@ const StyledRadio = muiStyled((props: RadioProps) => (
 function ProductRegistration() {
 	const navigate = useNavigate();
 
-	const [sellerName, setSellerName] = useState<string>("");
+	const category = useRecoilValue(codeState);
+	const currentUser = useRecoilValue(currentUserState);
+
 	const [postItem, setPostItem] = useState<ProductRegistForm>({
 		show: true,
 		active: true,
@@ -185,7 +192,7 @@ function ProductRegistration() {
 		quantity: Number.MAX_SAFE_INTEGER,
 		buyQuantity: 0,
 		extra: {
-			sellerName: "",
+			sellerName: currentUser?.name!,
 			isNew: true,
 			isBest: false,
 			category: "",
@@ -193,26 +200,12 @@ function ProductRegistration() {
 			soundFile: { path: "", name: "", originalname: "" },
 		},
 	});
-	const [category, setCategory] = useState<CategoryCode[]>();
+
 	const [imageLoading, setImageLoading] = useState<boolean>(false);
 	const [audioLoading, setAudioLoading] = useState<boolean>(false);
 
 	//비로그인 상태 체크
 	useRequireAuth();
-
-	async function getUser(id: number) {
-		const accessToken = localStorage.getItem("accessToken");
-		try {
-			const response = await axiosInstance.get<UserResponse>(`/users/${id}`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			});
-			setSellerName(response.data.item.name);
-		} catch (err) {
-			console.error(err);
-		}
-	}
 
 	function handlePostProductRegist(e: { preventDefault: () => void }) {
 		e.preventDefault();
@@ -278,39 +271,6 @@ function ProductRegistration() {
 		}
 	}
 
-	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		const userId = localStorage.getItem("_id");
-
-		async function fetchCategory() {
-			try {
-				const response = await axiosInstance.get(`/codes/productCategory`, {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				});
-				const responseData = response.data.item;
-				const categoryCodeList = responseData.productCategory.codes;
-				setCategory(categoryCodeList);
-
-				// 데이터를 로컬 스토리지에 저장
-			} catch (error) {
-				// 에러 처리
-				console.error("상품 리스트 조회 실패:", error);
-			}
-		}
-
-		fetchCategory();
-		getUser(+userId!);
-	}, []);
-
-	useEffect(() => {
-		setPostItem({
-			...postItem,
-			extra: { ...postItem.extra, sellerName: sellerName },
-		});
-	}, [sellerName]);
-
 	return (
 		<ProductRegistSection>
 			<Helmet>
@@ -375,7 +335,7 @@ function ProductRegistration() {
 										extra: { ...postItem.extra, category: e.target.value },
 									});
 								}}
-								category={category}
+								category={category!}
 							/>
 							<FormInput
 								name="hashTag"

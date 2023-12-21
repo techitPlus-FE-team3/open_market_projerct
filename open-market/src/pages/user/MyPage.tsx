@@ -1,5 +1,6 @@
 import MyPageList from "@/components/MyPageList";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
@@ -7,6 +8,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { Helmet } from "react-helmet-async";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 const Section = styled.section`
 	width: 1440px;
@@ -14,6 +16,7 @@ const Section = styled.section`
 	background-color: ${Common.colors.white};
 	padding: 56px;
 	margin: 0 auto;
+	padding-top: 100px;
 `;
 
 const MainTitle = styled.h2`
@@ -131,6 +134,10 @@ const StyledLink = styled(Link)`
 	line-height: 18px;
 	font-size: ${Common.font.size.sm};
 	border-radius: 10px;
+	color: inherit;
+	& > visited {
+		color: inherit;
+	}
 `;
 
 const InfoTitle = styled.h3`
@@ -189,7 +196,7 @@ async function fetchBookmarks(accessToken: string) {
 }
 
 function MyPage() {
-	const userId = localStorage.getItem("_id") || "";
+	const currentUser = useRecoilValue(currentUserState);
 	const accessToken = localStorage.getItem("accessToken") || "";
 
 	const historyList = JSON.parse(
@@ -197,21 +204,21 @@ function MyPage() {
 	);
 
 	const { data: userInfo, isLoading: isLoadingUserInfo } = useQuery({
-		queryKey: ["userInfo", userId],
-		queryFn: () => fetchUserInfo(userId),
+		queryKey: ["userInfo", currentUser!._id.toString()],
+		queryFn: () => fetchUserInfo(currentUser!._id.toString()),
 	});
 	const { data: userProductsInfo, isLoading: isLoadingProductsInfo } = useQuery(
 		{
-			queryKey: ["userProducts", userId],
+			queryKey: ["userProducts", currentUser!._id.toString()],
 			queryFn: () => fetchUserProductsInfo(accessToken),
 		},
 	);
 	const { data: userOrdersInfo, isLoading: isLoadingOrdersInfo } = useQuery({
-		queryKey: ["userOrders", userId],
+		queryKey: ["userOrders", currentUser!._id.toString()],
 		queryFn: () => fetchUserOrderInfo(accessToken),
 	});
 	const { data: bookmarkDetails, isLoading: isLoadingBookmarks } = useQuery({
-		queryKey: ["bookmarks", userId],
+		queryKey: ["bookmarks", currentUser!._id.toString()],
 		queryFn: () => fetchBookmarks(accessToken),
 	});
 
@@ -268,7 +275,7 @@ function MyPage() {
 										<p>{userInfo.phone}</p>
 									</div>
 								</PersonalInfoItem>
-								<StyledLink to={`/useredit/${userId}`}>
+								<StyledLink to={`/useredit/${currentUser!._id}`}>
 									회원정보 수정
 								</StyledLink>
 							</PersonalInfo>
@@ -369,7 +376,7 @@ function MyPage() {
 						</Link>
 					)}
 					linkText="전체보기"
-					linkUrl={`/user/${userId}/products`}
+					linkUrl={`/user/${currentUser!._id}/products`}
 				/>
 			)}
 		</Section>

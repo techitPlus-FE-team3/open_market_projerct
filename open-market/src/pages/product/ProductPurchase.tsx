@@ -1,6 +1,7 @@
 import FunctionalButton from "@/components/FunctionalButton";
 import Textarea from "@/components/Textarea";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { codeState } from "@/states/categoryState";
 import { Common } from "@/styles/common";
 import { axiosInstance, numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
@@ -8,6 +9,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 interface FlexLayoutProps {
 	right?: boolean;
@@ -25,7 +27,8 @@ interface LabelProps {
 
 const ProductPurchaseSection = styled.section`
 	background-color: ${Common.colors.white};
-	padding: 0 56px;
+	padding-top: 100px;
+	padding-bottom: 20px;
 
 	.a11yHidden {
 		display: ${Common.a11yHidden};
@@ -35,6 +38,7 @@ const ProductPurchaseSection = styled.section`
 		background-color: ${Common.colors.gray2};
 		padding: 40px;
 		width: 1328px;
+		margin: 0 auto;
 		border-radius: 10px;
 		display: flex;
 		flex-direction: column;
@@ -126,8 +130,8 @@ const ContentWrapper = styled.div`
 function ProductPurchase() {
 	const navigate = useNavigate();
 	const { productId } = useParams();
+	const category = useRecoilValue(codeState);
 	const [product, setProduct] = useState<Product>();
-	const [category, setCategory] = useState<CategoryCode[]>();
 	const [genre, setGenre] = useState<string>();
 
 	//비로그인 상태 체크
@@ -182,28 +186,13 @@ function ProductPurchase() {
 	}, []);
 
 	useEffect(() => {
-		async function fetchCategory() {
-			try {
-				const response = await axiosInstance.get(`/codes/productCategory`);
-				const responseData = response.data.item;
-				const categoryCodeList = responseData.productCategory.codes;
-				setCategory(categoryCodeList);
-			} catch (error) {
-				console.error("상품 리스트 조회 실패:", error);
-			}
-		}
-
-		fetchCategory();
-	}, []);
-
-	useEffect(() => {
 		function translateCodeToValue(code: string) {
 			if (
 				code !== undefined &&
 				category !== undefined &&
 				product !== undefined
 			) {
-				return category.find((item) => item.code === code)?.value;
+				return category!.find((item) => item.code === code)?.value;
 			}
 		}
 		setGenre(translateCodeToValue(product?.extra?.category!));

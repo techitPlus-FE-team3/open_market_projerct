@@ -38,6 +38,10 @@ const StyledLink = styled(Link)`
 	text-align: center;
 	line-height: 24px;
 	border-radius: 10px;
+	color: inherit;
+	& > visited {
+		color: inherit;
+	}
 `;
 
 interface MyPageListProps {
