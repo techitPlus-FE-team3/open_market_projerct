@@ -21,7 +21,7 @@ interface WidthProps {
 	showable?: boolean;
 }
 
-const PalyerContainer = styled.div<WidthProps>`
+const PlayerContainer = styled.div<WidthProps>`
 	width: auto;
 	min-width: ${(props) => (props.showable ? "600px;" : "65px")};
 	overflow: hidden;
@@ -91,7 +91,7 @@ function MusicPlayer({ soundFile, showable }: MusicPlayerProps) {
 	}, [percentage]);
 
 	return (
-		<PalyerContainer showable={showable}>
+		<PlayerContainer showable={showable}>
 			<PlayButton onClick={handlePlayAndPauseMusic}>
 				{isPlaying ? (
 					<PauseIcon fontSize="large" />
@@ -110,14 +110,14 @@ function MusicPlayer({ soundFile, showable }: MusicPlayerProps) {
 				onLoadedData={() => {
 					setDuration(+soundFile.duration!.toFixed(2));
 				}}
-				src={soundFile.path}
+				src={soundFile?.path}
 			/>
 			<ControlPanel
 				duration={duration}
 				currentTime={currentTime}
 				showable={showable}
 			/>
-		</PalyerContainer>
+		</PlayerContainer>
 	);
 }
 

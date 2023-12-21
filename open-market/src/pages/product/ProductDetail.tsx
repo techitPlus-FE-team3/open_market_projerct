@@ -15,6 +15,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import StarIcon from "@mui/icons-material/Star";
 import { Rating } from "@mui/material";
+import { AxiosError } from "axios";
 import { SetStateAction, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
@@ -32,7 +33,7 @@ function ProductDetail() {
 
 	const [product, setProduct] = useState<Product>();
 	const [rating, setRating] = useState(0);
-	const [order, setOrder] = useState<Order[]>();
+	const [order, setOrder] = useState<Order>();
 	const [ratingValue, setRatingValue] = useState<number>(3);
 	const [_, setHover] = useState(-1);
 	const [replyContent, setReplyContent] = useState<string>();
@@ -47,15 +48,18 @@ function ProductDetail() {
 			setProduct(response.data.item);
 			setRating(getRating(response.data.item));
 			setCreatedAt(formatDate(response.data.item.createdAt));
-			if (currentUser) {
-				getOrder(Number(id)!);
+			if (currentUser && currentUser?._id !== response.data.item.seller_id) {
+				fetchOrder(Number(id)!);
 			}
 		} catch (err) {
+			if (err instanceof AxiosError && err.response?.status === 404) {
+				return navigate("/err", { replace: true });
+			}
 			console.error(err);
 		}
 	}
 
-	async function getOrder(productId: number) {
+	async function fetchOrder(productId: number) {
 		const accessToken = localStorage.getItem("accessToken");
 		try {
 			const response = await axiosInstance.get<OrderListResponse>(`/orders`, {
@@ -63,7 +67,7 @@ function ProductDetail() {
 					Authorization: `Bearer ${accessToken}`,
 				},
 			});
-			const userOrder = response.data.item.filter(
+			const userOrder = response.data.item.find(
 				(order) => order.products[0]._id === productId,
 			);
 			setOrder(userOrder);
@@ -79,7 +83,7 @@ function ProductDetail() {
 			const response = await axiosInstance.post<ReplyResponse>(
 				`/replies`,
 				{
-					order_id: order![0]._id,
+					order_id: order!._id,
 					product_id: Number(productId),
 					rating: ratingValue,
 					content: replyContent,
@@ -123,13 +127,6 @@ function ProductDetail() {
 		}
 		getProduct(productId!);
 	}, []);
-
-	useEffect(() => {
-		getProduct(productId!);
-		if (currentUser) {
-			getOrder(Number(productId)!);
-		}
-	}, [productId]);
 
 	useEffect(() => {
 		let sessionHistory: Product[] = JSON.parse(
@@ -187,7 +184,7 @@ function ProductDetail() {
 						<p>로그인 후 댓글을 작성할 수 있습니다.</p>
 					) : currentUser && currentUser?._id === product?.seller_id ? (
 						<p>내 상품에는 댓글을 작성할 수 없습니다.</p>
-					) : (currentUser && order?.length === 0) || order === undefined ? (
+					) : (currentUser && !order) || order === undefined ? (
 						<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
 					) : (
 						<ReplyInputForm action="submit">
