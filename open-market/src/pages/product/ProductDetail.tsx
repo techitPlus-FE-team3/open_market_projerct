@@ -47,7 +47,7 @@ function ProductDetail() {
 			setProduct(response.data.item);
 			setRating(getRating(response.data.item));
 			setCreatedAt(formatDate(response.data.item.createdAt));
-			if (currentUser) {
+			if (currentUser && currentUser?._id !== response.data.item.seller_id) {
 				fetchOrder(Number(id)!);
 			}
 		} catch (err) {
@@ -123,13 +123,6 @@ function ProductDetail() {
 		}
 		getProduct(productId!);
 	}, []);
-
-	useEffect(() => {
-		getProduct(productId!);
-		if (currentUser) {
-			fetchOrder(Number(productId)!);
-		}
-	}, [productId]);
 
 	useEffect(() => {
 		let sessionHistory: Product[] = JSON.parse(
