@@ -362,7 +362,7 @@ function UserEdit() {
 						<UserImageWrapper>
 							<UserImage
 								src={userData.extra.profileImage || "../../public/user.svg"}
-								alt="프로필 이미지"
+								alt={`${userData.name} 프로필 이미지`}
 							/>
 							<label htmlFor="userProfileImage">프로필 이미지</label>
 							<div>

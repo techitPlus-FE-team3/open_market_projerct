@@ -262,7 +262,7 @@ function ProductManage() {
 				<FormTopLayout>
 					<img
 						src={userProductInfo?.mainImages[0].path}
-						alt="앨범아트"
+						alt={`${userProductInfo?.name} 앨범 아트`}
 						className="ProductImage"
 					/>
 					<FormTopRightLayout>

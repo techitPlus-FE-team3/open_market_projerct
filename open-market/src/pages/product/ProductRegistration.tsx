@@ -300,7 +300,7 @@ function ProductRegistration() {
 								<img
 									className="UploadImage"
 									src={postItem?.mainImages[0].path}
-									alt={`${postItem?.name}앨범아트`}
+									alt={`${postItem?.name} 앨범 아트`}
 								/>
 							) : (
 								<div className="PostImageLabel">
