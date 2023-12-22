@@ -9,15 +9,20 @@ interface disableProps {
 	isDisable?: boolean;
 }
 
+interface indexProps {
+	isIndex?: boolean;
+}
+
 export const Heading = styled.h2`
 	display: ${Common.a11yHidden};
 `;
 
-export const ProductSection = styled.section`
+export const ProductSection = styled.section<indexProps>`
 	width: 1160px;
 	margin: 0 auto;
 	padding: ${Common.space.spacingLg};
-	padding-top: 100px;
+	padding-top: ${(props) =>
+		props.isIndex ? `${Common.space.spacingXl}` : "100px"};
 	display: flex;
 	flex-flow: column nowrap;
 	justify-content: center;
