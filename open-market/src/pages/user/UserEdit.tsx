@@ -22,6 +22,8 @@ const Title = styled.h2`
 
 const Backgroud = styled.section`
 	width: 100vw;
+	height: auto;
+	min-height: 100vh;
 	padding: 100px;
 	background-color: ${Common.colors.black};
 	display: flex;
@@ -39,6 +41,7 @@ const Form = styled.form`
 	background-color: ${Common.colors.white};
 
 	width: 506px;
+	min-height: fit-content;
 	padding: ${Common.space.spacingLg};
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	border-radius: 10px;

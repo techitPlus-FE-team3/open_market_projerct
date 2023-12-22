@@ -159,19 +159,6 @@ function SignIn() {
 		}
 	}
 
-	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (accessToken) {
-			toast.error("비정상적인 접근입니다.", {
-				ariaProps: {
-					role: "status",
-					"aria-live": "polite",
-				},
-			});
-			return navigate("/", { replace: true });
-		}
-	}, []);
-
 	return (
 		<Backgroud>
 			<Helmet>
