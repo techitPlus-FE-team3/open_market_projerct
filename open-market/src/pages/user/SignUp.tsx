@@ -219,6 +219,19 @@ function SignUp() {
 	};
 
 	useEffect(() => {
+		const accessToken = localStorage.getItem("accessToken");
+		if (accessToken) {
+			toast.error("비정상적인 접근입니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+			return navigate("/", { replace: true });
+		}
+	}, []);
+
+	useEffect(() => {
 		// 모든 체크박스의 현재 상태를 확인
 		const allChecked =
 			termsOfUse &&
