@@ -5,8 +5,8 @@ import {
 	ProductContainer,
 	ProductList,
 	ProductSection,
-} from "@/components/ProductListComponent";
-import { ProductListItem } from "@/components/ProductListItem";
+} from "@/styles/ProductListStyle";
+import { ProductListItem } from "@/components/ProductListIComponent";
 import SearchBar from "@/components/SearchBar";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
@@ -25,7 +25,6 @@ function UserOrders() {
 	const [searchKeyword, setSearchKeyword] = useState<string>("");
 	const [searchedOrderList, setSearchedOrderList] = useState<Order[]>();
 
-	//비로그인 상태 체크
 	useRequireAuth();
 
 	async function fetchOrderProductsInfo({ pageParam = 1 }) {
@@ -57,6 +56,7 @@ function UserOrders() {
 				? lastPage.pagination.page + 1
 				: null,
 	});
+
 	const fetchedOrderProductList =
 		data?.pages.flatMap((page) => page.item) || [];
 
@@ -83,14 +83,12 @@ function UserOrders() {
 		fetchSearchResult();
 	}, [searchKeyword]);
 
-	// 로딩 중일 때
 	if (isLoading) {
 		return <LoadingSpinner width="100vw" height="100vh" />;
 	}
 
-	// 에러가 발생했을 때
 	if (isError) {
-		const err = error as Error; // Error 타입으로 변환
+		const err = error as Error;
 		return <div>에러가 발생했습니다: {err.message}</div>;
 	}
 	return (

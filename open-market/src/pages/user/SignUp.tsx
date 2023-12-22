@@ -13,6 +13,30 @@ import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import logoImage from "/logo/logo1.svg";
 
+interface SignUpForm {
+	email: string;
+	password: string;
+	confirmPassword: string;
+	name: string;
+	phone: string;
+	extra: {
+		terms: {
+			termsOfUse: boolean;
+			providingPersonalInformation: boolean;
+			recievingMarketingInformation: boolean;
+			confirmAge: boolean;
+		};
+	};
+}
+
+interface SignUpRequest {
+	email: string;
+	password: string;
+	name: string;
+	phone: string;
+	type: string;
+}
+
 const Title = styled.h2`
 	${Common.a11yHidden};
 `;
@@ -139,203 +163,14 @@ const Submit = styled.button`
 	padding: 15px 32px;
 `;
 
-interface SignUpForm {
-	email: string;
-	password: string;
-	confirmPassword: string;
-	name: string;
-	phone: string;
-	extra: {
-		terms: {
-			termsOfUse: boolean;
-			providingPersonalInformation: boolean;
-			recievingMarketingInformation: boolean;
-			confirmAge: boolean;
-		};
-	};
-}
-interface SignUpRequest {
-	email: string;
-	password: string;
-	name: string;
-	phone: string;
-	type: string;
-}
-
 function SignUp() {
 	const navigate = useNavigate();
-
-	const [form, setForm] = useState<SignUpForm>({
-		email: "",
-		password: "",
-		confirmPassword: "",
-		name: "",
-		phone: "",
-		extra: {
-			terms: {
-				termsOfUse: false,
-				providingPersonalInformation: false,
-				recievingMarketingInformation: false,
-				confirmAge: false,
-			},
-		},
-	});
-
-	const [agreeAll, setAgreeAll] = useState(false);
-	const [termsOfUse, setTermsOfUse] = useState(false);
-	const [providingPersonalInformation, setProvidingPersonalInformation] =
-		useState(false);
-	const [recievingMarketingInformation, setRecievingMarketingInformation] =
-		useState(false);
-	const [confirmAge, setConfirmAge] = useState(false);
-
-	// 이메일 중복 확인 상태
-	const [emailCheck, setEmailCheck] = useState({
-		checked: false,
-		valid: false,
-		message: "",
-	});
-
-	const handleAgreeAllChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const isChecked = e.target.checked;
-		setAgreeAll(isChecked);
-		setTermsOfUse(isChecked);
-		setProvidingPersonalInformation(isChecked);
-		setRecievingMarketingInformation(isChecked);
-		setConfirmAge(isChecked);
-
-		// form 상태의 extra 부분도 업데이트
-		setForm((prevForm) => ({
-			...prevForm,
-			extra: {
-				terms: {
-					termsOfUse: isChecked,
-					providingPersonalInformation: isChecked,
-					recievingMarketingInformation: isChecked,
-					confirmAge: isChecked,
-				},
-			},
-		}));
-	};
-
-	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (accessToken) {
-			toast.error("비정상적인 접근입니다.", {
-				ariaProps: {
-					role: "status",
-					"aria-live": "polite",
-				},
-			});
-			return navigate("/", { replace: true });
-		}
-	}, []);
-
-	useEffect(() => {
-		// 모든 체크박스의 현재 상태를 확인
-		const allChecked =
-			termsOfUse &&
-			providingPersonalInformation &&
-			recievingMarketingInformation &&
-			confirmAge;
-		setAgreeAll(allChecked);
-	}, [
-		termsOfUse,
-		providingPersonalInformation,
-		recievingMarketingInformation,
-		confirmAge,
-	]);
-
-	// 개별 체크박스 변경 처리
-	const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const { id, checked } = event.target;
-
-		switch (id) {
-			case "termsOfUse":
-				setTermsOfUse(checked);
-				setForm((prevForm) => ({
-					...prevForm,
-					extra: { ...prevForm.extra, termsOfUse: checked },
-				}));
-				break;
-			case "providingPersonalInformation":
-				setProvidingPersonalInformation(checked);
-				setForm((prevForm) => ({
-					...prevForm,
-					extra: { ...prevForm.extra, providingPersonalInformation: checked },
-				}));
-				break;
-			case "recievingMarketingInformation":
-				setRecievingMarketingInformation(checked);
-				setForm((prevForm) => ({
-					...prevForm,
-					extra: { ...prevForm.extra, recievingMarketingInformation: checked },
-				}));
-				break;
-			case "confirmAge":
-				setConfirmAge(checked);
-				setForm((prevForm) => ({
-					...prevForm,
-					extra: { ...prevForm.extra, confirmAge: checked },
-				}));
-				break;
-			default:
-				break;
-		}
-	};
-
-	// 회원 정보 객체 생성
-	const createUserObject = () => {
-		const { email, password, name, phone, extra } = form;
-		return {
-			email,
-			password,
-			name,
-			phone,
-			type: "seller", // 회원 유형은 "seller"로 고정
-			extra,
-		};
-	};
-
-	// 중복 확인 함수
-	const checkEmailDuplication = async () => {
-		try {
-			const response = await axiosInstance.get(
-				`/users/email?email=${form.email}`,
-			);
-			if (response.data.ok) {
-				setEmailCheck({
-					checked: true,
-					valid: true,
-					message: "사용 가능한 이메일입니다.",
-				});
-			}
-		} catch (error) {
-			if (axios.isAxiosError(error) && error.response) {
-				setEmailCheck({
-					checked: true,
-					valid: false,
-					message: error.response.data.message,
-				});
-			} else {
-				console.error("이메일 중복 확인 중 오류가 발생했습니다.", error);
-				setEmailCheck({
-					checked: true,
-					valid: false,
-					message: "중복 확인 중 오류가 발생했습니다.",
-				});
-			}
-		}
-	};
-
-	// 회원가입 요청 처리
 	const signUpMutation = useMutation({
 		mutationFn: async (newUser: SignUpRequest) => {
 			const response = await axiosInstance.post("/users/", newUser);
 			return response.data;
 		},
 		onSuccess: () => {
-			// 토스트 표시
 			toast.success("회원가입 완료!", {
 				ariaProps: {
 					role: "status",
@@ -395,8 +230,151 @@ function SignUp() {
 			}
 		},
 	});
-	// 폼 제출 처리
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+	const [form, setForm] = useState<SignUpForm>({
+		email: "",
+		password: "",
+		confirmPassword: "",
+		name: "",
+		phone: "",
+		extra: {
+			terms: {
+				termsOfUse: false,
+				providingPersonalInformation: false,
+				recievingMarketingInformation: false,
+				confirmAge: false,
+			},
+		},
+	});
+
+	const [emailCheck, setEmailCheck] = useState({
+		checked: false,
+		valid: false,
+		message: "",
+	});
+
+	const [agreeAll, setAgreeAll] = useState(false);
+	const [termsOfUse, setTermsOfUse] = useState(false);
+	const [providingPersonalInformation, setProvidingPersonalInformation] =
+		useState(false);
+	const [recievingMarketingInformation, setRecievingMarketingInformation] =
+		useState(false);
+	const [confirmAge, setConfirmAge] = useState(false);
+
+	async function checkEmailDuplication() {
+		try {
+			const response = await axiosInstance.get(
+				`/users/email?email=${form.email}`,
+			);
+			if (response.data.ok) {
+				setEmailCheck({
+					checked: true,
+					valid: true,
+					message: "사용 가능한 이메일입니다.",
+				});
+			}
+		} catch (error) {
+			if (axios.isAxiosError(error) && error.response) {
+				setEmailCheck({
+					checked: true,
+					valid: false,
+					message: error.response.data.message,
+				});
+			} else {
+				console.error("이메일 중복 확인 중 오류가 발생했습니다.", error);
+				setEmailCheck({
+					checked: true,
+					valid: false,
+					message: "중복 확인 중 오류가 발생했습니다.",
+				});
+			}
+		}
+	}
+
+	function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+		const { name, value } = event.target;
+
+		// 전화번호 필드의 경우 숫자만 허용
+		if (name === "phone") {
+			const numbersOnly = value.replace(/[^0-9]/g, "");
+			setForm({ ...form, [name]: numbersOnly });
+		} else {
+			setForm({ ...form, [name]: value });
+		}
+	}
+
+	function handleAgreeAllChange(e: React.ChangeEvent<HTMLInputElement>) {
+		const isChecked = e.target.checked;
+		setAgreeAll(isChecked);
+		setTermsOfUse(isChecked);
+		setProvidingPersonalInformation(isChecked);
+		setRecievingMarketingInformation(isChecked);
+		setConfirmAge(isChecked);
+
+		// form 상태의 extra 부분도 업데이트
+		setForm((prevForm) => ({
+			...prevForm,
+			extra: {
+				terms: {
+					termsOfUse: isChecked,
+					providingPersonalInformation: isChecked,
+					recievingMarketingInformation: isChecked,
+					confirmAge: isChecked,
+				},
+			},
+		}));
+	}
+
+	function handleCheckboxChange(event: React.ChangeEvent<HTMLInputElement>) {
+		const { id, checked } = event.target;
+
+		switch (id) {
+			case "termsOfUse":
+				setTermsOfUse(checked);
+				setForm((prevForm) => ({
+					...prevForm,
+					extra: { ...prevForm.extra, termsOfUse: checked },
+				}));
+				break;
+			case "providingPersonalInformation":
+				setProvidingPersonalInformation(checked);
+				setForm((prevForm) => ({
+					...prevForm,
+					extra: { ...prevForm.extra, providingPersonalInformation: checked },
+				}));
+				break;
+			case "recievingMarketingInformation":
+				setRecievingMarketingInformation(checked);
+				setForm((prevForm) => ({
+					...prevForm,
+					extra: { ...prevForm.extra, recievingMarketingInformation: checked },
+				}));
+				break;
+			case "confirmAge":
+				setConfirmAge(checked);
+				setForm((prevForm) => ({
+					...prevForm,
+					extra: { ...prevForm.extra, confirmAge: checked },
+				}));
+				break;
+			default:
+				break;
+		}
+	}
+
+	function createUserObject() {
+		const { email, password, name, phone, extra } = form;
+		return {
+			email,
+			password,
+			name,
+			phone,
+			type: "seller",
+			extra,
+		};
+	}
+
+	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		if (form.password !== form.confirmPassword) {
 			toast.error("비밀번호가 일치하지 않습니다.", {
@@ -409,20 +387,35 @@ function SignUp() {
 		}
 		const userObject = createUserObject();
 		signUpMutation.mutate(userObject);
-	};
+	}
 
-	// 입력 필드 변경 처리
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = event.target;
-
-		// 전화번호 필드의 경우 숫자만 허용
-		if (name === "phone") {
-			const numbersOnly = value.replace(/[^0-9]/g, "");
-			setForm({ ...form, [name]: numbersOnly });
-		} else {
-			setForm({ ...form, [name]: value });
+	useEffect(() => {
+		const accessToken = localStorage.getItem("accessToken");
+		if (accessToken) {
+			toast.error("비정상적인 접근입니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+			return navigate("/", { replace: true });
 		}
-	};
+	}, []);
+
+	useEffect(() => {
+		const allChecked =
+			termsOfUse &&
+			providingPersonalInformation &&
+			recievingMarketingInformation &&
+			confirmAge;
+		setAgreeAll(allChecked);
+	}, [
+		termsOfUse,
+		providingPersonalInformation,
+		recievingMarketingInformation,
+		confirmAge,
+	]);
+
 	return (
 		<Backgroud>
 			<Helmet>
@@ -446,7 +439,7 @@ function SignUp() {
 									label="이메일"
 									type="text"
 									defaultValue={form.email}
-									onChange={debounce(handleChange)}
+									onChange={debounce(handleInputChange)}
 									placeholder="이메일"
 									required={true}
 								/>
@@ -463,7 +456,7 @@ function SignUp() {
 								label="비밀번호"
 								type="password"
 								defaultValue={form.password}
-								onChange={debounce(handleChange)}
+								onChange={debounce(handleInputChange)}
 								placeholder="비밀번호"
 								required={true}
 							/>
@@ -475,7 +468,7 @@ function SignUp() {
 								label="비밀번호 확인"
 								type="password"
 								defaultValue={form.confirmPassword}
-								onChange={debounce(handleChange)}
+								onChange={debounce(handleInputChange)}
 								placeholder="비밀번호 확인"
 								required={true}
 							/>
@@ -486,7 +479,7 @@ function SignUp() {
 								id="name"
 								name="name"
 								defaultValue={form.name}
-								onChange={debounce(handleChange)}
+								onChange={debounce(handleInputChange)}
 								placeholder="이름"
 								required={true}
 							/>
@@ -497,7 +490,7 @@ function SignUp() {
 								id="phone"
 								name="phone"
 								defaultValue={form.phone}
-								onChange={debounce(handleChange)}
+								onChange={debounce(handleInputChange)}
 								placeholder="휴대폰 번호"
 								required={true}
 							/>

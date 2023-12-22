@@ -98,11 +98,12 @@ const Ul = styled.ul`
 `;
 
 function SignIn() {
+	const navigate = useNavigate();
+
 	const setCurrentUser = useSetRecoilState(currentUserState);
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const navigate = useNavigate();
 
 	const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();

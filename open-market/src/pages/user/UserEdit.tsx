@@ -169,6 +169,11 @@ const Cancle = styled(Link)`
 `;
 
 function UserEdit() {
+	const navigate = useNavigate();
+
+	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
+
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [confirmAge, setConfirmAge] = useState(false);
 	const [userData, setUserData] = useState({
 		email: "",
@@ -184,73 +189,7 @@ function UserEdit() {
 			},
 		},
 	});
-	const navigate = useNavigate();
-	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 	const [uploadedFileName, setUploadedFileName] = useState("");
-	const [isLoading, setIsLoading] = useState<boolean>(true);
-
-	// 비로그인 상태 체크
-	useRequireAuth();
-
-	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-		event.preventDefault();
-
-		// 비밀번호 길이 확인
-		if (userData.password && userData.password.length < 8) {
-			toast.error("비밀번호는 8자 이상이어야 합니다.", {
-				ariaProps: {
-					role: "status",
-					"aria-live": "polite",
-				},
-			});
-			return;
-		}
-
-		// 비밀번호 확인 로직
-		if (userData.password !== userData.confirmPassword) {
-			toast.error("비밀번호가 일치하지 않습니다.", {
-				ariaProps: {
-					role: "status",
-					"aria-live": "polite",
-				},
-			});
-			return;
-		}
-
-		// 사용자가 비밀번호를 입력하지 않았을 경우 비밀번호 필드를 제외한 데이터로 요청
-		const payload = userData.password
-			? userData
-			: { ...userData, password: undefined, confirmPassword: undefined };
-
-		// 정보 수정 요청
-		try {
-			const response = await axiosInstance.patch(
-				`/users/${currentUser?._id}`,
-				payload,
-			);
-			if (response.data.ok) {
-				toast.success("회원 정보가 수정되었습니다.", {
-					ariaProps: {
-						role: "status",
-						"aria-live": "polite",
-					},
-				});
-				setCurrentUser({
-					...currentUser!,
-					profileImage: userData.extra.profileImage,
-				});
-				navigate("/mypage");
-			}
-		} catch (error) {
-			console.error("Error updating user info:", error);
-			toast.error("회원 정보 수정에 실패했습니다.", {
-				ariaProps: {
-					role: "status",
-					"aria-live": "polite",
-				},
-			});
-		}
-	}
 
 	async function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
 		const { id, value, type, checked } = event.target;
@@ -311,8 +250,64 @@ function UserEdit() {
 		}
 	}
 
+	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+
+		if (userData.password && userData.password.length < 8) {
+			toast.error("비밀번호는 8자 이상이어야 합니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+			return;
+		}
+
+		if (userData.password !== userData.confirmPassword) {
+			toast.error("비밀번호가 일치하지 않습니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+			return;
+		}
+
+		// 사용자가 비밀번호를 입력하지 않았을 경우 비밀번호 필드를 제외한 데이터로 요청
+		const payload = userData.password
+			? userData
+			: { ...userData, password: undefined, confirmPassword: undefined };
+
+		try {
+			const response = await axiosInstance.patch(
+				`/users/${currentUser?._id}`,
+				payload,
+			);
+			if (response.data.ok) {
+				toast.success("회원 정보가 수정되었습니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
+				setCurrentUser({
+					...currentUser!,
+					profileImage: userData.extra.profileImage,
+				});
+				navigate("/mypage");
+			}
+		} catch (error) {
+			console.error("Error updating user info:", error);
+			toast.error("회원 정보 수정에 실패했습니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+		}
+	}
+
 	useEffect(() => {
-		// 사용자 정보 불러오기
 		async function fetchUserInfo() {
 			try {
 				const response = await axiosInstance.get(`/users/${currentUser?._id}`);
@@ -349,6 +344,9 @@ function UserEdit() {
 
 		fetchUserInfo();
 	}, [currentUser]);
+
+	// 비로그인 상태 체크
+	useRequireAuth();
 
 	if (isLoading) {
 		return <LoadingSpinner width="100vw" height="100vh" />;

@@ -9,8 +9,8 @@ import {
 	ProductContainer,
 	ProductList,
 	ProductSection,
-} from "@/components/ProductListComponent";
-import { ProductListItem } from "@/components/ProductListItem";
+} from "@/styles/ProductListStyle";
+import { ProductListItem } from "@/components/ProductListIComponent";
 import SearchBar from "@/components/SearchBar";
 import { useCategoryFilterProductList } from "@/hooks/useCategoryFilterProductList";
 import { codeState } from "@/states/categoryState";
@@ -47,13 +47,16 @@ const BannerSection = styled.section<bannerProps>`
 function Index() {
 	const searchRef = useRef<HTMLInputElement>(null);
 	const paginationButtonRef = useRef(null);
-	const [searchedProductList, setSearchedProductList] = useState<Product[]>();
+
+	const category = useRecoilValue(codeState);
+
 	const [searchKeyword, setSearchKeyword] =
 		useRecoilState<string>(searchKeywordState);
 	const [categoryValue, setCategoryValue] =
 		useRecoilState<string>(categoryValueState);
+
 	const [selectedCode, setSelectedCode] = useState("");
-	const category = useRecoilValue(codeState);
+	const [searchedProductList, setSearchedProductList] = useState<Product[]>();
 
 	const fetchProducts = async ({ pageParam = 1 }) => {
 		try {

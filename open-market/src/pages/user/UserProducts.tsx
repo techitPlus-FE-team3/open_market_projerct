@@ -5,8 +5,8 @@ import {
 	ProductContainer,
 	ProductList,
 	ProductSection,
-} from "@/components/ProductListComponent";
-import { UserProductListItem } from "@/components/ProductListItem";
+} from "@/styles/ProductListStyle";
+import { UserProductListItem } from "@/components/ProductListIComponent";
 import SearchBar from "@/components/SearchBar";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
@@ -30,12 +30,10 @@ function sortByNewestProductList(list: Product[]) {
 
 function UserProducts() {
 	const searchRef = useRef<HTMLInputElement>(null);
+	const paginationButtonRef = useRef(null);
 	const [searchKeyword, setSearchKeyword] = useState("");
 	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
 	const [searchedProductList, setSearchedProductList] = useState<Product[]>();
-	const paginationButtonRef = useRef(null);
-	//비로그인 상태 체크
-	useRequireAuth();
 
 	async function fetchUserProductsInfo({ pageParam = 1 }) {
 		try {
@@ -132,6 +130,9 @@ function UserProducts() {
 		// 선언한 비동기 함수를 호출합니다.
 		fetchSearchResult();
 	}, [searchKeyword]);
+
+	//비로그인 상태 체크
+	useRequireAuth();
 
 	// 로딩 중일 때
 	if (isLoading) {

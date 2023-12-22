@@ -9,6 +9,7 @@ import { Helmet } from "react-helmet-async";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import { useEffect } from "react";
 
 const Section = styled.section`
 	width: 1440px;
@@ -157,7 +158,6 @@ const Image = styled.img`
 	object-fit: cover;
 `;
 
-// API 호출을 위한 함수
 async function fetchUserInfo(userId: string) {
 	const response = await axiosInstance.get(`/users/${userId}`);
 	return response.data.item;
@@ -179,33 +179,34 @@ async function fetchBookmarks() {
 }
 
 function MyPage() {
+	useRequireAuth();
+
 	const currentUser = useRecoilValue(currentUserState);
+
+	const { data: userInfo, isLoading: isLoadingUserInfo } = useQuery({
+		queryKey: ["userInfo", currentUser?._id.toString()],
+		queryFn: () => fetchUserInfo(currentUser!._id.toString()),
+	});
+	const { data: userProductsInfo, isLoading: isLoadingProductsInfo } = useQuery(
+		{
+			queryKey: ["userProducts", currentUser?._id.toString()],
+			queryFn: () => fetchUserProductsInfo(),
+		},
+	);
+	const { data: userOrdersInfo, isLoading: isLoadingOrdersInfo } = useQuery({
+		queryKey: ["userOrders", currentUser?._id.toString()],
+		queryFn: () => fetchUserOrderInfo(),
+	});
+	const { data: bookmarkDetails, isLoading: isLoadingBookmarks } = useQuery({
+		queryKey: ["bookmarks", currentUser?._id.toString()],
+		queryFn: () => fetchBookmarks(),
+	});
 
 	const historyList = JSON.parse(
 		sessionStorage.getItem("historyList") as string,
 	);
 
-	const { data: userInfo, isLoading: isLoadingUserInfo } = useQuery({
-		queryKey: ["userInfo", currentUser!._id.toString()],
-		queryFn: () => fetchUserInfo(currentUser!._id.toString()),
-	});
-	const { data: userProductsInfo, isLoading: isLoadingProductsInfo } = useQuery(
-		{
-			queryKey: ["userProducts", currentUser!._id.toString()],
-			queryFn: () => fetchUserProductsInfo(),
-		},
-	);
-	const { data: userOrdersInfo, isLoading: isLoadingOrdersInfo } = useQuery({
-		queryKey: ["userOrders", currentUser!._id.toString()],
-		queryFn: () => fetchUserOrderInfo(),
-	});
-	const { data: bookmarkDetails, isLoading: isLoadingBookmarks } = useQuery({
-		queryKey: ["bookmarks", currentUser!._id.toString()],
-		queryFn: () => fetchBookmarks(),
-	});
-
-	// 비로그인 상태 체크
-	useRequireAuth();
+	const profileImageUrl = userInfo?.extra?.profileImage || "/user.svg";
 
 	const UserInfoSkeleton = () => (
 		<>
@@ -224,8 +225,6 @@ function MyPage() {
 			</Info>
 		</>
 	);
-
-	const profileImageUrl = userInfo?.extra?.profileImage || "public/user.svg";
 
 	return (
 		<Section>

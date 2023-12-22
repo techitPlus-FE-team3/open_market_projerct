@@ -176,6 +176,8 @@ function ProductEdit() {
 
 	const category = useRecoilValue(codeState);
 
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+
 	const [userProductInfo, setUserProductInfo] = useState<Product>();
 	const [postItem, setPostItem] = useState<ProductEditForm>({
 		show: false,
@@ -191,9 +193,8 @@ function ProductEdit() {
 			soundFile: { path: "", name: "", originalname: "" },
 		},
 	});
-	const [imageLoading, setImageLoading] = useState<boolean>(false);
 	const [audioLoading, setAudioLoading] = useState<boolean>(false);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [imageLoading, setImageLoading] = useState<boolean>(false);
 
 	useRequireAuth();
 

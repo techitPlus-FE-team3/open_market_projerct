@@ -12,6 +12,11 @@ import { Link } from "react-router-dom";
 
 const API_KEY = import.meta.env.VITE_API_SERVER;
 
+interface ProductItemProps {
+	product: Product | OrderProduct;
+	bookmark: boolean;
+}
+
 const theme = createTheme({
 	palette: {
 		primary: { main: "#FFB258", light: "#D9D9D9", dark: "#828280" },
@@ -110,13 +115,7 @@ const StyledElementSpan = styled.span`
 
 const StyledLink = StyledTitleSpan.withComponent(Link);
 
-export function ProductListItem({
-	product,
-	bookmark,
-}: {
-	product: Product | OrderProduct;
-	bookmark: boolean;
-}) {
+export function ProductListItem({ product, bookmark }: ProductItemProps) {
 	return (
 		<ListItem key={product?._id}>
 			<StyledLink to={`/productdetail/${product._id}`}>

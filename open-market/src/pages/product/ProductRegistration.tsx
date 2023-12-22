@@ -1,8 +1,8 @@
 import FormInput from "@/components/FormInput";
 import FunctionalButton from "@/components/FunctionalButton";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import SelectGenre from "@/components/SelectGenre";
 import Textarea from "@/components/Textarea";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
@@ -44,6 +44,7 @@ interface ProductRegistForm {
 		soundFile: ProductFiles;
 	};
 }
+
 const ProductRegistSection = styled.section`
 	background-color: ${Common.colors.white};
 	padding-top: 100px;
@@ -64,6 +65,7 @@ const ProductRegistSection = styled.section`
 		gap: ${Common.space.spacingXl};
 	}
 `;
+
 const FormTopLayout = styled.div`
 	width: 1248px;
 	display: flex;
@@ -101,6 +103,7 @@ const PostImageWrapper = styled.div`
 		width: 300px;
 	}
 `;
+
 const PostAudioWrapper = styled.div`
 	width: 211px;
 	height: 116px;
@@ -135,6 +138,7 @@ const PostAudioWrapper = styled.div`
 		transform: translate(-50%, 270%);
 	}
 `;
+
 const FormTopRightLayout = styled.div`
 	display: flex;
 	flex: 1;
@@ -201,10 +205,9 @@ function ProductRegistration() {
 		},
 	});
 
-	const [imageLoading, setImageLoading] = useState<boolean>(false);
 	const [audioLoading, setAudioLoading] = useState<boolean>(false);
+	const [imageLoading, setImageLoading] = useState<boolean>(false);
 
-	//비로그인 상태 체크
 	useRequireAuth();
 
 	function handlePostProductRegist(e: { preventDefault: () => void }) {
