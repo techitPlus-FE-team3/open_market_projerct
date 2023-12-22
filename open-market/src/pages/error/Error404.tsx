@@ -1,6 +1,6 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ErrorContainer = styled.div`
 	height: 100vh;
