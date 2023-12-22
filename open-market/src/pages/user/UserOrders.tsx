@@ -34,8 +34,8 @@ function UserOrders() {
 			);
 
 			return data;
-		} catch (err) {
-			console.error(err);
+		} catch (error) {
+			console.error(error);
 		}
 	}
 

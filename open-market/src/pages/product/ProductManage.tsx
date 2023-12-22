@@ -229,11 +229,11 @@ function ProductManage() {
 					`/seller/products/${productId}`,
 				);
 				setUserProductInfo(response.data.item);
-			} catch (err) {
-				if (err instanceof AxiosError && err.response?.status === 404) {
+			} catch (error) {
+				if (error instanceof AxiosError && error.response?.status === 404) {
 					return navigate("/err", { replace: true });
 				}
-				console.error("상품 정보 조회 실패:", err);
+				console.error("상품 정보 조회 실패:", error);
 			}
 		};
 

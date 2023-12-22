@@ -20,8 +20,8 @@ export const fetchProductListState = selectorFamily({
 				},
 			);
 			return response.data.item;
-		} catch (err) {
-			console.error(err);
+		} catch (error) {
+			console.error(error);
 		}
 	},
 });
