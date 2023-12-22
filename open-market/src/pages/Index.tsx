@@ -158,7 +158,7 @@ function Index() {
 					<img src="/banner.svg" alt="배너 이미지" />
 				</div>
 			</BannerSection>
-			<ProductSection isIndex>
+			<ProductSection isIndex={!searchKeyword}>
 				<Heading>메인페이지</Heading>
 				<SearchBar
 					onClick={handleSearchKeyword}
