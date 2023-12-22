@@ -61,8 +61,7 @@ function MyPageList({
 	linkText,
 	linkUrl,
 }: MyPageListProps) {
-	// 한글 title을 영어 key 접두사로 변환하는 함수
-	const convertTitleToKeyPrefix = (title: string) => {
+	function convertTitleToKeyPrefix(title: string) {
 		switch (title) {
 			case "북마크":
 				return "bookmark";
@@ -73,11 +72,10 @@ function MyPageList({
 			case "판매상품관리":
 				return "product-management";
 			default:
-				return "section"; // 기본값
+				return "section";
 		}
-	};
+	}
 
-	// Key를 생성하는 함수
 	function generateKey(title: string, id: number | string) {
 		const keyPrefix = convertTitleToKeyPrefix(title);
 		return `${keyPrefix}-${id}`;

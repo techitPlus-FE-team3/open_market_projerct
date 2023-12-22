@@ -70,7 +70,6 @@ function UserOrders() {
 
 	useEffect(() => {
 		setSearchKeyword(getItemWithExpireTime("searchOrderKeyword"));
-		// 별도의 비동기 함수를 선언합니다.
 		const fetchSearchResult = async () => {
 			const searchResult = await searchProductList({
 				resource: "orders",
@@ -79,7 +78,6 @@ function UserOrders() {
 			setSearchedOrderList(searchResult);
 		};
 
-		// 선언한 비동기 함수를 호출합니다.
 		fetchSearchResult();
 	}, [searchKeyword]);
 

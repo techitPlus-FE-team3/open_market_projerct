@@ -4,9 +4,9 @@ import toast from "react-hot-toast";
 const API_KEY = import.meta.env.VITE_API_SERVER;
 
 export async function uploadFile(
-	file: File, // 업로드할 파일
-	setItemCallback: (arg0: (prevItem: any) => any) => void, // state
-	itemType: string, // 파일 타입 - mainImages or soundFile
+	file: File,
+	setItemCallback: (arg0: (prevItem: any) => any) => void,
+	itemType: string,
 ) {
 	const formData = new FormData();
 	formData.append("attach", file);
@@ -24,7 +24,6 @@ export async function uploadFile(
 		const duration =
 			itemType === "soundFile" ? await loadAudio(filePath) : null;
 
-		// 상태 업데이트
 		setItemCallback((prevItem) => {
 			if (itemType === "image") {
 				return {
@@ -70,9 +69,8 @@ export async function uploadFile(
 
 async function loadAudio(filePath: string) {
 	try {
-		// Load an audio file
 		const response = await fetch(filePath);
-		// Decode it
+
 		const buffer = await response.arrayBuffer();
 		return new Promise((resolve, reject) => {
 			const audioContext = new (window.AudioContext || window.AudioContext)();

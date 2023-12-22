@@ -42,7 +42,6 @@ interface ProductFiles {
 	duration?: number;
 }
 
-// Reply
 interface Reply {
 	_id: number;
 	order_id: number;
@@ -65,7 +64,6 @@ interface ReplyResponse {
 	item: Reply;
 }
 
-// Bookmark
 interface Bookmark {
 	_id: number;
 	user_id: number;

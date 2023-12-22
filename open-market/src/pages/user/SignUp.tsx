@@ -294,7 +294,6 @@ function SignUp() {
 	function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = event.target;
 
-		// 전화번호 필드의 경우 숫자만 허용
 		if (name === "phone") {
 			const numbersOnly = value.replace(/[^0-9]/g, "");
 			setForm({ ...form, [name]: numbersOnly });
@@ -311,7 +310,6 @@ function SignUp() {
 		setRecievingMarketingInformation(isChecked);
 		setConfirmAge(isChecked);
 
-		// form 상태의 extra 부분도 업데이트
 		setForm((prevForm) => ({
 			...prevForm,
 			extra: {

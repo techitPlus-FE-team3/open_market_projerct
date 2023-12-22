@@ -41,10 +41,7 @@ function UserProducts() {
 				`/seller/products?page=${pageParam}&limit=8`,
 			);
 			return data;
-
-			// 데이터를 로컬 스토리지에 저장
 		} catch (error) {
-			// 에러 처리
 			console.error("상품 리스트 조회 실패:", error);
 			return [];
 		}
@@ -81,13 +78,11 @@ function UserProducts() {
 		if (fetchedProductList.length === 0) return;
 
 		let sortedProductList;
-		// searchedProductList가 존재하면 해당 리스트를 정렬하고, 그렇지 않으면 전체 리스트를 정렬합니다.
 		sortedProductList =
 			searchedProductList && searchedProductList.length > 0
 				? sortByProfitProductList([...searchedProductList])
 				: sortByProfitProductList([...fetchedProductList]);
 
-		// 정렬된 리스트를 상태에 반영합니다.
 		if (searchedProductList && searchedProductList.length > 0) {
 			setSearchedProductList(sortedProductList);
 		} else {
@@ -100,13 +95,11 @@ function UserProducts() {
 	const handleSortByNewest = useCallback(() => {
 		if (fetchedProductList.length === 0) return;
 
-		// 최신순으로 정렬된 상품 리스트를 가져옵니다.
 		let sortedProductList =
 			searchedProductList && searchedProductList.length > 0
 				? sortByNewestProductList([...searchedProductList])
 				: sortByNewestProductList([...fetchedProductList]);
 
-		// 정렬된 리스트를 상태에 반영합니다.
 		if (searchedProductList && searchedProductList.length > 0) {
 			setSearchedProductList(sortedProductList);
 		} else {
@@ -117,7 +110,6 @@ function UserProducts() {
 	}, [fetchedProductList, searchedProductList]);
 
 	useEffect(() => {
-		// 별도의 비동기 함수를 선언합니다.
 		const fetchSearchResult = async () => {
 			const searchResult = await searchProductList({
 				resource: "seller/products",
@@ -127,21 +119,17 @@ function UserProducts() {
 			setSearchedProductList(searchResult);
 		};
 
-		// 선언한 비동기 함수를 호출합니다.
 		fetchSearchResult();
 	}, [searchKeyword]);
 
-	//비로그인 상태 체크
 	useRequireAuth();
 
-	// 로딩 중일 때
 	if (isLoading) {
 		return <LoadingSpinner width="100vw" height="100vh" />;
 	}
 
-	// 에러가 발생했을 때
 	if (isError) {
-		const err = error as Error; // Error 타입으로 변환
+		const err = error as Error;
 		return <div>에러가 발생했습니다: {err.message}</div>;
 	}
 

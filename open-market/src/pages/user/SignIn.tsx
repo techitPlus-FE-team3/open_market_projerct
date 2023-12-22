@@ -114,14 +114,12 @@ function SignIn() {
 				password,
 			});
 
-			// 로그인 성공 시 토큰을 localStorage에 저장(임시)
 			if (response.data.ok && response.data.item.token) {
 				const userInfo = response.data.item;
 
 				localStorage.setItem("accessToken", userInfo.token.accessToken);
 				localStorage.setItem("refreshToken", userInfo.token.refreshToken);
 
-				// 로그인 성공 이후 홈 페이지로 이동.
 				toast.success("로그인 성공!", {
 					ariaProps: {
 						role: "status",

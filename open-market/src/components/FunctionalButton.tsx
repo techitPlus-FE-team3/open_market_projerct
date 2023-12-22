@@ -26,7 +26,7 @@ const Button = styled.button<ButtonProps>`
 `;
 
 function FunctionalButton({
-	secondary = false, // 기본값을 false로 설정
+	secondary = false,
 	type = "button",
 	handleFn,
 	text,

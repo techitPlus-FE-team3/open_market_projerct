@@ -110,7 +110,6 @@ function Index() {
 	}
 
 	useEffect(() => {
-		// categoryFilter 또는 category가 변화할 때마다 selectedCode를 업데이트 합니다.
 		if (category) {
 			const selectedCategory = category.find(
 				(item: { value: string }) => item.value === categoryValue,
@@ -122,31 +121,27 @@ function Index() {
 	}, [categoryValue]);
 
 	useEffect(() => {
-		// 별도의 비동기 함수를 선언합니다.
-		const fetchSearchResult = async () => {
+		async function fetchSearchResult() {
 			const searchResult = await searchProductList({
 				resource: "products",
 				searchKeyword,
 			});
 			setSearchedProductList(searchResult);
-		};
+		}
 
-		// 선언한 비동기 함수를 호출합니다.
 		fetchSearchResult();
 	}, [searchKeyword]);
 
-	// 로딩 중일 때
 	if (isLoading || categoryFilterLoading) {
 		return <LoadingSpinner width="100vw" height="100vh" />;
 	}
 
-	// 에러가 발생했을 때
 	if (isError || categoryFilterIsError) {
 		if (isError) {
-			const err = error as Error; // Error 타입으로 변환
+			const err = error as Error;
 			return <div>에러가 발생했습니다: {err.message}</div>;
 		} else {
-			const err = categoryFilterError as Error; // Error 타입으로 변환
+			const err = categoryFilterError as Error;
 			return <div>에러가 발생했습니다: {err.message}</div>;
 		}
 	}

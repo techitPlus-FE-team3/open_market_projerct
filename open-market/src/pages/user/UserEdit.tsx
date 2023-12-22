@@ -212,13 +212,12 @@ function UserEdit() {
 		}
 	}
 
-	// 파일 업로드 핸들러
 	async function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
 		if (event.target.files && event.target.files.length > 0) {
 			const file = event.target.files[0];
-			setUploadedFileName(file.name); // 업로드한 파일의 이름을 상태에 저장
+			setUploadedFileName(file.name);
 			const formData = new FormData();
-			formData.append("attach", file); // 'attach' 필드에 파일 추가
+			formData.append("attach", file);
 
 			try {
 				const response = await axiosInstance.post("/files", formData, {
@@ -229,7 +228,6 @@ function UserEdit() {
 
 				if (response.data.ok) {
 					const filePath = `${API_KEY}${response.data.file.path}`;
-					// 상태 업데이트로 이미지 경로 저장
 					setUserData((prevUserData) => ({
 						...prevUserData,
 						extra: {
@@ -273,7 +271,6 @@ function UserEdit() {
 			return;
 		}
 
-		// 사용자가 비밀번호를 입력하지 않았을 경우 비밀번호 필드를 제외한 데이터로 요청
 		const payload = userData.password
 			? userData
 			: { ...userData, password: undefined, confirmPassword: undefined };
@@ -312,20 +309,19 @@ function UserEdit() {
 			try {
 				const response = await axiosInstance.get(`/users/${currentUser?._id}`);
 				if (response.data.ok) {
-					// API로부터 불러온 데이터를 기본값과 병합.
 					const fetchedData = {
-						...userData, // 기존 상태의 기본값
-						...response.data.item, // API 응답
+						...userData,
+						...response.data.item,
 						extra: {
-							...userData.extra, // 기존 상태의 extra 기본값
-							...response.data.item.extra, // API 응답의 extra
+							...userData.extra,
+							...response.data.item.extra,
 							terms: {
-								...userData.extra.terms, // 기존 상태의 terms 기본값
-								...response.data.item.extra?.terms, // API 응답의 terms
+								...userData.extra.terms,
+								...response.data.item.extra?.terms,
 							},
 						},
-						password: "", // 비밀번호 필드 초기화
-						confirmPassword: "", // 비밀번호 확인 필드 초기화
+						password: "",
+						confirmPassword: "",
 					};
 					setConfirmAge(response.data.item.extra.terms.confirmAge);
 					setUserData(fetchedData);
@@ -345,7 +341,6 @@ function UserEdit() {
 		fetchUserInfo();
 	}, [currentUser]);
 
-	// 비로그인 상태 체크
 	useRequireAuth();
 
 	if (isLoading) {

@@ -11,8 +11,8 @@ export const Common = {
 	font: {
 		size: {
 			sm: "12px",
-			lg: "24px", // button
-			xl: "50px", // h2
+			lg: "24px",
+			xl: "50px",
 		},
 		weight: {
 			extraLight: "200",

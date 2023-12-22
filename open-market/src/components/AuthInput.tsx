@@ -1,7 +1,6 @@
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 
-// Props 인터페이스 정의
 interface AuthInputProps {
 	id: string;
 	name: string;
