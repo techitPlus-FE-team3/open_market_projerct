@@ -58,7 +58,7 @@ function Index() {
 	const [selectedCode, setSelectedCode] = useState("");
 	const [searchedProductList, setSearchedProductList] = useState<Product[]>();
 
-	const fetchProducts = async ({ pageParam = 1 }) => {
+	async function fetchProducts({ pageParam = 1 }) {
 		try {
 			const { data } = await axiosInstance.get(
 				`/products?page=${pageParam}&limit=4`,
@@ -69,7 +69,7 @@ function Index() {
 			console.error("Error fetching products:", error);
 			throw error;
 		}
-	};
+	}
 
 	const {
 		data,

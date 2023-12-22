@@ -105,7 +105,7 @@ function SignIn() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
-	const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
 		try {
@@ -157,7 +157,7 @@ function SignIn() {
 				toast.error("알 수 없는 오류가 발생했습니다.");
 			}
 		}
-	};
+	}
 
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");

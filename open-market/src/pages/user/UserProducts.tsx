@@ -110,14 +110,14 @@ function UserProducts() {
 	}, [fetchedProductList, searchedProductList]);
 
 	useEffect(() => {
-		const fetchSearchResult = async () => {
+		async function fetchSearchResult() {
 			const searchResult = await searchProductList({
 				resource: "seller/products",
 				searchKeyword,
 			});
 
 			setSearchedProductList(searchResult);
-		};
+		}
 
 		fetchSearchResult();
 	}, [searchKeyword]);

@@ -70,13 +70,13 @@ function UserOrders() {
 
 	useEffect(() => {
 		setSearchKeyword(getItemWithExpireTime("searchOrderKeyword"));
-		const fetchSearchResult = async () => {
+		async function fetchSearchResult() {
 			const searchResult = await searchProductList({
 				resource: "orders",
 				searchKeyword,
 			});
 			setSearchedOrderList(searchResult);
-		};
+		}
 
 		fetchSearchResult();
 	}, [searchKeyword]);
