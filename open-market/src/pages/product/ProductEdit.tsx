@@ -320,7 +320,7 @@ function ProductEdit() {
 											setImageLoading(false);
 										})
 										.catch((error) => {
-											console.log(error);
+											console.error(error);
 											setImageLoading(false);
 										});
 								}}
@@ -405,7 +405,7 @@ function ProductEdit() {
 													setAudioLoading(false);
 												})
 												.catch((error) => {
-													console.log(error);
+													console.error(error);
 													setAudioLoading(false);
 												});
 										}}

@@ -160,9 +160,6 @@ export function ProductListItem({
 }
 
 export function UserProductListItem({ product }: { product: Product }) {
-	{
-		console.log(product.bookmarks);
-	}
 	return (
 		<ListItem key={product?._id}>
 			<StyledTitleSpan>
