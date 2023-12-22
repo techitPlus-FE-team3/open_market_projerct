@@ -318,7 +318,7 @@ function MyPage() {
 					<Link to={`/productdetail/${item._id}`}>
 						<Image
 							src={`${item.mainImages[0].path}`}
-							alt={`${item.product.name} 앨범 아트`}
+							alt={`${item.name} 앨범 아트`}
 						/>
 					</Link>
 				)}
@@ -365,7 +365,7 @@ function MyPage() {
 						<Link to={`/productmanage/${item._id}`}>
 							<Image
 								src={`${item.mainImages[0].path}`}
-								alt={`${item.product.name} 앨범 아트`}
+								alt={`${item.name} 앨범 아트`}
 							/>
 						</Link>
 					)}
