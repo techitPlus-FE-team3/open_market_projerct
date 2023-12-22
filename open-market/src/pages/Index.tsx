@@ -187,7 +187,10 @@ function Index() {
 						</select>
 					</FilterSelect>
 				</FilterContainer>
-				<ProductContainer height={searchKeyword ? "633px" : "400px"}>
+				<ProductContainer
+					height={searchKeyword ? "633px" : "400px"}
+					isDisable={!hasNextPage || isFetchingNextPage}
+				>
 					<ProductList>
 						{searchKeyword && searchedProductList !== undefined ? (
 							searchedProductList.length === 0 ? (

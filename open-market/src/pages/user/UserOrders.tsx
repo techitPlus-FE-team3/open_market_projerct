@@ -104,7 +104,10 @@ function UserOrders() {
 				<FilterButton type="submit">인기순</FilterButton>
 				<FilterButton type="submit">최신순</FilterButton>
 			</FilterContainer>
-			<ProductContainer height={"633px"}>
+			<ProductContainer
+				height={"633px"}
+				isDisable={!hasNextPage || isFetchingNextPage}
+			>
 				<ProductList>
 					{searchKeyword && searchedOrderList?.length === 0 ? (
 						<span className="emptyList">해당하는 구매내역이 없습니다.</span>

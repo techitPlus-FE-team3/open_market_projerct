@@ -5,6 +5,10 @@ interface HeightProps {
 	height: string;
 }
 
+interface disableProps {
+	isDisable?: boolean;
+}
+
 export const Heading = styled.h2`
 	display: ${Common.a11yHidden};
 `;
@@ -21,7 +25,7 @@ export const ProductSection = styled.section`
 	gap: ${Common.space.spacingMd};
 `;
 
-export const ProductContainer = styled.div<HeightProps>`
+export const ProductContainer = styled.div<HeightProps & disableProps>`
 	width: 1160px;
 	min-height: ${(props) => props.height};
 	padding: ${Common.space.spacingLg} 0 5px 0;
@@ -53,7 +57,8 @@ export const ProductContainer = styled.div<HeightProps>`
 			transform: translateY(-30%);
 			right: 12px;
 			border-bottom: solid 8px transparent;
-			border-top: solid 8px black;
+			border-top: solid 8px
+				${(props) => (props.isDisable ? `${Common.colors.gray}` : `black`)};
 			border-left: solid 8px transparent;
 			border-right: solid 8px transparent;
 		}

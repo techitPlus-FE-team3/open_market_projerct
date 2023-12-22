@@ -165,7 +165,10 @@ function UserProducts() {
 							최신순
 						</FilterButton>
 					</FilterContainer>
-					<ProductContainer height="633px">
+					<ProductContainer
+						height="633px"
+						isDisable={!hasNextPage || isFetchingNextPage}
+					>
 						<ProductList>
 							{searchKeyword && searchedProductList?.length === 0 ? (
 								<span className="emptyList">해당하는 상품이 없습니다.</span>
