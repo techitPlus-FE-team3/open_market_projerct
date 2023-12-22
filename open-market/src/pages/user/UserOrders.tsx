@@ -1,4 +1,5 @@
 import { FilterButton, FilterContainer } from "@/components/FilterComponent";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import {
 	Heading,
 	ProductContainer,
@@ -84,7 +85,7 @@ function UserOrders() {
 
 	// 로딩 중일 때
 	if (isLoading) {
-		return <div>상품들을 불러오는 중...</div>;
+		return <LoadingSpinner width="100vw" height="100vh" />;
 	}
 
 	// 에러가 발생했을 때
