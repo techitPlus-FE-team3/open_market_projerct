@@ -4,7 +4,7 @@ import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
 import styled from "@emotion/styled";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -159,6 +159,19 @@ function SignIn() {
 			}
 		}
 	};
+
+	useEffect(() => {
+		const accessToken = localStorage.getItem("accessToken");
+		if (accessToken) {
+			toast.error("비정상적인 접근입니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+			return navigate("/", { replace: true });
+		}
+	}, []);
 
 	return (
 		<Backgroud>
