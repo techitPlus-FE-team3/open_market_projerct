@@ -337,7 +337,9 @@ function ProductRegistration() {
 								label="해시태그"
 								placeholder="해시태그를 ','(콤마)로 구분해주세요"
 								handleFn={debounce((e: React.ChangeEvent<HTMLInputElement>) => {
-									const tagsArray = e.target.value.split(",");
+									const tagsArray = e.target.value
+										.split(",")
+										.map((tag) => tag.replaceAll(" ", ""));
 									setPostItem({
 										...postItem,
 										extra: { ...postItem.extra, tags: tagsArray },
