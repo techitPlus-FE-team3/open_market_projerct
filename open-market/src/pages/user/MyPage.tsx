@@ -239,7 +239,10 @@ function MyPage() {
 					<UserInfoSkeleton />
 				) : (
 					<>
-						<UserImage src={profileImageUrl} alt="회원 썸네일" />
+						<UserImage
+							src={profileImageUrl}
+							alt={`${userInfo.name} 프로필 이미지`}
+						/>
 						<Info>
 							<PersonalInfo>
 								<Title>회원정보</Title>
@@ -297,7 +300,10 @@ function MyPage() {
 					emptyMessage="북마크가 없습니다."
 					renderItem={(item) => (
 						<Link to={`/productdetail/${item.product_id}`}>
-							<Image src={`${item.product.image.path}`} alt="앨범아트" />
+							<Image
+								src={`${item.product.image.path}`}
+								alt={`${item.product.name} 앨범 아트`}
+							/>
 						</Link>
 					)}
 					linkText="전체보기"
@@ -310,7 +316,10 @@ function MyPage() {
 				emptyMessage="히스토리가 없습니다."
 				renderItem={(item) => (
 					<Link to={`/productdetail/${item._id}`}>
-						<Image src={`${item.mainImages[0].path}`} alt="앨범아트" />
+						<Image
+							src={`${item.mainImages[0].path}`}
+							alt={`${item.name} 앨범 아트`}
+						/>
 					</Link>
 				)}
 			/>
@@ -330,7 +339,7 @@ function MyPage() {
 						<Link to={`/productdetail/${item.products[0]._id}`}>
 							<Image
 								src={item.products[0].image.path}
-								alt={`${item.products[0].name} 사진`}
+								alt={`${item.products[0].name} 앨범 아트`}
 							/>
 						</Link>
 					)}
@@ -354,7 +363,10 @@ function MyPage() {
 					emptyMessage="판매내역이 없습니다."
 					renderItem={(item) => (
 						<Link to={`/productmanage/${item._id}`}>
-							<Image src={`${item.mainImages[0].path}`} alt="앨범아트" />
+							<Image
+								src={`${item.mainImages[0].path}`}
+								alt={`${item.name} 앨범 아트`}
+							/>
 						</Link>
 					)}
 					linkText="전체보기"

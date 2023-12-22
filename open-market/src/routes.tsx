@@ -1,5 +1,6 @@
 import RootLayout from "@/layout/RootLayout";
 import Index from "@/pages/Index";
+import ErrorBoundary from "@/pages/error/ErrorBoundary";
 import ProductDetail from "@/pages/product/ProductDetail";
 import ProductEdit from "@/pages/product/ProductEdit";
 import ProductManage from "@/pages/product/ProductManage";
@@ -12,14 +13,14 @@ import UserEdit from "@/pages/user/UserEdit";
 import UserOrders from "@/pages/user/UserOrders";
 import UserProducts from "@/pages/user/UserProducts";
 import {
-    Route,
-    createBrowserRouter,
-    createRoutesFromElements,
+	Route,
+	createBrowserRouter,
+	createRoutesFromElements,
 } from "react-router-dom";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
-		<Route path="/" element={<RootLayout />}>
+		<Route path="/" element={<RootLayout />} errorElement={<ErrorBoundary />}>
 			<Route index element={<Index />} />
 			{/* sell */}
 			<Route path="productregistration" element={<ProductRegistration />} />

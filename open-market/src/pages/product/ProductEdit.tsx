@@ -2,7 +2,7 @@ import FormInput from "@/components/FormInput";
 import FunctionalButton from "@/components/FunctionalButton";
 import SelectGenre from "@/components/SelectGenre";
 import Textarea from "@/components/Textarea";
-import UploadLoadingSpinner from "@/components/UploadLoadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { codeState } from "@/states/categoryState";
 import { Common } from "@/styles/common";
@@ -318,12 +318,12 @@ function ProductEdit() {
 								id="photo"
 							/>
 							{imageLoading ? (
-								<UploadLoadingSpinner width="300px" height="300px" />
+								<LoadingSpinner width="300px" height="300px" upload />
 							) : postItem?.mainImages[0].path !== "" ? (
 								<img
 									className="UploadImage"
 									src={postItem?.mainImages[0].path}
-									alt={`${postItem?.name}앨범아트`}
+									alt={`${postItem?.name} 앨범 아트`}
 								/>
 							) : (
 								<div className="PostImageLabel">
@@ -362,7 +362,9 @@ function ProductEdit() {
 								defaultValue={userProductInfo?.extra?.tags}
 								placeholder="해시태그를 ','(콤마)로 구분해주세요"
 								handleFn={debounce((e: React.ChangeEvent<HTMLInputElement>) => {
-									const tagsArray = e.target.value.split(",");
+									const tagsArray = e.target.value
+										.split(",")
+										.map((tag) => tag.replaceAll(" ", ""));
 									setPostItem({
 										...postItem,
 										extra: { ...postItem.extra, tags: tagsArray },
@@ -398,7 +400,7 @@ function ProductEdit() {
 										}}
 									/>
 									{audioLoading ? (
-										<UploadLoadingSpinner width="211px" height="116px" />
+										<LoadingSpinner width="211px" height="116px" upload />
 									) : postItem?.extra.soundFile.path !== "" ? (
 										<span className="UploadAudioFile">
 											{postItem?.extra.soundFile.name}

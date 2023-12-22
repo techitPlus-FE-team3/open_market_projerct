@@ -25,13 +25,13 @@ const SliderContainer = styled.div<DisplayProps>`
 		cursor: pointer;
 	}
 
-	.slider-container {
+	.sliderContainer {
 		--progress-bar-height: 4px;
 		position: relative;
 		width: 100%;
 	}
 
-	.slider-container::before {
+	.sliderContainer::before {
 		content: "";
 		background-color: ${Common.colors.gray};
 		width: 99.5%;
@@ -47,7 +47,7 @@ const SliderContainer = styled.div<DisplayProps>`
 	}
 
 	/* Custom Progress Bar */
-	.progress-bar-cover {
+	.progressBarCover {
 		background-color: ${Common.colors.emphasize};
 		width: 80%;
 		height: 12px;
@@ -113,9 +113,9 @@ function PlayerSlider({
 
 	return (
 		<SliderContainer showable={showable}>
-			<div className="slider-container">
+			<div className="sliderContainer">
 				<div
-					className="progress-bar-cover"
+					className="progressBarCover"
 					style={{ width: `${progressBarWidth}px` }}
 				></div>
 				<div

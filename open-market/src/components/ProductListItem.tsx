@@ -126,7 +126,7 @@ export function ProductListItem({
 							? (product as OrderProduct).image!.path
 							: product.mainImages[0]?.path
 					}
-					alt={`${product.name} 사진`}
+					alt={`${product.name} 앨범 아트`}
 				/>
 				<span title={product.name}>{product.name}</span>
 			</StyledLink>
@@ -163,7 +163,10 @@ export function UserProductListItem({ product }: { product: Product }) {
 	return (
 		<ListItem key={product?._id}>
 			<StyledTitleSpan>
-				<img src={product?.mainImages[0]?.path} alt={`${product?.name} 사진`} />
+				<img
+					src={product?.mainImages[0]?.path}
+					alt={`${product?.name} 앨범 아트`}
+				/>
 				<span title={product?.name}>{product?.name}</span>
 			</StyledTitleSpan>
 			<MusicPlayer soundFile={product.extra?.soundFile!} />

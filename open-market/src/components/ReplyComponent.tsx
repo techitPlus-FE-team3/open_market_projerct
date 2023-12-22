@@ -159,7 +159,7 @@ export function ShowStarRating({ rating }: { rating: number }) {
 			readOnly
 			emptyIcon={
 				<StarIcon
-					style={{ color: `${Common.colors.white}` }}
+					style={{ color: `${Common.colors.gray2}` }}
 					fontSize="inherit"
 				/>
 			}

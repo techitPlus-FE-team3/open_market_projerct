@@ -81,9 +81,9 @@ async function loadAudio(filePath: string) {
 				(decodedData) => {
 					resolve(decodedData.duration);
 				},
-				(err) => {
-					console.error("Error decoding audio data:", err);
-					reject(err);
+				(error) => {
+					console.error("Error decoding audio data:", error);
+					reject(error);
 				},
 			);
 		});

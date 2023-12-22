@@ -1,21 +1,22 @@
 import {
-    FilterButton,
-    FilterContainer,
-    FilterSelect,
+	FilterButton,
+	FilterContainer,
+	FilterSelect,
 } from "@/components/FilterComponent";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import {
-    Heading,
-    ProductContainer,
-    ProductList,
-    ProductSection,
+	Heading,
+	ProductContainer,
+	ProductList,
+	ProductSection,
 } from "@/components/ProductListComponent";
 import { ProductListItem } from "@/components/ProductListItem";
 import SearchBar from "@/components/SearchBar";
 import { useCategoryFilterProductList } from "@/hooks/useCategoryFilterProductList";
 import { codeState } from "@/states/categoryState";
 import {
-    categoryValueState,
-    searchKeywordState,
+	categoryValueState,
+	searchKeywordState,
 } from "@/states/productListState";
 import { Common } from "@/styles/common";
 import { axiosInstance, searchProductList } from "@/utils";
@@ -133,7 +134,7 @@ function Index() {
 
 	// 로딩 중일 때
 	if (isLoading || categoryFilterLoading) {
-		return <div>상품들을 불러오는 중...</div>;
+		return <LoadingSpinner width="100vw" height="100vh" />;
 	}
 
 	// 에러가 발생했을 때
@@ -157,7 +158,7 @@ function Index() {
 					<img src="/banner.svg" alt="배너 이미지" />
 				</div>
 			</BannerSection>
-			<ProductSection>
+			<ProductSection isIndex>
 				<Heading>메인페이지</Heading>
 				<SearchBar
 					onClick={handleSearchKeyword}
@@ -186,7 +187,10 @@ function Index() {
 						</select>
 					</FilterSelect>
 				</FilterContainer>
-				<ProductContainer height={searchKeyword ? "633px" : "400px"}>
+				<ProductContainer
+					height={searchKeyword ? "633px" : "400px"}
+					isDisable={!hasNextPage || isFetchingNextPage}
+				>
 					<ProductList>
 						{searchKeyword && searchedProductList !== undefined ? (
 							searchedProductList.length === 0 ? (

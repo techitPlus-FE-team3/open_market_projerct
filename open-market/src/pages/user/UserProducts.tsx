@@ -1,4 +1,5 @@
 import { FilterButton, FilterContainer } from "@/components/FilterComponent";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import {
 	Heading,
 	ProductContainer,
@@ -134,7 +135,7 @@ function UserProducts() {
 
 	// 로딩 중일 때
 	if (isLoading) {
-		return <div>상품들을 불러오는 중...</div>;
+		return <LoadingSpinner width="100vw" height="100vh" />;
 	}
 
 	// 에러가 발생했을 때
@@ -164,7 +165,10 @@ function UserProducts() {
 							최신순
 						</FilterButton>
 					</FilterContainer>
-					<ProductContainer height="633px">
+					<ProductContainer
+						height="633px"
+						isDisable={!hasNextPage || isFetchingNextPage}
+					>
 						<ProductList>
 							{searchKeyword && searchedProductList?.length === 0 ? (
 								<span className="emptyList">해당하는 상품이 없습니다.</span>
@@ -177,10 +181,12 @@ function UserProducts() {
 								userProductsInfo.map((item) => (
 									<UserProductListItem key={item._id} product={item} />
 								))
-							) : (
+							) : fetchedProductList.length !== 0 ? (
 								fetchedProductList?.map((item) => (
 									<UserProductListItem key={item.id} product={item} />
 								))
+							) : (
+								<span className="emptyList">판매 내역이 없습니다.</span>
 							)}
 						</ProductList>
 						<button

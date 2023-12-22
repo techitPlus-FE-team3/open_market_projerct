@@ -160,8 +160,8 @@ const Header = () => {
 	async function fetchProductList() {
 		try {
 			return await axiosInstance.get("/products");
-		} catch (err) {
-			console.error(err);
+		} catch (error) {
+			console.error(error);
 		}
 	}
 

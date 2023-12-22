@@ -52,11 +52,11 @@ function ProductDetail() {
 			if (currentUser && currentUser?._id !== response.data.item.seller_id) {
 				fetchOrder(Number(id)!);
 			}
-		} catch (err) {
-			if (err instanceof AxiosError && err.response?.status === 404) {
-				return navigate("/err", { replace: true });
+		} catch (error) {
+			if (error instanceof AxiosError && error.response?.status === 404) {
+				return navigate("/err404", { replace: true });
 			}
-			console.error(err);
+			console.error(error);
 		}
 	}
 
@@ -67,8 +67,8 @@ function ProductDetail() {
 				(order) => order.products[0]._id === productId,
 			);
 			setOrder(userOrder);
-		} catch (err) {
-			console.error(err);
+		} catch (error) {
+			console.error(error);
 		}
 	}
 
@@ -93,8 +93,8 @@ function ProductDetail() {
 				setRatingValue(3);
 				getProduct(productId!);
 			}
-		} catch (err) {
-			console.error(err);
+		} catch (error) {
+			console.error(error);
 		}
 	}
 

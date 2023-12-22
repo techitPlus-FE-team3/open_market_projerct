@@ -157,11 +157,11 @@ function ProductPurchase() {
 			fetchOrder(+id).then(() => {
 				setProduct(response.data.item);
 			});
-		} catch (err) {
-			if (err instanceof AxiosError && err.response?.status === 404) {
-				return navigate("/err", { replace: true });
+		} catch (error) {
+			if (error instanceof AxiosError && error.response?.status === 404) {
+				return navigate("/err404", { replace: true });
 			}
-			console.error(err);
+			console.error(error);
 		}
 	}
 
@@ -179,8 +179,8 @@ function ProductPurchase() {
 				});
 				return navigate("/", { replace: true });
 			}
-		} catch (err) {
-			console.error(err);
+		} catch (error) {
+			console.error(error);
 		}
 	}
 
@@ -204,8 +204,8 @@ function ProductPurchase() {
 					});
 					navigate(`/orders`);
 				}
-			} catch (err) {
-				console.error(err);
+			} catch (error) {
+				console.error(error);
 			}
 		}
 	}

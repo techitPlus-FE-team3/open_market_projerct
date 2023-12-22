@@ -11,6 +11,7 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { Radio, RadioProps } from "@mui/material";
 
 import { styled as muiStyled } from "@mui/system";
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 
@@ -229,6 +230,9 @@ function ProductManage() {
 				);
 				setUserProductInfo(response.data.item);
 			} catch (error) {
+				if (error instanceof AxiosError && error.response?.status === 404) {
+					return navigate("/err404", { replace: true });
+				}
 				console.error("상품 정보 조회 실패:", error);
 			}
 		};
@@ -262,7 +266,7 @@ function ProductManage() {
 				<FormTopLayout>
 					<img
 						src={userProductInfo?.mainImages[0].path}
-						alt="앨범아트"
+						alt={`${userProductInfo?.name} 앨범 아트`}
 						className="ProductImage"
 					/>
 					<FormTopRightLayout>
