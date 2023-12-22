@@ -286,7 +286,7 @@ function ProductRegistration() {
 											setImageLoading(false);
 										})
 										.catch((error) => {
-											console.log(error);
+											console.error(error);
 											setImageLoading(false);
 										});
 								}}
@@ -368,7 +368,7 @@ function ProductRegistration() {
 													setAudioLoading(false);
 												})
 												.catch((error) => {
-													console.log(error);
+													console.error(error);
 													setAudioLoading(false);
 												});
 										}}

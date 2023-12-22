@@ -1,4 +1,5 @@
 import AuthInput from "@/components/AuthInput";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
@@ -21,6 +22,8 @@ const Title = styled.h2`
 
 const Backgroud = styled.section`
 	width: 100vw;
+	height: auto;
+	min-height: 100vh;
 	padding: 100px;
 	background-color: ${Common.colors.black};
 	display: flex;
@@ -38,6 +41,7 @@ const Form = styled.form`
 	background-color: ${Common.colors.white};
 
 	width: 506px;
+	min-height: fit-content;
 	padding: ${Common.space.spacingLg};
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	border-radius: 10px;
@@ -186,47 +190,10 @@ function UserEdit() {
 	const navigate = useNavigate();
 	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 	const [uploadedFileName, setUploadedFileName] = useState("");
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	// 비로그인 상태 체크
 	useRequireAuth();
-
-	useEffect(() => {
-		// 사용자 정보 불러오기
-		async function fetchUserInfo() {
-			try {
-				const response = await axiosInstance.get(`/users/${currentUser?._id}`);
-				if (response.data.ok) {
-					// API로부터 불러온 데이터를 기본값과 병합.
-					const fetchedData = {
-						...userData, // 기존 상태의 기본값
-						...response.data.item, // API 응답
-						extra: {
-							...userData.extra, // 기존 상태의 extra 기본값
-							...response.data.item.extra, // API 응답의 extra
-							terms: {
-								...userData.extra.terms, // 기존 상태의 terms 기본값
-								...response.data.item.extra?.terms, // API 응답의 terms
-							},
-						},
-						password: "", // 비밀번호 필드 초기화
-						confirmPassword: "", // 비밀번호 확인 필드 초기화
-					};
-					setConfirmAge(response.data.item.extra.terms.confirmAge);
-					setUserData(fetchedData);
-				}
-			} catch (error) {
-				console.error("Error fetching user info:", error);
-				toast.error("회원 정보를 불러오는데 실패했습니다.", {
-					ariaProps: {
-						role: "status",
-						"aria-live": "polite",
-					},
-				});
-			}
-		}
-
-		fetchUserInfo();
-	}, [currentUser]);
 
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -345,6 +312,49 @@ function UserEdit() {
 				});
 			}
 		}
+	}
+
+	useEffect(() => {
+		// 사용자 정보 불러오기
+		async function fetchUserInfo() {
+			try {
+				const response = await axiosInstance.get(`/users/${currentUser?._id}`);
+				if (response.data.ok) {
+					// API로부터 불러온 데이터를 기본값과 병합.
+					const fetchedData = {
+						...userData, // 기존 상태의 기본값
+						...response.data.item, // API 응답
+						extra: {
+							...userData.extra, // 기존 상태의 extra 기본값
+							...response.data.item.extra, // API 응답의 extra
+							terms: {
+								...userData.extra.terms, // 기존 상태의 terms 기본값
+								...response.data.item.extra?.terms, // API 응답의 terms
+							},
+						},
+						password: "", // 비밀번호 필드 초기화
+						confirmPassword: "", // 비밀번호 확인 필드 초기화
+					};
+					setConfirmAge(response.data.item.extra.terms.confirmAge);
+					setUserData(fetchedData);
+					setIsLoading(false);
+				}
+			} catch (error) {
+				console.error("Error fetching user info:", error);
+				toast.error("회원 정보를 불러오는데 실패했습니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
+			}
+		}
+
+		fetchUserInfo();
+	}, [currentUser]);
+
+	if (isLoading) {
+		return <LoadingSpinner width="100vw" height="100vh" />;
 	}
 
 	return (

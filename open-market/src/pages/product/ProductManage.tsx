@@ -1,4 +1,5 @@
 import FunctionalButton from "@/components/FunctionalButton";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import Textarea from "@/components/Textarea";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { currentUserState } from "@/states/authState";
@@ -194,6 +195,7 @@ function ProductManage() {
 	const category = useRecoilValue(codeState);
 	const [userProductInfo, setUserProductInfo] = useState<Product>();
 	const [genre, setGenre] = useState<string>();
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	// 비로그인 상태 체크
 	useRequireAuth();
@@ -241,6 +243,12 @@ function ProductManage() {
 	}, []);
 
 	useEffect(() => {
+		if (userProductInfo) {
+			setIsLoading(false);
+		}
+	}, [userProductInfo]);
+
+	useEffect(() => {
 		function translateCodeToValue(code: string) {
 			if (
 				code !== undefined &&
@@ -252,6 +260,10 @@ function ProductManage() {
 		}
 		setGenre(translateCodeToValue(userProductInfo?.extra?.category!));
 	}, [userProductInfo, category]);
+
+	if (isLoading) {
+		return <LoadingSpinner width="100vw" height="100vh" />;
+	}
 
 	return (
 		<ProductManagementSection>

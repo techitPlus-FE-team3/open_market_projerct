@@ -1,3 +1,4 @@
+import LoadingSpinner from "@/components/LoadingSpinner";
 import ProductDetailExtraLink from "@/components/ProductDetailBadgeComponent";
 import ProductDetailComponent from "@/components/ProductDetailComponent";
 import { Heading } from "@/components/ProductListComponent";
@@ -16,12 +17,12 @@ import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import StarIcon from "@mui/icons-material/Star";
 import { Rating } from "@mui/material";
 import { AxiosError } from "axios";
+import _ from "lodash";
 import { SetStateAction, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import _ from "lodash";
 
 function ProductDetail() {
 	const navigate = useNavigate();
@@ -40,6 +41,7 @@ function ProductDetail() {
 	const [replyContent, setReplyContent] = useState<string>();
 	const [genre, setGenre] = useState<string>();
 	const [createdAt, setCreatedAt] = useState<string>();
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	async function getProduct(id: string) {
 		try {
@@ -114,6 +116,7 @@ function ProductDetail() {
 			sessionStorage.getItem("historyList") || "[]",
 		);
 		if (product) {
+			setIsLoading(false);
 			if (sessionHistory.length > 5) {
 				sessionHistory.pop();
 			}
@@ -138,12 +141,17 @@ function ProductDetail() {
 		setGenre(translateCodeToValue(product?.extra?.category!));
 	}, [product, category]);
 
+	if (isLoading) {
+		return <LoadingSpinner width="100vw" height="100vh" />;
+	}
+
 	return (
 		<section>
 			<Helmet>
 				<title>Product Detail - 모두의 오디오 MODI</title>
 			</Helmet>
 			<Heading>상세 페이지</Heading>
+
 			<ProductDetailComponent
 				product={product}
 				genre={genre}

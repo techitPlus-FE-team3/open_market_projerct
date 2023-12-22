@@ -193,6 +193,7 @@ function ProductEdit() {
 	});
 	const [imageLoading, setImageLoading] = useState<boolean>(false);
 	const [audioLoading, setAudioLoading] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	useRequireAuth();
 
@@ -289,6 +290,16 @@ function ProductEdit() {
 		fetchUserProductInfo();
 	}, [productId]);
 
+	useEffect(() => {
+		if (userProductInfo) {
+			setIsLoading(false);
+		}
+	}, [userProductInfo]);
+
+	if (isLoading) {
+		return <LoadingSpinner width="100vw" height="100vh" />;
+	}
+
 	return (
 		<ProductEditSection>
 			<Helmet>
@@ -309,7 +320,7 @@ function ProductEdit() {
 											setImageLoading(false);
 										})
 										.catch((error) => {
-											console.log(error);
+											console.error(error);
 											setImageLoading(false);
 										});
 								}}
@@ -394,7 +405,7 @@ function ProductEdit() {
 													setAudioLoading(false);
 												})
 												.catch((error) => {
-													console.log(error);
+													console.error(error);
 													setAudioLoading(false);
 												});
 										}}
