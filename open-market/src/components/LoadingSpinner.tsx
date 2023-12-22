@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 interface SpinnerProps {
 	width: string;
 	height: string;
+	upload?: boolean;
 }
 
 const Spinner = styled.div<SpinnerProps>`
@@ -13,16 +14,16 @@ const Spinner = styled.div<SpinnerProps>`
 	justify-content: center;
 	align-items: center;
 	img {
-		width: 50%;
+		width: ${(props) => (props.upload ? "50%" : "200px")};
 	}
 `;
 
-function UploadLoadingSpinner({ width, height }: SpinnerProps) {
+function LoadingSpinner({ width, height, upload }: SpinnerProps) {
 	return (
-		<Spinner width={width} height={height}>
+		<Spinner width={width} height={height} upload={upload}>
 			<img src="/loadingSpinner.svg" alt="업로드 중" />
 		</Spinner>
 	);
 }
 
-export default UploadLoadingSpinner;
+export default LoadingSpinner;

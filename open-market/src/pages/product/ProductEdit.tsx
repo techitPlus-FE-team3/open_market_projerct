@@ -2,7 +2,7 @@ import FormInput from "@/components/FormInput";
 import FunctionalButton from "@/components/FunctionalButton";
 import SelectGenre from "@/components/SelectGenre";
 import Textarea from "@/components/Textarea";
-import UploadLoadingSpinner from "@/components/UploadLoadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { codeState } from "@/states/categoryState";
 import { Common } from "@/styles/common";
@@ -318,7 +318,7 @@ function ProductEdit() {
 								id="photo"
 							/>
 							{imageLoading ? (
-								<UploadLoadingSpinner width="300px" height="300px" />
+								<LoadingSpinner width="300px" height="300px" upload />
 							) : postItem?.mainImages[0].path !== "" ? (
 								<img
 									className="UploadImage"
@@ -398,7 +398,7 @@ function ProductEdit() {
 										}}
 									/>
 									{audioLoading ? (
-										<UploadLoadingSpinner width="211px" height="116px" />
+										<LoadingSpinner width="211px" height="116px" upload />
 									) : postItem?.extra.soundFile.path !== "" ? (
 										<span className="UploadAudioFile">
 											{postItem?.extra.soundFile.name}
