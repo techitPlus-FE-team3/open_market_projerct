@@ -231,7 +231,7 @@ function ProductManage() {
 				setUserProductInfo(response.data.item);
 			} catch (error) {
 				if (error instanceof AxiosError && error.response?.status === 404) {
-					return navigate("/err", { replace: true });
+					return navigate("/err404", { replace: true });
 				}
 				console.error("상품 정보 조회 실패:", error);
 			}
