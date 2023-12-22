@@ -119,7 +119,7 @@ function UserOrders() {
 								bookmark={false}
 							/>
 						))
-					) : (
+					) : fetchedOrderProductList.length !== 0 ? (
 						fetchedOrderProductList.map((order) => {
 							return (
 								<ProductListItem
@@ -129,6 +129,8 @@ function UserOrders() {
 								/>
 							);
 						})
+					) : (
+						<span className="emptyList">구매내역이 없습니다.</span>
 					)}
 				</ProductList>
 				<button

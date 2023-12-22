@@ -181,10 +181,12 @@ function UserProducts() {
 								userProductsInfo.map((item) => (
 									<UserProductListItem key={item._id} product={item} />
 								))
-							) : (
+							) : fetchedProductList.length !== 0 ? (
 								fetchedProductList?.map((item) => (
 									<UserProductListItem key={item.id} product={item} />
 								))
+							) : (
+								<span className="emptyList">판매 내역이 없습니다.</span>
 							)}
 						</ProductList>
 						<button
