@@ -1,6 +1,6 @@
 import {
-    DetailBadge,
-    DetailBadgeContainer,
+	DetailBadge,
+	DetailBadgeContainer,
 } from "@/components/ProductDetailBadgeComponent";
 import { ShowStarRating } from "@/components/ReplyComponent";
 import { Common } from "@/styles/common";

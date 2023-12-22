@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
@@ -21,7 +20,7 @@ const FooterLink = styled(Link)`
 	text-decoration: none;
 `;
 
-const Footer = () => {
+function Footer() {
 	return (
 		<FooterContainer>
 			<div>© 2023 모두의 오디오 : 모디. All rights reserved.</div>
@@ -39,6 +38,6 @@ const Footer = () => {
 			</div>
 		</FooterContainer>
 	);
-};
+}
 
 export default Footer;

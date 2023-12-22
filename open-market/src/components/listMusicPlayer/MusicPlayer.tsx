@@ -71,7 +71,7 @@ function MusicPlayer({ soundFile, showable }: MusicPlayerProps) {
 
 	function getCurrentDuration(e: SyntheticEvent<HTMLAudioElement>) {
 		const percent = (
-			(e.currentTarget.currentTime / soundFile.duration!) *
+			(e.currentTarget.currentTime / e.currentTarget.duration!) *
 			100
 		).toFixed(2);
 		const time = e.currentTarget.currentTime;

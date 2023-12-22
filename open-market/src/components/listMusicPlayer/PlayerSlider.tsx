@@ -1,5 +1,5 @@
-import styled from "@emotion/styled";
 import { Common } from "@/styles/common";
+import styled from "@emotion/styled";
 import { ChangeEventHandler, useEffect, useRef, useState } from "react";
 
 interface DisplayProps {

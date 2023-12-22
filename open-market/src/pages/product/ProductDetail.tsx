@@ -1,7 +1,6 @@
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ProductDetailExtraLink from "@/components/ProductDetailBadgeComponent";
 import ProductDetailComponent from "@/components/ProductDetailComponent";
-import { Heading } from "@/components/ProductListComponent";
 import ReplyListItem, {
 	ReplyBlock,
 	ReplyContainer,
@@ -11,6 +10,7 @@ import ReplyListItem, {
 } from "@/components/ReplyComponent";
 import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
+import { Heading } from "@/styles/ProductListStyle";
 import { axiosInstance, debounce, formatDate } from "@/utils";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
@@ -26,6 +26,7 @@ import { useRecoilValue } from "recoil";
 
 function ProductDetail() {
 	const navigate = useNavigate();
+
 	const { productId } = useParams();
 
 	const currentUser = useRecoilValue(currentUserState);
@@ -33,17 +34,19 @@ function ProductDetail() {
 
 	const replyRef = useRef<HTMLTextAreaElement & HTMLDivElement>(null);
 
-	const [product, setProduct] = useState<Product>();
-	const [rating, setRating] = useState(0);
-	const [order, setOrder] = useState<Order>();
-	const [ratingValue, setRatingValue] = useState<number>(3);
-	const [__, setHover] = useState(-1);
-	const [replyContent, setReplyContent] = useState<string>();
-	const [genre, setGenre] = useState<string>();
-	const [createdAt, setCreatedAt] = useState<string>();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 
-	async function getProduct(id: string) {
+	const [product, setProduct] = useState<Product>();
+	const [order, setOrder] = useState<Order>();
+	const [genre, setGenre] = useState<string>();
+	const [createdAt, setCreatedAt] = useState<string>();
+
+	const [rating, setRating] = useState(0);
+	const [ratingValue, setRatingValue] = useState<number>(3);
+	const [replyContent, setReplyContent] = useState<string>();
+	const [__, setHover] = useState(-1);
+
+	async function fetchProduct(id: string) {
 		try {
 			const response = await axiosInstance.get<ProductResponse>(
 				`/products/${id}`,
@@ -93,7 +96,7 @@ function ProductDetail() {
 				});
 				replyRef.current!.value = "";
 				setRatingValue(3);
-				getProduct(productId!);
+				fetchProduct(productId!);
 			}
 		} catch (error) {
 			console.error(error);
@@ -108,7 +111,7 @@ function ProductDetail() {
 		if (productId === null || productId === "") {
 			return navigate("/err", { replace: true });
 		}
-		getProduct(productId!);
+		fetchProduct(productId!);
 	}, []);
 
 	useEffect(() => {

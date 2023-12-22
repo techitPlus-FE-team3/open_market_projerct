@@ -10,12 +10,10 @@ import styled from "@emotion/styled";
 import CircleIcon from "@mui/icons-material/Circle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { Radio, RadioProps } from "@mui/material";
-
 import { styled as muiStyled } from "@mui/system";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -190,14 +188,17 @@ const UserProductListLink = styled(Link)`
 
 function ProductManage() {
 	const navigate = useNavigate();
+
 	const { productId } = useParams();
+
 	const currentUser = useRecoilValue(currentUserState);
 	const category = useRecoilValue(codeState);
-	const [userProductInfo, setUserProductInfo] = useState<Product>();
-	const [genre, setGenre] = useState<string>();
+
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 
-	// 비로그인 상태 체크
+	const [userProductInfo, setUserProductInfo] = useState<Product>();
+	const [genre, setGenre] = useState<string>();
+
 	useRequireAuth();
 
 	function handleProductDelete(e: { preventDefault: () => void }) {

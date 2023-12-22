@@ -9,8 +9,8 @@ import {
 	ProductContainer,
 	ProductList,
 	ProductSection,
-} from "@/components/ProductListComponent";
-import { ProductListItem } from "@/components/ProductListItem";
+} from "@/styles/ProductListStyle";
+import { ProductListItem } from "@/components/ProductListIComponent";
 import SearchBar from "@/components/SearchBar";
 import { useCategoryFilterProductList } from "@/hooks/useCategoryFilterProductList";
 import { codeState } from "@/states/categoryState";
@@ -47,15 +47,18 @@ const BannerSection = styled.section<bannerProps>`
 function Index() {
 	const searchRef = useRef<HTMLInputElement>(null);
 	const paginationButtonRef = useRef(null);
-	const [searchedProductList, setSearchedProductList] = useState<Product[]>();
+
+	const category = useRecoilValue(codeState);
+
 	const [searchKeyword, setSearchKeyword] =
 		useRecoilState<string>(searchKeywordState);
 	const [categoryValue, setCategoryValue] =
 		useRecoilState<string>(categoryValueState);
-	const [selectedCode, setSelectedCode] = useState("");
-	const category = useRecoilValue(codeState);
 
-	const fetchProducts = async ({ pageParam = 1 }) => {
+	const [selectedCode, setSelectedCode] = useState("");
+	const [searchedProductList, setSearchedProductList] = useState<Product[]>();
+
+	async function fetchProducts({ pageParam = 1 }) {
 		try {
 			const { data } = await axiosInstance.get(
 				`/products?page=${pageParam}&limit=4`,
@@ -66,7 +69,7 @@ function Index() {
 			console.error("Error fetching products:", error);
 			throw error;
 		}
-	};
+	}
 
 	const {
 		data,
@@ -107,7 +110,6 @@ function Index() {
 	}
 
 	useEffect(() => {
-		// categoryFilter 또는 category가 변화할 때마다 selectedCode를 업데이트 합니다.
 		if (category) {
 			const selectedCategory = category.find(
 				(item: { value: string }) => item.value === categoryValue,
@@ -119,31 +121,27 @@ function Index() {
 	}, [categoryValue]);
 
 	useEffect(() => {
-		// 별도의 비동기 함수를 선언합니다.
-		const fetchSearchResult = async () => {
+		async function fetchSearchResult() {
 			const searchResult = await searchProductList({
 				resource: "products",
 				searchKeyword,
 			});
 			setSearchedProductList(searchResult);
-		};
+		}
 
-		// 선언한 비동기 함수를 호출합니다.
 		fetchSearchResult();
 	}, [searchKeyword]);
 
-	// 로딩 중일 때
 	if (isLoading || categoryFilterLoading) {
 		return <LoadingSpinner width="100vw" height="100vh" />;
 	}
 
-	// 에러가 발생했을 때
 	if (isError || categoryFilterIsError) {
 		if (isError) {
-			const err = error as Error; // Error 타입으로 변환
+			const err = error as Error;
 			return <div>에러가 발생했습니다: {err.message}</div>;
 		} else {
-			const err = categoryFilterError as Error; // Error 타입으로 변환
+			const err = categoryFilterError as Error;
 			return <div>에러가 발생했습니다: {err.message}</div>;
 		}
 	}

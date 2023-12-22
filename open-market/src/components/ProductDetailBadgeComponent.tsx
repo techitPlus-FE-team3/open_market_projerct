@@ -11,6 +11,12 @@ interface BadgeProps {
 	isBest?: boolean;
 }
 
+interface ProductDetailProps {
+	product: Product | undefined;
+	order: Order | undefined;
+	currentUser: CurrentUser | null;
+}
+
 export const DetailBadgeContainer = styled.div`
 	width: 250px;
 	height: auto;
@@ -97,11 +103,7 @@ function ProductDetailExtraLink({
 	product,
 	order,
 	currentUser,
-}: {
-	product: Product | undefined;
-	order: Order | undefined;
-	currentUser: CurrentUser | null;
-}) {
+}: ProductDetailProps) {
 	const navigate = useNavigate();
 
 	function handelSignIn() {

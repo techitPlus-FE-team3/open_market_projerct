@@ -27,12 +27,11 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { KeyboardEvent, useEffect, useState } from "react";
-
 import { currentUserState } from "@/states/authState";
 import { axiosInstance } from "@/utils";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import logoImage from "/logo/logo2.svg";
 
 const HeaderContainer = styled(AppBar)`
@@ -131,10 +130,17 @@ const UserButton = styled(Button)`
 	}
 `;
 
-const Header = () => {
-	const [isLogoLoaded, setIsLogoLoaded] = useState(false); // 로고 로딩 상태 관리
+function Header() {
+	const navigate = useNavigate();
 
+	const [isLogoLoaded, setIsLogoLoaded] = useState(false);
+
+	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 	const [productList, setProductList] = useRecoilState(productListState);
+
+	const setSearchKeyword = useSetRecoilState<string>(searchKeywordState);
+	const setCategoryValue = useSetRecoilState<string>(categoryValueState);
+
 	const fetchedProductList = useRecoilValue(fetchProductListState(0));
 
 	const { refetch } = useQuery({
@@ -142,14 +148,6 @@ const Header = () => {
 		queryFn: fetchProductList,
 		refetchOnWindowFocus: false,
 	});
-
-	const [_, setSearchKeyword] = useRecoilState<string>(searchKeywordState);
-
-	const [__, setCategoryValue] = useRecoilState<string>(categoryValueState);
-
-	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
-
-	const navigate = useNavigate();
 
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [notificationAnchorEl, setNotificationAnchorEl] =
@@ -169,15 +167,34 @@ const Header = () => {
 		setIsLogoLoaded(true);
 	}
 
+	function handleSearchInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+		setSearchInput(event.target.value);
+	}
+
+	function handleEnterKeyPress(e: KeyboardEvent<HTMLInputElement>) {
+		const target = e.target as HTMLInputElement;
+		if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+			e.preventDefault();
+			setSearchKeyword(target.value);
+			setSearchInput("");
+			setCategoryValue("all");
+		}
+	}
+
+	function handleSearchClick() {
+		setSearchKeyword(searchInput);
+		setSearchInput("");
+	}
+
+	function handleNotificationsMenuOpen(event: React.MouseEvent<HTMLElement>) {
+		setNotificationAnchorEl(event.currentTarget);
+	}
+
 	function handleProfileMenuOpen(event: React.MouseEvent<HTMLElement>) {
 		const currentTarget = event.currentTarget;
 		if (currentTarget && document.body.contains(currentTarget)) {
 			setAnchorEl(currentTarget);
 		}
-	}
-
-	function handleNotificationsMenuOpen(event: React.MouseEvent<HTMLElement>) {
-		setNotificationAnchorEl(event.currentTarget);
 	}
 
 	function handleMenuClose() {
@@ -200,16 +217,6 @@ const Header = () => {
 		navigate("/");
 	}
 
-	function handleEnterKeyPress(e: KeyboardEvent<HTMLInputElement>) {
-		const target = e.target as HTMLInputElement;
-		if (e.key === "Enter" && !e.nativeEvent.isComposing) {
-			e.preventDefault();
-			setSearchKeyword(target.value);
-			setSearchInput("");
-			setCategoryValue("all");
-		}
-	}
-
 	useEffect(() => {
 		setProductList(fetchedProductList!);
 	}, []);
@@ -217,17 +224,6 @@ const Header = () => {
 	useEffect(() => {
 		refetch();
 	}, [productList]);
-
-	const handleSearchInputChange = (
-		event: React.ChangeEvent<HTMLInputElement>,
-	) => {
-		setSearchInput(event.target.value);
-	};
-
-	const handleSearchClick = () => {
-		setSearchKeyword(searchInput);
-		setSearchInput("");
-	};
 
 	return (
 		<HeaderContainer position="static" color="default" elevation={1}>
@@ -341,6 +337,6 @@ const Header = () => {
 			</HeaderWrapper>
 		</HeaderContainer>
 	);
-};
+}
 
 export default Header;

@@ -132,17 +132,20 @@ const ContentWrapper = styled.div`
 
 function ProductPurchase() {
 	const navigate = useNavigate();
+
 	const { productId } = useParams();
+
 	const category = useRecoilValue(codeState);
 	const currentUser = useRecoilValue(currentUserState);
-	const [product, setProduct] = useState<Product>();
-	const [genre, setGenre] = useState<string>();
+
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 
-	//비로그인 상태 체크
+	const [product, setProduct] = useState<Product>();
+	const [genre, setGenre] = useState<string>();
+
 	useRequireAuth();
 
-	async function getProduct(id: string) {
+	async function fetchProduct(id: string) {
 		try {
 			const response = await axiosInstance.get<ProductResponse>(
 				`/products/${id}`,
@@ -214,9 +217,9 @@ function ProductPurchase() {
 
 	useEffect(() => {
 		if (productId === null || productId === "") {
-			return navigate("/err", { replace: true });
+			return navigate("/err404", { replace: true });
 		}
-		getProduct(productId!);
+		fetchProduct(productId!);
 	}, []);
 
 	useEffect(() => {

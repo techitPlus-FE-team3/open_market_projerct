@@ -2,6 +2,15 @@ import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 
+interface MyPageListProps {
+	title: string;
+	data: any[];
+	renderItem: (item: any) => JSX.Element;
+	emptyMessage?: string;
+	linkText?: string;
+	linkUrl?: string;
+}
+
 const Article = styled.article`
 	width: 1328px;
 	height: 241px;
@@ -44,25 +53,15 @@ const StyledLink = styled(Link)`
 	}
 `;
 
-interface MyPageListProps {
-	title: string;
-	data: any[];
-	renderItem: (item: any) => JSX.Element;
-	emptyMessage?: string;
-	linkText?: string;
-	linkUrl?: string;
-}
-
-const MyPageList = ({
+function MyPageList({
 	title,
 	data,
 	renderItem,
 	emptyMessage,
 	linkText,
 	linkUrl,
-}: MyPageListProps) => {
-	// 한글 title을 영어 key 접두사로 변환하는 함수
-	const convertTitleToKeyPrefix = (title: string) => {
+}: MyPageListProps) {
+	function convertTitleToKeyPrefix(title: string) {
 		switch (title) {
 			case "북마크":
 				return "bookmark";
@@ -73,15 +72,14 @@ const MyPageList = ({
 			case "판매상품관리":
 				return "product-management";
 			default:
-				return "section"; // 기본값
+				return "section";
 		}
-	};
+	}
 
-	// Key를 생성하는 함수
-	const generateKey = (title: string, id: number | string) => {
+	function generateKey(title: string, id: number | string) {
 		const keyPrefix = convertTitleToKeyPrefix(title);
 		return `${keyPrefix}-${id}`;
-	};
+	}
 
 	return (
 		<Article>
@@ -100,6 +98,6 @@ const MyPageList = ({
 			{linkText && linkUrl && <StyledLink to={linkUrl}>{linkText}</StyledLink>}
 		</Article>
 	);
-};
+}
 
 export default MyPageList;

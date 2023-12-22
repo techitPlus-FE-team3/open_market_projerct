@@ -4,7 +4,7 @@ import { Common } from "@/styles/common";
 import { axiosInstance, debounce } from "@/utils";
 import styled from "@emotion/styled";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -98,13 +98,14 @@ const Ul = styled.ul`
 `;
 
 function SignIn() {
+	const navigate = useNavigate();
+
 	const setCurrentUser = useSetRecoilState(currentUserState);
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const navigate = useNavigate();
 
-	const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
 		try {
@@ -113,14 +114,12 @@ function SignIn() {
 				password,
 			});
 
-			// 로그인 성공 시 토큰을 localStorage에 저장(임시)
 			if (response.data.ok && response.data.item.token) {
 				const userInfo = response.data.item;
 
 				localStorage.setItem("accessToken", userInfo.token.accessToken);
 				localStorage.setItem("refreshToken", userInfo.token.refreshToken);
 
-				// 로그인 성공 이후 홈 페이지로 이동.
 				toast.success("로그인 성공!", {
 					ariaProps: {
 						role: "status",
@@ -158,20 +157,7 @@ function SignIn() {
 				toast.error("알 수 없는 오류가 발생했습니다.");
 			}
 		}
-	};
-
-	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-		if (accessToken) {
-			toast.error("비정상적인 접근입니다.", {
-				ariaProps: {
-					role: "status",
-					"aria-live": "polite",
-				},
-			});
-			return navigate("/", { replace: true });
-		}
-	}, []);
+	}
 
 	return (
 		<Backgroud>
