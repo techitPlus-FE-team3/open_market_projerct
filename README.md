@@ -13,6 +13,7 @@
 🗓️ 기획 기간 : 2023.11.20 ~ 2023.11.27<br/>
 🗓️ 개발 기간 : 2023.11.28 ~ 2023.12.22
 **소규모 음원 제작자들을 위한 오픈마켓 플랫폼 구축**
+(web for PC)
 
 [모두의 오디오 MODI](https://develop--ip3-modi.netlify.app/)
 
@@ -24,7 +25,9 @@
 
 </div>
 
-## 🛠️기술 스택
+<div align="center">
+
+## 🛠️Tech Stack
 
 #### Language
 
@@ -36,32 +39,27 @@
 
 #### State Management
 
-<img src="https://img.shields.io/badge/reactquery-FF4154?style=for-the-badge&logo=reactquery&logoColor=white"/>
-<img src="https://img.shields.io/badge/recoil-3578E5?style=for-the-badge&logo=recoil&logoColor=white"/>
+<img src="https://img.shields.io/badge/reactquery-FF4154?style=for-the-badge&logo=reactquery&logoColor=white"/> <img src="https://img.shields.io/badge/recoil-3578E5?style=for-the-badge&logo=recoil&logoColor=white"/>
 
 #### Style
 
-<img src="https://img.shields.io/badge/emotion-673AB8?style=for-the-badge&logo=emotion&logoColor=white"/>
-<img src="https://img.shields.io/badge/mui-007FFF?style=for-the-badge&logo=mui&logoColor=white"/>
+<img src="https://img.shields.io/badge/emotion-673AB8?style=for-the-badge&logo=emotion&logoColor=white"/> <img src="https://img.shields.io/badge/mui-007FFF?style=for-the-badge&logo=mui&logoColor=white"/>
 
 #### Library
 
-<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white"/>
-<img src="https://img.shields.io/badge/reactrouter-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white"/>
+<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white"/> <img src="https://img.shields.io/badge/reactrouter-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white"/>
 
   <br/>
 
 #### Deploy
 
-<img src="https://img.shields.io/badge/mongodb-47A248?style=for-the-badge&logo=mongodb&logoColor=white"/>
-<img src="https://img.shields.io/badge/koyeb-121212?style=for-the-badge&logo=koyeb&logoColor=white"/>
-<img src="https://img.shields.io/badge/netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white"/>
+<img src="https://img.shields.io/badge/mongodb-47A248?style=for-the-badge&logo=mongodb&logoColor=white"/> <img src="https://img.shields.io/badge/koyeb-121212?style=for-the-badge&logo=koyeb&logoColor=white"/> <img src="https://img.shields.io/badge/netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white"/>
 
 ### 🧰Tools
 
-<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
-<img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">
-<img src="https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white">
+<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"> <img src="https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white">
+
+</div>
 
 ## 📁디렉터리 트리
 
@@ -141,7 +139,7 @@
 
 ## 👀서버 구동
 
-- 프로젝트 루트에서 실행
+### 프로젝트 루트에서 실행
 <!-- * -s 옵션: 라우터를 추가할 경우 클라이언트가 요청한 모든 URL에 대해서 index.html을 응답하도록 설정 -->
 
 ```
@@ -149,14 +147,14 @@ cd open-market
 npm run dev
 ```
 
-- 프로젝트 빌드
+### 프로젝트 빌드
 
 ```
 cd open-market
 npm run build
 ```
 
-- 프로젝트 프리뷰
+### 프로젝트 프리뷰
 
 ```
 cd open-market
