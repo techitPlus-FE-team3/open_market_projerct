@@ -2,23 +2,28 @@
 
 <div align="center">
 
-# 모두의 오디오 : MODI
-## 테킷 플러스 프론트엔드 1기 오픈마켓 프로젝트
+![team16](./open-market/public/logo/logo2.svg)
 
-[사이트 바로가기](https://develop--ip3-modi.netlify.app/)
+# 모두의 오디오 : MODI
+
+테킷 플러스 프론트엔드 1기 오픈마켓 프로젝트
+
+## 프로젝트 개요
 
 🗓️ 기획 기간 : 2023.11.20 ~ 2023.11.27
-
 🗓️ 개발 기간 : 2023.11.28 ~ 2023.12.22
+
+**소규모 음원 제작자들을 위한 오픈마켓 플랫폼 구축**
+
+[모두의 오디오 MODI](https://develop--ip3-modi.netlify.app/)
 
 ## 팀원 소개
 
 |                              [안승지](https://github.com/s-ja)                              |                                                                                                            [강보경](https://github.com/hungerbk)                                                                                                            |                                                                                                 [김진주](https://github.com/pearlKinn)                                                                                                  |
 | :-----------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| <img width="200" height="150" src="https://avatars.githubusercontent.com/u/69342971?v=4" /> | <img width="200" height="150" src="https://cdn.discordapp.com/attachments/1174240282951303220/1187669618177888278/KakaoTalk_Photo_2022-12-29-14-02-19.jpeg?ex=6597ba86&is=65854586&hm=49f489c40ba899fe0070d6036bc2dee5043bdc38db2c3cbc1e3f4e7c081b9f61&" /> | <img width="200" height="150" src="https://cdn.discordapp.com/attachments/1164071632160182347/1168469320393822208/a255f7770b98d619.png?ex=6551e0db&is=653f6bdb&hm=4eb518878b76733f02794269a4a06dff14027664af797a0964c81cb040ee5ee0&" /> |
+| <img width="200" height="200" src="https://avatars.githubusercontent.com/u/69342971?v=4" /> | <img width="200" height="200" src="https://cdn.discordapp.com/attachments/1174240282951303220/1187669618177888278/KakaoTalk_Photo_2022-12-29-14-02-19.jpeg?ex=6597ba86&is=65854586&hm=49f489c40ba899fe0070d6036bc2dee5043bdc38db2c3cbc1e3f4e7c081b9f61&" /> | <img width="200" height="200" src="https://cdn.discordapp.com/attachments/1164071632160182347/1168469320393822208/a255f7770b98d619.png?ex=6551e0db&is=653f6bdb&hm=4eb518878b76733f02794269a4a06dff14027664af797a0964c81cb040ee5ee0&" /> |
 
 </div>
-
 
 ## 🛠️기술 스택
 
@@ -38,6 +43,7 @@
 #### Style
 
 <img src="https://img.shields.io/badge/emotion-673AB8?style=for-the-badge&logo=emotion&logoColor=white"/>
+<img src="https://img.shields.io/badge/mui-007FFF?style=for-the-badge&logo=mui&logoColor=white"/>
 
 #### Library
 
@@ -48,7 +54,9 @@
 
 ### 🧰Tools
 
-<img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=Vercel&logoColor=white"/>
+<img src="https://img.shields.io/badge/mongodb-47A248?style=for-the-badge&logo=mongodb&logoColor=white"/>
+<img src="https://img.shields.io/badge/koyeb-121212?style=for-the-badge&logo=koyeb&logoColor=white"/>
+<img src="https://img.shields.io/badge/netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white"/>
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
 
 ## 📁디렉터리 트리
