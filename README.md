@@ -18,9 +18,9 @@
 
 ## 팀원 소개
 
-|                              [안승지](https://github.com/s-ja)                              |                                                                                                            [강보경](https://github.com/hungerbk)                                                                                                            |                                                                                                 [김진주](https://github.com/pearlKinn)                                                                                                  |
-| :-----------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| <img width="200" height="200" src="https://avatars.githubusercontent.com/u/69342971?v=4" /> | <img width="200" height="200" src="https://cdn.discordapp.com/attachments/1174240282951303220/1187669618177888278/KakaoTalk_Photo_2022-12-29-14-02-19.jpeg?ex=6597ba86&is=65854586&hm=49f489c40ba899fe0070d6036bc2dee5043bdc38db2c3cbc1e3f4e7c081b9f61&" /> | <img width="200" height="200" src="https://cdn.discordapp.com/attachments/1164071632160182347/1168469320393822208/a255f7770b98d619.png?ex=6551e0db&is=653f6bdb&hm=4eb518878b76733f02794269a4a06dff14027664af797a0964c81cb040ee5ee0&" /> |
+|                 [안승지](https://github.com/s-ja)                 |               [강보경](https://github.com/hungerbk)               |               [김진주](https://github.com/pearlKinn)               |
+| :---------------------------------------------------------------: | :---------------------------------------------------------------: | :----------------------------------------------------------------: |
+| <img width="200" height="200" src="./samples/teamates/asj.png" /> | <img width="200" height="200" src="./samples/teamates/kbk.png" /> | <img width="200" height="200" src="./samples//teamates/kjj.png" /> |
 
 </div>
 
@@ -51,12 +51,17 @@
 
   <br/>
 
-### 🧰Tools
+#### Deploy
 
 <img src="https://img.shields.io/badge/mongodb-47A248?style=for-the-badge&logo=mongodb&logoColor=white"/>
 <img src="https://img.shields.io/badge/koyeb-121212?style=for-the-badge&logo=koyeb&logoColor=white"/>
 <img src="https://img.shields.io/badge/netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white"/>
+
+### 🧰Tools
+
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
+<img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">
+<img src="https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white">
 
 ## 📁디렉터리 트리
 
