@@ -5,7 +5,6 @@ const API_KEY = import.meta.env.VITE_API_SERVER;
 
 export const axiosInstance = axios.create({
 	baseURL: API_KEY,
-	timeout: 1000 * 5,
 	headers: {
 		"Content-Type": "application/json",
 		accept: "application/json",
@@ -20,11 +19,14 @@ async function refreshToken() {
 	}
 
 	try {
-		refreshingToken = axiosInstance.get("/users/refresh", {
-			headers: {
-				Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+		refreshingToken = axios.get(
+			"https://modi-ip3-modi.koyeb.app/api/users/refresh",
+			{
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+				},
 			},
-		});
+		);
 
 		const response = await refreshingToken;
 
