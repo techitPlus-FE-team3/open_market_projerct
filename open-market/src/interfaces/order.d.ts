@@ -4,7 +4,7 @@ interface Order {
 	state?: string;
 	createdAt: string;
 	updatedAt: string;
-	products: Product[];
+	products: OrderProduct[];
 	cost: {
 		products: number;
 		shippongFees: 0;
@@ -20,4 +20,18 @@ interface OrderListResponse {
 interface OrderResponse {
 	ok: number;
 	item: Order;
+}
+
+interface OrderProduct {
+	_id: number;
+	quantity: number;
+	seller_id: number;
+	name: string;
+	image: ProductFiles;
+	price: number;
+	extra: {
+		category: string;
+		soundFile: ProductFiles;
+		tags: string[];
+	};
 }

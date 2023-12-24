@@ -13,7 +13,7 @@ interface User {
 			termsOfUse: boolean;
 			providingPersonalInformation: boolean;
 			recievingMarketingInformation: boolean;
-			cofirmAge: boolean;
+			confirmAge: boolean;
 		};
 	};
 	token: {
@@ -25,4 +25,10 @@ interface User {
 interface UserResponse {
 	ok: number;
 	item: User;
+}
+
+interface CurrentUser {
+	_id: number;
+	name: string;
+	profileImage: string | null;
 }

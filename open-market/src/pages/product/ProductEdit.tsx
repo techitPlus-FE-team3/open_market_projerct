@@ -1,16 +1,33 @@
-import { debounce } from "@/utils";
+import FormInput from "@/components/FormInput";
+import FunctionalButton from "@/components/FunctionalButton";
+import SelectGenre from "@/components/SelectGenre";
+import Textarea from "@/components/Textarea";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { codeState } from "@/states/categoryState";
+import { Common } from "@/styles/common";
+import { axiosInstance, debounce } from "@/utils";
 import { uploadFile } from "@/utils/uploadFile";
+import styled from "@emotion/styled";
+import CircleIcon from "@mui/icons-material/Circle";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import { Radio, RadioProps } from "@mui/material";
+import { styled as muiStyled } from "@mui/system";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+
+interface FlexLayoutProps {
+	right?: boolean;
+}
 
 interface ProductEditForm {
 	show: boolean;
 	name: string;
-	mainImages: string[];
+	mainImages: ProductFiles[];
 	content: string;
 	price: number;
 	shippingFees: number;
@@ -18,19 +35,154 @@ interface ProductEditForm {
 	extra: {
 		category: string;
 		tags: string[];
-		soundFile: string;
+		soundFile: ProductFiles;
 	};
 }
+const ProductEditSection = styled.section`
+	background-color: ${Common.colors.white};
+	padding-top: 100px;
+	padding-bottom: 20px;
+	.a11yHidden {
+		display: ${Common.a11yHidden};
+	}
+
+	.PostFormWrapper {
+		background-color: ${Common.colors.gray2};
+		padding: 40px;
+		width: 1328px;
+		margin: 0 auto;
+		border-radius: 10px;
+		display: flex;
+		flex-direction: column;
+		gap: ${Common.space.spacingXl};
+	}
+`;
+
+const PostImageWrapper = styled.div`
+	width: 300px;
+	height: 300px;
+	background-color: ${Common.colors.white};
+	border-radius: 10px;
+
+	.ImageWrapper {
+		position: relative;
+	}
+	.PostImage {
+		position: absolute;
+		z-index: 10;
+		width: 100%;
+		height: 300px;
+		opacity: 0;
+		cursor: pointer;
+	}
+	.PostImageLabel {
+		display: flex;
+		flex-direction: column;
+		color: ${Common.colors.gray2};
+		align-items: center;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, 105%);
+	}
+	.UploadImage {
+		width: 300px;
+	}
+`;
+
+const PostAudioWrapper = styled.div`
+	width: 211px;
+	background-color: ${Common.colors.white};
+	border-radius: 10px;
+
+	.AudioWrapper {
+		position: relative;
+	}
+	.PostAudio {
+		position: absolute;
+		z-index: 10;
+		width: 100%;
+		height: 116px;
+		opacity: 0;
+		cursor: pointer;
+	}
+	.PostAudioLabel {
+		display: flex;
+		color: ${Common.colors.black};
+		align-items: center;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, 250%);
+	}
+	.UploadAudioFile {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, 270%);
+	}
+`;
+
+const FormTopLayout = styled.div`
+	width: 1248px;
+	display: flex;
+	gap: ${Common.space.spacingLg};
+`;
+
+const FormTopRightLayout = styled.div`
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: ${Common.space.spacingLg};
+	width: 918px;
+`;
+
+const FlexLayout = styled.div<FlexLayoutProps>`
+	display: flex;
+	gap: ${Common.space.spacingXl};
+	${(props) => props.right && "justify-content: flex-end;"}
+`;
+
+const ProductRadioButtonWrapper = styled.div`
+	width: 590px;
+	height: 290px;
+	color: ${Common.colors.gray};
+	border-radius: 10px;
+	background-color: ${Common.colors.white};
+	padding: ${Common.space.spacingMd};
+`;
+
+const RadioButtonGroup = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	top: 50%;
+	transform: translateY(-60%);
+`;
+
+const StyledRadio = muiStyled((props: RadioProps) => (
+	<Radio
+		{...props}
+		icon={<RadioButtonUncheckedIcon style={{ color: "#D9D9D9" }} />}
+		checkedIcon={<CircleIcon style={{ color: "#FFB258" }} />}
+	/>
+))``;
 
 function ProductEdit() {
 	const navigate = useNavigate();
 
 	const { productId } = useParams();
+
+	const category = useRecoilValue(codeState);
+
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+
 	const [userProductInfo, setUserProductInfo] = useState<Product>();
 	const [postItem, setPostItem] = useState<ProductEditForm>({
 		show: false,
 		name: "",
-		mainImages: [],
+		mainImages: [{ path: "", name: "", originalname: "" }],
 		content: "",
 		price: 0,
 		shippingFees: 0,
@@ -38,53 +190,29 @@ function ProductEdit() {
 		extra: {
 			category: "",
 			tags: [],
-			soundFile: "",
+			soundFile: { path: "", name: "", originalname: "" },
 		},
 	});
+	const [audioLoading, setAudioLoading] = useState<boolean>(false);
+	const [imageLoading, setImageLoading] = useState<boolean>(false);
 
-	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
-
-		const fetchUserProductInfo = async () => {
-			try {
-				const response = await axios.get<ProductResponse>(
-					`https://localhost/api/seller/products/${productId}`,
-					{
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
-						},
-					},
-				);
-				const fetchedProductInfo = response.data.item;
-				setUserProductInfo(fetchedProductInfo);
-				setPostItem({
-					show: fetchedProductInfo?.show || false,
-					name: fetchedProductInfo?.name || "",
-					mainImages: fetchedProductInfo?.mainImages || [],
-					content: fetchedProductInfo?.content || "",
-					price: fetchedProductInfo?.price || 0,
-					buyQuantity: fetchedProductInfo?.buyQuantity || 0,
-					shippingFees: 0,
-					extra: {
-						category: fetchedProductInfo?.extra?.category || "",
-						tags: fetchedProductInfo?.extra?.tags || [],
-						soundFile: fetchedProductInfo?.extra?.soundFile || "",
-					},
-				});
-			} catch (error) {
-				console.error("상품 정보 조회 실패:", error);
-			}
-		};
-
-		fetchUserProductInfo();
-	}, [productId]);
+	useRequireAuth();
 
 	function handleEditProduct(e: { preventDefault: () => void }) {
 		e.preventDefault();
-		const accessToken = localStorage.getItem("accessToken");
 
-		if (postItem.extra.soundFile === "") {
-			toast.error("음원을 업로드해야 합니다", {
+		if (postItem.mainImages.length === 0) {
+			toast.error("앨범아트를 업로드해야 합니다.", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
+			return;
+		}
+
+		if (postItem.extra.soundFile.path === "") {
+			toast.error("음원을 업로드해야 합니다.", {
 				ariaProps: {
 					role: "status",
 					"aria-live": "polite",
@@ -94,14 +222,10 @@ function ProductEdit() {
 		}
 
 		try {
-			axios
-				.patch(`https://localhost/api/seller/products/${productId}`, postItem, {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				})
+			axiosInstance
+				.patch(`/seller/products/${productId}`, postItem)
 				.then(() => {
-					toast.success("상품이 성공적으로 수정되었습니다", {
+					toast.success("상품 수정 완료!", {
 						ariaProps: {
 							role: "status",
 							"aria-live": "polite",
@@ -127,163 +251,243 @@ function ProductEdit() {
 		}
 	}
 
+	useEffect(() => {
+		const accessToken = localStorage.getItem("accessToken");
+
+		const fetchUserProductInfo = async () => {
+			try {
+				const response = await axiosInstance.get<ProductResponse>(
+					`/seller/products/${productId}`,
+					{
+						headers: {
+							Authorization: `Bearer ${accessToken}`,
+						},
+					},
+				);
+				const fetchedProductInfo = response.data.item;
+				setUserProductInfo(fetchedProductInfo);
+				setPostItem({
+					show: fetchedProductInfo?.show || false,
+					name: fetchedProductInfo?.name || "",
+					mainImages: fetchedProductInfo?.mainImages || [],
+					content: fetchedProductInfo?.content || "",
+					price: fetchedProductInfo?.price || 0,
+					buyQuantity: fetchedProductInfo?.buyQuantity || 0,
+					shippingFees: 0,
+					extra: {
+						category: fetchedProductInfo?.extra?.category || "",
+						tags: fetchedProductInfo?.extra?.tags || [],
+						soundFile: fetchedProductInfo?.extra?.soundFile || {
+							path: "",
+							name: "",
+							originalname: "",
+						},
+					},
+				});
+			} catch (error) {
+				console.error("상품 정보 조회 실패:", error);
+			}
+		};
+		fetchUserProductInfo();
+	}, [productId]);
+
+	useEffect(() => {
+		if (userProductInfo) {
+			setIsLoading(false);
+		}
+	}, [userProductInfo]);
+
+	if (isLoading) {
+		return <LoadingSpinner width="100vw" height="100vh" />;
+	}
+
 	return (
-		<section>
+		<ProductEditSection>
 			<Helmet>
 				<title>Edit Product - 모두의 오디오 MODI</title>
 			</Helmet>
-			<h2>상품 수정</h2>
-			<form encType="multipart/form-data">
-				<div>
-					<div>
-						<div>
-							<FileUploadIcon fontSize="large" />
-							<label htmlFor="photo">앨범아트 업로드</label>
-						</div>
-						<input
-							type="file"
-							accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
-							name="photo"
-							id="photo"
-							onChange={(e: { target: { files: any } }) => {
-								uploadFile(e.target.files[0], setPostItem, "image");
-							}}
-						/>
-						<img
-							src={postItem?.mainImages[0]}
-							alt={`${userProductInfo?.name}앨범아트`}
-						/>
-					</div>
-					<div>
-						<div>
-							<label htmlFor="title">타이틀 | </label>
+			<h2 className="a11yHidden">상품 수정</h2>
+			<form encType="multipart/form-data" className="PostFormWrapper">
+				<FormTopLayout>
+					<PostImageWrapper>
+						<div className="ImageWrapper">
 							<input
-								type="text"
-								name="title"
-								id="title"
-								placeholder="제목을 입력해주세요"
-								defaultValue={userProductInfo?.name}
-								onChange={debounce((e: { target: { value: any } }) =>
-									setPostItem({ ...postItem, name: e.target.value }),
-								)}
+								type="file"
+								accept="*.jpg,*.png,*.jpeg,*.webp,*.avif"
+								onChange={(e: { target: { files: any } }) => {
+									setImageLoading(true);
+									uploadFile(e.target.files[0], setPostItem, "image")
+										.then(() => {
+											setImageLoading(false);
+										})
+										.catch((error) => {
+											console.error(error);
+											setImageLoading(false);
+										});
+								}}
+								className="PostImage"
+								name="photo"
+								id="photo"
 							/>
-						</div>
-						<div>
-							<div>
-								<label htmlFor="genre">장르 | </label>
-								<select
-									name="genre"
-									id="genre"
-									defaultValue={userProductInfo?.extra?.category}
-									onChange={(e) => {
-										setPostItem({
-											...postItem,
-											extra: { ...postItem.extra, category: e.target.value },
-										});
-									}}
-								>
-									{/*{genres.map((genre) => (
-										<option key={genre} value={genre}>
-											{genre}
-										</option>
-									))}*/}
-								</select>
-							</div>
-							<div>
-								<label htmlFor="hashTag">해시태그 | </label>
-								<input
-									type="text"
-									name="hashTag"
-									id="hashTag"
-									placeholder=",(콤마)로 구분하여 입력해주세요"
-									defaultValue={userProductInfo?.extra?.tags}
-									onChange={debounce((e: { target: { value: string } }) => {
-										const tagsArray = e.target.value.split(",");
-										setPostItem({
-											...postItem,
-											extra: { ...postItem.extra, tags: tagsArray },
-										});
-									})}
+							{imageLoading ? (
+								<LoadingSpinner width="300px" height="300px" upload />
+							) : postItem?.mainImages[0].path !== "" ? (
+								<img
+									className="UploadImage"
+									src={postItem?.mainImages[0].path}
+									alt={`${postItem?.name} 앨범 아트`}
 								/>
-							</div>
-						</div>
-						<div>
-							<div>
-								<label htmlFor="description">설명</label>
-								<textarea
-									name="description"
-									id="description"
-									cols={30}
-									rows={3}
-									defaultValue={userProductInfo?.content}
-									onChange={debounce((e: { target: { value: any } }) =>
-										setPostItem({ ...postItem, content: e.target.value }),
-									)}
-								/>
-							</div>
-							<div>
-								<div>
-									<FileUploadIcon fontSize="small" />
-									<label htmlFor="mp3">음원 업로드</label>
+							) : (
+								<div className="PostImageLabel">
+									<FileUploadIcon
+										style={{ color: "#D9D9D9", fontSize: "80px" }}
+									/>
+									<label htmlFor="photo">커버 업로드</label>
 								</div>
-								<input
-									type="file"
-									accept="audio/*"
-									name="mp3"
-									id="mp3"
-									onChange={(e: { target: { files: any } }) =>
-										uploadFile(e.target.files[0], setPostItem, "soundFile")
-									}
-								/>
-							</div>
+							)}
 						</div>
-					</div>
-				</div>
-				<div>
-					<div>
-						<label htmlFor="price">가격</label>
-						<input
-							type="number"
-							name="price"
-							id="price"
-							defaultValue={userProductInfo?.price}
-							onChange={debounce((e: { target: { value: string | number } }) =>
-								setPostItem({ ...postItem, price: +e.target.value }),
+					</PostImageWrapper>
+					<FormTopRightLayout>
+						<FormInput
+							name="title"
+							label="타이틀"
+							defaultValue={userProductInfo?.name}
+							handleFn={debounce((e: { target: { value: any } }) =>
+								setPostItem({ ...postItem, name: e.target.value }),
 							)}
 						/>
-					</div>
-					<div>
-						<span>공개여부</span>
-						<div>
-							<input
-								type="radio"
-								value="true"
-								name="public"
-								onChange={() => setPostItem({ ...postItem, show: true })}
+						<FlexLayout>
+							<SelectGenre
+								id="genre"
+								value={userProductInfo?.extra?.category}
+								handleFn={(e) => {
+									setPostItem({
+										...postItem,
+										extra: { ...postItem.extra, category: e.target.value },
+									});
+								}}
+								category={category!}
 							/>
+							<FormInput
+								name="hashTag"
+								label="해시태그"
+								defaultValue={userProductInfo?.extra?.tags}
+								placeholder="해시태그를 ','(콤마)로 구분해주세요"
+								handleFn={debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+									const tagsArray = e.target.value
+										.split(",")
+										.map((tag) => tag.replaceAll(" ", ""));
+									setPostItem({
+										...postItem,
+										extra: { ...postItem.extra, tags: tagsArray },
+									});
+								})}
+							/>
+						</FlexLayout>
+						<FlexLayout>
+							<Textarea
+								content={userProductInfo?.content}
+								onChange={debounce((e: { target: { value: any } }) =>
+									setPostItem({ ...postItem, content: e.target.value }),
+								)}
+							/>
+							<PostAudioWrapper>
+								<div className="AudioWrapper">
+									<input
+										type="file"
+										accept="audio/*"
+										name="mp3"
+										className="PostAudio"
+										id="mp3"
+										onChange={(e: { target: { files: any } }) => {
+											setAudioLoading(true);
+											uploadFile(e.target.files[0], setPostItem, "soundFile")
+												.then(() => {
+													setAudioLoading(false);
+												})
+												.catch((error) => {
+													console.error(error);
+													setAudioLoading(false);
+												});
+										}}
+									/>
+									{audioLoading ? (
+										<LoadingSpinner width="211px" height="116px" upload />
+									) : postItem?.extra.soundFile.path !== "" ? (
+										<span className="UploadAudioFile">
+											{postItem?.extra.soundFile.name}
+										</span>
+									) : (
+										<div className="PostAudioLabel">
+											<FileUploadIcon
+												style={{ color: "#FF3821", fontSize: "20px" }}
+											/>
+											<label htmlFor="mp3">음원 업로드</label>
+										</div>
+									)}
+								</div>
+							</PostAudioWrapper>
+						</FlexLayout>
+					</FormTopRightLayout>
+				</FormTopLayout>
+				<FlexLayout>
+					<FormInput
+						name="price"
+						label="가격"
+						type="number"
+						defaultValue={userProductInfo?.price}
+						handleFn={debounce((e: { target: { value: number } }) => {
+							if (e.target.value < 0) {
+								e.target.value = 0;
+							}
+							setPostItem({
+								...postItem,
+								price: +e.target.value,
+							});
+						})}
+					/>
+					<ProductRadioButtonWrapper>
+						<span>공개여부</span>
+						<RadioButtonGroup>
 							<span>공개</span>
-						</div>
-						<div>
-							<input
-								type="radio"
-								value="false"
-								name="public"
-								onChange={() => setPostItem({ ...postItem, show: false })}
+							<StyledRadio
+								checked={postItem.show === true}
+								onChange={() =>
+									setPostItem((prevPostItem) => ({
+										...prevPostItem,
+										show: true,
+									}))
+								}
+								value="true"
 							/>
 							<span>비공개</span>
-						</div>
-					</div>
-				</div>
-				<div>
-					<button type="button" onClick={handleEditCancel}>
-						취소
-					</button>
-					<button type="submit" onClick={handleEditProduct}>
-						수정
-					</button>
-				</div>
+							<StyledRadio
+								checked={postItem.show === false}
+								onChange={() =>
+									setPostItem((prevPostItem) => ({
+										...prevPostItem,
+										show: false,
+									}))
+								}
+								value="false"
+							/>
+						</RadioButtonGroup>
+					</ProductRadioButtonWrapper>
+				</FlexLayout>
+				<FlexLayout right>
+					<FunctionalButton
+						secondary={true}
+						handleFn={handleEditCancel}
+						text="취소"
+					/>
+					<FunctionalButton
+						type="submit"
+						handleFn={handleEditProduct}
+						text="수정"
+					/>
+				</FlexLayout>
 			</form>
-		</section>
+		</ProductEditSection>
 	);
 }
 

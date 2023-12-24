@@ -6,7 +6,7 @@ interface Product {
 	show: boolean;
 	active: boolean;
 	name: string;
-	mainImages: string[];
+	mainImages: ProductFiles[];
 	image?: string;
 	content: string;
 	quantity: number;
@@ -14,11 +14,12 @@ interface Product {
 	createdAt: string;
 	updatedAt: string;
 	extra?: {
+		sellerName: string;
 		isNew: boolean;
 		isBest: boolean;
 		category: string;
 		tags: string[];
-		soundFile: string;
+		soundFile: ProductFiles;
 	};
 	replies?: Reply[];
 	bookmarks?: Bookmark[];
@@ -34,17 +35,28 @@ interface ProductResponse {
 	item: Product;
 }
 
-// Reply
+interface ProductFiles {
+	path: string;
+	name: string;
+	originalname: string;
+	duration?: number;
+}
+
 interface Reply {
 	_id: number;
 	order_id: number;
-	user_id: number;
 	product_id: number;
 	rating: number;
 	content: string;
 	createdAt: string;
-	userName: string;
 	product: Product;
+	user: {
+		name: string;
+		_id: number;
+	};
+	extra?: {
+		profileImage: string;
+	};
 }
 
 interface ReplyResponse {
@@ -52,7 +64,6 @@ interface ReplyResponse {
 	item: Reply;
 }
 
-// Bookmark
 interface Bookmark {
 	_id: number;
 	user_id: number;

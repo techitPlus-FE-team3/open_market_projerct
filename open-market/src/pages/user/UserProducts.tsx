@@ -1,94 +1,204 @@
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { FilterButton, FilterContainer } from "@/components/FilterComponent";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import {
+	Heading,
+	ProductContainer,
+	ProductList,
+	ProductSection,
+} from "@/styles/ProductListStyle";
+import { UserProductListItem } from "@/components/ProductListIComponent";
+import SearchBar from "@/components/SearchBar";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import {
+	axiosInstance,
+	searchProductList,
+	setItemWithExpireTime,
+} from "@/utils";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+
+function sortByProfitProductList(list: Product[]) {
+	return list.sort((a, b) => b.buyQuantity * b.price - a.buyQuantity * a.price);
+}
+
+function sortByNewestProductList(list: Product[]) {
+	return list.sort((a, b) => {
+		return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+	});
+}
 
 function UserProducts() {
+	const searchRef = useRef<HTMLInputElement>(null);
+	const paginationButtonRef = useRef(null);
+	const [searchKeyword, setSearchKeyword] = useState("");
 	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
+	const [searchedProductList, setSearchedProductList] = useState<Product[]>();
+
+	async function fetchUserProductsInfo({ pageParam = 1 }) {
+		try {
+			const { data } = await axiosInstance.get(
+				`/seller/products?page=${pageParam}&limit=8`,
+			);
+			return data;
+		} catch (error) {
+			console.error("상품 리스트 조회 실패:", error);
+			return [];
+		}
+	}
+
+	const {
+		data,
+		error,
+		isLoading,
+		isError,
+		hasNextPage,
+		fetchNextPage,
+		isFetchingNextPage,
+	} = useInfiniteQuery({
+		queryKey: ["seller/products"],
+		queryFn: fetchUserProductsInfo,
+		initialPageParam: 1,
+		getNextPageParam: (lastPage) =>
+			lastPage.pagination.page < lastPage.pagination.totalPages
+				? lastPage.pagination.page + 1
+				: null,
+	});
+	const fetchedProductList = data?.pages.flatMap((page) => page.item) || [];
+
+	function handleSearchKeyword(e: { preventDefault: () => void }) {
+		e.preventDefault();
+
+		const keyword =
+			searchRef.current?.value.split(" ").join("").toLowerCase() || "";
+		setSearchKeyword(keyword);
+	}
+
+	const handleSortByProfit = useCallback(() => {
+		if (fetchedProductList.length === 0) return;
+
+		let sortedProductList;
+		sortedProductList =
+			searchedProductList && searchedProductList.length > 0
+				? sortByProfitProductList([...searchedProductList])
+				: sortByProfitProductList([...fetchedProductList]);
+
+		if (searchedProductList && searchedProductList.length > 0) {
+			setSearchedProductList(sortedProductList);
+		} else {
+			setUserProductsInfo(sortedProductList);
+		}
+
+		setItemWithExpireTime("userProductsInfo", sortedProductList, 5000 * 100);
+	}, [fetchedProductList, searchedProductList]);
+
+	const handleSortByNewest = useCallback(() => {
+		if (fetchedProductList.length === 0) return;
+
+		let sortedProductList =
+			searchedProductList && searchedProductList.length > 0
+				? sortByNewestProductList([...searchedProductList])
+				: sortByNewestProductList([...fetchedProductList]);
+
+		if (searchedProductList && searchedProductList.length > 0) {
+			setSearchedProductList(sortedProductList);
+		} else {
+			setUserProductsInfo(sortedProductList);
+		}
+
+		setItemWithExpireTime("userProductsInfo", sortedProductList, 5000 * 100);
+	}, [fetchedProductList, searchedProductList]);
 
 	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
+		async function fetchSearchResult() {
+			const searchResult = await searchProductList({
+				resource: "seller/products",
+				searchKeyword,
+			});
 
-		const fetchUserProductsInfo = async () => {
-			try {
-				const response = await axios.get<ProductListResponse>(
-					`https://localhost/api/seller/products/`,
-					{
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
-						},
-					},
-				);
-				setUserProductsInfo(response.data.item);
-			} catch (error) {
-				// 에러 처리
-				console.error("상품 리스트 조회 실패:", error);
-			}
-		};
+			setSearchedProductList(searchResult);
+		}
 
-		fetchUserProductsInfo();
-	}, []);
+		fetchSearchResult();
+	}, [searchKeyword]);
+
+	useRequireAuth();
+
+	if (isLoading) {
+		return <LoadingSpinner width="100vw" height="100vh" />;
+	}
+
+	if (isError) {
+		const err = error as Error;
+		return <div>에러가 발생했습니다: {err.message}</div>;
+	}
 
 	return (
-		<section>
+		<ProductSection>
 			<Helmet>
 				<title>My Products - 모두의 오디오 MODI</title>
 			</Helmet>
-			<h2>상품관리</h2>
+			<Heading>상품관리</Heading>
 			{userProductsInfo ? (
 				<>
-					<div>
-						<form>
-							<input type="text" placeholder="판매내역 검색" />
-							<button type="submit">검색</button>
-						</form>
-					</div>
-					<ul>
-						<li>
-							<button type="button">인기순</button>
-						</li>
-						<li>
-							<button type="button">최신순</button>
-						</li>
-					</ul>
-					<ul>
-						{Array.isArray(userProductsInfo) ? (
-							userProductsInfo.map((item) => (
-								<li key={item._id}>
-									<img src={item.mainImages[0]} alt="앨범 이름 이미지" />
-									<p>{item.name}</p>
-									<button type="button">
-										<PlayArrowIcon />
-									</button>
-									<p>
-										판매 개수: <span>{item.buyQuantity}</span>
-									</p>
-									<p>
-										총 수익:{" "}
-										<span>
-											{typeof item.buyQuantity !== "undefined"
-												? item.buyQuantity * item.price
-												: "0"}
-										</span>
-									</p>
-									<p>
-										북마크 수:{" "}
-										<span>{item?.bookmarks ? item?.bookmarks.length : 0}</span>
-									</p>
-									<Link to={`/productmanage/${item._id}`}>상세보기</Link>
-								</li>
-							))
-						) : (
-							<span>데이터가 없습니다.</span>
-						)}
-					</ul>
-					<button type="submit">더보기</button>
+					<SearchBar
+						onClick={handleSearchKeyword}
+						searchRef={searchRef}
+						showable
+					/>
+					<FilterContainer>
+						<FilterButton type="button" onClick={handleSortByProfit}>
+							수익순
+						</FilterButton>
+						<FilterButton type="button" onClick={handleSortByNewest}>
+							최신순
+						</FilterButton>
+					</FilterContainer>
+					<ProductContainer
+						height="633px"
+						isDisable={!hasNextPage || isFetchingNextPage}
+					>
+						<ProductList>
+							{searchKeyword && searchedProductList?.length === 0 ? (
+								<span className="emptyList">해당하는 상품이 없습니다.</span>
+							) : searchKeyword && searchedProductList?.length !== 0 ? (
+								searchedProductList?.map((item) => (
+									<UserProductListItem key={item._id} product={item} />
+								))
+							) : Array.isArray(userProductsInfo) &&
+							  userProductsInfo.length > 0 ? (
+								userProductsInfo.map((item) => (
+									<UserProductListItem key={item._id} product={item} />
+								))
+							) : fetchedProductList.length !== 0 ? (
+								fetchedProductList?.map((item) => (
+									<UserProductListItem key={item.id} product={item} />
+								))
+							) : (
+								<span className="emptyList">판매 내역이 없습니다.</span>
+							)}
+						</ProductList>
+						<button
+							type="submit"
+							className="moreButton"
+							ref={paginationButtonRef}
+							onClick={() => {
+								setSearchedProductList([]);
+								setUserProductsInfo([]);
+								fetchNextPage();
+							}}
+							disabled={!hasNextPage || isFetchingNextPage}
+						>
+							더보기
+						</button>
+					</ProductContainer>
 				</>
 			) : (
-				<span>현재 회원님이 판매하고 있는 상품이 없습니다</span>
+				<span className="emptyList">
+					현재 회원님이 판매하고 있는 상품이 없습니다
+				</span>
 			)}
-		</section>
+		</ProductSection>
 	);
 }
 

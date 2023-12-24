@@ -10,7 +10,7 @@ if (process.env.NODE_ENV) {
 }
 
 import moment from "moment";
-import db, { getClient, nextSeq } from "../utils/dbutil.js";
+import db, { getClient, nextSeq } from "../utils/dbUtil.js";
 
 async function main() {
   await db.dropDatabase();
@@ -174,7 +174,7 @@ async function registUser() {
       name: "제이지",
       phone: "01044445555",
       address: "서울시 강남구 논현동 222",
-      type: "user",
+      type: "seller",
       createdAt: getTime(-20, -60 * 30),
       updatedAt: getTime(-10, -60 * 60 * 12),
       extra: {
@@ -210,10 +210,14 @@ async function registProduct() {
       show: true,
       active: true,
       name: "비비드",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 0,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-album2.jpg`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-album2.jpg`,
+          fileName: `sample-album2`,
+          orgName: "sample-album2",
+        },
       ],
       content: `팝하고 신나는 음악 비비드입니다`,
       createdAt: getTime(-41, -60 * 60 * 2),
@@ -224,7 +228,11 @@ async function registProduct() {
         category: "팝",
         tags: ["비비드", "신나는", "팝한"],
         sort: 5,
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
+        soundFile: {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-oppa.mp3`,
+          fileName: "sample-oppa",
+          orgName: "sample-oppa",
+        },
       },
     },
     {
@@ -235,10 +243,14 @@ async function registProduct() {
       show: true,
       active: true,
       name: "집에 보내줘",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 198,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-album3.jpg`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-album3.jpg`,
+          fileName: "sample-album3",
+          orgName: "sample-album3",
+        },
       ],
       content: `집에 가고싶은 사람들의 마음을 대변하여 쓴 음악입니다`,
       createdAt: getTime(-38, -60 * 60 * 6),
@@ -248,7 +260,11 @@ async function registProduct() {
         isBest: true,
         category: "발라드",
         tags: ["슬픈", "우울한", "팝한"],
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
+        soundFile: {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-oppa.mp3`,
+          fileName: "sample-oppa.mp3",
+          orgName: "sample-oppa",
+        },
         sort: 4,
       },
     },
@@ -260,10 +276,14 @@ async function registProduct() {
       show: true,
       active: true,
       name: "레고 레츠고",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 99,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-cross.jpg`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-cross.jpg`,
+          fileName: "sample-cross",
+          orgName: "sample-cross",
+        },
       ],
       content: `가자가자 집에 가자 직장인들의 퇴근길`,
       createdAt: getTime(-35, -60 * 60 * 6),
@@ -274,7 +294,11 @@ async function registProduct() {
         category: "댄스",
         sort: 3,
         tags: ["행복한", "희망찬", "기대하는"],
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
+        soundFile: {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-oppa.mp3`,
+          fileName: "sample-oppa",
+          orgName: "sample-oppa",
+        },
       },
     },
     {
@@ -285,10 +309,14 @@ async function registProduct() {
       show: true,
       active: true,
       name: "스마일",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 89,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-smile.jpg`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-smile.jpg`,
+          fileName: "sample-smile",
+          orgName: "sample-smile",
+        },
       ],
       content: `힘든일이 있어도 항상 웃고 살자는 노래입니다`,
       createdAt: getTime(-33, -60 * 60 * 7),
@@ -299,7 +327,11 @@ async function registProduct() {
         category: "일렉트로닉",
         sort: 1,
         tags: ["희망찬", "행복한", "긍정적인"],
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-baedal.mp3`,
+        soundFile: {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-baedal.mp3`,
+          fileName: "sample-baedal.mp3",
+          orgName: "sample-baedal",
+        },
       },
     },
     {
@@ -310,10 +342,14 @@ async function registProduct() {
       show: true,
       active: true,
       name: "안스마일",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 98,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-smile.jpg`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-smile.jpg`,
+          fileName: "sample-smile",
+          orgName: "sample-smile",
+        },
       ],
       content: `힘든 일만 가득한데 왜 웃으라는지 모르겠는 사람들의 마음을 대변하는 노래`,
       createdAt: getTime(-30, -60 * 60 * 10),
@@ -325,7 +361,11 @@ async function registProduct() {
         category: "클래식",
         sort: 2,
         tags: ["슬픈", "우울한", "절망적인"],
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
+        soundFile: {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-oppa.mp3`,
+          fileName: "sample-oppa.mp3",
+          orgName: "sample-oppa",
+        },
       },
     },
     {
@@ -336,10 +376,14 @@ async function registProduct() {
       show: false,
       active: true,
       name: "히어로 김히로",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 99,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-night.png`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-night.jpg`,
+          fileName: "sample-night",
+          orgName: "sample-night",
+        },
       ],
       content: `우리들의 영웅 김히로가 악당들을 물리치는 상황을 담은 노래`,
       createdAt: getTime(-30, -60 * 60 * 21),
@@ -350,7 +394,9 @@ async function registProduct() {
         category: "힙합",
         sort: 1,
         tags: ["히어로", "영웅", "웅장한"],
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
+        soundFile: {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-oppa.mp3`,
+        },
       },
     },
     {
@@ -361,10 +407,14 @@ async function registProduct() {
       show: true,
       active: true,
       name: "안졸리다 졸려",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 98,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-album2.jpg`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-album2.jpg`,
+          fileName: "album2.jpg",
+          orgName: "album",
+        },
       ],
       content: `안졸린줄 알앗는데 무척이나 졸린 나의 상황을 표현한 노래입니다`,
       createdAt: getTime(-25, -60 * 60 * 12),
@@ -375,7 +425,11 @@ async function registProduct() {
         category: ["PC01", "PC0102", "PC010201"],
         sort: 3,
         tags: ["피곤한", "우울한"],
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
+        soundFile: {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-oppa.mp3`,
+          fileName: "sample-oppa.mp3",
+          orgName: "sample-oppa",
+        },
       },
     },
     {
@@ -386,10 +440,14 @@ async function registProduct() {
       show: true,
       active: true,
       name: "루미큐브",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 97,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-rummikub.png`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-rummikub.png`,
+          fileName: "sample-rummikub.png",
+          orgName: "sample-rummikube",
+        },
       ],
       content: `루미큐브의 긴장감을 표현한 노래입니다`,
       createdAt: getTime(-22, -60 * 60 * 22),
@@ -400,7 +458,11 @@ async function registProduct() {
         category: "클래식",
         sort: 8,
         tags: ["웅장한", "긴장감있는", "정적인"],
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
+        soundFile: {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-oppa.mp3`,
+          fileName: "sample-oppa.mp3",
+          orgName: "sample-oppa",
+        },
       },
     },
     {
@@ -411,10 +473,14 @@ async function registProduct() {
       show: true,
       active: true,
       name: "짱구는 못말려 숲속 산책",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 96,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-jjangu.jpg`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-jjangu.jpg`,
+          fileName: "sample-jjangu.jpg",
+          orgName: "sample-jjangu.jpg.",
+        },
       ],
       content: `짱구가 우연히 들어간 숲속에서 일어난 일에 대해 짱구가 느끼는 감정을 표현한 노래`,
       createdAt: getTime(-21, -60 * 60 * 4),
@@ -426,7 +492,11 @@ async function registProduct() {
         category: "락",
         sort: 2,
         tags: ["신나는", "재밌는", "팝한"],
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
+        soundFile: {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-oppa.mp3`,
+          fileName: "sample-oppa.mp3",
+          orgName: "sample-oppa",
+        },
       },
     },
     {
@@ -437,10 +507,14 @@ async function registProduct() {
       show: true,
       active: true,
       name: "라푼젤라또",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 95,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-rapunzel.jpg`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-rapunzel.jpg`,
+          fileName: "sample-rapunzel.jpg",
+          orgName: "sample-rapunzel",
+        },
       ],
       content: `디즈니에서 만든 라푼젤라또 ost 음악`,
       createdAt: getTime(-18, -60 * 60 * 7),
@@ -451,7 +525,11 @@ async function registProduct() {
         category: "국악",
         sort: 4,
         tags: ["슬픈", "달콤한", "팝한"],
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
+        soundFile: {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-oppa.mp3`,
+          fileName: "sample-oppa.mp3",
+          orgName: "sample-oppa",
+        },
       },
     },
     {
@@ -462,10 +540,14 @@ async function registProduct() {
       show: true,
       active: true,
       name: "INVU",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 94,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-invu.jpg`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-invu.jpg`,
+          fileName: "sample-invu.",
+          orgName: "sample-invu",
+        },
       ],
       content: `태연의 INVU 아이앤브이유`,
       createdAt: getTime(-16, -60 * 60 * 3),
@@ -477,7 +559,7 @@ async function registProduct() {
         category: "인디", // 어린이 > 레고
         sort: 6,
         tags: ["희망찬", "힘찬"],
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
+        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-oppa.mp3`,
       },
     },
     {
@@ -488,10 +570,14 @@ async function registProduct() {
       show: true,
       active: true,
       name: "데이지",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 800,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-album3.jpg`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-album3.jpg`,
+          fileName: "sample-album3.jpg",
+          orgName: "album3",
+        },
       ],
       content: `데이지가 피는 계절의 노래`,
       createdAt: getTime(-11, -60 * 60 * 12),
@@ -502,7 +588,11 @@ async function registProduct() {
         category: "R&B", // 어린이 > 레고
         sort: 7,
         tags: ["조용한"],
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
+        soundFile: {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-oppa.mp3`,
+          fileName: "sample-oppa.mp3",
+          orgName: "sample-oppa",
+        },
       },
     },
     {
@@ -513,10 +603,14 @@ async function registProduct() {
       show: true,
       active: true,
       name: "핑크베놈",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 94,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-night.jpg`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-night.jpg`,
+          fileName: "sample-night",
+          orgName: "sample-night",
+        },
       ],
       content: `블랙핑크의 핑크베놈입니다`,
       createdAt: getTime(-10, -60 * 60 * 12),
@@ -527,7 +621,11 @@ async function registProduct() {
         category: "월드뮤직", // 어린이 > 레고
         sort: 6,
         tags: ["웅장한", "강한", "팝한"],
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-oppa.mp3`,
+        soundFile: {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-oppa.mp3`,
+          fileName: "sample-oppa.mp3",
+          orgName: "sample-oppa",
+        },
       },
     },
     {
@@ -538,10 +636,14 @@ async function registProduct() {
       show: true,
       active: true,
       name: "하입보이",
-      quantity: Infinity,
+      quantity: Number.MAX_SAFE_INTEGER,
       buyQuantity: 298,
       mainImages: [
-        `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-cross.jpg`,
+        {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-cross.jpg`,
+          fileName: "sample-cross.jpg",
+          orgName: "sample-cross",
+        },
       ],
       content: `뉴진스의 데뷔곡 하입보이`,
       createdAt: getTime(-3, -60 * 60 * 12),
@@ -552,7 +654,11 @@ async function registProduct() {
         category: "앰비언트", // 어린이 > 보드게임
         sort: 5,
         tags: ["설렘", "신나는", "긴장감"],
-        soundFile: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-baedal.mp3`,
+        soundFile: {
+          url: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-oppa.mp3`,
+          fileName: "sample-oppa.mp3",
+          orgName: "sample-oppa",
+        },
       },
     },
   ];
@@ -611,7 +717,7 @@ async function registOrder() {
         {
           _id: 2,
           name: "헬로카봇 스톰다이버",
-          image: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-diver.jpg`,
+          image: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-diver.jpg`,
           quantity: 2,
           price: 34520,
           reply_id: 3,
@@ -646,14 +752,14 @@ async function registOrder() {
         {
           _id: 3,
           name: "레고 클래식 라지 조립 박스 10698",
-          image: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-classic.jpg`,
+          image: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-classic.jpg`,
           quantity: 1,
           price: 48870,
         },
         {
           _id: 4,
           name: "레고 테크닉 42151 부가티 볼리드",
-          image: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-bugatti.png`,
+          image: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-bugatti.png`,
           quantity: 2,
           price: 90000,
           reply_id: 2,
@@ -683,7 +789,7 @@ async function registOrder() {
         {
           _id: 4,
           name: "레고 테크닉 42151 부가티 볼리드",
-          image: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/uploads/sample-bugatti.png`,
+          image: `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/files/sample-bugatti.png`,
           quantity: 1,
           price: 45000,
           reply_id: 1,
@@ -793,8 +899,6 @@ async function registCode() {
         },
         {
           sort: 1,
-          code: "PC08",
-          value: "락",
           code: "PC08",
           value: "락",
           depth: 1,

@@ -1,250 +1,377 @@
-import axios from "axios";
-import axiosInstance from "@/api/instance";
-import { useEffect, useState } from "react";
+import MyPageList from "@/components/MyPageList";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { currentUserState } from "@/states/authState";
+import { Common } from "@/styles/common";
+import { axiosInstance } from "@/utils";
+import styled from "@emotion/styled";
+import Skeleton from "@mui/material/Skeleton";
 import { Helmet } from "react-helmet-async";
-import { Link, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+
+const Section = styled.section`
+	width: 1440px;
+	height: 100%;
+	background-color: ${Common.colors.white};
+	padding: 56px;
+	margin: 0 auto;
+	padding-top: 100px;
+`;
+
+const MainTitle = styled.h2`
+	font-weight: ${Common.font.weight.bold};
+	font-size: ${Common.font.size.xl};
+	color: ${Common.colors.gray};
+`;
+
+const Article = styled.article`
+	width: 1328px;
+	height: 241px;
+	background: ${Common.colors.gray2};
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	border-radius: 10px;
+	margin: 20px auto;
+	position: relative;
+	padding: ${Common.space.spacingMd};
+	padding-left: 100px;
+	display: flex;
+	gap: 20px;
+`;
+
+const Info = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+`;
+
+const PersonalInfo = styled.div`
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	background-color: ${Common.colors.white};
+	width: 979px;
+	height: 95px;
+	border-radius: 10px;
+	padding: 6px 12px;
+`;
+
+const PersonalInfoItem = styled.div`
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	width: 960px;
+	height: 60px;
+	gap: 5px;
+	div {
+		display: flex;
+		gap: 10px;
+		& > * {
+			font-size: ${Common.font.size.sm};
+			font-weight: ${Common.font.weight.regular};
+		}
+		& > h5 {
+			width: 100px;
+		}
+		& > p {
+			color: ${Common.colors.gray};
+			text-decoration: underline;
+		}
+	}
+`;
+
+const UserImage = styled.img`
+	width: 200px;
+	height: 200px;
+	object-fit: cover;
+	border-radius: 50%;
+`;
+
+const Comment = styled.div`
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	background-color: ${Common.colors.white};
+	width: 979px;
+	height: 95px;
+	border-radius: 10px;
+	padding: 6px 12px;
+`;
+
+const CommentInfo = styled.div`
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	gap: 5px;
+	height: 60px;
+	& > div {
+		display: flex;
+		& > * {
+			font-size: ${Common.font.size.sm};
+			font-weight: ${Common.font.weight.regular};
+		}
+		& > h5 {
+			width: 100px;
+		}
+		& > p {
+			color: ${Common.colors.gray};
+			text-decoration: underline;
+		}
+	}
+`;
+
+const StyledLink = styled(Link)`
+	text-decoration: none;
+	position: absolute;
+	right: 5px;
+	bottom: 3px;
+	background-color: ${Common.colors.emphasize};
+	width: 83px;
+	height: 18px;
+	text-align: center;
+	line-height: 18px;
+	font-size: ${Common.font.size.sm};
+	border-radius: 10px;
+	color: inherit;
+	& > visited {
+		color: inherit;
+	}
+`;
+
+const InfoTitle = styled.h3`
+	color: ${Common.colors.gray};
+	position: absolute;
+	top: 10px;
+	left: 10px;
+`;
+
+const Title = styled.h3`
+	color: ${Common.colors.gray};
+`;
+
+const Image = styled.img`
+	width: 200px;
+	height: 200px;
+	object-fit: cover;
+`;
+
+async function fetchUserInfo(userId: string) {
+	const response = await axiosInstance.get(`/users/${userId}`);
+	return response.data.item;
+}
+
+async function fetchUserProductsInfo() {
+	const response = await axiosInstance.get(`/seller/products/`);
+	return response.data.item;
+}
+
+async function fetchUserOrderInfo() {
+	const response = await axiosInstance.get(`/orders`);
+	return response.data.item;
+}
+
+async function fetchBookmarks() {
+	const response = await axiosInstance.get(`/bookmarks`);
+	return response.data.item;
+}
 
 function MyPage() {
-	const [userInfo, setUserInfo] = useState<User | null>(null);
-	const [userProductsInfo, setUserProductsInfo] = useState<Product[]>([]);
-	const [userOrdersInfo, setUserOrdersInfo] = useState<Order[]>([]);
+	useRequireAuth();
 
-	const [bookmarks, setBookmarks] = useState<number[]>([]);
-	const [bookmarkDetails, setBookmarkDetails] = useState<any[]>([]);
+	const currentUser = useRecoilValue(currentUserState);
 
-	const userId = localStorage.getItem("_id");
-	const accessToken = localStorage.getItem("accessToken");
+	const { data: userInfo, isLoading: isLoadingUserInfo } = useQuery({
+		queryKey: ["userInfo", currentUser?._id.toString()],
+		queryFn: () => fetchUserInfo(currentUser!._id.toString()),
+	});
+	const { data: userProductsInfo, isLoading: isLoadingProductsInfo } = useQuery(
+		{
+			queryKey: ["userProducts", currentUser?._id.toString()],
+			queryFn: () => fetchUserProductsInfo(),
+		},
+	);
+	const { data: userOrdersInfo, isLoading: isLoadingOrdersInfo } = useQuery({
+		queryKey: ["userOrders", currentUser?._id.toString()],
+		queryFn: () => fetchUserOrderInfo(),
+	});
+	const { data: bookmarkDetails, isLoading: isLoadingBookmarks } = useQuery({
+		queryKey: ["bookmarks", currentUser?._id.toString()],
+		queryFn: () => fetchBookmarks(),
+	});
 
-	const navigate = useNavigate();
+	const historyList = JSON.parse(
+		sessionStorage.getItem("historyList") as string,
+	);
 
-	useEffect(() => {
-		const fetchUserInfo = async () => {
-			try {
-				const response = await axiosInstance.get<UserResponse>(
-					`/users/${userId}`,
-					{
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
-						},
-					},
-				);
-				setUserInfo(response.data.item);
-				if (response.data.item.extra && response.data.item.extra.bookmarks) {
-					setBookmarks(response.data.item.extra.bookmarks);
-				} else {
-					setBookmarks([]);
-				}
-			} catch (error) {
-				if (axios.isAxiosError(error)) {
-					console.error("회원 정보 조회 실패:", error);
-					if (error.response && error.response.status === 401) {
-						toast.error("세션이 만료되었습니다. 다시 로그인해주세요.");
-						navigate("/signin");
-					}
-				} else {
-					// 에러가 AxiosError가 아닌 경우
-					console.error("Unexpected error:", error);
-				}
-			}
-		};
+	const profileImageUrl = userInfo?.extra?.profileImage || "/user.svg";
 
-		const fetchUserProductsInfo = async () => {
-			try {
-				const response = await axiosInstance.get<ProductListResponse>(
-					`/seller/products/`,
-					{
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
-						},
-					},
-				);
-				setUserProductsInfo(response.data.item);
-			} catch (error) {
-				console.error("회원 정보 조회 실패:", error);
-			}
-		};
-
-		async function fetchUserOrderInfo() {
-			try {
-				const response = await axiosInstance.get<OrderListResponse>("/orders", {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				});
-				setUserOrdersInfo(response.data.item);
-			} catch (err) {
-				console.error(err);
-			}
-		}
-
-		fetchUserInfo();
-		fetchUserProductsInfo();
-		fetchUserOrderInfo();
-	}, []);
-
-	useEffect(() => {
-		const fetchBookmarkDetails = async () => {
-			const bookmarkInfo = [];
-			for (const bookmarkId of bookmarks) {
-				try {
-					const response = await axiosInstance.get(`/products/${bookmarkId}`, {
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
-						},
-					});
-					bookmarkInfo.push(response.data.item);
-				} catch (error) {
-					console.error(`북마크 ${bookmarkId} 정보 조회 실패:`, error);
-				}
-			}
-			setBookmarkDetails(bookmarkInfo);
-		};
-
-		if (bookmarks.length > 0) {
-			fetchBookmarkDetails();
-		}
-	}, [bookmarks]);
-
-	if (!userInfo) {
-		return <div>Loading...</div>; // 로딩 처리
-	}
+	const UserInfoSkeleton = () => (
+		<>
+			<Skeleton variant="circular" width={200} height={200} />
+			<Info>
+				<PersonalInfo>
+					<Skeleton variant="text" width={100} height={24} />
+					<Skeleton variant="text" width={960} height={12} />
+					<Skeleton variant="text" width={960} height={12} />
+				</PersonalInfo>
+				<Comment>
+					<Skeleton variant="text" width={100} height={24} />
+					<Skeleton variant="text" width={960} height={12} />
+					<Skeleton variant="text" width={960} height={12} />
+				</Comment>
+			</Info>
+		</>
+	);
 
 	return (
-		<section>
+		<Section>
 			<Helmet>
 				<title>My Page - 모두의 오디오 MODI</title>
 			</Helmet>
-			<h2>마이페이지</h2>
-			<article>
-				<h3>내 정보</h3>
-				<img src="public/user.svg" alt="회원 썸네일" />
-				<div>
-					<div>
-						<h4>회원정보</h4>
-						<div>
-							<h5>이메일</h5>
-							<p>{userInfo.email}</p>
-						</div>
-						<div>
-							<h5>이름</h5>
-							<p>{userInfo.name}</p>
-						</div>
-						<div>
-							<h5>휴대폰 번호</h5>
-							<p>{userInfo.phone}</p>
-						</div>
-						<Link to="/update/userId">회원정보 수정</Link>
-					</div>
-					<div>
-						<h4>내가 쓴 댓글</h4>
-						<div>
-							<h5>게시글 제목</h5>
-							<p>내용</p>
-						</div>
-						<div>
-							<h5>게시글 제목</h5>
-							<p>내용</p>
-						</div>
-						<div>
-							<h5>게시글 제목</h5>
-							<p>내용</p>
-						</div>
-						<Link to="/">전체보기</Link>
-					</div>
-				</div>
-			</article>
-			<article>
-				<h3>북마크</h3>
-				<ul>
-					{bookmarkDetails.map((product) => (
-						<li key={product._id}>
-							<Link to={`/productdetail/${product._id}`}>
-								<img src={product.mainImages[0]} alt={`앨범 ${product.name}`} />
-							</Link>
-						</li>
-					))}
-				</ul>
-				<Link to="/">전체보기</Link>
-			</article>
-			<article>
-				<h3>히스토리</h3>
-				<ul>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
+			<MainTitle>마이페이지</MainTitle>
+			<Article>
+				<InfoTitle>내 정보</InfoTitle>
+				{isLoadingUserInfo ? (
+					<UserInfoSkeleton />
+				) : (
+					<>
+						<UserImage
+							src={profileImageUrl}
+							alt={`${userInfo.name} 프로필 이미지`}
+						/>
+						<Info>
+							<PersonalInfo>
+								<Title>회원정보</Title>
+								<PersonalInfoItem>
+									<div>
+										<h5>이메일</h5>
+										<p>{userInfo.email}</p>
+									</div>
+									<div>
+										<h5>이름</h5>
+										<p>{userInfo.name}</p>
+									</div>
+									<div>
+										<h5>휴대폰 번호</h5>
+										<p>{userInfo.phone}</p>
+									</div>
+								</PersonalInfoItem>
+								<StyledLink to={`/useredit/${currentUser!._id}`}>
+									회원정보 수정
+								</StyledLink>
+							</PersonalInfo>
+							<Comment>
+								<Title>내가 쓴 댓글</Title>
+								<CommentInfo>
+									<div>
+										<h5>게시글 제목</h5>
+										<p>내용</p>
+									</div>
+									<div>
+										<h5>게시글 제목</h5>
+										<p>내용</p>
+									</div>
+									<div>
+										<h5>게시글 제목</h5>
+										<p>내용</p>
+									</div>
+								</CommentInfo>
+								<StyledLink to="/">전체보기</StyledLink>
+							</Comment>
+						</Info>
+					</>
+				)}
+			</Article>
+			{isLoadingBookmarks ? (
+				<Skeleton
+					variant="rounded"
+					width="100%"
+					height={241}
+					animation="wave"
+				/>
+			) : (
+				<MyPageList
+					title="북마크"
+					data={isLoadingBookmarks ? [] : (bookmarkDetails || []).slice(0, 5)}
+					emptyMessage="북마크가 없습니다."
+					renderItem={(item) => (
+						<Link to={`/productdetail/${item.product_id}`}>
+							<Image
+								src={`${item.product.image.path}`}
+								alt={`${item.product.name} 앨범 아트`}
+							/>
 						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-					<li>
-						<Link to="/">
-							<img src="" alt="앨범아트" />
-						</Link>
-					</li>
-				</ul>
-				<Link to="/">전체보기</Link>
-			</article>
-			<article>
-				<h3>구매내역</h3>
-				<ul>
-					{userOrdersInfo.length !== 0 ? (
-						userOrdersInfo.slice(0, 4).map((order) => {
-							return (
-								<li key={order._id}>
-									<Link to={`/productdetail/${order.products[0]._id}`}>
-										{order.products[0].image ? (
-											<img
-												src={order.products[0].image}
-												alt={`${order.products[0].name} 사진`}
-											/>
-										) : (
-											<img
-												src="/noImage.svg"
-												alt={`${order.products[0].name} 사진 없음`}
-											/>
-										)}
-									</Link>
-								</li>
-							);
-						})
-					) : (
-						<span>구매 내역이 없습니다.</span>
 					)}
-				</ul>
-				<Link to="/orders">전체보기</Link>
-			</article>
-			<article>
-				<h3>판매상품관리</h3>
-				<ul>
-					{Array.isArray(userProductsInfo) ? (
-						userProductsInfo.slice(0, 4).map((item) => (
-							<li key={item._id}>
-								<Link to={`/productmanage/${item._id}`}>
-									<img src={`${item.mainImages[0]}`} alt="앨범아트" />
-								</Link>
-							</li>
-						))
-					) : (
-						<span>데이터가 없습니다.</span>
+					linkText="전체보기"
+					linkUrl="/"
+				/>
+			)}
+			<MyPageList
+				title="히스토리"
+				data={historyList ? historyList.slice(0, 5) : []}
+				emptyMessage="히스토리가 없습니다."
+				renderItem={(item) => (
+					<Link to={`/productdetail/${item._id}`}>
+						<Image
+							src={`${item.mainImages[0].path}`}
+							alt={`${item.name} 앨범 아트`}
+						/>
+					</Link>
+				)}
+			/>
+			{isLoadingProductsInfo ? (
+				<Skeleton
+					variant="rounded"
+					width="100%"
+					height={241}
+					animation="wave"
+				/>
+			) : (
+				<MyPageList
+					title="구매내역"
+					data={isLoadingOrdersInfo ? [] : (userOrdersInfo || []).slice(0, 5)}
+					emptyMessage="구매내역이 없습니다."
+					renderItem={(item) => (
+						<Link to={`/productdetail/${item.products[0]._id}`}>
+							<Image
+								src={item.products[0].image.path}
+								alt={`${item.products[0].name} 앨범 아트`}
+							/>
+						</Link>
 					)}
-				</ul>
-				<Link to={`/user/${userId}/products`}>전체보기</Link>
-			</article>
-		</section>
+					linkText="전체보기"
+					linkUrl="/orders"
+				/>
+			)}
+			{isLoadingOrdersInfo ? (
+				<Skeleton
+					variant="rounded"
+					width="100%"
+					height={241}
+					animation="wave"
+				/>
+			) : (
+				<MyPageList
+					title="판매상품관리"
+					data={
+						isLoadingProductsInfo ? [] : (userProductsInfo || []).slice(0, 5)
+					}
+					emptyMessage="판매내역이 없습니다."
+					renderItem={(item) => (
+						<Link to={`/productmanage/${item._id}`}>
+							<Image
+								src={`${item.mainImages[0].path}`}
+								alt={`${item.name} 앨범 아트`}
+							/>
+						</Link>
+					)}
+					linkText="전체보기"
+					linkUrl={`/user/${currentUser!._id}/products`}
+				/>
+			)}
+		</Section>
 	);
 }
 
