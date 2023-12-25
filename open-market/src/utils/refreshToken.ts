@@ -5,7 +5,6 @@ const API_KEY = import.meta.env.VITE_API_SERVER;
 
 export const axiosInstance = axios.create({
 	baseURL: API_KEY,
-	timeout: 1000 * 5,
 	headers: {
 		"Content-Type": "application/json",
 		accept: "application/json",
@@ -19,35 +18,42 @@ async function refreshToken() {
 		return refreshingToken;
 	}
 
-	try {
-		refreshingToken = axiosInstance.get("/users/refresh", {
+	refreshingToken = axios
+		.get("https://modi-ip3-modi.koyeb.app/api/users/refresh", {
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
 			},
+		})
+		.then((response) => {
+			if (response.data.ok) {
+				const newAccessToken = response.data.accessToken;
+				localStorage.setItem("accessToken", newAccessToken);
+				currentAccessToken = newAccessToken;
+				axiosInstance.defaults.headers.common["Authorization"] =
+					`Bearer ${newAccessToken}`;
+				return newAccessToken;
+			} else {
+				throw new Error("Failed to refresh token");
+			}
+		})
+		.catch((error) => {
+			handleTokenRefreshError(error);
+			throw error;
+		})
+		.finally(() => {
+			refreshingToken = null;
 		});
 
-		const response = await refreshingToken;
-
-		if (response.data.ok) {
-			localStorage.setItem("accessToken", response.data.accessToken);
-			axiosInstance.defaults.headers.common["Authorization"] =
-				`Bearer ${response.data.accessToken}`;
-			refreshingToken = null;
-			return response.data.accessToken;
-		} else {
-			throw new Error("Failed to refresh token");
-		}
-	} catch (error) {
-		handleTokenRefreshError(error);
-		throw error;
-	} finally {
-		refreshingToken = null;
-	}
+	return refreshingToken;
 }
 
 function handleTokenRefreshError(error: any) {
 	console.error("Error refreshing token:", error);
-	toast.error("토큰이 만료되었습니다. 다시 로그인해주세요.", {
+	const errorMessage =
+		error.response && error.response.data
+			? error.response.data.message
+			: "토큰 갱신 중 문제가 발생했습니다. 다시 시도해주세요.";
+	toast.error(errorMessage, {
 		ariaProps: {
 			role: "status",
 			"aria-live": "polite",
@@ -56,11 +62,12 @@ function handleTokenRefreshError(error: any) {
 	localStorage.clear();
 }
 
+let currentAccessToken = localStorage.getItem("accessToken");
+
 axiosInstance.interceptors.request.use(
 	(config) => {
-		const token = localStorage.getItem("accessToken");
-		if (token) {
-			config.headers["Authorization"] = `Bearer ${token}`;
+		if (currentAccessToken) {
+			config.headers["Authorization"] = `Bearer ${currentAccessToken}`;
 		}
 		return config;
 	},
@@ -77,9 +84,8 @@ axiosInstance.interceptors.response.use(
 		if (error.response.status === 401 && !originalRequest._retry) {
 			originalRequest._retry = true;
 			try {
-				await refreshToken();
-				originalRequest.headers["Authorization"] =
-					`Bearer ${localStorage.getItem("accessToken")}`;
+				const newAccessToken = await refreshToken();
+				originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
 				return axiosInstance(originalRequest);
 			} catch (refreshError) {
 				return Promise.reject(refreshError);
