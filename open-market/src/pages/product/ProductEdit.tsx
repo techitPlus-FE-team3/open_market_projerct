@@ -387,6 +387,7 @@ function ProductEdit() {
 						<FlexLayout>
 							<Textarea
 								content={userProductInfo?.content}
+								placeholder="10글자 이상 입력해주세요."
 								onChange={debounce((e: { target: { value: any } }) =>
 									setPostItem({ ...postItem, content: e.target.value }),
 								)}

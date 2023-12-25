@@ -5,6 +5,7 @@ interface TextareaProps {
 	readOnly?: boolean;
 	content?: string;
 	small?: boolean;
+	placeholder?: string;
 	onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
@@ -41,6 +42,7 @@ function Textarea({
 	content = "",
 	small = false,
 	onChange,
+	placeholder,
 }: TextareaProps) {
 	const width = readOnly ? "928px" : "687px";
 	const height = small ? "80px" : "111px";
@@ -56,6 +58,7 @@ function Textarea({
 				readOnly={readOnly}
 				defaultValue={content}
 				onChange={onChange}
+				placeholder={placeholder}
 			/>
 		</TextareaWrapper>
 	);
