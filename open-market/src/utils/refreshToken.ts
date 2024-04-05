@@ -61,8 +61,6 @@ function handleTokenRefreshError(error: any) {
 	localStorage.clear();
 }
 
-let currentAccessToken = localStorage.getItem("accessToken");
-
 axiosInstance.interceptors.request.use(
 	(config) => {
 		let accessToken = localStorage.getItem("accessToken");
