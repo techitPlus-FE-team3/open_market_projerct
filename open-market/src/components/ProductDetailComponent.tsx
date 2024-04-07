@@ -3,8 +3,8 @@ import {
 	DetailBadgeContainer,
 } from "@/components/ProductDetailBadgeComponent";
 import { ShowStarRating } from "@/components/ReplyComponent";
-import { DetailControlPanel } from "@/components/listMusicPlayer/ControlPanel";
-import { DetailPlayerSlider } from "@/components/listMusicPlayer/PlayerSlider";
+import { DetailControlPanel } from "@/components/audioPlayer/ControlPanel";
+import { DetailPlayerSlider } from "@/components/audioPlayer/PlayerSlider";
 import { Common } from "@/styles/common";
 import { numberWithComma } from "@/utils";
 import styled from "@emotion/styled";

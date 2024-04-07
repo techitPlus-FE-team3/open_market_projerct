@@ -1,5 +1,5 @@
-import { ListControlPanel } from "@/components/listMusicPlayer/ControlPanel";
-import { ListPlayerSlider } from "@/components/listMusicPlayer/PlayerSlider";
+import { ListControlPanel } from "@/components/audioPlayer/ControlPanel";
+import { ListPlayerSlider } from "@/components/audioPlayer/PlayerSlider";
 import { currentAudioIdState } from "@/states/audioPlayerState";
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
