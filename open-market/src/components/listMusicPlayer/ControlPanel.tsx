@@ -17,7 +17,49 @@ const StyledControlPanel = styled.div<DisplayProps>`
 	font-size: ${Common.font.size.sm};
 `;
 
-function ControlPanel({
+const StyledDetailControlPanel = styled.div`
+	color: white;
+	position: relative;
+	top: 5px;
+	font-size: ${Common.font.size.sm};
+
+	span:first-of-type::after {
+		content: " / ";
+	}
+`;
+
+function secondsToHms(seconds: number) {
+	if (!seconds) return "00:00";
+
+	let duration = seconds;
+	let currentHours = duration / 3600;
+	duration = duration % 3600;
+
+	let currentMin: number | string = parseInt(String(duration / 60));
+	duration = duration % 60;
+
+	let currentSeconds: number | string = parseInt(String(duration));
+
+	if (currentSeconds < 10) {
+		currentSeconds = `0${currentSeconds}`;
+	}
+	if (currentMin < 10) {
+		currentMin = `0${currentMin}`;
+	}
+
+	if (parseInt(String(currentHours), 10) > 0) {
+		return `${parseInt(
+			String(currentHours),
+			10,
+		)}:${currentMin}:${currentSeconds}`;
+	} else if (currentMin == 0) {
+		return `00:${currentSeconds}`;
+	} else {
+		return `${currentMin}:${currentSeconds}`;
+	}
+}
+
+export function ListControlPanel({
 	duration,
 	currentTime,
 	showable,
@@ -26,37 +68,6 @@ function ControlPanel({
 	currentTime: number;
 	showable?: boolean;
 }) {
-	function secondsToHms(seconds: number) {
-		if (!seconds) return "00:00";
-
-		let duration = seconds;
-		let currentHours = duration / 3600;
-		duration = duration % 3600;
-
-		let currentMin: number | string = parseInt(String(duration / 60));
-		duration = duration % 60;
-
-		let currentSeconds: number | string = parseInt(String(duration));
-
-		if (currentSeconds < 10) {
-			currentSeconds = `0${currentSeconds}`;
-		}
-		if (currentMin < 10) {
-			currentMin = `0${currentMin}`;
-		}
-
-		if (parseInt(String(currentHours), 10) > 0) {
-			return `${parseInt(
-				String(currentHours),
-				10,
-			)}:${currentMin}:${currentSeconds}`;
-		} else if (currentMin == 0) {
-			return `00:${currentSeconds}`;
-		} else {
-			return `${currentMin}:${currentSeconds}`;
-		}
-	}
-
 	return (
 		<StyledControlPanel showable={showable}>
 			<span>{secondsToHms(currentTime)}</span>
@@ -64,4 +75,18 @@ function ControlPanel({
 		</StyledControlPanel>
 	);
 }
-export default ControlPanel;
+
+export function DetailControlPanel({
+	duration,
+	currentTime,
+}: {
+	duration: number;
+	currentTime: number;
+}) {
+	return (
+		<StyledDetailControlPanel>
+			<span>{secondsToHms(currentTime)}</span>
+			<span>{secondsToHms(duration)}</span>
+		</StyledDetailControlPanel>
+	);
+}
