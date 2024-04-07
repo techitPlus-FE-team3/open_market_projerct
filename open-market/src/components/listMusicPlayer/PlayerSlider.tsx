@@ -123,7 +123,7 @@ const DetailSliderContainer = styled.div`
 
 	/* Custom Progress Bar */
 	.progressBarCover {
-		background-color: ${Common.colors.secondary};
+		background-color: ${Common.colors.primary};
 		width: 80%;
 		height: 3px;
 		display: block;
