@@ -191,7 +191,7 @@ function ProductDetailComponent({
 	function onChange(e: ChangeEvent<HTMLInputElement>) {
 		const target = e.target as HTMLInputElement;
 		audio.currentTime =
-			(+product?.extra?.soundFile?.duration?.toFixed(2) ?? 0 / 100) *
+			(+product?.extra?.soundFile?.duration?.toFixed(2)! / 100) *
 			parseInt(target.value);
 		setPercentage(parseInt(target.value));
 	}
@@ -262,7 +262,7 @@ function ProductDetailComponent({
 					onTimeUpdate={getCurrentDuration}
 				/>
 				<DetailControlPanel
-					duration={+product?.extra?.soundFile?.duration?.toFixed(2)}
+					duration={+product?.extra?.soundFile?.duration?.toFixed(2)!}
 					currentTime={currentTime}
 				/>
 			</ProductMediaContainer>
