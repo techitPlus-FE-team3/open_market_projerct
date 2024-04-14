@@ -76,3 +76,28 @@ export const ProductList = styled.ul`
 	align-items: center;
 	gap: ${Common.space.spacingLg};
 `;
+
+export const MoreButton = styled.button<disableProps>`
+	width: 100px;
+	height: 40px;
+	position: relative;
+	background-color: transparent;
+	left: 50%;
+	transform: translateX(-60%);
+	border: none;
+	font-weight: ${Common.font.weight.regular};
+	cursor: ${(props) => (props.isDisable ? `not-allowed` : `pointer`)};
+
+	&::after {
+		content: "";
+		position: absolute;
+		top: 50%;
+		transform: translateY(-30%);
+		right: 12px;
+		border-bottom: solid 8px transparent;
+		border-top: solid 8px
+			${(props) => (props.isDisable ? `${Common.colors.gray}` : `black`)};
+		border-left: solid 8px transparent;
+		border-right: solid 8px transparent;
+	}
+`;
