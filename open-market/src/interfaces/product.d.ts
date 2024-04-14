@@ -25,14 +25,14 @@ interface Product {
 	bookmarks?: Bookmark[];
 }
 
-interface ProductListResponse {
-	ok: number;
-	item: Product[];
-}
-
 interface ProductResponse {
 	ok: number;
 	item: Product;
+}
+
+interface ProductListResponse {
+	ok: number;
+	item: Product[];
 }
 
 interface ProductFiles {
@@ -62,6 +62,11 @@ interface Reply {
 interface ReplyResponse {
 	ok: number;
 	item: Reply;
+}
+
+interface ReplyListResponse {
+	ok: number;
+	item: Reply[];
 }
 
 interface Bookmark {
