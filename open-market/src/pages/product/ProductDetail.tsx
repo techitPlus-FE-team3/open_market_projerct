@@ -10,7 +10,7 @@ import ReplyListItem, {
 } from "@/components/ReplyComponent";
 import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
-import { Heading } from "@/styles/ProductListStyle";
+import { Heading, MoreButton } from "@/styles/ProductListStyle";
 import { axiosInstance, debounce, formatDate } from "@/utils";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
@@ -267,13 +267,13 @@ function ProductDetail() {
 				</ul>
 				{allReplies !== undefined &&
 				currentPage * REPLIES_PER_PAGE < allReplies?.length ? (
-					<button className="moreButton" onClick={handleMoreReplies}>
+					<MoreButton onClick={handleMoreReplies} isReply>
 						더보기
-					</button>
+					</MoreButton>
 				) : (
-					<button className="moreButton" disabled>
+					<MoreButton isReply disabled isDisable>
 						더보기
-					</button>
+					</MoreButton>
 				)}
 			</ReplyContainer>
 		</section>
