@@ -147,11 +147,7 @@ function Index() {
 
 	return (
 		<>
-			<HelmetSetup
-				title="Home"
-				description="홈페이지"
-				url=""
-			/>
+			<HelmetSetup title="Home" description="홈페이지" url="" />
 			<BannerSection showable={searchKeyword ? false : true}>
 				<video autoPlay loop muted>
 					<source src="/videos/mainVideo.mp4" type="video/mp4" />
