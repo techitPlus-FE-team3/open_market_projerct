@@ -149,6 +149,46 @@ function Index() {
 		<>
 			<Helmet>
 				<title>Home - 모두의 오디오 MODI</title>
+
+				{/* Primary Meta Tags */}
+				<meta name="title" content="Home - 모두의 오디오 MODI" />
+				<meta
+					name="description"
+					content="소규모 음원 제작자들을 위한 오픈마켓 플랫폼"
+				/>
+				<meta name="author" content="IP3" />
+				{/* <meta name="keywords" content="음원, 다운로드, 공유, 인디, 작곡" /> */}
+
+				{/* Open Graph / Facebook */}
+				<meta property="og:type" content="website" />
+				<meta property="og:site_name" content="모두의 오디오 MODI" />
+				<meta property="og:url" content="https://ip3-modi.netlify.app/" />
+				<meta property="og:title" content="Home - 모두의 오디오 MODI" />
+				<meta
+					property="og:description"
+					content="소규모 음원 제작자들을 위한 오픈마켓 플랫폼"
+				/>
+				<meta
+					property="og:image"
+					content="https://modi-ip3-modi.koyeb.app/api/files/KrlpaHRt3.png"
+				/>
+				<meta property="og:image:alt" content="모두의 오디오! MODI" />
+
+				{/* Twitter */}
+				<meta property="twitter:card" content="summary_large_image" />
+				<meta property="twitter:url" content="https://ip3-modi.netlify.app/" />
+				<meta property="twitter:title" content="Home - 모두의 오디오 MODI" />
+				<meta
+					property="twitter:description"
+					content="소규모 음원 제작자들을 위한 오픈마켓 플랫폼"
+				/>
+				<meta
+					property="twitter:image"
+					content="https://modi-ip3-modi.koyeb.app/api/files/KrlpaHRt3.png"
+				/>
+
+				{/* Canonical URL */}
+				<link rel="canonical" href="https://ip3-modi.netlify.app/" />
 			</Helmet>
 			<BannerSection showable={searchKeyword ? false : true}>
 				<video autoPlay loop muted>
