@@ -280,7 +280,7 @@ export function UserRepliesListItem({ reply }: { reply: Reply }) {
 		<ListItem key={reply.product?._id}>
 			<StyledTitleSpan>
 				<img
-					src={reply.product.image.url}
+					src={reply.product.image.path}
 					alt={`${reply.product.name} 앨범 아트`}
 				/>
 				<span title={reply.product.name}>{reply.product.name}</span>

@@ -63,9 +63,9 @@ interface ReplyProduct {
 	_id: number;
 	name: string;
 	image: {
-		fileName: string;
-		orgName: string;
-		url: string;
+		name: string;
+		originalname: string;
+		path: string;
 	};
 }
 
