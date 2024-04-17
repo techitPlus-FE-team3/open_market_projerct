@@ -117,7 +117,20 @@ const StyledElementSpan = styled.span`
 	border-radius: 10px;
 `;
 
-const StyledLink = StyledTitleSpan.withComponent(Link);
+const StyledLink = styled(Link)`
+	width: auto;
+	height: 24px;
+	padding: 0 10px;
+	color: ${Common.colors.black};
+	font-size: 16px;
+	text-decoration: none;
+	text-align: center;
+	line-height: 24px;
+	border-radius: 10px;
+	background-color: ${Common.colors.emphasize};
+`;
+
+const StyledTitleLink = StyledTitleSpan.withComponent(Link);
 
 async function postScrap(productId: number, userId: number) {
 	try {
@@ -159,7 +172,7 @@ export function ProductListItem({ product, bookmark }: ProductItemProps) {
 
 	return (
 		<ListItem key={product?._id}>
-			<StyledLink to={`/productdetail/${product._id}`}>
+			<StyledTitleLink to={`/productdetail/${product._id}`}>
 				<img
 					src={
 						"image" in product
@@ -169,7 +182,7 @@ export function ProductListItem({ product, bookmark }: ProductItemProps) {
 					alt={`${product.name} 앨범 아트`}
 				/>
 				<span title={product.name}>{product.name}</span>
-			</StyledLink>
+			</StyledTitleLink>
 			<MusicPlayer
 				soundFile={product.extra?.soundFile!}
 				audioId={product?._id}
