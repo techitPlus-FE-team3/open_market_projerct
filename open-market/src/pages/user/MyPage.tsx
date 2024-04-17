@@ -2,7 +2,6 @@ import HelmetSetup from "@/components/HelmetSetup";
 import MyPageList from "@/components/MyPageList";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { currentUserState } from "@/states/authState";
-import { codeState } from "@/states/categoryState";
 import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
