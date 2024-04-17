@@ -49,13 +49,23 @@ interface Reply {
 	rating: number;
 	content: string;
 	createdAt: string;
-	product: Product;
+	product: ReplyProduct;
 	user: {
 		name: string;
 		_id: number;
 	};
 	extra?: {
 		profileImage: string;
+	};
+}
+
+interface ReplyProduct {
+	_id: number;
+	name: string;
+	image: {
+		fileName: string;
+		orgName: string;
+		url: string;
 	};
 }
 
