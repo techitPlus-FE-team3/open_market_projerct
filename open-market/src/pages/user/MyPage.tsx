@@ -1,3 +1,4 @@
+import HelmetSetup from "@/components/HelmetSetup";
 import MyPageList from "@/components/MyPageList";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { currentUserState } from "@/states/authState";
@@ -5,7 +6,6 @@ import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
 import Skeleton from "@mui/material/Skeleton";
-import { Helmet } from "react-helmet-async";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -227,9 +227,7 @@ function MyPage() {
 
 	return (
 		<Section>
-			<Helmet>
-				<title>My Page - 모두의 오디오 MODI</title>
-			</Helmet>
+			<HelmetSetup title="My Page" description="마이페이지" url="mypage" />
 			<MainTitle>마이페이지</MainTitle>
 			<Article>
 				<InfoTitle>내 정보</InfoTitle>
@@ -305,7 +303,7 @@ function MyPage() {
 						</Link>
 					)}
 					linkText="전체보기"
-					linkUrl="/"
+					linkUrl="/userbookmarks"
 				/>
 			)}
 			<MyPageList

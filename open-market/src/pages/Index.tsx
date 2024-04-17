@@ -3,9 +3,10 @@ import {
 	FilterContainer,
 	FilterSelect,
 } from "@/components/FilterComponent";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import HelmetSetup from "@/components/HelmetSetup";
 import { ProductListItem } from "@/components/ProductListComponent";
 import SearchBar from "@/components/SearchBar";
+import { IndexSkeleton } from "@/components/SkeletonUI";
 import { useCategoryFilterProductList } from "@/hooks/useCategoryFilterProductList";
 import { codeState } from "@/states/categoryState";
 import {
@@ -14,6 +15,7 @@ import {
 } from "@/states/productListState";
 import {
 	Heading,
+	MoreButton,
 	ProductContainer,
 	ProductList,
 	ProductSection,
@@ -23,7 +25,6 @@ import { axiosInstance, searchProductList } from "@/utils";
 import styled from "@emotion/styled";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 interface bannerProps {
@@ -44,6 +45,11 @@ const BannerSection = styled.section<bannerProps>`
 	}
 `;
 
+const getBookmarkData = async () => {
+	const { data } = await axiosInstance.get(`/bookmarks/`);
+	console.log(data, "sdafdsd");
+};
+
 function Index() {
 	const searchRef = useRef<HTMLInputElement>(null);
 	const paginationButtonRef = useRef(null);
@@ -63,7 +69,6 @@ function Index() {
 			const { data } = await axiosInstance.get(
 				`/products?page=${pageParam}&limit=4`,
 			);
-
 			return data;
 		} catch (error) {
 			console.error("Error fetching products:", error);
@@ -94,7 +99,6 @@ function Index() {
 	const {
 		data: categoryFilterData,
 		error: categoryFilterError,
-		isLoading: categoryFilterLoading,
 		isError: categoryFilterIsError,
 	} = useCategoryFilterProductList({
 		resource: "products",
@@ -108,6 +112,9 @@ function Index() {
 			searchRef.current!.value.split(" ").join("").toLowerCase(),
 		);
 	}
+	useEffect(() => {
+		getBookmarkData();
+	}, []);
 
 	useEffect(() => {
 		if (category) {
@@ -132,10 +139,6 @@ function Index() {
 		fetchSearchResult();
 	}, [searchKeyword]);
 
-	if (isLoading || categoryFilterLoading) {
-		return <LoadingSpinner width="100vw" height="100vh" />;
-	}
-
 	if (isError || categoryFilterIsError) {
 		if (isError) {
 			const err = error as Error;
@@ -148,104 +151,101 @@ function Index() {
 
 	return (
 		<>
-			<Helmet>
-				<title>Home - 모두의 오디오 MODI</title>
-			</Helmet>
-			<BannerSection showable={searchKeyword ? false : true}>
-				<video autoPlay loop muted>
-					<source src="/videos/mainVideo.mp4" type="video/mp4" />
-					메인 영상 배너
-				</video>
-			</BannerSection>
-			<ProductSection isIndex={!searchKeyword}>
-				<Heading>메인페이지</Heading>
-				<SearchBar
-					onClick={handleSearchKeyword}
-					searchRef={searchRef}
-					showable={searchKeyword ? true : false}
-				/>
-				<FilterContainer>
-					<FilterButton type="submit">인기순</FilterButton>
-					<FilterButton type="submit">최신순</FilterButton>
-					<FilterSelect showable={!searchKeyword ? true : false}>
-						<select
-							value={categoryValue}
-							onChange={(e) => setCategoryValue(e.target.value)}
-						>
-							<option value="none" disabled hidden>
-								장르 선택
-							</option>
-							<option value="all">전체 보기</option>
-							{category && category.length !== 0
-								? category.map((item) => (
-										<option key={item.code} value={item.value}>
-											{item.value}
-										</option>
+			<HelmetSetup title="Home" description="홈페이지" url="" />
+			{isLoading ? (
+				<IndexSkeleton searchKeyword={searchKeyword} />
+			) : (
+				<div>
+					<BannerSection showable={searchKeyword ? false : true}>
+						<video autoPlay loop muted>
+							<source src="/videos/mainVideo.mp4" type="video/mp4" />
+							메인 영상 배너
+						</video>
+					</BannerSection>
+					<ProductSection isIndex={!searchKeyword}>
+						<Heading>메인페이지</Heading>
+						<SearchBar
+							onClick={handleSearchKeyword}
+							searchRef={searchRef}
+							showable={!!searchKeyword}
+						/>
+						<FilterContainer>
+							<FilterButton type="submit">인기순</FilterButton>
+							<FilterButton type="submit">최신순</FilterButton>
+							<FilterSelect showable={!searchKeyword}>
+								<select
+									value={categoryValue}
+									onChange={(e) => {
+										setCategoryValue(e.target.value);
+									}}
+								>
+									<option value="none" disabled hidden>
+										장르 선택
+									</option>
+									<option value="all">전체 보기</option>
+									{category && category.length !== 0
+										? category.map((item) => (
+												<option key={item.code} value={item.value}>
+													{item.value}
+												</option>
+											))
+										: undefined}
+								</select>
+							</FilterSelect>
+						</FilterContainer>
+						<ProductContainer height={searchKeyword ? "633px" : "400px"}>
+							<ProductList>
+								{searchKeyword && searchedProductList !== undefined ? (
+									searchedProductList.length === 0 ? (
+										<span className="emptyList">해당하는 상품이 없습니다.</span>
+									) : (
+										searchedProductList.map((product) => (
+											<ProductListItem
+												key={product._id}
+												product={product}
+												bookmark
+											/>
+										))
+									)
+								) : !searchKeyword &&
+								  categoryValue !== "all" &&
+								  fetchedFilterProductList !== undefined ? (
+									fetchedFilterProductList.length === 0 ? (
+										<span className="emptyList">해당하는 상품이 없습니다.</span>
+									) : (
+										fetchedFilterProductList.map((product: Product) => (
+											<ProductListItem
+												key={product._id}
+												product={product}
+												bookmark
+											/>
+										))
+									)
+								) : (
+									fetchedProductList?.map((product: Product) => (
+										<ProductListItem
+											key={product._id}
+											product={product}
+											bookmark
+										/>
 									))
-								: undefined}
-						</select>
-					</FilterSelect>
-				</FilterContainer>
-				<ProductContainer
-					height={searchKeyword ? "633px" : "400px"}
-					isDisable={!hasNextPage || isFetchingNextPage}
-				>
-					<ProductList>
-						{searchKeyword && searchedProductList !== undefined ? (
-							searchedProductList.length === 0 ? (
-								<span className="emptyList">해당하는 상품이 없습니다.</span>
-							) : (
-								searchedProductList.map((product) => {
-									return (
-										<ProductListItem
-											key={product._id}
-											product={product}
-											bookmark
-										/>
-									);
-								})
-							)
-						) : !searchKeyword &&
-						  categoryValue !== "all" &&
-						  fetchedFilterProductList !== undefined ? (
-							fetchedFilterProductList.length === 0 ? (
-								<span className="emptyList">해당하는 상품이 없습니다.</span>
-							) : (
-								fetchedFilterProductList.map((product: Product) => {
-									return (
-										<ProductListItem
-											key={product._id}
-											product={product}
-											bookmark
-										/>
-									);
-								})
-							)
-						) : (
-							fetchedProductList?.map((product: Product) => {
-								return (
-									<ProductListItem
-										key={product._id}
-										product={product}
-										bookmark
-									/>
-								);
-							})
-						)}
-					</ProductList>
-					<button
-						type="submit"
-						className="moreButton"
-						ref={paginationButtonRef}
-						onClick={() => {
-							fetchNextPage();
-						}}
-						disabled={!hasNextPage || isFetchingNextPage}
-					>
-						더보기
-					</button>
-				</ProductContainer>
-			</ProductSection>
+								)}
+							</ProductList>
+							<MoreButton
+								type="submit"
+								ref={paginationButtonRef}
+								onClick={() => {
+									fetchNextPage();
+								}}
+								disabled={!hasNextPage || isFetchingNextPage}
+								isDisable={!hasNextPage || isFetchingNextPage}
+							>
+								더보기
+							</MoreButton>
+						</ProductContainer>
+					</ProductSection>
+				</div>
+			)}
 		</>
 	);
 }
