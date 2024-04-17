@@ -22,7 +22,6 @@ export default function UserReplies() {
 		try {
 			const response = await axiosInstance.get<ReplyListResponse>(`/replies`);
 			setReplies(response.data.item);
-			console.log(response.data.item);
 		} catch (error) {
 			if (error instanceof AxiosError && error.response?.status === 404) {
 				return navigate("/err404", { replace: true });
