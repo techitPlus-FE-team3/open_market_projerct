@@ -1,3 +1,4 @@
+import { ShowStarRating } from "@/components/ReplyComponent";
 import MusicPlayer from "@/components/audioPlayer/MusicPlayer";
 import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
@@ -79,6 +80,13 @@ const ListItem = styled.li`
 		text-decoration: none;
 		background-color: ${Common.colors.emphasize};
 		border-radius: 10px;
+	}
+
+	span.replyContent {
+		width: 500px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 `;
 
@@ -263,6 +271,25 @@ export function UserProductListItem({ product }: { product: Product }) {
 			<Link className="manageLink" to={`/productmanage/${product?._id}`}>
 				상세보기
 			</Link>
+		</ListItem>
+	);
+}
+
+export function UserRepliesListItem({ reply }: { reply: Reply }) {
+	return (
+		<ListItem key={reply.product?._id}>
+			<StyledTitleSpan>
+				<img
+					src={reply.product.image.url}
+					alt={`${reply.product.name} 앨범 아트`}
+				/>
+				<span title={reply.product.name}>{reply.product.name}</span>
+			</StyledTitleSpan>
+			<span className="replyContent">{reply.content}</span>
+			<ShowStarRating rating={reply.rating} />
+			<StyledLink to={`/productdetail/${reply.product._id}`}>
+				음원 상세 페이지 이동
+			</StyledLink>
 		</ListItem>
 	);
 }
