@@ -34,15 +34,19 @@ interface bannerProps {
 const BannerSection = styled.section<bannerProps>`
 	display: ${(props) => (props.showable ? "block" : "none")};
 	width: 100%;
-	height: auto;
+	height: 530px;
 	background-color: ${Common.colors.black};
 	padding-top: 80px;
+	overflow: hidden;
 	video {
 		width: 100%;
 		height: 500px;
 		object-fit: cover;
 		aspect-ratio: 16 / 9;
 	}
+	/* video::cue {
+		opacity: 0;
+	} */
 `;
 
 const getBookmarkData = async () => {
@@ -159,7 +163,14 @@ function Index() {
 					<BannerSection showable={searchKeyword ? false : true}>
 						<video autoPlay loop muted>
 							<source src="/videos/mainVideo.mp4" type="video/mp4" />
-							메인 영상 배너
+							<track
+								src="/videos/mainVideo.vtt"
+								kind="captions"
+								srcLang="ko"
+								label="한국어 자막"
+								default
+							/>
+							모두의 오디오! MODI 메인 페이지 배너 영상입니다.
 						</video>
 					</BannerSection>
 					<ProductSection isIndex={!searchKeyword}>
