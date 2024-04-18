@@ -7,3 +7,9 @@ export function sortByNewestProductList(list: Product[]) {
 		return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
 	});
 }
+
+export function sortByOrdersProductList(list: Product[]) {
+	return list.sort((a, b) => {
+		return b.buyQuantity - a.buyQuantity;
+	});
+}
