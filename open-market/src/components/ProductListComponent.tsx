@@ -1,6 +1,8 @@
-import MusicPlayer from "@/components/listMusicPlayer/MusicPlayer";
+import { ShowStarRating } from "@/components/ReplyComponent";
+import MusicPlayer from "@/components/audioPlayer/MusicPlayer";
+import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
-import { numberWithComma } from "@/utils";
+import { axiosInstance, numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
@@ -8,7 +10,10 @@ import DownloadIcon from "@mui/icons-material/Download";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { isAxiosError } from "axios";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 const API_KEY = import.meta.env.VITE_API_SERVER;
 
@@ -76,6 +81,13 @@ const ListItem = styled.li`
 		background-color: ${Common.colors.emphasize};
 		border-radius: 10px;
 	}
+
+	span.replyContent {
+		width: 500px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
 `;
 
 const StyledTitleSpan = styled.span`
@@ -113,12 +125,62 @@ const StyledElementSpan = styled.span`
 	border-radius: 10px;
 `;
 
-const StyledLink = StyledTitleSpan.withComponent(Link);
+const StyledLink = styled(Link)`
+	width: auto;
+	height: 24px;
+	padding: 0 10px;
+	color: ${Common.colors.black};
+	font-size: 16px;
+	text-decoration: none;
+	text-align: center;
+	line-height: 24px;
+	border-radius: 10px;
+	background-color: ${Common.colors.emphasize};
+`;
+
+const StyledTitleLink = StyledTitleSpan.withComponent(Link);
+
+async function postScrap(productId: number, userId: number) {
+	try {
+		axiosInstance
+			.post(`/bookmarks/`, {
+				user_id: userId,
+				product_id: productId,
+				memo: "",
+			})
+			.then(() => {
+				toast.success("북마크 성공 완료", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
+			})
+			.catch((error) => {
+				if (isAxiosError(error)) {
+					if (error.response && error.response.status === 409) {
+						toast.error("이미 북마크된 상품입니다.", {
+							ariaProps: {
+								role: "status",
+								"aria-live": "polite",
+							},
+						});
+					} else {
+						console.error("알 수 없는 오류가 발생했습니다.", error.message);
+					}
+				}
+			});
+	} catch (error) {
+		console.error(error);
+	}
+}
 
 export function ProductListItem({ product, bookmark }: ProductItemProps) {
+	const currentUser = useRecoilValue(currentUserState);
+
 	return (
 		<ListItem key={product?._id}>
-			<StyledLink to={`/productdetail/${product._id}`}>
+			<StyledTitleLink to={`/productdetail/${product._id}`}>
 				<img
 					src={
 						"image" in product
@@ -128,8 +190,12 @@ export function ProductListItem({ product, bookmark }: ProductItemProps) {
 					alt={`${product.name} 앨범 아트`}
 				/>
 				<span title={product.name}>{product.name}</span>
-			</StyledLink>
-			<MusicPlayer soundFile={product.extra?.soundFile!} showable />
+			</StyledTitleLink>
+			<MusicPlayer
+				soundFile={product.extra?.soundFile!}
+				audioId={product?._id}
+				showable
+			/>
 			{"image" in product ? (
 				<a
 					href={`${API_KEY}/files/download/${product?.extra?.soundFile.name}?name=${product?.extra?.soundFile.originalname}`}
@@ -144,16 +210,24 @@ export function ProductListItem({ product, bookmark }: ProductItemProps) {
 			) : (
 				<></>
 			)}
-			<button type="submit" className="bookmark">
-				<ThemeProvider theme={theme}>
-					{bookmark ? (
-						<BookmarkIcon sx={{ color: `primary.main` }} />
-					) : (
-						<BookmarkBorderIcon sx={{ color: `primary.light` }} />
-					)}
-				</ThemeProvider>
-				<span>북마크</span>
-			</button>
+			{currentUser ? (
+				<button
+					type="submit"
+					className="bookmark"
+					onClick={() => postScrap(product._id, currentUser._id)}
+				>
+					<ThemeProvider theme={theme}>
+						{bookmark ? (
+							<BookmarkIcon sx={{ color: `primary.main` }} />
+						) : (
+							<BookmarkBorderIcon sx={{ color: `primary.light` }} />
+						)}
+					</ThemeProvider>
+					<span>북마크</span>
+				</button>
+			) : (
+				""
+			)}
 		</ListItem>
 	);
 }
@@ -168,7 +242,10 @@ export function UserProductListItem({ product }: { product: Product }) {
 				/>
 				<span title={product?.name}>{product?.name}</span>
 			</StyledTitleSpan>
-			<MusicPlayer soundFile={product.extra?.soundFile!} />
+			<MusicPlayer
+				soundFile={product.extra?.soundFile!}
+				audioId={product?._id}
+			/>
 			<StyledElementSpan>
 				판매 개수: <span>{product?.buyQuantity}</span>
 			</StyledElementSpan>
@@ -194,6 +271,25 @@ export function UserProductListItem({ product }: { product: Product }) {
 			<Link className="manageLink" to={`/productmanage/${product?._id}`}>
 				상세보기
 			</Link>
+		</ListItem>
+	);
+}
+
+export function UserRepliesListItem({ reply }: { reply: Reply }) {
+	return (
+		<ListItem key={reply.product?._id}>
+			<StyledTitleSpan>
+				<img
+					src={reply.product.image.path}
+					alt={`${reply.product.name} 앨범 아트`}
+				/>
+				<span title={reply.product.name}>{reply.product.name}</span>
+			</StyledTitleSpan>
+			<span className="replyContent">{reply.content}</span>
+			<ShowStarRating rating={reply.rating} />
+			<StyledLink to={`/productdetail/${reply.product._id}`}>
+				음원 상세 페이지 이동
+			</StyledLink>
 		</ListItem>
 	);
 }

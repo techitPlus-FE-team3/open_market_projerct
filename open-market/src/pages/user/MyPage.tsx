@@ -1,3 +1,4 @@
+import HelmetSetup from "@/components/HelmetSetup";
 import MyPageList from "@/components/MyPageList";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { currentUserState } from "@/states/authState";
@@ -5,7 +6,6 @@ import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
 import Skeleton from "@mui/material/Skeleton";
-import { Helmet } from "react-helmet-async";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -101,23 +101,35 @@ const Comment = styled.div`
 `;
 
 const CommentInfo = styled.div`
-	display: flex;
-	flex-direction: column;
-	flex-wrap: wrap;
-	gap: 5px;
 	height: 60px;
-	& > div {
+	margin-top: 7px;
+	display: flex;
+	flex-flow: column nowrap;
+	gap: 5px;
+	font-size: ${Common.font.size.sm};
+	font-weight: ${Common.font.weight.regular};
+
+	li {
 		display: flex;
-		& > * {
-			font-size: ${Common.font.size.sm};
-			font-weight: ${Common.font.weight.regular};
-		}
-		& > h5 {
+		flex-flow: row nowrap;
+		gap: ${Common.space.spacingMd};
+
+		p {
 			width: 100px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
-		& > p {
+
+		span {
+			display: block;
+			width: 750px;
+			height: ${Common.font.size.lg};
 			color: ${Common.colors.gray};
 			text-decoration: underline;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 	}
 `;
@@ -177,6 +189,11 @@ async function fetchBookmarks() {
 	return response.data.item;
 }
 
+async function fetchUserReplies() {
+	const response = await axiosInstance.get(`/replies`);
+	return response.data.item;
+}
+
 function MyPage() {
 	useRequireAuth();
 
@@ -199,6 +216,10 @@ function MyPage() {
 	const { data: bookmarkDetails, isLoading: isLoadingBookmarks } = useQuery({
 		queryKey: ["bookmarks", currentUser?._id.toString()],
 		queryFn: () => fetchBookmarks(),
+	});
+	const { data: userReplies, isLoading: isLoadingUserReplies } = useQuery({
+		queryKey: ["replies", currentUser?._id.toString()],
+		queryFn: () => fetchUserReplies(),
 	});
 
 	const historyList = JSON.parse(
@@ -227,13 +248,11 @@ function MyPage() {
 
 	return (
 		<Section>
-			<Helmet>
-				<title>My Page - 모두의 오디오 MODI</title>
-			</Helmet>
+			<HelmetSetup title="My Page" description="마이페이지" url="mypage" />
 			<MainTitle>마이페이지</MainTitle>
 			<Article>
 				<InfoTitle>내 정보</InfoTitle>
-				{isLoadingUserInfo ? (
+				{isLoadingUserInfo || isLoadingUserReplies ? (
 					<UserInfoSkeleton />
 				) : (
 					<>
@@ -265,20 +284,22 @@ function MyPage() {
 							<Comment>
 								<Title>내가 쓴 댓글</Title>
 								<CommentInfo>
-									<div>
-										<h5>게시글 제목</h5>
-										<p>내용</p>
-									</div>
-									<div>
-										<h5>게시글 제목</h5>
-										<p>내용</p>
-									</div>
-									<div>
-										<h5>게시글 제목</h5>
-										<p>내용</p>
-									</div>
+									{userReplies ? (
+										<ul>
+											{userReplies.slice(0, 2).map((reply: Reply) => {
+												return (
+													<li>
+														<p>{reply.product.name}</p>
+														<span>{reply.content}</span>
+													</li>
+												);
+											})}
+										</ul>
+									) : (
+										<span>작성한 댓글이 없습니다.</span>
+									)}
 								</CommentInfo>
-								<StyledLink to="/">전체보기</StyledLink>
+								<StyledLink to={"/replies"}>전체보기</StyledLink>
 							</Comment>
 						</Info>
 					</>
@@ -305,7 +326,7 @@ function MyPage() {
 						</Link>
 					)}
 					linkText="전체보기"
-					linkUrl="/"
+					linkUrl="/userbookmarks"
 				/>
 			)}
 			<MyPageList

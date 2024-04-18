@@ -4,14 +4,20 @@ import { ChangeEventHandler, useEffect, useRef, useState } from "react";
 
 interface DisplayProps {
 	showable?: boolean;
+	isDetail?: boolean;
 }
 
 const SliderContainer = styled.div<DisplayProps>`
 	display: ${(props) => (props.showable ? "block" : "none")};
-	width: 90%;
+	width: ${(props) => (props.isDetail ? "100%" : "90%")};
 	height: auto;
 	background-color: transparent;
-	position: relative;
+	${(props) =>
+		props.isDetail
+			? `position: absolute;
+	       bottom: -9px;
+	       right: 0;`
+			: `position: relative`};
 
 	/*  Hide Original */
 	.range {
@@ -19,14 +25,14 @@ const SliderContainer = styled.div<DisplayProps>`
 		margin: 0 auto;
 		background-color: ${Common.colors.gray2};
 		width: 100%;
-		height: 24px;
+		height: ${(props) => (props.isDetail ? "3px" : "24px")};
 		opacity: 0;
 		border-radius: 10px;
 		cursor: pointer;
 	}
 
 	.sliderContainer {
-		--progress-bar-height: 4px;
+		--progress-bar-height: ${(props) => (props.isDetail ? "3px" : "4px")};
 		position: relative;
 		width: 100%;
 	}
@@ -34,8 +40,8 @@ const SliderContainer = styled.div<DisplayProps>`
 	.sliderContainer::before {
 		content: "";
 		background-color: ${Common.colors.gray};
-		width: 99.5%;
-		height: 12px;
+		width: ${(props) => (props.isDetail ? "100%" : "99.5%")};
+		height: ${(props) => (props.isDetail ? "3px" : "12px")};
 		display: block;
 		position: absolute;
 		border-radius: 10px;
@@ -48,9 +54,12 @@ const SliderContainer = styled.div<DisplayProps>`
 
 	/* Custom Progress Bar */
 	.progressBarCover {
-		background-color: ${Common.colors.emphasize};
+		background-color: ${(props) =>
+			props.isDetail
+				? `${Common.colors.primary}`
+				: `${Common.colors.emphasize}`};
 		width: 80%;
-		height: 12px;
+		height: ${(props) => (props.isDetail ? "3px" : "12px")};
 		display: block;
 		position: absolute;
 		border-radius: 10px;
@@ -84,10 +93,12 @@ function PlayerSlider({
 	onChange,
 	percentage,
 	showable,
+	isDetail,
 }: {
 	onChange: ChangeEventHandler;
 	percentage: number;
 	showable?: boolean;
+	isDetail?: boolean;
 }) {
 	const [position, setPosition] = useState(0);
 	const [marginLeft, setMarginLeft] = useState(0);
@@ -112,7 +123,7 @@ function PlayerSlider({
 	}, [percentage]);
 
 	return (
-		<SliderContainer showable={showable}>
+		<SliderContainer showable={showable} isDetail={isDetail}>
 			<div className="sliderContainer">
 				<div
 					className="progressBarCover"
