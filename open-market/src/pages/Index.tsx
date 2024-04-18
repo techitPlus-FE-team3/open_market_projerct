@@ -48,6 +48,21 @@ const BannerSection = styled.section<bannerProps>`
 		aspect-ratio: 16 / 9;
 	}
 
+	.description {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 30px;
+		width: 100%;
+		bottom: 0px;
+		padding: 200px 0;
+		font-size: xx-large;
+		font-weight: 800;
+		color: white;
+		text-shadow: 5px 3px 3px rgba(19, 4, 4, 0.3);
+	}
+
 	.playingButton {
 		background-color: transparent;
 		border: 1px solid ${Common.colors.gray2};
@@ -183,6 +198,10 @@ function Index() {
 							<source src="/videos/mainVideo.mp4" type="video/mp4" />
 							메인 영상 배너
 						</video>
+						<div className="description">
+							<span>소규모 음원 제작자들을 위한 오픈마켓 플랫폼</span>
+							<span>MODI</span>
+						</div>
 						<button className="playingButton" onClick={togglePlay}>
 							{isPlaying ? (
 								<PauseRoundedIcon
