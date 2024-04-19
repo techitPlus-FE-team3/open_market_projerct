@@ -234,7 +234,7 @@ function Header() {
 					size="small"
 					variant="outlined"
 					placeholder="검색어를 입력하세요"
-					label="검색"
+					label="검색어 입력"
 					value={searchInput}
 					onChange={handleSearchInputChange}
 					onKeyDown={(e) =>

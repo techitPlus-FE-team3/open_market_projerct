@@ -180,7 +180,10 @@ export function ProductListItem({ product, bookmark }: ProductItemProps) {
 
 	return (
 		<ListItem key={product?._id}>
-			<StyledTitleLink to={`/productdetail/${product._id}`}>
+			<StyledTitleLink
+				to={`/productdetail/${product._id}`}
+				aria-label={`${product.name}의 상세 페이지로 이동`}
+			>
 				<img
 					src={
 						"image" in product
@@ -266,16 +269,20 @@ export function UserProductListItem({ product }: { product: Product }) {
 			</StyledElementSpan>
 			<ThemeProvider theme={theme}>
 				{product.show ? (
-					<span aria-label="잠금 해제">
+					<span aria-label="공개되어 있는 상품입니다.">
 						<LockOpenIcon sx={{ color: `primary.dark` }} />
 					</span>
 				) : (
-					<span aria-label="잠금">
+					<span aria-label="비공개되어 있는 상품입니다.">
 						<LockIcon sx={{ color: `primary.main` }} />
 					</span>
 				)}
 			</ThemeProvider>
-			<Link className="manageLink" to={`/productmanage/${product?._id}`}>
+			<Link
+				className="manageLink"
+				to={`/productmanage/${product?._id}`}
+				aria-label={`${product.name}의 상세 페이지로 이동합니다.`}
+			>
 				상세보기
 			</Link>
 		</ListItem>
