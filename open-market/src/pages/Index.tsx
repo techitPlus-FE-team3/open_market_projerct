@@ -244,8 +244,6 @@ function Index() {
 		}
 	}
 
-	console.log(sortedFilteredProductList);
-
 	return (
 		<>
 			<HelmetSetup title="Home" description="홈페이지" url="" />
