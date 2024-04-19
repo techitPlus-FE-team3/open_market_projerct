@@ -195,6 +195,7 @@ export function ProductListItem({ product, bookmark }: ProductItemProps) {
 				soundFile={product.extra?.soundFile!}
 				audioId={product?._id}
 				showable
+				name={product.name}
 			/>
 			{"image" in product ? (
 				<a
@@ -215,6 +216,7 @@ export function ProductListItem({ product, bookmark }: ProductItemProps) {
 					type="submit"
 					className="bookmark"
 					onClick={() => postScrap(product._id, currentUser._id)}
+					aria-label={`${product.name} 상품을 북마크에 추가합니다.`}
 				>
 					<ThemeProvider theme={theme}>
 						{bookmark ? (
@@ -245,6 +247,7 @@ export function UserProductListItem({ product }: { product: Product }) {
 			<MusicPlayer
 				soundFile={product.extra?.soundFile!}
 				audioId={product?._id}
+				name={product.name}
 			/>
 			<StyledElementSpan>
 				판매 개수: <span>{product?.buyQuantity}</span>
