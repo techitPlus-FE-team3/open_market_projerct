@@ -34,6 +34,7 @@ interface bannerProps {
 const BannerSection = styled.section<bannerProps>`
 	display: ${(props) => (props.showable ? "block" : "none")};
 	width: 100%;
+	/* height: auto; */
 	height: 530px;
 	background-color: ${Common.colors.black};
 	padding-top: 80px;
@@ -44,9 +45,6 @@ const BannerSection = styled.section<bannerProps>`
 		object-fit: cover;
 		aspect-ratio: 16 / 9;
 	}
-	/* video::cue {
-		opacity: 0;
-	} */
 `;
 
 const getBookmarkData = async () => {

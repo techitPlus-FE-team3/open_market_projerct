@@ -140,8 +140,6 @@ function Header() {
 	});
 
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [notificationAnchorEl, setNotificationAnchorEl] =
-		useState<null | HTMLElement>(null);
 
 	const [searchInput, setSearchInput] = useState("");
 
@@ -185,7 +183,6 @@ function Header() {
 
 	function handleMenuClose() {
 		setAnchorEl(null);
-		setNotificationAnchorEl(null);
 	}
 
 	function handleLogout() {
@@ -226,7 +223,7 @@ function Header() {
 					>
 						<img
 							src={logoImage}
-							alt="모디 로고"
+							alt="모디 로고, 메인 페이지 이동 버튼"
 							onLoad={onLogoLoad}
 							style={{ display: isLogoLoaded ? "block" : "none" }}
 						/>
@@ -264,14 +261,6 @@ function Header() {
 						>
 							업로드
 						</UploadButton>
-
-						<Menu
-							anchorEl={notificationAnchorEl}
-							open={Boolean(notificationAnchorEl)}
-							onClose={handleMenuClose}
-						>
-							<MenuItem onClick={handleMenuClose}>알림1</MenuItem>
-						</Menu>
 
 						<UserButton color="inherit" onClick={handleProfileMenuOpen}>
 							<AccountCircle />

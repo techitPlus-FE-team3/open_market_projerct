@@ -187,7 +187,7 @@ export function ProductListItem({ product, bookmark }: ProductItemProps) {
 							? (product as OrderProduct).image!.path
 							: product.mainImages[0]?.path
 					}
-					alt={`${product.name} 앨범 아트`}
+					alt={`${product.name}의 앨범 아트`}
 				/>
 				<span title={product.name}>{product.name}</span>
 			</StyledTitleLink>
