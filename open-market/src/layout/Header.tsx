@@ -243,9 +243,11 @@ function Header() {
 					InputProps={{
 						endAdornment: (
 							<InputAdornment position="end">
-								<IconButton onClick={handleSearchClick}>
-									<Search />
-								</IconButton>
+								<span aria-label="검색 버튼">
+									<IconButton onClick={handleSearchClick}>
+										<Search />
+									</IconButton>
+								</span>
 							</InputAdornment>
 						),
 					}}
@@ -262,9 +264,11 @@ function Header() {
 							업로드
 						</UploadButton>
 
-						<UserButton color="inherit" onClick={handleProfileMenuOpen}>
-							<AccountCircle />
-						</UserButton>
+						<span aria-label="사용자 메뉴">
+							<UserButton color="inherit" onClick={handleProfileMenuOpen}>
+								<AccountCircle />
+							</UserButton>
+						</span>
 						<Menu
 							anchorEl={anchorEl}
 							open={Boolean(anchorEl)}
