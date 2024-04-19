@@ -5,7 +5,6 @@ const API_KEY = import.meta.env.VITE_API_SERVER;
 
 export const axiosInstance = axios.create({
 	baseURL: API_KEY,
-	// timeout: 1000 * 1000,
 	headers: {
 		"Content-Type": "application/json",
 		accept: "application/json",
