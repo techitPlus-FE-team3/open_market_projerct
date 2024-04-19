@@ -49,6 +49,7 @@ const ProductMediaContainer = styled.div`
 		width: 270px;
 		height: 270px;
 		object-fit: cover;
+		filter: brightness(60%);
 	}
 
 	button {
