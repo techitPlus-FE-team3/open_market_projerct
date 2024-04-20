@@ -175,41 +175,6 @@ async function postScrap(productId: number, userId: number) {
 	}
 }
 
-async function postScrap(productId: number, userId: number) {
-	try {
-		axiosInstance
-			.post(`/bookmarks/`, {
-				user_id: userId,
-				product_id: productId,
-				memo: "",
-			})
-			.then(() => {
-				toast.success("북마크 성공 완료", {
-					ariaProps: {
-						role: "status",
-						"aria-live": "polite",
-					},
-				});
-			})
-			.catch((error) => {
-				if (isAxiosError(error)) {
-					if (error.response && error.response.status === 409) {
-						toast.error("이미 북마크된 상품입니다.", {
-							ariaProps: {
-								role: "status",
-								"aria-live": "polite",
-							},
-						});
-					} else {
-						console.error("알 수 없는 오류가 발생했습니다.", error.message);
-					}
-				}
-			});
-	} catch (error) {
-		console.error(error);
-	}
-}
-
 export function ProductListItem({ product, bookmark }: ProductItemProps) {
 	const currentUser = useRecoilValue(currentUserState);
 
