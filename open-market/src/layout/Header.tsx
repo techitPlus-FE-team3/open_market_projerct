@@ -12,7 +12,6 @@ import {
 	AccountCircle,
 	FileUpload,
 	Search,
-	Login,
 	Logout,
 } from "@mui/icons-material";
 import {
@@ -119,6 +118,11 @@ const UserButton = styled(Button)`
 	gap: 10px;
 	&:hover {
 		color: ${Common.colors.emphasize};
+	}
+	.notLoggedIn {
+		border-radius: 10px;
+		border: 1px solid ${Common.colors.emphasize};
+		padding: 10px;
 	}
 `;
 
@@ -275,8 +279,7 @@ function Header() {
 							}}
 							aria-label="로그인"
 						>
-							<Login />
-							<span>로그인 / 회원가입</span>
+							<span className="notLoggedIn">로그인 / 회원가입</span>
 						</UserButton>
 					</ButtonWrapper>
 				)}
