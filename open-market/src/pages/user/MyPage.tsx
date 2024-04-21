@@ -7,7 +7,6 @@ import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
 import Skeleton from "@mui/material/Skeleton";
 import { useQuery } from "@tanstack/react-query";
-import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
@@ -37,7 +36,9 @@ const Article = styled.article`
 	padding: ${Common.space.spacingMd};
 	padding-left: 100px;
 	display: flex;
-	gap: 20px;
+	justify-content: center;
+	align-items: center;
+	gap: ${Common.space.spacingXl};
 `;
 
 const Info = styled.div`
@@ -52,7 +53,7 @@ const PersonalInfo = styled.div`
 	flex-direction: column;
 	gap: 10px;
 	background-color: ${Common.colors.white};
-	width: 979px;
+	width: 879px;
 	height: 95px;
 	border-radius: 10px;
 	padding: 6px 12px;
@@ -60,13 +61,12 @@ const PersonalInfo = styled.div`
 
 const PersonalInfoItem = styled.div`
 	display: flex;
-	width: 960px;
-	height: 60px;
+	align-items: center;
+	height: 30px;
 	gap: ${Common.space.spacingXl};
 	div {
 		display: flex;
-		flex-direction: column;
-		gap: ${Common.space.spacingMd};
+		gap: ${Common.space.spacingLg};
 		& > h5 {
 			font-size: 18px;
 		}
@@ -91,7 +91,7 @@ const Comment = styled.div`
 	flex-direction: column;
 	gap: 10px;
 	background-color: ${Common.colors.white};
-	width: 979px;
+	width: 879px;
 	height: 95px;
 	border-radius: 10px;
 	padding: 6px 12px;
@@ -276,15 +276,15 @@ function MyPage() {
 								<Title>회원정보</Title>
 								<PersonalInfoItem>
 									<div>
-										<h5>이메일</h5>
+										<h5>이메일 : </h5>
 										<p>{userInfo.email}</p>
 									</div>
 									<div>
-										<h5>이름</h5>
+										<h5>이름 : </h5>
 										<p>{userInfo.name}</p>
 									</div>
 									<div>
-										<h5>휴대폰 번호</h5>
+										<h5>휴대폰 번호 : </h5>
 										<p>{formatPhoneNumber(userInfo.phone)}</p>
 									</div>
 								</PersonalInfoItem>
