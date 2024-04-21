@@ -114,6 +114,9 @@ const UserButton = styled(Button)`
 	cursor: pointer;
 	color: ${Common.colors.white};
 	margin: 0 5px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
 	&:hover {
 		color: ${Common.colors.emphasize};
 	}
@@ -273,6 +276,7 @@ function Header() {
 							aria-label="로그인"
 						>
 							<Login />
+							<span>로그인 / 회원가입</span>
 						</UserButton>
 					</ButtonWrapper>
 				)}
