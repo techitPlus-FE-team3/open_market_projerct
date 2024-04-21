@@ -34,7 +34,6 @@ const Article = styled.article`
 	margin: 20px auto;
 	position: relative;
 	padding: ${Common.space.spacingMd};
-	/* padding-left: 100px; */
 	display: flex;
 	justify-content: center;
 	align-items: center;
