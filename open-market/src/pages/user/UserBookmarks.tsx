@@ -165,7 +165,7 @@ function UserBookmarks() {
 			<HelmetSetup
 				title="My Bookmarks"
 				description="북마크한 목록"
-				url="Bookmarks"
+				url="userbookmarks"
 			/>
 			<Heading>북마크한 목록</Heading>
 			<ProductContainer height="633px">
