@@ -3,6 +3,7 @@ import { UserRepliesListItem } from "@/components/ProductListComponent";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
 	Heading,
+	MoreButton,
 	ProductContainer,
 	ProductList,
 	ProductSection,
@@ -16,12 +17,15 @@ export default function UserReplies() {
 	useRequireAuth();
 	const navigate = useNavigate();
 
-	const [replies, setReplies] = useState<Reply[]>([]);
+	const [allReplies, setAllReplies] = useState<Reply[]>([]);
+	const [displayReplies, setDisplayReplies] = useState<Reply[]>([]);
+	const [currentPage, setCurrentPage] = useState(2);
+	const REPLIES_PER_PAGE = 4;
 
 	async function fetchUserReplies() {
 		try {
 			const response = await axiosInstance.get<ReplyListResponse>(`/replies`);
-			setReplies(response.data.item);
+			setAllReplies(response.data.item);
 		} catch (error) {
 			if (error instanceof AxiosError && error.response?.status === 404) {
 				return navigate("/err404", { replace: true });
@@ -30,9 +34,25 @@ export default function UserReplies() {
 		}
 	}
 
+	function handleMoreReplies() {
+		const newPage = currentPage + 1;
+		const newReplies = allReplies!.slice(
+			currentPage * REPLIES_PER_PAGE,
+			newPage * REPLIES_PER_PAGE,
+		);
+		setDisplayReplies((prev) => [...prev, ...newReplies]);
+		setCurrentPage(newPage);
+	}
+
 	useEffect(() => {
 		fetchUserReplies();
 	}, []);
+
+	useEffect(() => {
+		if (allReplies) {
+			setDisplayReplies(allReplies.slice(0, currentPage * REPLIES_PER_PAGE));
+		}
+	}, [allReplies]);
 
 	return (
 		<ProductSection>
@@ -44,10 +64,31 @@ export default function UserReplies() {
 			<Heading>내가 쓴 댓글</Heading>
 			<ProductContainer height="633px">
 				<ProductList>
-					{replies.map((reply) => {
-						return <UserRepliesListItem reply={reply} />;
-					})}
+					{allReplies !== undefined && allReplies?.length === 0 ? (
+						<p>댓글이 없습니다.</p>
+					) : (
+						displayReplies?.map((reply) => {
+							return <UserRepliesListItem reply={reply} />;
+						})
+					)}
 				</ProductList>
+				{allReplies !== undefined &&
+				currentPage * REPLIES_PER_PAGE < allReplies?.length ? (
+					<MoreButton
+						onClick={handleMoreReplies}
+						aria-label="댓글을 추가로 더 표시합니다."
+					>
+						더보기
+					</MoreButton>
+				) : (
+					<MoreButton
+						disabled
+						isDisable
+						aria-label="더이상 표시할 댓글이 없습니다."
+					>
+						더보기
+					</MoreButton>
+				)}
 			</ProductContainer>
 		</ProductSection>
 	);
