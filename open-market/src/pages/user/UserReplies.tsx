@@ -16,7 +16,6 @@ import { useEffect, useState } from "react";
 export default function UserReplies() {
 	useRequireAuth();
 
-	const [allReplies, setAllReplies] = useState<Reply[]>([]);
 	const [displayReplies, setDisplayReplies] = useState<Reply[]>([]);
 	const [currentPage, setCurrentPage] = useState(2);
 	const REPLIES_PER_PAGE = 4;
@@ -33,7 +32,7 @@ export default function UserReplies() {
 
 	function handleMoreReplies() {
 		const newPage = currentPage + 1;
-		const newReplies = allReplies!.slice(
+		const newReplies = userReplies!.slice(
 			currentPage * REPLIES_PER_PAGE,
 			newPage * REPLIES_PER_PAGE,
 		);
@@ -42,14 +41,10 @@ export default function UserReplies() {
 	}
 
 	useEffect(() => {
-		setAllReplies(userReplies);
-	}, [userReplies]);
-
-	useEffect(() => {
-		if (allReplies) {
-			setDisplayReplies(allReplies.slice(0, currentPage * REPLIES_PER_PAGE));
+		if (userReplies) {
+			setDisplayReplies(userReplies.slice(0, currentPage * REPLIES_PER_PAGE));
 		}
-	}, [allReplies]);
+	}, [userReplies]);
 
 	return (
 		<ProductSection>
@@ -64,7 +59,7 @@ export default function UserReplies() {
 			) : (
 				<ProductContainer height="633px">
 					<ProductList>
-						{allReplies !== undefined && allReplies?.length === 0 ? (
+						{userReplies !== undefined && userReplies?.length === 0 ? (
 							<p>댓글이 없습니다.</p>
 						) : (
 							displayReplies?.map((reply) => {
@@ -72,8 +67,8 @@ export default function UserReplies() {
 							})
 						)}
 					</ProductList>
-					{allReplies !== undefined &&
-					currentPage * REPLIES_PER_PAGE < allReplies?.length ? (
+					{userReplies !== undefined &&
+					currentPage * REPLIES_PER_PAGE < userReplies?.length ? (
 						<MoreButton
 							onClick={handleMoreReplies}
 							aria-label="댓글을 추가로 더 표시합니다."
