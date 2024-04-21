@@ -275,13 +275,16 @@ function ProductManage() {
 				<ProductManagementSkeleton />
 			) : (
 				<ProductInfoWrapper>
-					<UserProductListLink to={`/user/${currentUser!._id}/products`}>
+					<UserProductListLink
+						to={`/user/${currentUser!._id}/products`}
+						aria-label="판매 상품 목록으로 이동"
+					>
 						&gt; 판매 상품 목록
 					</UserProductListLink>
 					<FormTopLayout>
 						<img
 							src={userProductInfo?.mainImages[0].path}
-							alt={`${userProductInfo?.name} 앨범 아트`}
+							alt={`${userProductInfo?.name}의 앨범 아트`}
 							className="ProductImage"
 						/>
 						<FormTopRightLayout>

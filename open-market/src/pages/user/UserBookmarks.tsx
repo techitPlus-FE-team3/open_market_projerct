@@ -69,10 +69,13 @@ function UserBookmarks() {
 						{bookmarkList ? (
 							bookmarkList!.map((i) => (
 								<ListItem key={i.product_id}>
-									<StyledLink to={`/productdetail/${i.product_id}`}>
+									<StyledLink
+										to={`/productdetail/${i.product_id}`}
+										aria-label={`${i.product.name}의 상세페이지로 이동`}
+									>
 										<img
 											src={i.product.image.path}
-											alt={`${i.product.name} 앨범 아트`}
+											alt={`${i.product.name}의 앨범 아트`}
 										/>
 										<span title={i.product.name}>{i.product.name}</span>
 									</StyledLink>

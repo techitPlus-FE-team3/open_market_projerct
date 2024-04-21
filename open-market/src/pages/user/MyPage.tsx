@@ -258,7 +258,7 @@ function MyPage() {
 					<>
 						<UserImage
 							src={profileImageUrl}
-							alt={`${userInfo.name} 프로필 이미지`}
+							alt={`${userInfo.name}님의 프로필 이미지`}
 						/>
 						<Info>
 							<PersonalInfo>
@@ -299,7 +299,9 @@ function MyPage() {
 										<span>작성한 댓글이 없습니다.</span>
 									)}
 								</CommentInfo>
-								<StyledLink to={"/replies"}>전체보기</StyledLink>
+								<StyledLink to={"/replies"} aria-label="내가 쓴 댓글 전체보기">
+									전체보기
+								</StyledLink>
 							</Comment>
 						</Info>
 					</>
@@ -337,7 +339,7 @@ function MyPage() {
 					<Link to={`/productdetail/${item._id}`}>
 						<Image
 							src={`${item.mainImages[0].path}`}
-							alt={`${item.name} 앨범 아트`}
+							alt={`${item.name}의 앨범 아트`}
 						/>
 					</Link>
 				)}
@@ -358,7 +360,7 @@ function MyPage() {
 						<Link to={`/productdetail/${item.products[0]._id}`}>
 							<Image
 								src={item.products[0].image.path}
-								alt={`${item.products[0].name} 앨범 아트`}
+								alt={`${item.products[0].name}의 앨범 아트`}
 							/>
 						</Link>
 					)}
@@ -384,7 +386,7 @@ function MyPage() {
 						<Link to={`/productmanage/${item._id}`}>
 							<Image
 								src={`${item.mainImages[0].path}`}
-								alt={`${item.name} 앨범 아트`}
+								alt={`${item.name}의 앨범 아트`}
 							/>
 						</Link>
 					)}

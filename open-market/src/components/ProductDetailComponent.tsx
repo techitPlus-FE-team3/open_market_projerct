@@ -214,7 +214,11 @@ function ProductDetailTitle({ text }: { text: string }) {
 
 	return (
 		<DetailTitleWrapper>
-			<DetailTitle fontSize={fontSize} ref={textRef}>
+			<DetailTitle
+				aria-label="음원 상품 제목"
+				fontSize={fontSize}
+				ref={textRef}
+			>
 				{text}
 			</DetailTitle>
 		</DetailTitleWrapper>
@@ -295,14 +299,22 @@ function ProductDetailComponent({
 			<ProductMediaContainer>
 				<img
 					src={product?.mainImages[0].path}
-					alt={`${product?.name} 앨범 아트`}
+					alt={`${product?.name}의 앨범 아트`}
 				/>
 				{isPlaying ? (
-					<button className="pauseButton" onClick={handlePlayAndPauseMusic}>
+					<button
+						className="pauseButton"
+						onClick={handlePlayAndPauseMusic}
+						aria-label={`${product?.name}의 음원 재생을 중지합니다.`}
+					>
 						pause
 					</button>
 				) : (
-					<button className="playButton" onClick={handlePlayAndPauseMusic}>
+					<button
+						className="playButton"
+						onClick={handlePlayAndPauseMusic}
+						aria-label={`${product?.name}의 음원을 재생합니다.`}
+					>
 						play
 					</button>
 				)}
@@ -318,21 +330,29 @@ function ProductDetailComponent({
 			</ProductMediaContainer>
 			<ProductDetailInfo>
 				<ProductDetailTitle text={product?.name!} />
-				<span className="seller">{product?.extra?.sellerName}</span>
-				<span>{createdAt}</span>
+				<span className="seller" aria-label="음원 상품 판매자">
+					{product?.extra?.sellerName}
+				</span>
+				<span aria-label="음원 상품 등록일">{createdAt}</span>
 				<ProductDetailContentContainer>
-					<span className="genre">{genre}</span>
-					<span className="tags">
+					<span className="genre" aria-label="음원 상품 장르">
+						{genre}
+					</span>
+					<span className="tags" aria-label="음원 상품 등록 태그">
 						{product?.extra?.tags.map((tag) => `#${tag} `)}
 					</span>
-					<div className="content">{product?.content}</div>
-					<span className="price">{numberWithComma(product?.price!)}</span>
+					<div className="content" aria-label="음원 상품 설명">
+						{product?.content}
+					</div>
+					<span className="price" aria-label="음원 상품 가격">
+						{numberWithComma(product?.price!)}
+					</span>
 				</ProductDetailContentContainer>
 			</ProductDetailInfo>
 			<ProductDetailExtra>
 				<DetailBadgeContainer>
 					{product?.extra?.isNew ? (
-						<DetailBadge isNew>
+						<DetailBadge isNew aria-label="최근에 등록된 상품입니다!">
 							<StarIcon fontSize="small" />
 							New!
 						</DetailBadge>
@@ -340,7 +360,7 @@ function ProductDetailComponent({
 						<></>
 					)}
 					{product?.extra?.isBest ? (
-						<DetailBadge isBest>
+						<DetailBadge isBest aria-label="인기 상품입니다!">
 							<ThumbUpIcon fontSize="small" />
 							Best!
 						</DetailBadge>

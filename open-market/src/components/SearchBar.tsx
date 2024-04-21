@@ -65,7 +65,7 @@ const StyledSearchBar = styled.form<DisplayProps>`
 function SearchBar({ onClick, searchRef, showable }: SearchBarProps) {
 	return (
 		<StyledSearchBar showable={showable}>
-			<label htmlFor="searchBar">검색</label>
+			<label htmlFor="searchBar">검색어 입력</label>
 			<input
 				type="text"
 				id="searchBar"
@@ -75,7 +75,9 @@ function SearchBar({ onClick, searchRef, showable }: SearchBarProps) {
 			/>
 			<button type="button" onClick={onClick}>
 				<ThemeProvider theme={theme}>
-					<SearchIcon fontSize="large" color="primary" />
+					<span aria-label="검색 버튼">
+						<SearchIcon fontSize="large" color="primary" />
+					</span>
 				</ThemeProvider>
 			</button>
 		</StyledSearchBar>
