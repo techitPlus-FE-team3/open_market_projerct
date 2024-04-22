@@ -1,12 +1,10 @@
 import { ShowStarRating } from "@/components/ReplyComponent";
 import MusicPlayer from "@/components/audioPlayer/MusicPlayer";
-import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import { axiosInstance, numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import DownloadIcon from "@mui/icons-material/Download";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
@@ -14,13 +12,11 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { isAxiosError } from "axios";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 
 const API_KEY = import.meta.env.VITE_API_SERVER;
 
 interface ProductItemProps {
 	product: Product | OrderProduct;
-	bookmark: boolean;
 }
 
 const theme = createTheme({
@@ -38,23 +34,16 @@ const ListItem = styled.li`
 	align-items: center;
 	justify-content: space-between;
 	gap: 30px;
+	position: relative;
 	border-radius: 10px;
 	background-color: ${Common.colors.white};
 
 	.bookmark {
-		display: flex;
-		flex-flow: row nowrap;
-		align-items: center;
-		gap: 2px;
-		padding: 5px;
-		background-color: transparent;
-		border: none;
-
-		span {
-			position: relative;
-			top: 1px;
-			font-size: ${Common.font.size.sm};
-		}
+		color: ${Common.colors.black};
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: 17px;
 	}
 
 	.download {
@@ -150,44 +139,7 @@ const StyledLink = styled(Link)`
 
 const StyledTitleLink = StyledTitleSpan.withComponent(Link);
 
-async function postScrap(productId: number, userId: number) {
-	try {
-		axiosInstance
-			.post(`/bookmarks/`, {
-				user_id: userId,
-				product_id: productId,
-				memo: "",
-			})
-			.then(() => {
-				toast.success("북마크 성공 완료", {
-					ariaProps: {
-						role: "status",
-						"aria-live": "polite",
-					},
-				});
-			})
-			.catch((error) => {
-				if (isAxiosError(error)) {
-					if (error.response && error.response.status === 409) {
-						toast.error("이미 북마크된 상품입니다.", {
-							ariaProps: {
-								role: "status",
-								"aria-live": "polite",
-							},
-						});
-					} else {
-						console.error("알 수 없는 오류가 발생했습니다.", error.message);
-					}
-				}
-			});
-	} catch (error) {
-		console.error(error);
-	}
-}
-
-export function ProductListItem({ product, bookmark }: ProductItemProps) {
-	const currentUser = useRecoilValue(currentUserState);
-
+export function ProductListItem({ product }: ProductItemProps) {
 	return (
 		<ListItem key={product?._id}>
 			<StyledTitleLink
@@ -227,24 +179,15 @@ export function ProductListItem({ product, bookmark }: ProductItemProps) {
 			) : (
 				<></>
 			)}
-			{currentUser ? (
-				<button
-					type="submit"
-					className="bookmark"
-					onClick={() => postScrap(product._id, currentUser._id)}
-					aria-label={`${product.name} 상품을 북마크에 추가합니다.`}
-				>
-					<ThemeProvider theme={theme}>
-						{bookmark ? (
-							<BookmarkIcon sx={{ color: `primary.main` }} />
-						) : (
-							<BookmarkBorderIcon sx={{ color: `primary.light` }} />
-						)}
-					</ThemeProvider>
-					<span>북마크</span>
-				</button>
+			{"bookmarks" in product ? (
+				<ThemeProvider theme={theme}>
+					<BookmarkIcon sx={{ color: `primary.main` }} />
+					<span className="bookmark" aria-label="북마크 수">
+						{product.bookmarks}
+					</span>
+				</ThemeProvider>
 			) : (
-				""
+				<></>
 			)}
 		</ListItem>
 	);
@@ -278,7 +221,7 @@ export function UserProductListItem({ product }: { product: Product }) {
 			</StyledElementSpan>
 			<StyledElementSpan>
 				북마크 수:
-				<span>{product?.bookmarks ? product?.bookmarks.length : 0}</span>
+				<span>{product?.bookmarks}</span>
 			</StyledElementSpan>
 			<ThemeProvider theme={theme}>
 				{product.show ? (
