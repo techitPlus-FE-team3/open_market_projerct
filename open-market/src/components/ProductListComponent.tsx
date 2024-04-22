@@ -4,6 +4,7 @@ import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import { axiosInstance, numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -95,8 +96,10 @@ const StyledTitleSpan = styled.span`
 	flex-flow: row nowrap;
 	align-items: center;
 	gap: 30px;
+	width: 180px;
 	text-decoration: none;
 	color: ${Common.colors.black};
+	position: relative;
 
 	img {
 		width: 42px;
@@ -110,6 +113,13 @@ const StyledTitleSpan = styled.span`
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
+`;
+
+const StyledTitleIcon = styled(ArrowForwardIosIcon)`
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: -20px;
 `;
 
 const StyledElementSpan = styled.span`
@@ -193,6 +203,9 @@ export function ProductListItem({ product, bookmark }: ProductItemProps) {
 					alt={`${product.name}의 앨범 아트`}
 				/>
 				<span title={product.name}>{product.name}</span>
+				<ThemeProvider theme={theme}>
+					<StyledTitleIcon sx={{ color: `primary.dark` }} />
+				</ThemeProvider>
 			</StyledTitleLink>
 			<MusicPlayer
 				soundFile={product.extra?.soundFile!}
