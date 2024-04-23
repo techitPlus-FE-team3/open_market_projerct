@@ -1,7 +1,7 @@
 import { ShowStarRating } from "@/components/ReplyComponent";
 import MusicPlayer from "@/components/audioPlayer/MusicPlayer";
 import { Common } from "@/styles/common";
-import { axiosInstance, numberWithComma } from "@/utils";
+import { numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
@@ -9,8 +9,6 @@ import DownloadIcon from "@mui/icons-material/Download";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { isAxiosError } from "axios";
-import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 const API_KEY = import.meta.env.VITE_API_SERVER;
@@ -183,7 +181,11 @@ export function ProductListItem({ product }: ProductItemProps) {
 				<ThemeProvider theme={theme}>
 					<BookmarkIcon sx={{ color: `primary.main` }} />
 					<span className="bookmark" aria-label="북마크 수">
-						{product.bookmarks}
+						{product?.bookmarks
+							? typeof product?.bookmarks === "number"
+								? product.bookmarks
+								: product.bookmarks.length
+							: 0}
 					</span>
 				</ThemeProvider>
 			) : (
@@ -221,7 +223,13 @@ export function UserProductListItem({ product }: { product: Product }) {
 			</StyledElementSpan>
 			<StyledElementSpan>
 				북마크 수:
-				<span>{product?.bookmarks}</span>
+				<span>
+					{product?.bookmarks
+						? typeof product?.bookmarks === "number"
+							? product.bookmarks
+							: product.bookmarks.length
+						: 0}
+				</span>
 			</StyledElementSpan>
 			<ThemeProvider theme={theme}>
 				{product.show ? (
