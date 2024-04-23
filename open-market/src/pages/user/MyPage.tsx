@@ -333,7 +333,8 @@ function MyPage() {
 						<Link to={`/productdetail/${item.product_id}`}>
 							<Image
 								src={`${item.product.image.path}`}
-								alt={`${item.product.name} 앨범 아트`}
+								alt={`${item.product.name}의 앨범 아트`}
+								onError={(e) => (e.currentTarget.src = "/alt_cover.jpeg")}
 							/>
 						</Link>
 					)}
