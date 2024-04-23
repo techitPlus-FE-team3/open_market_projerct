@@ -334,7 +334,7 @@ function MyPage() {
 							<Image
 								src={`${item.product.image.path}`}
 								alt={`${item.product.name}의 앨범 아트`}
-								onError={(e) => (e.currentTarget.src = "/alt_cover.jpeg")}
+								onError={(e) => (e.currentTarget.src = "/alt_cover.png")}
 							/>
 						</Link>
 					)}
@@ -351,7 +351,7 @@ function MyPage() {
 						<Image
 							src={`${item.mainImages[0].path}`}
 							alt={`${item.name}의 앨범 아트`}
-							onError={(e) => (e.currentTarget.src = "/alt_cover.jpeg")}
+							onError={(e) => (e.currentTarget.src = "/alt_cover.png")}
 						/>
 					</Link>
 				)}
@@ -373,7 +373,7 @@ function MyPage() {
 							<Image
 								src={item.products[0].image.path}
 								alt={`${item.products[0].name}의 앨범 아트`}
-								onError={(e) => (e.currentTarget.src = "/alt_cover.jpeg")}
+								onError={(e) => (e.currentTarget.src = "/alt_cover.png")}
 							/>
 						</Link>
 					)}
@@ -400,7 +400,7 @@ function MyPage() {
 							<Image
 								src={`${item.mainImages[0].path}`}
 								alt={`${item.name}의 앨범 아트`}
-								onError={(e) => (e.currentTarget.src = "/alt_cover.jpeg")}
+								onError={(e) => (e.currentTarget.src = "/alt_cover.png")}
 							/>
 						</Link>
 					)}
