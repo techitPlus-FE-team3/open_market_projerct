@@ -12,7 +12,7 @@ import { useSetRecoilState } from "recoil";
 import ScrollToTop from "./components/ScrollToTop";
 import RootLayout from "./layout/RootLayout";
 import Index from "./pages/Index";
-import ErrorBoundary from "./pages/error/ErrorBoundary";
+import Error404 from "./pages/error/Error404";
 import ProductDetail from "./pages/product/ProductDetail";
 import ProductEdit from "./pages/product/ProductEdit";
 import ProductManage from "./pages/product/ProductManage";
@@ -59,11 +59,7 @@ function App() {
 				/>
 				<ScrollToTop />
 				<Routes>
-					<Route
-						path="/"
-						element={<RootLayout />}
-						errorElement={<ErrorBoundary />}
-					>
+					<Route path="/" element={<RootLayout />}>
 						<Route index element={<Index />} />
 						{/* sell */}
 						<Route
@@ -94,7 +90,10 @@ function App() {
 						{/* signin, signup */}
 						<Route path="signin" element={<SignIn />} />
 						<Route path="signup" element={<SignUp />} />
+						{/* 404 Error */}
+						<Route path="*" element={<Error404 />} />
 					</Route>
+					<Route path="*" element={<Error404 />} />
 				</Routes>
 			</HelmetProvider>
 		</QueryClientProvider>
