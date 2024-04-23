@@ -116,11 +116,11 @@ function MusicPlayer({ soundFile, audioId, showable, name }: MusicPlayerProps) {
 
 	useEffect(() => {
 		if (audio) {
-			const handleAudioEnd = () => {
+			function handleAudioEnd() {
 				setIsPlaying(false);
 				setPercentage(0);
 				audio.currentTime = 0;
-			};
+			}
 
 			audio.addEventListener("ended", handleAudioEnd);
 
