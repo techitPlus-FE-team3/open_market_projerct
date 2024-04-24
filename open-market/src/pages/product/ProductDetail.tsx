@@ -101,7 +101,12 @@ function ProductDetail() {
 		e.preventDefault();
 
 		if (!replyContent || replyContent?.trim() === "")
-			return alert("댓글 내용을 입력해주세요!");
+			return toast.error("내용을 입력해주세요!", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
 
 		setIsReplyLoading(true);
 
