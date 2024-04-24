@@ -136,8 +136,6 @@ function SignIn() {
 				});
 				console.log("로그인 성공:", response);
 				navigate("/");
-			} else {
-				console.log("로그인 실패:", response);
 			}
 		} catch (error: any) {
 			if (axios.isAxiosError(error) && error.response) {
