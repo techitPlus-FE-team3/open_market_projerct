@@ -1,7 +1,7 @@
 import { Common } from "@/styles/common";
 import { Global, css } from "@emotion/react";
 import { HelmetProvider, HelmetServerState } from "react-helmet-async";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import { codeState } from "@/states/categoryState";
 import { axiosInstance } from "@/utils";
@@ -48,6 +48,7 @@ function App() {
 			}
 		})();
 	});
+
 	return (
 		<QueryClientProvider client={queryClient}>
 			<ReactQueryDevtools initialIsOpen={false} />
@@ -91,9 +92,9 @@ function App() {
 						<Route path="signin" element={<SignIn />} />
 						<Route path="signup" element={<SignUp />} />
 						{/* 404 Error */}
-						<Route path="*" element={<Error404 />} />
+						<Route path="/err404" element={<Error404 />} />
+						<Route path="*" element={<Navigate replace to="/err404" />} />
 					</Route>
-					<Route path="*" element={<Error404 />} />
 				</Routes>
 			</HelmetProvider>
 		</QueryClientProvider>
