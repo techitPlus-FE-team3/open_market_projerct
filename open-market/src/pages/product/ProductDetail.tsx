@@ -97,6 +97,9 @@ function ProductDetail() {
 	}
 
 	async function handleReplySubmit(e: { preventDefault: () => void }) {
+		if (!replyContent || replyContent?.trim() === "")
+			return alert("댓글 내용을 입력해주세요!");
+
 		e.preventDefault();
 		try {
 			const response = await axiosInstance.post<ReplyResponse>(`/replies`, {
