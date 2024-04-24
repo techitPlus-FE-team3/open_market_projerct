@@ -134,8 +134,10 @@ function SignIn() {
 						? userInfo.extra?.profileImage
 						: null,
 				});
-
+				console.log("로그인 성공:", response);
 				navigate("/");
+			} else {
+				console.log("로그인 실패:", response);
 			}
 		} catch (error: any) {
 			if (axios.isAxiosError(error) && error.response) {
@@ -164,7 +166,10 @@ function SignIn() {
 			<HelmetSetup title="Sign In" description="로그인" url="signin" />
 			<Logo>
 				<Link to="/">
-					<img src={logoImage} alt="모두의 오디오! 모디의 로고 이미지 입니다." />
+					<img
+						src={logoImage}
+						alt="모두의 오디오! 모디의 로고 이미지 입니다."
+					/>
 				</Link>
 			</Logo>
 			<Title>로그인</Title>
