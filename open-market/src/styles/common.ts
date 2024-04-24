@@ -137,6 +137,7 @@ export const Common = {
     }
     body {
       line-height: 1;
+      overscroll-behavior: none;
     }
     ol,
     ul {
