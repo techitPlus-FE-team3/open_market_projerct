@@ -186,5 +186,8 @@ export const Common = {
         "Segoe UI Symbol",
         sans-serif;
     }
+    main{
+      min-height: calc(100vh - 100px);
+    }
   `,
 };
