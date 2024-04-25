@@ -14,7 +14,7 @@ vi.mock("react-router-dom", async () => {
 	};
 });
 
-describe("로그인 테스트", async () => {
+describe("로그인 페이지 입력 창 렌더링 테스트", async () => {
 	const mockedPost = vi.fn();
 
 	beforeEach(() => {

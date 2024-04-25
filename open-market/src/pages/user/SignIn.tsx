@@ -113,7 +113,6 @@ function SignIn() {
 				email,
 				password,
 			});
-			console.log("API response:", response);
 
 			if (response.data.ok === 1 && response.data.item.token) {
 				const userInfo = response.data.item;
@@ -136,9 +135,6 @@ function SignIn() {
 						: null,
 				});
 				navigate("/");
-			} else {
-				console.error("응답 구조가 예상과 다릅니다:", response);
-				throw new Error("로그인 실패: 유효하지 않은 데이터");
 			}
 		} catch (error: any) {
 			if (axios.isAxiosError(error) && error.response) {
@@ -156,7 +152,6 @@ function SignIn() {
 					toast.error(errorMessage);
 				}
 			} else {
-				console.error("예상치 못한 오류가 발생했습니다.:", error);
 				const errorMessage =
 					error.response && error.response.data
 						? error.response.data.message
