@@ -8,12 +8,7 @@ import {
 import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
-import {
-	AccountCircle,
-	FileUpload,
-	Search,
-	Logout,
-} from "@mui/icons-material";
+import { AccountCircle, FileUpload, Search, Logout } from "@mui/icons-material";
 import {
 	AppBar,
 	Button,
@@ -201,6 +196,10 @@ function Header() {
 		refetch();
 	}, [productList]);
 
+	useEffect(() => {
+		console.log("CurrentUser State:", currentUser); // 현재 사용자 상태 로깅
+	}, [currentUser]);
+
 	return (
 		<HeaderContainer position="static" color="default" elevation={1}>
 			<HeaderWrapper>
@@ -266,7 +265,12 @@ function Header() {
 						>
 							<AccountCircle />
 						</UserButton>
-						<UserButton onClick={handleLogout} aria-label="로그아웃">
+						<UserButton
+							role="button"
+							data-testid="logout-button"
+							onClick={handleLogout}
+							aria-label="로그아웃"
+						>
 							<Logout />
 						</UserButton>
 					</ButtonWrapper>
