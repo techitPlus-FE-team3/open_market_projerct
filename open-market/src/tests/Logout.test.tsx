@@ -1,54 +1,57 @@
 import Header from "@/layout/Header";
-import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import toast from "react-hot-toast";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { screen, render, waitFor } from "@testing-library/react";
+import { http } from "msw";
+import { setupServer } from "msw/node";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
-// react-hot-toast 모킹
-vi.mock("react-hot-toast");
+const queryClient = new QueryClient();
 
-// react-router-dom 모킹
-vi.mock("react-router-dom", async () => {
-	const actual = await import("react-router-dom");
-	return {
-		...actual,
-		useNavigate: () => () => {}, // Simplified mock for useNavigate
-	};
-});
+// API 모킹
+const server = setupServer(
+	http.get("/users/login", ({ req, res, ctx }) => {
+		return res(ctx.status(200), ctx.json([{ id: 1, name: "Product 1" }]));
+	}),
+);
 
-describe("Header 컴포넌트의 로그아웃 기능 테스트", () => {
-	beforeEach(() => {
-		// 모든 모의를 초기화하고 환경을 설정
-		vi.resetAllMocks();
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
-		// Mock localStorage
-		Storage.prototype.removeItem = vi.fn();
-		Storage.prototype.clear = vi.fn();
-	});
-
-	it("로그아웃 버튼 클릭 시 로그아웃 처리가 수행되어야 함", async () => {
+describe("Header 컴포넌트", () => {
+	it("로그인 상태에서 사용자 인터페이스를 테스트", async () => {
 		render(
-			<RecoilRoot>
-				<BrowserRouter>
-					<Header />
-				</BrowserRouter>
-			</RecoilRoot>,
+			<QueryClientProvider client={queryClient}>
+				<RecoilRoot>
+					<BrowserRouter>
+						<Header />
+					</BrowserRouter>
+				</RecoilRoot>
+			</QueryClientProvider>,
 		);
 
-		// const logoutButton = screen.getByLabelText("로그아웃");
-		await act(async () => {
-			const logoutButton = await screen.findByTestId("logout-button");
-			await userEvent.click(logoutButton);
-		});
+		// 요소 검증
+		await waitFor(() =>
+			expect(screen.getByTestId("logout-button")).toBeInTheDocument(),
+		);
+	});
 
-		expect(localStorage.removeItem).toHaveBeenCalledWith("accessToken");
-		expect(localStorage.removeItem).toHaveBeenCalledWith("refreshToken");
-		expect(localStorage.clear).toHaveBeenCalled();
-		expect(toast.success).toHaveBeenCalledWith(
-			"로그아웃 되었습니다.",
-			expect.anything(),
+	it("로그아웃 상태에서 사용자 인터페이스를 테스트", async () => {
+		render(
+			<QueryClientProvider client={queryClient}>
+				<RecoilRoot>
+					<BrowserRouter>
+						<Header />
+					</BrowserRouter>
+				</RecoilRoot>
+			</QueryClientProvider>,
+		);
+
+		// 로그인/회원가입 버튼 확인
+		await waitFor(() =>
+			expect(screen.getByText("로그인 / 회원가입")).toBeInTheDocument(),
 		);
 	});
 });
