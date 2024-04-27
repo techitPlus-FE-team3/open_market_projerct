@@ -196,9 +196,9 @@ function Header() {
 		refetch();
 	}, [productList]);
 
-	useEffect(() => {
-		console.log("CurrentUser State:", currentUser); // 현재 사용자 상태 로깅
-	}, [currentUser]);
+	// useEffect(() => {
+	// 	console.log("CurrentUser State:", currentUser); // 현재 사용자 상태 로깅
+	// }, [currentUser]);
 
 	return (
 		<HeaderContainer position="static" color="default" elevation={1}>
@@ -258,6 +258,8 @@ function Header() {
 						</UploadButton>
 
 						<UserButton
+							role="button"
+							data-testid="mypage-button"
 							onClick={() => {
 								navigate("/mypage");
 							}}
