@@ -5,7 +5,17 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot, useSetRecoilState } from "recoil";
-import { describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
+import { setupServer } from "msw/node";
+import { http, HttpResponse } from "msw";
+
+const server = setupServer(
+	http.get("/products", () => {
+		return HttpResponse.json({
+			id: "1",
+		});
+	}),
+);
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -26,21 +36,9 @@ const MockLoginState = ({ children, user }) => {
 	return <>{children}</>;
 };
 
-vi.mock("axios", () => {
-	const axiosMock = {
-		get: vi.fn().mockResolvedValue({ data: "mock data" }),
-		create: vi.fn(() => axiosMock),
-		defaults: { headers: { common: {} } },
-		interceptors: {
-			request: { use: vi.fn(), eject: vi.fn() },
-			response: { use: vi.fn(), eject: vi.fn() },
-		},
-	};
-	return {
-		default: axiosMock,
-		__esModule: true, // ES 모듈 호환성 보장
-	};
-});
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 describe("Header 컴포넌트", () => {
 	it("로그인 상태에서 사용자 인터페이스를 테스트", async () => {
