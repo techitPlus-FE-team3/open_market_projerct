@@ -1,7 +1,6 @@
 import { currentUserState } from "@/states/authState";
 import {
 	categoryValueState,
-	fetchProductListState,
 	productListState,
 	searchKeywordState,
 } from "@/states/productListState";
@@ -22,7 +21,7 @@ import { useQuery } from "@tanstack/react-query";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import logoImage from "/logo/logo2.svg";
 
 const HeaderContainer = styled(AppBar)`
@@ -132,8 +131,6 @@ function Header() {
 	const setSearchKeyword = useSetRecoilState<string>(searchKeywordState);
 	const setCategoryValue = useSetRecoilState<string>(categoryValueState);
 
-	// const fetchedProductList = useRecoilValue(fetchProductListState(0));
-
 	const { data: productListData, refetch } = useQuery({
 		queryKey: ["productList"],
 		queryFn: fetchProductList,
@@ -145,13 +142,10 @@ function Header() {
 	const isMounted = useRef(false);
 
 	async function fetchProductList() {
-		console.log("Fetching product list.");
 		try {
 			const response = await axiosInstance.get("/products");
-			console.log("Product list fetched.");
 			return response.data;
 		} catch (error) {
-			console.error("Product list fetching error", error);
 			throw new Error("Fetching failed");
 		}
 	}
@@ -195,20 +189,11 @@ function Header() {
 	}
 
 	useEffect(() => {
-		console.log("Header component mounted.");
 		isMounted.current = true;
 		return () => {
-			console.log("Header component will unmount.");
 			isMounted.current = false;
 		};
 	}, []);
-
-	// useEffect(() => {
-	// 	if (isMounted.current && fetchedProductList) {
-	// 		console.log("Updating product list state.");
-	// 		setProductList(fetchedProductList!);
-	// 	}
-	// }, [fetchedProductList, setProductList]);
 
 	useEffect(() => {
 		if (productListData && isMounted.current) {
@@ -216,10 +201,9 @@ function Header() {
 			setProductList(productListData);
 		}
 	}, [productListData, setProductList, isMounted]);
-	
+
 	useEffect(() => {
 		if (isMounted.current) {
-			console.log("Refetching data.");
 			refetch();
 		}
 	}, [productList]);

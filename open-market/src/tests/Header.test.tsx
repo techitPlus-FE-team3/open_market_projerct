@@ -1,13 +1,17 @@
 import Header from "@/layout/Header";
 import { currentUserState } from "@/states/authState";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor, cleanup } from "@testing-library/react";
-import { useEffect, useRef } from "react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
+import { ReactNode, useEffect, useRef, FunctionComponent } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot, useSetRecoilState } from "recoil";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
-import { setupServer } from "msw/node";
-import { http, HttpResponse } from "msw";
+interface MockLoginStateProps {
+	children: ReactNode;
+	user: User | null;
+}
 
 const server = setupServer(
 	http.get("/products", () => {
@@ -27,6 +31,16 @@ const queryClient = new QueryClient({
 	},
 });
 
+// User 객체를 CurrentUser 객체로 변환하는 화살표 함수
+const toCurrentUser = (user: User | null): CurrentUser | null => {
+	if (!user) return null;
+	return {
+		_id: user._id,
+		name: user.name,
+		profileImage: user.extra?.profileImage || null,
+	};
+};
+
 // 컴포넌트 마운트 상태 확인을 위한 훅
 const useIsMounted = () => {
 	const isMounted = useRef(false);
@@ -42,9 +56,14 @@ const useIsMounted = () => {
 };
 
 // Function to safely update user state
-const updateUserState = (user, setUser, isMounted) => {
+const updateUserState = (
+	user: User | null,
+	setUser: (user: CurrentUser | null) => void,
+	isMounted: React.MutableRefObject<boolean>,
+) => {
 	if (isMounted.current) {
-		setUser(user);
+		const currentUser = toCurrentUser(user);
+		setUser(currentUser);
 		console.log("User set", user);
 	} else {
 		console.log("Attempt to set state after unmount");
@@ -52,7 +71,10 @@ const updateUserState = (user, setUser, isMounted) => {
 };
 
 // 로그인 상태를 모의하기 위한 컴포넌트
-const MockLoginState = ({ children, user }) => {
+const MockLoginState: FunctionComponent<MockLoginStateProps> = ({
+	children,
+	user,
+}) => {
 	const setUser = useSetRecoilState(currentUserState);
 	const isMounted = useIsMounted();
 
@@ -74,7 +96,30 @@ afterAll(() => server.close());
 
 describe("Header 컴포넌트", () => {
 	it("로그인 상태에서 사용자 인터페이스를 테스트", async () => {
-		const user = { id: 1, name: "Test User" }; // 로그인 상태를 나타내는 객체
+		// User 인터페이스에 따라 필요한 모든 속성을 포함하는 객체
+		const user: User = {
+			_id: 1,
+			email: "test@example.com",
+			password: "password123",
+			name: "Test User",
+			phone: "123-456-7890",
+			type: "normal",
+			createdAt: "2021-01-01T00:00:00.000Z",
+			updatedAt: "2021-01-01T00:00:00.000Z",
+			extra: {
+				profileImage: "path/to/image.jpg",
+				terms: {
+					termsOfUse: true,
+					providingPersonalInformation: true,
+					recievingMarketingInformation: true,
+					confirmAge: true,
+				},
+			},
+			token: {
+				accessToken: "access-token",
+				refreshToken: "refresh-token",
+			},
+		};
 
 		render(
 			<QueryClientProvider client={queryClient}>
