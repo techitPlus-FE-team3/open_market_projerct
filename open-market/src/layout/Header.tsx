@@ -8,7 +8,7 @@ import {
 import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
-import { AccountCircle, FileUpload, Search, Logout } from "@mui/icons-material";
+import { AccountCircle, FileUpload, Logout, Search } from "@mui/icons-material";
 import {
 	AppBar,
 	Button,
@@ -19,7 +19,7 @@ import {
 	Toolbar,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { KeyboardEvent, useEffect, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -132,21 +132,27 @@ function Header() {
 	const setSearchKeyword = useSetRecoilState<string>(searchKeywordState);
 	const setCategoryValue = useSetRecoilState<string>(categoryValueState);
 
-	const fetchedProductList = useRecoilValue(fetchProductListState(0));
+	// const fetchedProductList = useRecoilValue(fetchProductListState(0));
 
-	const { refetch } = useQuery({
-		queryKey: ["productList", productList],
+	const { data: productListData, refetch } = useQuery({
+		queryKey: ["productList"],
 		queryFn: fetchProductList,
 		refetchOnWindowFocus: false,
 	});
 
 	const [searchInput, setSearchInput] = useState("");
 
+	const isMounted = useRef(false);
+
 	async function fetchProductList() {
+		console.log("Fetching product list.");
 		try {
-			return await axiosInstance.get("/products");
+			const response = await axiosInstance.get("/products");
+			console.log("Product list fetched.");
+			return response.data;
 		} catch (error) {
-			console.error(error);
+			console.error("Product list fetching error", error);
+			throw new Error("Fetching failed");
 		}
 	}
 
@@ -189,16 +195,34 @@ function Header() {
 	}
 
 	useEffect(() => {
-		setProductList(fetchedProductList!);
+		console.log("Header component mounted.");
+		isMounted.current = true;
+		return () => {
+			console.log("Header component will unmount.");
+			isMounted.current = false;
+		};
 	}, []);
 
-	useEffect(() => {
-		refetch();
-	}, [productList]);
-
 	// useEffect(() => {
-	// 	console.log("CurrentUser State:", currentUser); // 현재 사용자 상태 로깅
-	// }, [currentUser]);
+	// 	if (isMounted.current && fetchedProductList) {
+	// 		console.log("Updating product list state.");
+	// 		setProductList(fetchedProductList!);
+	// 	}
+	// }, [fetchedProductList, setProductList]);
+
+	useEffect(() => {
+		if (productListData && isMounted.current) {
+			// useQuery에서 받은 데이터를 Recoil 상태에 설정
+			setProductList(productListData);
+		}
+	}, [productListData, setProductList, isMounted]);
+	
+	useEffect(() => {
+		if (isMounted.current) {
+			console.log("Refetching data.");
+			refetch();
+		}
+	}, [productList]);
 
 	return (
 		<HeaderContainer position="static" color="default" elevation={1}>
