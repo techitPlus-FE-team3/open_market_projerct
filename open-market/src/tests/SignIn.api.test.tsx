@@ -50,7 +50,7 @@ describe("로그인 페이지 기능 테스트", () => {
 			);
 	});
 
-	it("로그인 시 API 호출 및 토스트 알림 출력 테스트", async () => {
+	it("로그인 시 API 호출, 리디렉션 및 토스트 알림 출력 테스트", async () => {
 		render(
 			<RecoilRoot>
 				<MemoryRouter>
@@ -75,6 +75,7 @@ describe("로그인 페이지 기능 테스트", () => {
 				email: "u1@market.com",
 				password: "11111111",
 			});
+			expect(window.location.pathname).toBe("/");
 		});
 		// 로그인 성공 메시지 확인
 		await waitFor(() => {
