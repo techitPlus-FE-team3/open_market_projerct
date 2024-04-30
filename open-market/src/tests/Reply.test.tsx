@@ -24,7 +24,7 @@ const server = setupServer(
 		return HttpResponse.json({
 			ok: 1,
 			item: {
-				_id: id,
+				_id: 45,
 				seller_id: 4,
 				price: 3000,
 				name: "50글자가넘어갔을때어떻게보일까요50글자가넘어갔을때어떻게보일까요50글자가넘어갔을때어떻게보일까",
@@ -66,7 +66,7 @@ const server = setupServer(
 	}),
 	http.get("bookmarks/products/:id", ({ params }) => {
 		const { id } = params;
-		return HttpResponse.json({ _id: id, ok: 1, item: [] });
+		return HttpResponse.json({ _id: 45, ok: 1, item: [] });
 	}),
 	http.post("/replies", () => {
 		return HttpResponse.json({ ok: true });
@@ -116,6 +116,23 @@ describe("ProductDetail Component", () => {
 		).toBeInTheDocument();
 	});
 
+	describe("로그인이 되어 있는 경우", () => {
+		it("상품의 판매자인 경우, 댓글 작성 불가 메시지 표시", async () => {
+			setup({
+				currentUser: { ...currentUserMock, _id: 4 }, // 판매자 ID로 설정
+			});
+
+			if (screen.queryByTestId("product-detail-skeleton")) {
+				await waitForElementToBeRemoved(() =>
+					screen.queryByTestId("product-detail-skeleton"),
+				);
+			}
+
+			expect(
+				await screen.findByText("내 상품에는 댓글을 작성할 수 없습니다."),
+			).toBeInTheDocument();
+		});
+	});
 	// it("로그인은 되어 있는데 구매하지 않은 경우, 구매 후 댓글 작성 가능", async () => {
 	// 	setup({ currentUser: currentUserMock }); // 로그인된 상태, 구매 정보 없음
 
@@ -130,25 +147,6 @@ describe("ProductDetail Component", () => {
 
 	// 	expect(
 	// 		await screen.findByText("음원 구매 후 댓글을 작성할 수 있습니다."),
-	// 	).toBeInTheDocument();
-	// });
-
-	// it("상품의 판매자인 경우, 댓글 작성 불가 메시지 표시", async () => {
-	// 	setup({
-	// 		currentUser: { ...currentUserMock, _id: 4 }, // 판매자 ID로 설정
-	// 	});
-
-	// 	if (screen.queryByTestId("product-detail-skeleton")) {
-	// 		await waitForElementToBeRemoved(
-	// 			() => screen.queryByTestId("product-detail-skeleton"),
-	// 			{
-	// 				timeout: 5000,
-	// 			},
-	// 		);
-	// 	}
-
-	// 	expect(
-	// 		await screen.findByText("내 상품에는 댓글을 작성할 수 없습니다"),
 	// 	).toBeInTheDocument();
 	// });
 
