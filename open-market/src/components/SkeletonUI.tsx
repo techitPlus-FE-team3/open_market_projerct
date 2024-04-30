@@ -46,7 +46,7 @@ export function IndexSkeleton({ searchKeyword }: { searchKeyword: string }) {
 
 export function ProductDetailSkeleton() {
 	return (
-		<Box sx={{ width: "100%" }}>
+		<Box sx={{ width: "100%" }} data-testid="product-detail-skeleton">
 			<ProductDetailArticle>
 				<Skeleton
 					variant="rectangular"
