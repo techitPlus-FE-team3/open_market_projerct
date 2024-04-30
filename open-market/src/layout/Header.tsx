@@ -197,7 +197,6 @@ function Header() {
 
 	useEffect(() => {
 		if (productListData && isMounted.current) {
-			// useQuery에서 받은 데이터를 Recoil 상태에 설정
 			setProductList(productListData);
 		}
 	}, [productListData, setProductList, isMounted]);

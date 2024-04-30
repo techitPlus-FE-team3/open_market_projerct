@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { ReactNode, useEffect, useRef, FunctionComponent } from "react";
+import { FunctionComponent, ReactNode, useEffect, useRef } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot, useSetRecoilState } from "recoil";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
@@ -13,6 +13,7 @@ interface MockLoginStateProps {
 	user: User | null;
 }
 
+// MSW를 이용한 API 모킹
 const server = setupServer(
 	http.get("/products", () => {
 		return HttpResponse.json({
@@ -22,16 +23,17 @@ const server = setupServer(
 	}),
 );
 
+// QueryClient 설정: 테스트 중 재시도 비활성화 및 초기 데이터 설정
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
-			retry: false, // 테스트 중에는 재시도를 비활성화
-			initialData: [], // 기본 데이터로 빈 배열 제공
+			retry: false,
+			initialData: [],
 		},
 	},
 });
 
-// User 객체를 CurrentUser 객체로 변환하는 화살표 함수
+// User를 CurrentUser로 변환
 const toCurrentUser = (user: User | null): CurrentUser | null => {
 	if (!user) return null;
 	return {
@@ -45,17 +47,17 @@ const toCurrentUser = (user: User | null): CurrentUser | null => {
 const useIsMounted = () => {
 	const isMounted = useRef(false);
 	useEffect(() => {
-		console.log("Component mounted");
+		// console.log("컴포넌트 마운트");
 		isMounted.current = true;
 		return () => {
-			console.log("Component will unmount");
+			// console.log("컴포넌트 언마운트");
 			isMounted.current = false;
 		};
 	}, []);
 	return isMounted;
 };
 
-// Function to safely update user state
+// User 상태를 안전하게 업데이트하는 함수
 const updateUserState = (
 	user: User | null,
 	setUser: (user: CurrentUser | null) => void,
@@ -64,13 +66,12 @@ const updateUserState = (
 	if (isMounted.current) {
 		const currentUser = toCurrentUser(user);
 		setUser(currentUser);
-		console.log("User set", user);
 	} else {
-		console.log("Attempt to set state after unmount");
+		console.log("컴포넌트가 언마운트 된 후 상태 업데이트 시도");
 	}
 };
 
-// 로그인 상태를 모의하기 위한 컴포넌트
+// 로그인 상태를 테스트하는 컴포넌트
 const MockLoginState: FunctionComponent<MockLoginStateProps> = ({
 	children,
 	user,
@@ -79,7 +80,7 @@ const MockLoginState: FunctionComponent<MockLoginStateProps> = ({
 	const isMounted = useIsMounted();
 
 	useEffect(() => {
-		console.log("Setting user", user);
+		// console.log("Setting user", user);
 		updateUserState(user, setUser, isMounted);
 	}, [setUser, user, isMounted]);
 
@@ -89,8 +90,7 @@ const MockLoginState: FunctionComponent<MockLoginStateProps> = ({
 beforeAll(() => server.listen());
 afterEach(() => {
 	server.resetHandlers();
-	queryClient.clear(); // QueryClient의 캐시를 정리
-	cleanup();
+	queryClient.clear(); // QueryClient의 캐시 정리
 });
 afterAll(() => server.close());
 
@@ -133,7 +133,7 @@ describe("Header 컴포넌트", () => {
 			</QueryClientProvider>,
 		);
 
-		// 요소 검증
+		// 로그아웃, 마이페이지 버튼 확인
 		await waitFor(() => {
 			expect(screen.getByTestId("logout-button")).toBeInTheDocument();
 			expect(screen.getByTestId("mypage-button")).toBeInTheDocument();
