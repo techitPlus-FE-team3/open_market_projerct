@@ -132,23 +132,21 @@ describe("ProductDetail Component", () => {
 				await screen.findByText("내 상품에는 댓글을 작성할 수 없습니다."),
 			).toBeInTheDocument();
 		});
+
+		it("상품을 구매하지 않은 경우, 구매 후 댓글 작성 가능하다는 메세지 표시", async () => {
+			setup({ currentUser: currentUserMock }); // 로그인된 상태, 구매 정보 없음
+
+			if (screen.queryByTestId("product-detail-skeleton")) {
+				await waitForElementToBeRemoved(() =>
+					screen.queryByTestId("product-detail-skeleton"),
+				);
+			}
+
+			expect(
+				await screen.findByText("음원 구매 후 댓글을 작성할 수 있습니다."),
+			).toBeInTheDocument();
+		});
 	});
-	// it("로그인은 되어 있는데 구매하지 않은 경우, 구매 후 댓글 작성 가능", async () => {
-	// 	setup({ currentUser: currentUserMock }); // 로그인된 상태, 구매 정보 없음
-
-	// 	if (screen.queryByTestId("product-detail-skeleton")) {
-	// 		await waitForElementToBeRemoved(
-	// 			() => screen.queryByTestId("product-detail-skeleton"),
-	// 			{
-	// 				timeout: 5000,
-	// 			},
-	// 		);
-	// 	}
-
-	// 	expect(
-	// 		await screen.findByText("음원 구매 후 댓글을 작성할 수 있습니다."),
-	// 	).toBeInTheDocument();
-	// });
 
 	// 	it("상품을 구매한 경우, 댓글 입력창과 버튼이 생성", async () => {
 	// 		setup({ currentUser: currentUserMock }); // 상품 구매 상태로 설정 필요
