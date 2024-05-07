@@ -8,7 +8,7 @@ async function fetchUserReplies() {
 
 export function useUserRepliesQuery() {
 	return useQuery({
-		queryKey: ["replies"],
+		queryKey: ["userReplies"],
 		queryFn: () => fetchUserReplies(),
 	});
 }
