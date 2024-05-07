@@ -8,7 +8,11 @@ import ReplyListItem, {
 	ReplyTextarea,
 	ReplyUserProfileImage,
 } from "@/components/ReplyComponent";
-import { ProductDetailSkeleton } from "@/components/SkeletonUI";
+import {
+	ProductDetailSkeleton,
+	ProductRepliesSkeleton,
+} from "@/components/SkeletonUI";
+import { useProductRepliesQuery } from "@/hooks/reply/queries/useProductRepliesQuery";
 import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
 import { Heading, MoreButton } from "@/styles/ProductListStyle";
@@ -29,6 +33,9 @@ function ProductDetail() {
 
 	const { productId } = useParams();
 
+	const { data: allReplies, isLoading: isLoadingProductReplies } =
+		useProductRepliesQuery(productId!);
+
 	const currentUser = useRecoilValue(currentUserState);
 	const category = useRecoilValue(codeState);
 
@@ -42,7 +49,6 @@ function ProductDetail() {
 	const [createdAt, setCreatedAt] = useState<string>();
 	const [bookmark, setBookmark] = useState<Bookmark>();
 
-	const [allReplies, setAllReplies] = useState<Reply[]>([]);
 	const [displayReplies, setDisplayReplies] = useState<Reply[]>([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const REPLIES_PER_PAGE = 4;
@@ -168,9 +174,6 @@ function ProductDetail() {
 		);
 		if (product) {
 			setIsLoading(false);
-			if (product.replies) {
-				setAllReplies(product.replies);
-			}
 			if (sessionHistory.length > 5) {
 				sessionHistory.pop();
 			}
@@ -225,114 +228,120 @@ function ProductDetail() {
 						currentUser={currentUser}
 						bookmark={bookmark}
 					/>
-					<ReplyContainer>
-						<h3>
-							<ModeCommentIcon />
-							댓글
-						</h3>
-						<div>
-							{!currentUser ? (
-								<p>로그인 후 댓글을 작성할 수 있습니다.</p>
-							) : currentUser && currentUser?._id === product?.seller_id ? (
-								<p>내 상품에는 댓글을 작성할 수 없습니다.</p>
-							) : (currentUser && !order) || order === undefined ? (
-								<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
-							) : (
-								<ReplyInputForm action="submit">
-									<span>
-										{currentUser?.profileImage ? (
-											<ReplyUserProfileImage
-												src={currentUser?.profileImage}
-												alt={`${currentUser?.name}님의 프로필 이미지`}
-											/>
-										) : (
-											<span
-												aria-label={`${currentUser?.name}님의 프로필 이미지`}
-											>
-												<AccountCircleIcon />
-											</span>
-										)}
-									</span>
-									<ReplyBlock user>{currentUser?.name}</ReplyBlock>
-									<div className="inputRating">
-										<Rating
-											name="rating"
-											value={ratingValue}
-											precision={0.5}
-											max={5}
-											onChange={(_, newValue) => {
-												newValue === null
-													? setRatingValue(1)
-													: setRatingValue(newValue);
-											}}
-											onChangeActive={(_, newHover) => {
-												setHover(newHover);
-											}}
-											emptyIcon={
-												<StarIcon
-													style={{ opacity: 0.55 }}
-													fontSize="inherit"
+					{isLoadingProductReplies ? (
+						<ProductRepliesSkeleton />
+					) : (
+						<ReplyContainer>
+							<h3>
+								<ModeCommentIcon />
+								댓글
+							</h3>
+							<div>
+								{!currentUser ? (
+									<p>로그인 후 댓글을 작성할 수 있습니다.</p>
+								) : currentUser && currentUser?._id === product?.seller_id ? (
+									<p>내 상품에는 댓글을 작성할 수 없습니다.</p>
+								) : (currentUser && !order) || order === undefined ? (
+									<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
+								) : (
+									<ReplyInputForm action="submit">
+										<span>
+											{currentUser?.profileImage ? (
+												<ReplyUserProfileImage
+													src={currentUser?.profileImage}
+													alt={`${currentUser?.name}님의 프로필 이미지`}
 												/>
-											}
-											aria-label={`별점 선택: ${ratingValue}점`}
-										/>
-									</div>
-									<label htmlFor="content" className="a11yHidden">
-										댓글 내용
-									</label>
-									<div className="replyTextAreaContainer">
-										<ReplyTextarea
-											id="content"
-											name="content"
-											ref={replyRef}
-											onChange={debounce(
-												(e: {
-													target: { value: SetStateAction<string | undefined> };
-												}) => setReplyContent(e.target.value),
+											) : (
+												<span
+													aria-label={`${currentUser?.name}님의 프로필 이미지`}
+												>
+													<AccountCircleIcon />
+												</span>
 											)}
-											required
-										/>
-										<button
-											type="submit"
-											onClick={handleReplySubmit}
-											aria-label="작성한 댓글 등록"
-											disabled={isReplyLoading}
-										>
-											{isReplyLoading ? "업로드 중.." : "작성하기"}
-										</button>
-									</div>
-								</ReplyInputForm>
-							)}
-						</div>
-						<ul>
-							{allReplies !== undefined && allReplies?.length === 0 ? (
-								<p>댓글이 없습니다.</p>
+										</span>
+										<ReplyBlock user>{currentUser?.name}</ReplyBlock>
+										<div className="inputRating">
+											<Rating
+												name="rating"
+												value={ratingValue}
+												precision={0.5}
+												max={5}
+												onChange={(_, newValue) => {
+													newValue === null
+														? setRatingValue(1)
+														: setRatingValue(newValue);
+												}}
+												onChangeActive={(_, newHover) => {
+													setHover(newHover);
+												}}
+												emptyIcon={
+													<StarIcon
+														style={{ opacity: 0.55 }}
+														fontSize="inherit"
+													/>
+												}
+												aria-label={`별점 선택: ${ratingValue}점`}
+											/>
+										</div>
+										<label htmlFor="content" className="a11yHidden">
+											댓글 내용
+										</label>
+										<div className="replyTextAreaContainer">
+											<ReplyTextarea
+												id="content"
+												name="content"
+												ref={replyRef}
+												onChange={debounce(
+													(e: {
+														target: {
+															value: SetStateAction<string | undefined>;
+														};
+													}) => setReplyContent(e.target.value),
+												)}
+												required
+											/>
+											<button
+												type="submit"
+												onClick={handleReplySubmit}
+												aria-label="작성한 댓글 등록"
+												disabled={isReplyLoading}
+											>
+												{isReplyLoading ? "업로드 중.." : "작성하기"}
+											</button>
+										</div>
+									</ReplyInputForm>
+								)}
+							</div>
+							<ul>
+								{allReplies !== undefined && allReplies?.length === 0 ? (
+									<p>댓글이 없습니다.</p>
+								) : (
+									displayReplies?.map((reply) => {
+										return <ReplyListItem reply={reply} />;
+									})
+								)}
+							</ul>
+							{allReplies !== undefined &&
+							currentPage * REPLIES_PER_PAGE < allReplies?.length ? (
+								<MoreButton
+									onClick={handleMoreReplies}
+									isReply
+									aria-label="댓글을 추가로 더 표시합니다."
+								>
+									더보기
+								</MoreButton>
 							) : (
-								displayReplies?.map((reply) => {
-									return <ReplyListItem reply={reply} />;
-								})
+								<MoreButton
+									isReply
+									disabled
+									isDisable
+									aria-label="더이상 표시할 댓글이 없습니다."
+								>
+									더보기
+								</MoreButton>
 							)}
-						</ul>
-						{allReplies !== undefined &&
-						currentPage * REPLIES_PER_PAGE < allReplies?.length ? (
-							<MoreButton
-								onClick={handleMoreReplies}
-								isReply
-								aria-label="댓글을 추가로 더 표시합니다."
-							>
-								더보기
-							</MoreButton>
-						) : (
-							<MoreButton
-								isReply
-								disabled
-								isDisable
-								aria-label="더이상 표시할 댓글이 없습니다."
-							>
-								더보기
-							</MoreButton>
-						)}
-					</ReplyContainer>
+						</ReplyContainer>
+					)}
 				</>
 			)}
 		</section>
