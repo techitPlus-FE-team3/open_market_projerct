@@ -4,7 +4,7 @@ import { isAxiosError } from "axios";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-export const useMutationPostProductQuery = () => {
+export const usePostProductMutation = () => {
 	const navigate = useNavigate();
 	const { mutate, isSuccess, error } = useMutation({
 		mutationFn: (newProduct: ProductRegistForm) =>

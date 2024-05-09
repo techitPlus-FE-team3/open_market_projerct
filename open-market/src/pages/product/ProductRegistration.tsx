@@ -1,10 +1,11 @@
+import { ProductRegistForm } from "@/apis/product/detail";
 import FormInput from "@/components/FormInput";
 import FunctionalButton from "@/components/FunctionalButton";
 import HelmetSetup from "@/components/HelmetSetup";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SelectGenre from "@/components/SelectGenre";
 import Textarea from "@/components/Textarea";
-import { useMutationPostProductQuery } from "@/hooks/product/mutations/registration";
+import { usePostProductMutation } from "@/hooks/product/mutations/registration";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
@@ -24,26 +25,6 @@ import { useRecoilValue } from "recoil";
 
 interface FlexLayoutProps {
 	right?: boolean;
-}
-
-interface ProductRegistForm {
-	show: boolean;
-	active: boolean;
-	name: string;
-	mainImages: ProductFiles[];
-	content: string;
-	price: number;
-	shippingFees: number;
-	quantity: number;
-	buyQuantity: number;
-	extra: {
-		sellerName: string;
-		isNew: boolean;
-		isBest: boolean;
-		category: string;
-		tags: string[];
-		soundFile: ProductFiles;
-	};
 }
 
 const ProductRegistSection = styled.section`
@@ -207,7 +188,7 @@ function ProductRegistration() {
 	});
 	const [audioLoading, setAudioLoading] = useState<boolean>(false);
 	const [imageLoading, setImageLoading] = useState<boolean>(false);
-	const { mutate: registerProduct } = useMutationPostProductQuery();
+	const { mutate: registerProduct } = usePostProductMutation();
 
 	useRequireAuth();
 

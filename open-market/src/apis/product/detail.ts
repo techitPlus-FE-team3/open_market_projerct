@@ -34,11 +34,11 @@ export async function getProductDetail(
 	}
 }
 
-export async function postProductDetail(postProductDetail: ProductRegistForm) {
+export async function postProductDetail(newProductDetail: ProductRegistForm) {
 	try {
 		const response = await axiosInstance.post(
 			`/seller/products`,
-			postProductDetail,
+			newProductDetail,
 		);
 
 		return response.data.item;
