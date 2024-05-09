@@ -1,11 +1,28 @@
 import { axiosInstance } from "@/utils";
-// import { useNavigate } from "react-router-dom";
+
+export interface ProductRegistForm {
+	show: boolean;
+	active: boolean;
+	name: string;
+	mainImages: ProductFiles[];
+	content: string;
+	price: number;
+	shippingFees: number;
+	quantity: number;
+	buyQuantity: number;
+	extra: {
+		sellerName: string;
+		isNew: boolean;
+		isBest: boolean;
+		category: string;
+		tags: string[];
+		soundFile: ProductFiles;
+	};
+}
 
 export async function getProductDetail(
 	productId?: string,
 ): Promise<Product | undefined> {
-	// const navigate = useNavigate();
-
 	try {
 		const response = await axiosInstance.get<ProductResponse>(
 			`/products/${productId}`,
@@ -13,9 +30,20 @@ export async function getProductDetail(
 
 		return response.data.item;
 	} catch (error) {
-		// if (error instanceof AxiosError && error.response?.status === 404) {
-		// 	return navigate("/err404", { replace: true });
-		// }
 		console.error(error);
+	}
+}
+
+export async function postProductDetail(postProductDetail: ProductRegistForm) {
+	try {
+		const response = await axiosInstance.post(
+			`/seller/products`,
+			postProductDetail,
+		);
+
+		return response.data.item;
+	} catch (error) {
+		console.error(error);
+		throw error;
 	}
 }
