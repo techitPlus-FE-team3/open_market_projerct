@@ -87,7 +87,7 @@ const Ul = styled.ul`
 	display: flex;
 	a {
 		text-decoration: none;
-		color: inherit;
+		color: ${Common.colors.black};
 	}
 	margin-bottom: 100px;
 	& > :first-of-type::after {
