@@ -18,21 +18,29 @@ function isAxiosError(error: any): error is AxiosError {
 	return error.isAxiosError === true;
 }
 
-function logTokenExpiration(token: string) {
+const logTokenExpiration = (
+	token: string,
+	logLevel: "info" | "debug" = "info",
+) => {
 	try {
-		const decoded = jwtDecode<{ exp: number }>(token); // Ensures decoding is typed
+		const decoded = jwtDecode<{ exp: number }>(token);
 		const expiresAt = new Date(decoded.exp * 1000);
-		console.log(`Token expires at: ${expiresAt}`);
+		if (logLevel === "info") {
+			console.info("Token refreshed");
+		} else if (logLevel === "debug") {
+			console.debug(`Token expires at: ${expiresAt}`);
+		}
 	} catch (error) {
 		console.error("Failed to decode token:", error);
 	}
-}
+};
 
 let isRefreshing = false;
 let subscribers: TokenRefreshCallback[] = [];
 
 function onAccessTokenFetched(accessToken: string): void {
-	logTokenExpiration(accessToken); // 토큰 만료 시간 로깅
+	logTokenExpiration(accessToken, "info"); // 토큰 만료 시간 로깅 // For production
+	// logTokenExpiration(accessToken, "debug"); // 토큰 만료 시간 로깅 // For development/debugging
 	subscribers.forEach((callback) => callback(accessToken));
 	subscribers = [];
 }
