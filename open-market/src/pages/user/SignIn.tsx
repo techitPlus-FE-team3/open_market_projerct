@@ -85,7 +85,7 @@ const Submit = styled.button`
 
 const Ul = styled.ul`
 	display: flex;
-	a:visited {
+	a {
 		text-decoration: none;
 		color: inherit;
 	}
