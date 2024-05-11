@@ -2,6 +2,7 @@ import FunctionalButton from "@/components/FunctionalButton";
 import HelmetSetup from "@/components/HelmetSetup";
 import { ProductManagementSkeleton } from "@/components/SkeletonUI";
 import Textarea from "@/components/Textarea";
+import { useDeleteProductMutation } from "@/hooks/product/mutations/delete";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
@@ -14,7 +15,6 @@ import { Radio, RadioProps } from "@mui/material";
 import { styled as muiStyled } from "@mui/system";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
@@ -200,30 +200,23 @@ function ProductManage() {
 	const [userProductInfo, setUserProductInfo] = useState<Product>();
 	const [genre, setGenre] = useState<string>();
 
+	const { mutate: deleteProduct } = useDeleteProductMutation();
+
 	useRequireAuth();
 
 	function handleProductDelete(e: { preventDefault: () => void }) {
 		e.preventDefault();
 		const result = confirm("상품을 정말로 삭제하시겠습니까?");
 		if (!result) return;
-		try {
-			axiosInstance
-				.delete(`/seller/products/${productId}`)
-				.then(() => {
-					toast.success("상품 삭제 완료", {
-						ariaProps: {
-							role: "status",
-							"aria-live": "polite",
-						},
-					});
-					navigate(`/user/${currentUser?._id}/products`);
-				})
-				.catch((error) => {
-					console.error("에러 발생:", error);
-				});
-		} catch (error) {
-			console.error(error);
-		}
+
+		deleteProduct(productId, {
+			onSuccess: () => {
+				navigate(`/user/${currentUser?._id}/products`);
+			},
+			onError: (error) => {
+				console.error("상품 삭제 중 오류 발생", error);
+			},
+		});
 	}
 
 	useEffect(() => {

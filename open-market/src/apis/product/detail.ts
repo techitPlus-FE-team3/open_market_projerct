@@ -47,3 +47,11 @@ export async function postProductDetail(newProductDetail: ProductRegistForm) {
 		throw error;
 	}
 }
+
+export async function deleteProductDetail(productId?: string) {
+	try {
+		axiosInstance.delete(`/seller/products/${productId}`);
+	} catch (error) {
+		console.error(error);
+	}
+}
