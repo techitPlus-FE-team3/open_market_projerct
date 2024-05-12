@@ -37,7 +37,7 @@ function ProductDetail() {
 	const { productId } = useParams();
 
 	const { data: allReplies, isLoading: isLoadingProductReplies } =
-		useProductRepliesQuery(productId!);
+		useProductRepliesQuery({ productId });
 
 	const currentUser = useRecoilValue(currentUserState);
 	const category = useRecoilValue(codeState);
