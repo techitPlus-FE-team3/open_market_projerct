@@ -1,10 +1,5 @@
-import { axiosInstance } from "@/utils";
+import { fetchUserReplies } from "@/apis/user/replies";
 import { useQuery } from "@tanstack/react-query";
-
-async function fetchUserReplies() {
-	const response = await axiosInstance.get(`/replies`);
-	return response.data.item;
-}
 
 export function useUserRepliesQuery() {
 	return useQuery({
