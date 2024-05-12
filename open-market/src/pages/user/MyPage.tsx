@@ -1,5 +1,6 @@
 import HelmetSetup from "@/components/HelmetSetup";
 import MyPageList from "@/components/MyPageList";
+import { UserDataSkeleton } from "@/components/SkeletonUI";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useUserOrdersQuery } from "@/hooks/user/queries/orders";
 import { useUserProductsQuery } from "@/hooks/user/queries/products";
@@ -43,13 +44,13 @@ const Article = styled.article`
 	gap: ${Common.space.spacingXl};
 `;
 
-const Info = styled.div`
+export const Info = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
 `;
 
-const PersonalInfo = styled.div`
+export const PersonalInfo = styled.div`
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -87,7 +88,7 @@ const UserImage = styled.img`
 	border-radius: 50%;
 `;
 
-const Comment = styled.div`
+export const Comment = styled.div`
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -220,24 +221,6 @@ function MyPage() {
 	);
 
 	const profileImageUrl = userData?.extra?.profileImage || "/user.svg";
-
-	const UserDataSkeleton = () => (
-		<>
-			<Skeleton variant="circular" width={200} height={200} />
-			<Info>
-				<PersonalInfo>
-					<Skeleton variant="text" width={100} height={24} />
-					<Skeleton variant="text" width={960} height={12} />
-					<Skeleton variant="text" width={960} height={12} />
-				</PersonalInfo>
-				<Comment>
-					<Skeleton variant="text" width={100} height={24} />
-					<Skeleton variant="text" width={960} height={12} />
-					<Skeleton variant="text" width={960} height={12} />
-				</Comment>
-			</Info>
-		</>
-	);
 
 	return (
 		<Section>
