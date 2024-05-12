@@ -1,8 +1,9 @@
+import { ProductEditForm } from "@/pages/product/ProductEdit";
 import { axiosInstance } from "@/utils";
 
-export interface ProductRegistForm {
+export interface ProductForm {
 	show: boolean;
-	active: boolean;
+	active?: boolean;
 	name: string;
 	mainImages: ProductFiles[];
 	content: string;
@@ -12,8 +13,8 @@ export interface ProductRegistForm {
 	buyQuantity: number;
 	extra: {
 		sellerName: string;
-		isNew: boolean;
-		isBest: boolean;
+		isNew?: boolean;
+		isBest?: boolean;
 		category: string;
 		tags: string[];
 		soundFile: ProductFiles;
@@ -34,7 +35,7 @@ export async function getProductDetail(
 	}
 }
 
-export async function postProductDetail(newProductDetail: ProductRegistForm) {
+export async function postProductDetail(newProductDetail: ProductForm) {
 	try {
 		const response = await axiosInstance.post(
 			`/seller/products`,
@@ -48,9 +49,24 @@ export async function postProductDetail(newProductDetail: ProductRegistForm) {
 	}
 }
 
-export async function deleteProductDetail(productId?: string) {
+export function deleteProductDetail(productId?: string) {
 	try {
 		axiosInstance.delete(`/seller/products/${productId}`);
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+export async function patchProductDetail(
+	productId?: string,
+	newProductDetail?: ProductEditForm,
+): Promise<string | undefined> {
+	try {
+		const response = await axiosInstance.patch(
+			`/seller/products/${productId}`,
+			newProductDetail,
+		);
+		return response.data.updated;
 	} catch (error) {
 		console.error(error);
 	}
