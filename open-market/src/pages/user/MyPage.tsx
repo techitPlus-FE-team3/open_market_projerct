@@ -1,6 +1,7 @@
 import HelmetSetup from "@/components/HelmetSetup";
 import MyPageList from "@/components/MyPageList";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useUserOrdersQuery } from "@/hooks/user/queries/orders";
 import { useUserProductsQuery } from "@/hooks/user/queries/products";
 import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
@@ -172,11 +173,6 @@ async function fetchUserInfo(userId: string) {
 	return response.data.item;
 }
 
-async function fetchUserOrderInfo() {
-	const response = await axiosInstance.get(`/orders`);
-	return response.data.item;
-}
-
 async function fetchBookmarks() {
 	const response = await axiosInstance.get(`/bookmarks`);
 	return response.data.item;
@@ -212,10 +208,8 @@ function MyPage() {
 	const { data: userProductsData, isLoading: isLoadingProductsData } =
 		useUserProductsQuery();
 
-	const { data: userOrdersInfo, isLoading: isLoadingOrdersInfo } = useQuery({
-		queryKey: ["userOrders", currentUser?._id.toString()],
-		queryFn: () => fetchUserOrderInfo(),
-	});
+	const { data: userOrders, isLoading: isLoadingOrders } = useUserOrdersQuery();
+
 	const { data: bookmarkDetails, isLoading: isLoadingBookmarks } = useQuery({
 		queryKey: ["bookmarks", currentUser?._id.toString()],
 		queryFn: () => fetchBookmarks(),
@@ -359,7 +353,7 @@ function MyPage() {
 			) : (
 				<MyPageList
 					title="구매내역"
-					data={isLoadingOrdersInfo ? [] : (userOrdersInfo || []).slice(0, 5)}
+					data={isLoadingOrders ? [] : (userOrders || []).slice(0, 5)}
 					emptyMessage="구매내역이 없습니다."
 					renderItem={(item) => (
 						<Link to={`/productdetail/${item.products[0]._id}`}>
@@ -374,7 +368,7 @@ function MyPage() {
 					linkUrl="/orders"
 				/>
 			)}
-			{isLoadingOrdersInfo ? (
+			{isLoadingOrders ? (
 				<Skeleton
 					variant="rounded"
 					width="100%"
