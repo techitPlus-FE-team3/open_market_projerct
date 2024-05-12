@@ -316,7 +316,7 @@ function MyPage() {
 					</Link>
 				)}
 			/>
-			{isLoadingProducts ? (
+			{isLoadingOrders ? (
 				<MyPageListSkeleton />
 			) : (
 				<MyPageList
@@ -336,7 +336,7 @@ function MyPage() {
 					linkUrl="/orders"
 				/>
 			)}
-			{isLoadingOrders ? (
+			{isLoadingProducts ? (
 				<MyPageListSkeleton />
 			) : (
 				<MyPageList
