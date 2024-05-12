@@ -1,6 +1,6 @@
 import HelmetSetup from "@/components/HelmetSetup";
 import MyPageList from "@/components/MyPageList";
-import { UserDataSkeleton } from "@/components/SkeletonUI";
+import { MyPageListSkeleton, UserDataSkeleton } from "@/components/SkeletonUI";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useUserOrdersQuery } from "@/hooks/user/queries/orders";
 import { useUserProductsQuery } from "@/hooks/user/queries/products";
@@ -9,7 +9,6 @@ import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
-import Skeleton from "@mui/material/Skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -284,12 +283,7 @@ function MyPage() {
 				)}
 			</Article>
 			{isLoadingBookmarks ? (
-				<Skeleton
-					variant="rounded"
-					width="100%"
-					height={241}
-					animation="wave"
-				/>
+				<MyPageListSkeleton />
 			) : (
 				<MyPageList
 					title="북마크"
@@ -323,12 +317,7 @@ function MyPage() {
 				)}
 			/>
 			{isLoadingProducts ? (
-				<Skeleton
-					variant="rounded"
-					width="100%"
-					height={241}
-					animation="wave"
-				/>
+				<MyPageListSkeleton />
 			) : (
 				<MyPageList
 					title="구매내역"
@@ -348,12 +337,7 @@ function MyPage() {
 				/>
 			)}
 			{isLoadingOrders ? (
-				<Skeleton
-					variant="rounded"
-					width="100%"
-					height={241}
-					animation="wave"
-				/>
+				<MyPageListSkeleton />
 			) : (
 				<MyPageList
 					title="판매상품관리"
