@@ -1,4 +1,4 @@
-import { ProductRegistForm, postProductDetail } from "@/apis/product/detail";
+import { ProductRegisterForm, postProductDetail } from "@/apis/product/product";
 import { useMutation } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 export const usePostProductMutation = () => {
 	const navigate = useNavigate();
-	const { mutate, isSuccess, error } = useMutation({
-		mutationFn: (newProduct: ProductRegistForm) =>
+	const { mutate } = useMutation({
+		mutationFn: (newProduct: ProductRegisterForm) =>
 			postProductDetail(newProduct),
 
 		onSuccess: (response) => {
@@ -38,5 +38,5 @@ export const usePostProductMutation = () => {
 		},
 	});
 
-	return { mutate, isSuccess, error };
+	return { mutate };
 };

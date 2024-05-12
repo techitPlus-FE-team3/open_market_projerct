@@ -1,7 +1,7 @@
 import { ProductEditForm } from "@/pages/product/ProductEdit";
 import { axiosInstance } from "@/utils";
 
-export interface ProductForm {
+export interface ProductRegisterForm {
 	show: boolean;
 	active?: boolean;
 	name: string;
@@ -35,7 +35,7 @@ export async function getProductDetail(
 	}
 }
 
-export async function postProductDetail(newProductDetail: ProductForm) {
+export async function postProductDetail(newProductDetail: ProductRegisterForm) {
 	try {
 		const response = await axiosInstance.post(
 			`/seller/products`,

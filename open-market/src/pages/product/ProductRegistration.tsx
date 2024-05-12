@@ -1,4 +1,4 @@
-import { ProductRegistForm } from "@/apis/product/detail";
+import { ProductRegisterForm } from "@/apis/product/product";
 import FormInput from "@/components/FormInput";
 import FunctionalButton from "@/components/FunctionalButton";
 import HelmetSetup from "@/components/HelmetSetup";
@@ -167,7 +167,7 @@ function ProductRegistration() {
 	const category = useRecoilValue(codeState);
 	const currentUser = useRecoilValue(currentUserState);
 
-	const [postItem, setPostItem] = useState<ProductRegistForm>({
+	const [postItem, setPostItem] = useState<ProductRegisterForm>({
 		show: true,
 		active: true,
 		name: "",
