@@ -201,7 +201,7 @@ function MyPage() {
 		currentUser!._id.toString(),
 	);
 
-	const { data: userProductsData, isLoading: isLoadingProductsData } =
+	const { data: userProducts, isLoading: isLoadingProducts } =
 		useUserProductsQuery();
 
 	const { data: userOrders, isLoading: isLoadingOrders } = useUserOrdersQuery();
@@ -339,7 +339,7 @@ function MyPage() {
 					</Link>
 				)}
 			/>
-			{isLoadingProductsData ? (
+			{isLoadingProducts ? (
 				<Skeleton
 					variant="rounded"
 					width="100%"
@@ -374,9 +374,7 @@ function MyPage() {
 			) : (
 				<MyPageList
 					title="판매상품관리"
-					data={
-						isLoadingProductsData ? [] : (userProductsData || []).slice(0, 5)
-					}
+					data={isLoadingProducts ? [] : (userProducts || []).slice(0, 5)}
 					emptyMessage="판매내역이 없습니다."
 					renderItem={(item) => (
 						<Link to={`/productmanage/${item._id}`}>
