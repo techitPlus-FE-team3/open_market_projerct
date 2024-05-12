@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/utils";
 
-export async function fetchProductReplies(productId?: string) {
+export async function getProductReplies(productId?: string) {
 	try {
 		const response = await axiosInstance.get(`/replies/products/${productId}`);
 		return response.data.item;

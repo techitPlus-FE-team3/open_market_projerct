@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/utils";
 
-export async function fetchUserReplies() {
+export async function getUserReplies() {
 	try {
 		const response = await axiosInstance.get(`/replies`);
 		return response.data.item;
