@@ -1,6 +1,7 @@
 import HelmetSetup from "@/components/HelmetSetup";
 import MyPageList from "@/components/MyPageList";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useUserProductsQuery } from "@/hooks/user/queries/products";
 import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
@@ -171,11 +172,6 @@ async function fetchUserInfo(userId: string) {
 	return response.data.item;
 }
 
-async function fetchUserProductsInfo() {
-	const response = await axiosInstance.get(`/seller/products/`);
-	return response.data.item;
-}
-
 async function fetchUserOrderInfo() {
 	const response = await axiosInstance.get(`/orders`);
 	return response.data.item;
@@ -213,12 +209,9 @@ function MyPage() {
 		queryKey: ["userInfo", currentUser?._id.toString()],
 		queryFn: () => fetchUserInfo(currentUser!._id.toString()),
 	});
-	const { data: userProductsInfo, isLoading: isLoadingProductsInfo } = useQuery(
-		{
-			queryKey: ["userProducts", currentUser?._id.toString()],
-			queryFn: () => fetchUserProductsInfo(),
-		},
-	);
+	const { data: userProductsData, isLoading: isLoadingProductsData } =
+		useUserProductsQuery();
+
 	const { data: userOrdersInfo, isLoading: isLoadingOrdersInfo } = useQuery({
 		queryKey: ["userOrders", currentUser?._id.toString()],
 		queryFn: () => fetchUserOrderInfo(),
@@ -356,7 +349,7 @@ function MyPage() {
 					</Link>
 				)}
 			/>
-			{isLoadingProductsInfo ? (
+			{isLoadingProductsData ? (
 				<Skeleton
 					variant="rounded"
 					width="100%"
@@ -392,7 +385,7 @@ function MyPage() {
 				<MyPageList
 					title="판매상품관리"
 					data={
-						isLoadingProductsInfo ? [] : (userProductsInfo || []).slice(0, 5)
+						isLoadingProductsData ? [] : (userProductsData || []).slice(0, 5)
 					}
 					emptyMessage="판매내역이 없습니다."
 					renderItem={(item) => (
