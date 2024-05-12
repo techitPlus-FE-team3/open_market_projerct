@@ -49,9 +49,13 @@ export async function postProductDetail(newProductDetail: ProductForm) {
 	}
 }
 
-export function deleteProductDetail(productId?: string) {
+export async function deleteProductDetail(productId?: string) {
 	try {
-		axiosInstance.delete(`/seller/products/${productId}`);
+		const response = await axiosInstance.delete(
+			`/seller/products/${productId}`,
+		);
+
+		return response;
 	} catch (error) {
 		console.error(error);
 	}

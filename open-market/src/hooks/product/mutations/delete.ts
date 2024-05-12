@@ -1,4 +1,4 @@
-import { deleteProductDetail } from "@/apis/product/detail";
+import { deleteProductDetail } from "@/apis/product/product";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 

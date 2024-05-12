@@ -4,16 +4,16 @@ import { ProductManagementSkeleton } from "@/components/SkeletonUI";
 import Textarea from "@/components/Textarea";
 import { useDeleteProductMutation } from "@/hooks/product/mutations/delete";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useUserProductDetailSuspenseQuery } from "@/hooks/user/queries/detail";
 import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
 import { Common } from "@/styles/common";
-import { axiosInstance, numberWithComma } from "@/utils";
+import { numberWithComma } from "@/utils";
 import styled from "@emotion/styled";
 import CircleIcon from "@mui/icons-material/Circle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { Radio, RadioProps } from "@mui/material";
 import { styled as muiStyled } from "@mui/system";
-import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -195,11 +195,10 @@ function ProductManage() {
 	const currentUser = useRecoilValue(currentUserState);
 	const category = useRecoilValue(codeState);
 
-	const [isLoading, setIsLoading] = useState<boolean>(true);
-
-	const [userProductInfo, setUserProductInfo] = useState<Product>();
 	const [genre, setGenre] = useState<string>();
 
+	const { data: userProductDetail, isLoading: userProductDetailLoading } =
+		useUserProductDetailSuspenseQuery(productId);
 	const { mutate: deleteProduct } = useDeleteProductMutation();
 
 	useRequireAuth();
@@ -220,41 +219,17 @@ function ProductManage() {
 	}
 
 	useEffect(() => {
-		const fetchUserProductInfo = async () => {
-			try {
-				const response = await axiosInstance.get<ProductResponse>(
-					`/seller/products/${productId}`,
-				);
-				setUserProductInfo(response.data.item);
-			} catch (error) {
-				if (error instanceof AxiosError && error.response?.status === 404) {
-					return navigate("/err404", { replace: true });
-				}
-				console.error("상품 정보 조회 실패:", error);
-			}
-		};
-
-		fetchUserProductInfo();
-	}, []);
-
-	useEffect(() => {
-		if (userProductInfo) {
-			setIsLoading(false);
-		}
-	}, [userProductInfo]);
-
-	useEffect(() => {
 		function translateCodeToValue(code: string) {
 			if (
 				code !== undefined &&
 				category !== undefined &&
-				userProductInfo !== undefined
+				userProductDetail !== undefined
 			) {
 				return category!.find((item) => item.code === code)?.value;
 			}
 		}
-		setGenre(translateCodeToValue(userProductInfo?.extra?.category!));
-	}, [userProductInfo, category]);
+		setGenre(translateCodeToValue(userProductDetail?.extra?.category!));
+	}, [userProductDetail, category]);
 
 	return (
 		<ProductManagementSection>
@@ -264,7 +239,7 @@ function ProductManage() {
 				url={`productmanage/${productId}`}
 			/>
 			<h2 className="a11yHidden">상품 관리</h2>
-			{isLoading ? (
+			{userProductDetailLoading ? (
 				<ProductManagementSkeleton />
 			) : (
 				<ProductInfoWrapper>
@@ -276,17 +251,17 @@ function ProductManage() {
 					</UserProductListLink>
 					<FormTopLayout>
 						<img
-							src={userProductInfo?.mainImages[0].path}
-							alt={`${userProductInfo?.name}의 앨범 아트`}
+							src={userProductDetail?.mainImages[0].path}
+							alt={`${userProductDetail?.name}의 앨범 아트`}
 							className="ProductImage"
 						/>
 						<FormTopRightLayout>
 							<ProductItemWrapper>
 								<ProductLabel bar>제목</ProductLabel>
-								<ProductValue>{userProductInfo?.name}</ProductValue>
-								{userProductInfo?.show ? (
+								<ProductValue>{userProductDetail?.name}</ProductValue>
+								{userProductDetail?.show ? (
 									<ProductDetailLink
-										to={`/productdetail/${userProductInfo?._id}`}
+										to={`/productdetail/${userProductDetail?._id}`}
 									>
 										상세 페이지 확인
 									</ProductDetailLink>
@@ -302,24 +277,24 @@ function ProductManage() {
 								<ProductItemWrapper wide>
 									<ProductLabel bar>해시태그</ProductLabel>
 									<ProductValue>
-										{userProductInfo?.extra?.tags?.map((i) => `#${i} `)}
+										{userProductDetail?.extra?.tags?.map((i) => `#${i} `)}
 									</ProductValue>
 								</ProductItemWrapper>
 							</FlexLayout>
-							<Textarea readOnly={true} content={userProductInfo?.content} />
+							<Textarea readOnly={true} content={userProductDetail?.content} />
 						</FormTopRightLayout>
 					</FormTopLayout>
 					<FlexLayout>
 						<ProductItemWrapper large>
 							<ProductLabel>
 								판매 수익 (판매 가격:
-								<span> {numberWithComma(userProductInfo?.price!)}₩</span>)
+								<span> {numberWithComma(userProductDetail?.price!)}₩</span>)
 							</ProductLabel>
 
 							<ProductValue large>
-								{typeof userProductInfo?.buyQuantity !== "undefined"
+								{typeof userProductDetail?.buyQuantity !== "undefined"
 									? numberWithComma(
-											userProductInfo?.buyQuantity * userProductInfo?.price,
+											userProductDetail?.buyQuantity * userProductDetail?.price,
 										)
 									: "0"}
 								₩
@@ -330,13 +305,13 @@ function ProductManage() {
 							<RadioButtonGroup>
 								<span>공개</span>
 								<StyledRadio
-									checked={userProductInfo?.show === true}
+									checked={userProductDetail?.show === true}
 									value="true"
 								/>
 								<div>
 									<span>비공개</span>
 									<StyledRadio
-										checked={userProductInfo?.show === false}
+										checked={userProductDetail?.show === false}
 										value="false"
 									/>
 								</div>
@@ -351,7 +326,7 @@ function ProductManage() {
 							text="삭제"
 						/>
 						<LinkedEditButton
-							to={`/productedit/${userProductInfo?._id}`}
+							to={`/productedit/${userProductDetail?._id}`}
 							title="수정하러 가기"
 						>
 							수정
