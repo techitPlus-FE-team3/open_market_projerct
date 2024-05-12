@@ -2,6 +2,7 @@ import HelmetSetup from "@/components/HelmetSetup";
 import MyPageList from "@/components/MyPageList";
 import { MyPageListSkeleton, UserDataSkeleton } from "@/components/SkeletonUI";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useUserBookmarksQuery } from "@/hooks/user/queries/bookmarks";
 import { useUserOrdersQuery } from "@/hooks/user/queries/orders";
 import { useUserProductsQuery } from "@/hooks/user/queries/products";
 import { useUserDataQuery } from "@/hooks/user/queries/user";
@@ -169,11 +170,6 @@ const Image = styled.img`
 	object-fit: cover;
 `;
 
-async function fetchBookmarks() {
-	const response = await axiosInstance.get(`/bookmarks`);
-	return response.data.item;
-}
-
 async function fetchUserReplies() {
 	const response = await axiosInstance.get(`/replies`);
 	return response.data.item;
@@ -206,10 +202,9 @@ function MyPage() {
 
 	const { data: userOrders, isLoading: isLoadingOrders } = useUserOrdersQuery();
 
-	const { data: bookmarkDetails, isLoading: isLoadingBookmarks } = useQuery({
-		queryKey: ["bookmarks", currentUser?._id.toString()],
-		queryFn: () => fetchBookmarks(),
-	});
+	const { data: bookmarkDetails, isLoading: isLoadingBookmarks } =
+		useUserBookmarksQuery();
+
 	const { data: userReplies, isLoading: isLoadingUserReplies } = useQuery({
 		queryKey: ["replies", currentUser?._id.toString()],
 		queryFn: () => fetchUserReplies(),
