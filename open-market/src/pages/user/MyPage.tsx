@@ -3,6 +3,7 @@ import MyPageList from "@/components/MyPageList";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useUserOrdersQuery } from "@/hooks/user/queries/orders";
 import { useUserProductsQuery } from "@/hooks/user/queries/products";
+import { useUserDataQuery } from "@/hooks/user/queries/user";
 import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
@@ -168,11 +169,6 @@ const Image = styled.img`
 	object-fit: cover;
 `;
 
-async function fetchUserInfo(userId: string) {
-	const response = await axiosInstance.get(`/users/${userId}`);
-	return response.data.item;
-}
-
 async function fetchBookmarks() {
 	const response = await axiosInstance.get(`/bookmarks`);
 	return response.data.item;
@@ -201,10 +197,10 @@ function MyPage() {
 
 	const currentUser = useRecoilValue(currentUserState);
 
-	const { data: userInfo, isLoading: isLoadingUserInfo } = useQuery({
-		queryKey: ["userInfo", currentUser?._id.toString()],
-		queryFn: () => fetchUserInfo(currentUser!._id.toString()),
-	});
+	const { data: userData, isLoading: isLoadingUserData } = useUserDataQuery(
+		currentUser!._id.toString(),
+	);
+
 	const { data: userProductsData, isLoading: isLoadingProductsData } =
 		useUserProductsQuery();
 
@@ -223,9 +219,9 @@ function MyPage() {
 		sessionStorage.getItem("historyList") as string,
 	);
 
-	const profileImageUrl = userInfo?.extra?.profileImage || "/user.svg";
+	const profileImageUrl = userData?.extra?.profileImage || "/user.svg";
 
-	const UserInfoSkeleton = () => (
+	const UserDataSkeleton = () => (
 		<>
 			<Skeleton variant="circular" width={200} height={200} />
 			<Info>
@@ -249,13 +245,13 @@ function MyPage() {
 			<MainTitle>마이페이지</MainTitle>
 			<Article>
 				<InfoTitle>내 정보</InfoTitle>
-				{isLoadingUserInfo || isLoadingUserReplies ? (
-					<UserInfoSkeleton />
+				{isLoadingUserData || isLoadingUserReplies ? (
+					<UserDataSkeleton />
 				) : (
 					<>
 						<UserImage
 							src={profileImageUrl}
-							alt={`${userInfo.name}님의 프로필 이미지`}
+							alt={`${userData.name}님의 프로필 이미지`}
 						/>
 						<Info>
 							<PersonalInfo>
@@ -263,15 +259,15 @@ function MyPage() {
 								<PersonalInfoItem>
 									<div>
 										<h5>이메일 : </h5>
-										<p>{userInfo.email}</p>
+										<p>{userData.email}</p>
 									</div>
 									<div>
 										<h5>이름 : </h5>
-										<p>{userInfo.name}</p>
+										<p>{userData.name}</p>
 									</div>
 									<div>
 										<h5>휴대폰 번호 : </h5>
-										<p>{formatPhoneNumber(userInfo.phone)}</p>
+										<p>{formatPhoneNumber(userData.phone)}</p>
 									</div>
 								</PersonalInfoItem>
 								<StyledLink to={`/useredit/${currentUser!._id}`}>
