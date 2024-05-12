@@ -1,7 +1,7 @@
 import HelmetSetup from "@/components/HelmetSetup";
 import { UserRepliesListItem } from "@/components/ProductListComponent";
 import { ProductListSkeleton } from "@/components/SkeletonUI";
-import { useUserRepliesQuery } from "@/hooks/reply/queries/useUserRepliesQuery";
+import { useUserRepliesQuery } from "@/hooks/user/queries/replies";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
 	Heading,

@@ -1,6 +1,6 @@
 import HelmetSetup from "@/components/HelmetSetup";
 import MyPageList from "@/components/MyPageList";
-import { useUserRepliesQuery } from "@/hooks/reply/queries/useUserRepliesQuery";
+import { useUserRepliesQuery } from "@/hooks/user/queries/replies";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
