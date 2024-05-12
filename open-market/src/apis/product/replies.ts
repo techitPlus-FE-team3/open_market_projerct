@@ -8,3 +8,14 @@ export async function getProductReplies(productId?: string) {
 		console.error(error);
 	}
 }
+
+export async function postProductReply(
+	replyData: PostReply,
+): Promise<PostReply> {
+	const response = await axiosInstance.post<PostReplyResponse>(
+		`/replies`,
+		replyData,
+	);
+
+	return response.data.item;
+}
