@@ -14,12 +14,13 @@ import {
 } from "@/components/SkeletonUI";
 import { useProductDetailSuspenseQuery } from "@/hooks/product/queries/detail";
 import { useProductOrderSuspenseQuery } from "@/hooks/product/queries/order";
-import { useBookMarksSuspenseQuery } from "@/hooks/user/queries/bookMark";
+import { usePostReplyMutation } from "@/hooks/reply/mutations/usePostReplyMutation";
 import { useProductRepliesQuery } from "@/hooks/reply/queries/useProductRepliesQuery";
+import { useBookMarksSuspenseQuery } from "@/hooks/user/queries/bookMark";
 import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
 import { Heading, MoreButton } from "@/styles/ProductListStyle";
-import { axiosInstance, debounce, formatDate } from "@/utils";
+import { debounce, formatDate } from "@/utils";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import StarIcon from "@mui/icons-material/Star";
@@ -55,7 +56,6 @@ function ProductDetail() {
 	const [ratingValue, setRatingValue] = useState<number>(3);
 	const [replyContent, setReplyContent] = useState<string>();
 	const [__, setHover] = useState(-1);
-	const [isReplyLoading, setIsReplyLoading] = useState<boolean>(false);
 
 	const {
 		data: productDetailData,
@@ -79,6 +79,13 @@ function ProductDetail() {
 	const { data: productOrderData, error: productOrderError } =
 		useProductOrderSuspenseQuery({ productId, currentUser, productDetailData });
 
+	const {
+		mutate: submitReply,
+		isSuccess,
+		isError: replyError,
+		status: postReplyStatus,
+	} = usePostReplyMutation();
+
 	async function handleReplySubmit(e: { preventDefault: () => void }) {
 		e.preventDefault();
 
@@ -90,40 +97,21 @@ function ProductDetail() {
 				},
 			});
 
-		setIsReplyLoading(true);
+		submitReply({
+			order_id: productOrderData!._id,
+			product_id: Number(productId),
+			rating: ratingValue,
+			content: replyContent,
+			extra: { profileImage: currentUser?.profileImage },
+		});
 
-		try {
-			const response = await axiosInstance.post<ReplyResponse>(`/replies`, {
-				order_id: productOrderData!._id,
-				product_id: Number(productId),
-				rating: ratingValue,
-				content: replyContent,
-				extra: { profileImage: currentUser?.profileImage },
-			});
-
-			setTimeout(() => {
-				if (response.data.ok) {
-					toast.success("댓글을 작성했습니다.", {
-						ariaProps: {
-							role: "status",
-							"aria-live": "polite",
-						},
-					});
-					replyRef.current!.value = "";
-					setReplyContent("");
-					setRatingValue(3);
-					productDetailRefetch(); // tanstack-query 리패치 함수
-					setIsReplyLoading(false);
-				}
-			}, 500);
-		} catch (error) {
-			setIsReplyLoading(false);
+		if (replyError) {
 			console.error(error);
 		}
 	}
 
-	function getRating(productDetailData: Product) {
-		return +_.meanBy(productDetailData.replies, "rating").toFixed(2) || 0;
+	function getRating(reply: Reply[]) {
+		return +_.meanBy(reply, "rating").toFixed(2) || 0;
 	}
 
 	function handleMoreReplies() {
@@ -147,7 +135,6 @@ function ProductDetail() {
 			sessionStorage.getItem("historyList") || "[]",
 		);
 		if (productDetailData) {
-			setRating(getRating(productDetailData));
 			setCreatedAt(formatDate(productDetailData.createdAt));
 
 			if (sessionHistory.length > 5) {
@@ -162,7 +149,16 @@ function ProductDetail() {
 	}, [productDetailData]);
 
 	useEffect(() => {
+		if (isSuccess) {
+			replyRef.current!.value = "";
+			setReplyContent("");
+			setRatingValue(3);
+		}
+	}, [isSuccess]);
+
+	useEffect(() => {
 		if (allReplies) {
+			setRating(getRating(allReplies));
 			setDisplayReplies(allReplies.slice(0, currentPage * REPLIES_PER_PAGE));
 		}
 	}, [allReplies]);
@@ -216,10 +212,10 @@ function ProductDetail() {
 								{!currentUser ? (
 									<p>로그인 후 댓글을 작성할 수 있습니다.</p>
 								) : currentUser &&
-							  currentUser?._id === productDetailData?.seller_id ? (
+								  currentUser?._id === productDetailData?.seller_id ? (
 									<p>내 상품에는 댓글을 작성할 수 없습니다.</p>
 								) : (currentUser && !productOrderData) ||
-							  productOrderData === undefined ? (
+								  productOrderData === undefined ? (
 									<p>음원 구매 후 댓글을 작성할 수 있습니다.</p>
 								) : (
 									<ReplyInputForm action="submit">
@@ -282,9 +278,11 @@ function ProductDetail() {
 												type="submit"
 												onClick={handleReplySubmit}
 												aria-label="작성한 댓글 등록"
-												disabled={isReplyLoading}
+												disabled={postReplyStatus === "pending"}
 											>
-												{isReplyLoading ? "업로드 중.." : "작성하기"}
+												{postReplyStatus === "pending"
+													? "업로드 중.."
+													: "작성하기"}
 											</button>
 										</div>
 									</ReplyInputForm>
