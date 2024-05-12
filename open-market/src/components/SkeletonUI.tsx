@@ -239,3 +239,9 @@ export function UserDataSkeleton() {
 		</>
 	);
 }
+
+export function MyPageListSkeleton() {
+	return (
+		<Skeleton variant="rounded" width="100%" height={241} animation="wave" />
+	);
+}
