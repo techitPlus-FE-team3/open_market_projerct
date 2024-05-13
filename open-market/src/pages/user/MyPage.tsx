@@ -5,12 +5,11 @@ import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useUserBookmarksQuery } from "@/hooks/user/queries/bookmarks";
 import { useUserOrdersQuery } from "@/hooks/user/queries/orders";
 import { useUserProductsQuery } from "@/hooks/user/queries/products";
+import { useUserRepliesQuery } from "@/hooks/user/queries/replies";
 import { useUserDataQuery } from "@/hooks/user/queries/user";
 import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
-import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
@@ -170,11 +169,6 @@ const Image = styled.img`
 	object-fit: cover;
 `;
 
-async function fetchUserReplies() {
-	const response = await axiosInstance.get(`/replies`);
-	return response.data.item;
-}
-
 const formatPhoneNumber = (phoneNumber: number) => {
 	// Ensure the input is a string
 	const cleaned = ("" + phoneNumber).replace(/\D/g, "");
@@ -205,10 +199,8 @@ function MyPage() {
 	const { data: bookmarkDetails, isLoading: isLoadingBookmarks } =
 		useUserBookmarksQuery();
 
-	const { data: userReplies, isLoading: isLoadingUserReplies } = useQuery({
-		queryKey: ["replies", currentUser?._id.toString()],
-		queryFn: () => fetchUserReplies(),
-	});
+	const { data: userReplies, isLoading: isLoadingUserReplies } =
+		useUserRepliesQuery();
 
 	const historyList = JSON.parse(
 		sessionStorage.getItem("historyList") as string,
