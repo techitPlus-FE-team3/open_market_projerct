@@ -137,7 +137,6 @@ function ProductDetail() {
 				sessionHistory.pop();
 			}
 			sessionHistory.unshift(productDetailData);
-			sessionHistory.unshift(productDetailData);
 			sessionHistory = Array.from(
 				new Set(sessionHistory.map((item) => JSON.stringify(item))),
 			).map((item) => JSON.parse(item));
