@@ -16,8 +16,10 @@ let refreshmentPromise: Promise<void> = new Promise(() => {});
 
 async function refreshAccessToken(): Promise<void> {
 	if (isRefreshing) {
+		console.log("-------------------refresh 실행----------------------");
 		return refreshmentPromise;
 	}
+
 	refreshmentPromise = axios
 		.get("https://modi-ip3-modi.koyeb.app/api/users/refresh", {
 			headers: {
