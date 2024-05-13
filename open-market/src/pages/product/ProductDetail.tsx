@@ -17,6 +17,9 @@ import { useProductOrderSuspenseQuery } from "@/hooks/product/queries/order";
 import { useProductRepliesQuery } from "@/hooks/product/queries/reply";
 import { usePostReplyMutation } from "@/hooks/reply/mutations/usePostReplyMutation";
 import { useBookMarksSuspenseQuery } from "@/hooks/user/queries/bookMark";
+import { useProductDetailSuspenseQuery } from "@/hooks/product/queries/detail";
+import { useProductOrderSuspenseQuery } from "@/hooks/product/queries/order";
+import { useBookMarksSuspenseQuery } from "@/hooks/user/queries/bookMark";
 import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
 import { Heading, MoreButton } from "@/styles/ProductListStyle";
@@ -45,6 +48,7 @@ function ProductDetail() {
 	const replyRef = useRef<HTMLTextAreaElement & HTMLDivElement>(null);
 
 	// TODO : 지우고, useSuspenseQuery suspense적용
+	// TODO : 지우고, useSuspenseQuery suspense적용
 	const [genre, setGenre] = useState<string>();
 	const [createdAt, setCreatedAt] = useState<string>();
 
@@ -56,7 +60,6 @@ function ProductDetail() {
 	const [ratingValue, setRatingValue] = useState<number>(3);
 	const [replyContent, setReplyContent] = useState<string>();
 	const [__, setHover] = useState(-1);
-
 	const {
 		data: productDetailData,
 		error: productDetailError,
@@ -74,17 +77,15 @@ function ProductDetail() {
 		productId,
 	});
 
-	const error = !!bookMarksError;
-
 	const { data: productOrderData, error: productOrderError } =
 		useProductOrderSuspenseQuery({ productId, currentUser, productDetailData });
 
-	const {
-		mutate: submitReply,
-		isSuccess,
-		isError: replyError,
-		status: postReplyStatus,
-	} = usePostReplyMutation();
+  	const {
+      mutate: submitReply,
+      isSuccess,
+      isError: replyError,
+      status: postReplyStatus,
+    } = usePostReplyMutation();
 
 	async function handleReplySubmit(e: { preventDefault: () => void }) {
 		e.preventDefault();
@@ -141,6 +142,7 @@ function ProductDetail() {
 				sessionHistory.pop();
 			}
 			sessionHistory.unshift(productDetailData);
+			sessionHistory.unshift(productDetailData);
 			sessionHistory = Array.from(
 				new Set(sessionHistory.map((item) => JSON.stringify(item))),
 			).map((item) => JSON.parse(item));
@@ -169,12 +171,17 @@ function ProductDetail() {
 				code !== undefined &&
 				category !== undefined &&
 				productDetailData !== undefined
+				productDetailData !== undefined
 			) {
 				return category?.find((item) => item.code === code)?.value;
 			}
 		}
 		setGenre(translateCodeToValue(productDetailData?.extra?.category!));
 	}, [productDetailData, category]);
+
+	if (productDetailError || bookMarksError || productOrderError) {
+		navigate("/err404", { replace: true });
+	}
 
 	return (
 		<section>
@@ -184,7 +191,9 @@ function ProductDetail() {
 				url={`productdetail/${productId}`}
 			/>
 			<Heading>상세 페이지</Heading>
-			{bookMarksLoading || productDetailData === undefined ? (
+			{bookMarksLoading ||
+			productDetailLoading ||
+			productDetailData === undefined ? (
 				<ProductDetailSkeleton />
 			) : (
 				<>
