@@ -1,6 +1,6 @@
 import AuthInput from "@/components/AuthInput";
 import HelmetSetup from "@/components/HelmetSetup";
-import { useLoginMutation } from "@/hooks/user/queries/useLoginMutation";
+import { useSignInMutation } from "@/hooks/user/queries/useSignInMutation";
 import { Common } from "@/styles/common";
 import { debounce } from "@/utils";
 import styled from "@emotion/styled";
@@ -97,7 +97,7 @@ const Ul = styled.ul`
 function SignIn() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const { mutate: handleLogin } = useLoginMutation();
+	const { mutate: handleLogin } = useSignInMutation();
 
 	const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();

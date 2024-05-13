@@ -1,17 +1,17 @@
-import { login } from "@/apis/user/auth";
+import { signIn } from "@/apis/user/auth";
 import { currentUserState } from "@/states/authState";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 
-export function useLoginMutation() {
+export function useSignInMutation() {
 	const navigate = useNavigate();
 	const setCurrentUser = useSetRecoilState(currentUserState);
 
 	return useMutation({
 		mutationFn: (credentials: { email: string; password: string }) =>
-			login(credentials.email, credentials.password),
+			signIn(credentials.email, credentials.password),
 		onSuccess: (data) => {
 			if (data.ok === 1 && data.item.token) {
 				const userInfo = data.item;

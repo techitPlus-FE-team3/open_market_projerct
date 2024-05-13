@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/utils";
 
-export async function login(
+export async function signIn(
 	email: string,
 	password: string,
 ): Promise<UserResponse> {
@@ -8,5 +8,10 @@ export async function login(
 		email,
 		password,
 	});
+	return response.data;
+}
+
+export async function signUp(userData: SignUpRequest) {
+	const response = await axiosInstance.post("/users/", userData);
 	return response.data;
 }
