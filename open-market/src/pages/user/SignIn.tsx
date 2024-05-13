@@ -97,7 +97,7 @@ const Ul = styled.ul`
 function SignIn() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const { mutate: handleLogin } = useSignInMutation();
+	const { mutate: handleLogin, isPending } = useSignInMutation();
 
 	const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -147,7 +147,9 @@ function SignIn() {
 					/>
 				</Fieldset>
 
-				<Submit type="submit">로그인</Submit>
+				<Submit type="submit" disabled={isPending}>
+					{isPending ? "처리중..." : "로그인"}
+				</Submit>
 				<Ul>
 					<li>
 						<Link to="/signup">회원가입</Link>
