@@ -265,6 +265,10 @@ function ProductEdit() {
 		}
 	}, [userProductDetail]);
 
+	if (userProductDetailError) {
+		navigate("/err404", { replace: true });
+	}
+
 	return (
 		<ProductEditSection>
 			<HelmetSetup

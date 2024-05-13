@@ -199,6 +199,7 @@ function ProductManage() {
 
 	const { data: userProductDetail, isLoading: userProductDetailLoading } =
 		useUserProductDetailSuspenseQuery(productId);
+
 	const { mutate: deleteProduct } = useDeleteProductMutation();
 
 	useRequireAuth();
