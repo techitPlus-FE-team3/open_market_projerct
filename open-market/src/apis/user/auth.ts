@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/utils";
 
-export async function loginUser(
+export async function login(
 	email: string,
 	password: string,
 ): Promise<UserResponse> {
