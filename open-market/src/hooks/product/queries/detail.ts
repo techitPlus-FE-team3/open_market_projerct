@@ -1,4 +1,4 @@
-import { getProductDetail } from "@/apis/product/detail";
+import { getProductDetail } from "@/apis/product/product";
 import { useQuery } from "@tanstack/react-query";
 
 type TParams = {

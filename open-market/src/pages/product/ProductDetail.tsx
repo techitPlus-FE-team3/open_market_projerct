@@ -67,8 +67,6 @@ function ProductDetail() {
 		productId,
 	});
 
-	const error = !!bookMarksError;
-
 	const { data: productOrderData, error: productOrderError } =
 		useProductOrderSuspenseQuery({ productId, currentUser, productDetailData });
 
@@ -175,6 +173,10 @@ function ProductDetail() {
 		setGenre(translateCodeToValue(productDetailData?.extra?.category!));
 	}, [productDetailData, category]);
 
+	if (productDetailError || bookMarksError || productOrderError) {
+		navigate("/err404", { replace: true });
+	}
+
 	return (
 		<section>
 			<HelmetSetup
@@ -183,7 +185,9 @@ function ProductDetail() {
 				url={`productdetail/${productId}`}
 			/>
 			<Heading>상세 페이지</Heading>
-			{bookMarksLoading || productDetailData === undefined ? (
+			{bookMarksLoading ||
+			productDetailLoading ||
+			productDetailData === undefined ? (
 				<ProductDetailSkeleton />
 			) : (
 				<>
