@@ -2,15 +2,14 @@ import AuthInput from "@/components/AuthInput";
 import HelmetSetup from "@/components/HelmetSetup";
 import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
-import { debounce } from "@/utils";
+import { axiosInstance, debounce } from "@/utils";
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import axios from "axios";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import logoImage from "/logo/logo1.svg";
-import { useLogin } from "@/hooks/user/queries/useLogin";
-import { AxiosError } from "axios";
 
 const Title = styled.h2`
 	${Common.a11yHidden};
@@ -106,34 +105,61 @@ function SignIn() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
-	const { data, isError, isSuccess, refetch, error } = useLogin(
-		email,
-		password,
-	);
-
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
-		refetch();
-	}
-
-	useEffect(() => {
-		if (isSuccess && data) {
-			localStorage.setItem("accessToken", data.token.accessToken);
-			localStorage.setItem("refreshToken", data.token.refreshToken);
-			setCurrentUser({
-				_id: data._id,
-				name: data.name,
-				profileImage: data.extra?.profileImage || null,
+		try {
+			const response = await axiosInstance.post<UserResponse>("/users/login", {
+				email,
+				password,
 			});
-			toast.success("로그인 성공!");
-			navigate("/");
-		} else if (isError && error) {
-			const axiosError = error as AxiosError<UserResponse>; // 에러 타입을 AxiosError로 단언
-			const errorMessage = axiosError.response?.data?.message || "로그인 실패";
-			toast.error(errorMessage);
+
+			if (response.data.ok === 1 && response.data.item.token) {
+				const userInfo = response.data.item;
+
+				localStorage.setItem("accessToken", userInfo.token.accessToken);
+				localStorage.setItem("refreshToken", userInfo.token.refreshToken);
+
+				toast.success("로그인 성공!", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
+
+				setCurrentUser({
+					_id: userInfo._id,
+					name: userInfo.name,
+					profileImage: userInfo.extra?.profileImage
+						? userInfo.extra?.profileImage
+						: null,
+				});
+				navigate("/");
+			}
+		} catch (error: any) {
+			if (axios.isAxiosError(error) && error.response) {
+				const errorMessage = error.response.data.message;
+
+				if (
+					error.response.data.errors &&
+					error.response.data.errors.length > 0
+				) {
+					const detailedMessages = error.response.data.errors
+						.map((err: any) => `${err.msg} (${err.path})`)
+						.join("\n");
+					toast.error(`${detailedMessages}`);
+				} else {
+					toast.error(errorMessage);
+				}
+			} else {
+				const errorMessage =
+					error.response && error.response.data
+						? error.response.data.message
+						: "알 수 없는 오류가 발생했습니다.";
+				toast.error(errorMessage);
+			}
 		}
-	}, [isSuccess, isError, data, error, navigate, setCurrentUser]);
+	}
 
 	return (
 		<Backgroud>
