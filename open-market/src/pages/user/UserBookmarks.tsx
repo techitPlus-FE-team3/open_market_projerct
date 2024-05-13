@@ -1,4 +1,5 @@
 import HelmetSetup from "@/components/HelmetSetup";
+import { ProductListSkeleton } from "@/components/SkeletonUI";
 import { useUserBookmarksQuery } from "@/hooks/user/queries/bookmarks";
 import {
 	Heading,
@@ -162,37 +163,41 @@ function UserBookmarks() {
 			/>
 			<Heading>북마크한 목록</Heading>
 			<ProductContainer height="633px">
-				<ProductList>
-					{bookmarkList ? (
-						bookmarkList.reverse()!.map((bookmark: Bookmark) => (
-							<ListItem key={bookmark.product_id}>
-								<StyledLink
-									to={`/productdetail/${bookmark.product_id}`}
-									aria-label={`${bookmark.product.name}의 상세페이지로 이동`}
-								>
-									<img
-										src={bookmark.product.image.path}
-										alt={`${bookmark.product.name}의 앨범 아트`}
-									/>
-									<span title={bookmark.product.name}>
-										{bookmark.product.name}
-									</span>
-								</StyledLink>
-								<button
-									className="iconWrapper"
-									onClick={() => deleteScrap(bookmark._id)}
-								>
-									북마크 삭제
-									<Delete
-										sx={{ color: `${Common.colors.black}`, fontSize: "20px" }}
-									/>
-								</button>
-							</ListItem>
-						))
-					) : (
-						<span>북마크된 상품이 없습니다.</span>
-					)}
-				</ProductList>
+				{isLoadingBookmarks ? (
+					<ProductListSkeleton />
+				) : (
+					<ProductList>
+						{bookmarkList ? (
+							bookmarkList.reverse()!.map((bookmark: Bookmark) => (
+								<ListItem key={bookmark.product_id}>
+									<StyledLink
+										to={`/productdetail/${bookmark.product_id}`}
+										aria-label={`${bookmark.product.name}의 상세페이지로 이동`}
+									>
+										<img
+											src={bookmark.product.image.path}
+											alt={`${bookmark.product.name}의 앨범 아트`}
+										/>
+										<span title={bookmark.product.name}>
+											{bookmark.product.name}
+										</span>
+									</StyledLink>
+									<button
+										className="iconWrapper"
+										onClick={() => deleteScrap(bookmark._id)}
+									>
+										북마크 삭제
+										<Delete
+											sx={{ color: `${Common.colors.black}`, fontSize: "20px" }}
+										/>
+									</button>
+								</ListItem>
+							))
+						) : (
+							<span>북마크된 상품이 없습니다.</span>
+						)}
+					</ProductList>
+				)}
 			</ProductContainer>
 		</ProductSection>
 	);
