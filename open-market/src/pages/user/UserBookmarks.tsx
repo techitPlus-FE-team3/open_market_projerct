@@ -144,8 +144,8 @@ function UserBookmarks() {
 					<ProductListSkeleton />
 				) : (
 					<ProductList>
-						{bookmarkList ? (
-							bookmarkList.reverse()!.map((bookmark: Bookmark) => (
+						{bookmarkList && bookmarkList.length !== 0 ? (
+							bookmarkList.map((bookmark: Bookmark) => (
 								<ListItem key={bookmark.product_id}>
 									<StyledLink
 										to={`/productdetail/${bookmark.product_id}`}
