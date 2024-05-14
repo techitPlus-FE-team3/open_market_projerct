@@ -1,5 +1,6 @@
 import HelmetSetup from "@/components/HelmetSetup";
 import { ProductListSkeleton } from "@/components/SkeletonUI";
+import { useDeleteBookmarkMutation } from "@/hooks/user/mutations/bookmark";
 import { useUserBookmarksQuery } from "@/hooks/user/queries/bookmarks";
 import {
 	Heading,
@@ -8,10 +9,8 @@ import {
 	ProductSection,
 } from "@/styles/ProductListStyle";
 import { Common } from "@/styles/common";
-import { axiosInstance } from "@/utils";
 import styled from "@emotion/styled";
 import { Delete } from "@mui/icons-material";
-import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 type Bookmark = {
@@ -130,29 +129,7 @@ function UserBookmarks() {
 	const { data: bookmarkList, isLoading: isLoadingBookmarks } =
 		useUserBookmarksQuery();
 
-	async function deleteScrap(bookmarkId: number) {
-		try {
-			axiosInstance.delete(`/bookmarks/${bookmarkId}`).then(() => {
-				// setBookmarkList((currentList) =>
-				// 	currentList.filter((bookmark) => bookmark._id !== bookmarkId),
-				// );
-				toast.success("북마크 삭제 완료", {
-					ariaProps: {
-						role: "status",
-						"aria-live": "polite",
-					},
-				});
-			});
-		} catch (error) {
-			console.error(error);
-			toast.error("북마크 삭제 실패", {
-				ariaProps: {
-					role: "status",
-					"aria-live": "polite",
-				},
-			});
-		}
-	}
+	const { mutate: deleteBookmark } = useDeleteBookmarkMutation();
 
 	return (
 		<ProductSection>
@@ -184,7 +161,7 @@ function UserBookmarks() {
 									</StyledLink>
 									<button
 										className="iconWrapper"
-										onClick={() => deleteScrap(bookmark._id)}
+										onClick={() => deleteBookmark(bookmark._id.toString())}
 									>
 										북마크 삭제
 										<Delete
