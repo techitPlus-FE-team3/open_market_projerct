@@ -11,10 +11,9 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Checkbox from "@mui/material/Checkbox";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useRecoilState } from "recoil";
-
-const API_KEY = import.meta.env.VITE_API_SERVER;
+import { useUpdateUserMutation } from "@/hooks/user/queries/useUpdateUserMutation";
 
 const Title = styled.h2`
 	${Common.a11yHidden};
@@ -173,55 +172,56 @@ const Cancel = styled(Link)`
 `;
 
 function UserEdit() {
-	const navigate = useNavigate();
-
 	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 
-	const [isLoading, setIsLoading] = useState<boolean>(true);
-	const [confirmAge, setConfirmAge] = useState(false);
-	const [userData, setUserData] = useState({
-		email: "",
-		name: "",
+	const [formData, setFormData] = useState({
+		userId: currentUser?._id || "",
+		email: currentUser?.email || "",
+		name: currentUser?.name || "",
 		password: "",
 		confirmPassword: "",
-		phone: "",
+		phone: currentUser?.phone || "",
+		profileImage: currentUser?.profileImage || "",
 		extra: {
-			profileImage: "",
 			terms: {
 				recievingMarketingInformation: false,
-				confirmAge: confirmAge,
+				confirmAge: false,
 			},
 		},
 	});
+
 	const [uploadedFileName, setUploadedFileName] = useState("");
 
-	async function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-		const { id, value, type, checked } = event.target;
-		if (type === "checkbox") {
-			setUserData({
-				...userData,
-				extra: {
-					...userData.extra,
-					terms: {
-						...userData.extra.terms,
-						[id]: checked,
-					},
+	const { mutate: updateUser, isPending, error } = useUpdateUserMutation();
+
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = event.target;
+		setFormData((prevState) => ({
+			...prevState,
+			[name]: value,
+		}));
+	};
+
+	const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { id, checked } = event.target;
+		setFormData((prevState) => ({
+			...prevState,
+			extra: {
+				...prevState.extra,
+				terms: {
+					...prevState.extra.terms,
+					[id]: checked,
 				},
-			});
-		} else {
-			setUserData({
-				...userData,
-				[id]: value,
-			});
-		}
-	}
+			},
+		}));
+	};
 
 	async function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
-		if (event.target.files && event.target.files.length > 0) {
+		if (event.target.files) {
 			const file = event.target.files[0];
 			setUploadedFileName(file.name);
 			const formData = new FormData();
-			formData.append("attach", file);
+			formData.append("profileImage", file);
 
 			try {
 				const response = await axiosInstance.post("/files", formData, {
@@ -230,16 +230,10 @@ function UserEdit() {
 					},
 				});
 
-				if (response.data.ok) {
-					const filePath = `${API_KEY}${response.data.file.path}`;
-					setUserData((prevUserData) => ({
-						...prevUserData,
-						extra: {
-							...prevUserData.extra,
-							profileImage: filePath,
-						},
-					}));
-				}
+				setFormData((prevState) => ({
+					...prevState,
+					profileImage: response.data.url,
+				}));
 			} catch (error) {
 				console.error("Image upload failed:", error);
 				toast.error("이미지 업로드에 실패했습니다.", {
@@ -255,7 +249,7 @@ function UserEdit() {
 	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 
-		if (userData.password && userData.password.length < 8) {
+		if (formData.password && formData.password.length < 8) {
 			toast.error("비밀번호는 8자 이상이어야 합니다.", {
 				ariaProps: {
 					role: "status",
@@ -265,7 +259,7 @@ function UserEdit() {
 			return;
 		}
 
-		if (userData.password !== userData.confirmPassword) {
+		if (formData.password !== formData.confirmPassword) {
 			toast.error("비밀번호가 일치하지 않습니다.", {
 				ariaProps: {
 					role: "status",
@@ -274,63 +268,18 @@ function UserEdit() {
 			});
 			return;
 		}
-
-		const payload = userData.password
-			? userData
-			: { ...userData, password: undefined, confirmPassword: undefined };
-
-		try {
-			const response = await axiosInstance.patch(
-				`/users/${currentUser?._id}`,
-				payload,
-			);
-			if (response.data.ok) {
-				toast.success("회원 정보가 수정되었습니다.", {
-					ariaProps: {
-						role: "status",
-						"aria-live": "polite",
-					},
-				});
-				setCurrentUser({
-					...currentUser!,
-					profileImage: userData.extra.profileImage,
-				});
-				navigate("/mypage");
-			}
-		} catch (error) {
-			console.error("Error updating user info:", error);
-			toast.error("회원 정보 수정에 실패했습니다.", {
-				ariaProps: {
-					role: "status",
-					"aria-live": "polite",
-				},
-			});
-		}
+		const { userId, ...userData } = formData;
+		updateUser({
+			userId,
+			userData,
+		});
 	}
 
 	useEffect(() => {
 		async function fetchUserInfo() {
 			try {
 				const response = await axiosInstance.get(`/users/${currentUser?._id}`);
-				if (response.data.ok) {
-					const fetchedData = {
-						...userData,
-						...response.data.item,
-						extra: {
-							...userData.extra,
-							...response.data.item.extra,
-							terms: {
-								...userData.extra.terms,
-								...response.data.item.extra?.terms,
-							},
-						},
-						password: "",
-						confirmPassword: "",
-					};
-					setConfirmAge(response.data.item.extra.terms.confirmAge);
-					setUserData(fetchedData);
-					setIsLoading(false);
-				}
+				setFormData(response.data);
 			} catch (error) {
 				console.error("Error fetching user info:", error);
 				toast.error("회원 정보를 불러오는데 실패했습니다.", {
@@ -342,14 +291,18 @@ function UserEdit() {
 			}
 		}
 
-		fetchUserInfo();
+		if (currentUser) {
+			fetchUserInfo();
+		}
 	}, [currentUser]);
 
-	useRequireAuth();
+	useEffect(() => {
+		if (error) {
+			toast.error("회원정보 수정 오류: " + error.message);
+		}
+	}, [error]);
 
-	if (isLoading) {
-		return <LoadingSpinner width="100vw" height="100vh" />;
-	}
+	useRequireAuth();
 
 	return (
 		<Background>
@@ -366,8 +319,8 @@ function UserEdit() {
 					<ul>
 						<UserImageWrapper>
 							<UserImage
-								src={userData.extra.profileImage || "/user.svg"}
-								alt={`${userData.name}님의 프로필 이미지`}
+								src={formData.extra.profileImage || "/user.svg"}
+								alt={`${formData.name}님의 프로필 이미지`}
 							/>
 							<label htmlFor="userProfileImage">프로필 이미지</label>
 							<div>
@@ -401,7 +354,7 @@ function UserEdit() {
 								id="name"
 								name="name"
 								type="text"
-								defaultValue={userData.name}
+								defaultValue={formData.name}
 								onChange={handleInputChange}
 								placeholder="이름을 입력하세요"
 								required={true}
@@ -417,7 +370,7 @@ function UserEdit() {
 								id="email"
 								name="email"
 								type="email"
-								defaultValue={userData.email}
+								defaultValue={formData.email}
 								onChange={handleInputChange}
 								placeholder="이메일 주소를 입력하세요"
 								required={true}
@@ -447,7 +400,7 @@ function UserEdit() {
 								id="phone"
 								name="phone"
 								type="text"
-								defaultValue={userData.phone}
+								defaultValue={formData.phone}
 								onChange={handleInputChange}
 								placeholder="전화번호를 입력하세요"
 							/>
@@ -459,8 +412,8 @@ function UserEdit() {
 							<div>
 								<StyledCheckbox
 									id="recievingMarketingInformation"
-									checked={!!userData.extra.terms.recievingMarketingInformation}
-									onChange={handleInputChange}
+									checked={!!formData.extra.terms.recievingMarketingInformation}
+									onChange={handleCheckboxChange}
 									icon={<CheckCircleOutlineIcon />}
 									checkedIcon={<CheckCircleIcon />}
 									sx={{
@@ -482,8 +435,8 @@ function UserEdit() {
 								<div>
 									<StyledCheckbox
 										id="confirmAge"
-										checked={!!userData.extra.terms.confirmAge}
-										onChange={handleInputChange}
+										checked={!!formData.extra.terms.confirmAge}
+										onChange={handleCheckboxChange}
 										icon={<CheckCircleOutlineIcon />}
 										checkedIcon={<CheckCircleIcon />}
 										sx={{
@@ -499,7 +452,9 @@ function UserEdit() {
 						)}
 					</ul>
 				</Fieldset>
-				<Submit type="submit">수정하기</Submit>
+				<Submit type="submit" disabled={isPending}>
+					{isPending ? "저장 중..." : "정보 저장"}
+				</Submit>
 				<Cancel to="/mypage">수정취소</Cancel>
 			</Form>
 		</Background>
