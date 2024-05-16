@@ -105,12 +105,6 @@ describe("ProductDetail Component", () => {
 	it("로그인하지 않은 경우, 로그인 후 댓글을 작성할 수 있다는 메시지 표시", async () => {
 		setup({ currentUser: null }); // 로그인하지 않은 상태
 
-		if (screen.queryByTestId("product-detail-skeleton")) {
-			await waitForElementToBeRemoved(() =>
-				screen.queryByTestId("product-detail-skeleton"),
-			);
-		}
-
 		expect(
 			await screen.findByText("로그인 후 댓글을 작성할 수 있습니다."),
 		).toBeInTheDocument();
@@ -122,12 +116,6 @@ describe("ProductDetail Component", () => {
 				currentUser: { ...currentUserMock, _id: 4 }, // 판매자 ID로 설정
 			});
 
-			if (screen.queryByTestId("product-detail-skeleton")) {
-				await waitForElementToBeRemoved(() =>
-					screen.queryByTestId("product-detail-skeleton"),
-				);
-			}
-
 			expect(
 				await screen.findByText("내 상품에는 댓글을 작성할 수 없습니다."),
 			).toBeInTheDocument();
@@ -135,12 +123,6 @@ describe("ProductDetail Component", () => {
 
 		it("상품을 구매하지 않은 경우, 구매 후 댓글 작성 가능하다는 메세지 표시", async () => {
 			setup({ currentUser: currentUserMock }); // 로그인된 상태, 구매 정보 없음
-
-			if (screen.queryByTestId("product-detail-skeleton")) {
-				await waitForElementToBeRemoved(() =>
-					screen.queryByTestId("product-detail-skeleton"),
-				);
-			}
 
 			expect(
 				await screen.findByText("음원 구매 후 댓글을 작성할 수 있습니다."),
