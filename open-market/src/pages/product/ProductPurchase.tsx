@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { ProductInfoWrapper } from "./ProductManage";
+import { usePostProductOrderMutation } from "@/hooks/product/mutations/order";
 
 interface FlexLayoutProps {
 	right?: boolean;
@@ -146,6 +147,8 @@ function ProductPurchase() {
 
 	useRequireAuth();
 
+	const { mutate: postOrder } = usePostProductOrderMutation();
+
 	async function fetchProduct(id: string) {
 		try {
 			const response = await axiosInstance.get<ProductResponse>(
@@ -192,27 +195,7 @@ function ProductPurchase() {
 
 	async function handleProductOrder() {
 		if (confirm("구매하시겠습니까?")) {
-			try {
-				const response = await axiosInstance.post<OrderResponse>("/orders", {
-					products: [
-						{
-							_id: product?._id,
-							quantity: 1,
-						},
-					],
-				});
-				if (response.data.ok) {
-					toast.success("구매 완료!", {
-						ariaProps: {
-							role: "status",
-							"aria-live": "polite",
-						},
-					});
-					navigate(`/orders`);
-				}
-			} catch (error) {
-				console.error(error);
-			}
+			postOrder(productId!);
 		}
 	}
 
