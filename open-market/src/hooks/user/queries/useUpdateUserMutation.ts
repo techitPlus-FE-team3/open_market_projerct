@@ -1,40 +1,25 @@
-import {
-	useMutation,
-	useQueryClient,
-	UseMutationResult,
-	UseMutationOptions,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateUser } from "@/apis/user/auth";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import { currentUserState } from "@/states/authState";
 
-export function useUpdateUserMutation(): UseMutationResult<
-	unknown,
-	Error,
-	UpdateUserRequest,
-	unknown
-> {
+export function useUpdateUserMutation() {
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
 
-	const mutationFn = async (newUserData: UpdateUserRequest) => {
-		if (typeof currentUser?._id === "number") {
-			return await updateUser(currentUser._id.toString(), newUserData);
+	const mutationFn = async (newUserData) => {
+		if (currentUser?._id) {
+			return await updateUser(currentUser._id, newUserData);
 		} else {
 			throw new Error("Invalid user ID");
 		}
 	};
 
-	const mutationOptions: UseMutationOptions<
-		unknown,
-		Error,
-		UpdateUserRequest,
-		unknown
-	> = {
-		onSuccess: (data, variables) => {
+	const mutationOptions = {
+		onSuccess: (_data, variables) => {
 			toast.success("회원 정보가 수정되었습니다.", {
 				ariaProps: {
 					role: "status",
@@ -46,13 +31,13 @@ export function useUpdateUserMutation(): UseMutationResult<
 				prev
 					? {
 							...prev,
-							profileImage: variables.profileImage ?? prev.profileImage,
+							profileImage: variables.extra.profileImage ?? prev.profileImage,
 						}
 					: null,
 			);
 			navigate("/mypage");
 		},
-		onError: (error: any) => {
+		onError: (error) => {
 			console.error("Error updating user info:", error);
 			toast.error("회원 정보 수정에 실패했습니다.", {
 				ariaProps: {
@@ -63,8 +48,5 @@ export function useUpdateUserMutation(): UseMutationResult<
 		},
 	};
 
-	return useMutation<unknown, Error, UpdateUserRequest>(
-		mutationFn,
-		mutationOptions,
-	);
+	return useMutation(mutationFn, mutationOptions);
 }

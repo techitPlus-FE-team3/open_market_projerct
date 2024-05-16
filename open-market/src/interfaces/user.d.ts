@@ -33,14 +33,16 @@ interface CurrentUser {
 	profileImage: string | null;
 }
 interface UpdateUserRequest {
-	email?: string;
-	name?: string;
-	phone?: string;
-	profileImage?: string;
-	extra?: {
-		terms?: {
-			recievingMarketingInformation?: boolean;
-			confirmAge?: boolean;
+	email: string;
+	name: string;
+	password?: string;
+	confirmPassword?: string;
+	phone: string;
+	extra: {
+		profileImage: string;
+		terms: {
+			recievingMarketingInformation: boolean;
+			confirmAge: boolean;
 		};
 	};
 }

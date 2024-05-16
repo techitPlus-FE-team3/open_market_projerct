@@ -16,7 +16,7 @@ export async function signUp(userData: SignUpRequest) {
 	return response.data;
 }
 
-export async function updateUser(userId: string, userData: UpdateUserRequest) {
+export async function updateUser(userId: number, userData: UpdateUserRequest) {
 	const response = await axiosInstance.patch(`/users/${userId}`, userData);
 	return response.data;
 }
