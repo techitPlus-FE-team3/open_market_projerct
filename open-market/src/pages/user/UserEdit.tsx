@@ -175,7 +175,7 @@ const Cancel = styled(Link)`
 
 function UserEdit() {
 	const [currentUser] = useRecoilState(currentUserState);
-	const { mutate: updateUserMutate } = useUpdateUserMutation();
+	const { mutate: updateUserMutate, isPending } = useUpdateUserMutation();
 
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [confirmAge, setConfirmAge] = useState(false);
@@ -476,7 +476,9 @@ function UserEdit() {
 						)}
 					</ul>
 				</Fieldset>
-				<Submit type="submit">수정하기</Submit>
+				<Submit type="submit" disabled={isPending}>
+					{isPending ? "수정중..." : "수정하기"}
+				</Submit>
 				<Cancel to="/mypage">수정취소</Cancel>
 			</Form>
 		</Background>
