@@ -3,7 +3,6 @@ import HelmetSetup from "@/components/HelmetSetup";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useUpdateUserMutation } from "@/hooks/user/queries/useUpdateUserMutation";
-import { useUserDataQuery } from "@/hooks/user/queries/user";
 import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import { axiosInstance } from "@/utils";
@@ -13,7 +12,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Checkbox from "@mui/material/Checkbox";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useRecoilState } from "recoil";
 
 const API_KEY = import.meta.env.VITE_API_SERVER;
@@ -175,23 +174,19 @@ const Cancel = styled(Link)`
 `;
 
 function UserEdit() {
-	const navigate = useNavigate();
+	const [currentUser] = useRecoilState(currentUserState);
+	const { mutate: updateUserMutate } = useUpdateUserMutation();
 
-	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
-
-	const {
-		data: userInfo,
-		isLoading,
-		error,
-	} = useUserDataQuery(currentUser?._id.toString());
-
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [confirmAge, setConfirmAge] = useState(false);
-	const [userData, setUserData] = useState<UpdateUserRequest>({
+	const [userData, setUserData] = useState({
 		email: "",
 		name: "",
+		password: "",
+		confirmPassword: "",
 		phone: "",
-		profileImage: "",
 		extra: {
+			profileImage: "",
 			terms: {
 				recievingMarketingInformation: false,
 				confirmAge: confirmAge,
@@ -200,45 +195,24 @@ function UserEdit() {
 	});
 	const [uploadedFileName, setUploadedFileName] = useState("");
 
-	useEffect(() => {
-		if (userInfo) {
-			setUserData({
-				email: userInfo.email,
-				name: userInfo.name,
-				phone: userInfo.phone,
-				profileImage: userInfo.profileImage,
-				extra: {
-					terms: {
-						recievingMarketingInformation:
-							userInfo.extra?.terms?.recievingMarketingInformation,
-						confirmAge: userInfo.extra?.terms?.confirmAge,
-					},
-				},
-			});
-			setConfirmAge(userInfo.extra?.terms?.confirmAge || false);
-		}
-	}, [userInfo]);
-
-	const updateUserMutation = useUpdateUserMutation(userData);
-
 	async function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
 		const { id, value, type, checked } = event.target;
 		if (type === "checkbox") {
-			setUserData((prevData) => ({
-				...prevData,
+			setUserData({
+				...userData,
 				extra: {
-					...prevData.extra,
+					...userData.extra,
 					terms: {
-						...prevData.extra?.terms,
+						...userData.extra.terms,
 						[id]: checked,
 					},
 				},
-			}));
+			});
 		} else {
-			setUserData((prevData) => ({
-				...prevData,
+			setUserData({
+				...userData,
 				[id]: value,
-			}));
+			});
 		}
 	}
 
@@ -301,28 +275,57 @@ function UserEdit() {
 			return;
 		}
 
-		const payload: UpdateUserRequest = userData.password
+		const payload = userData.password
 			? userData
 			: { ...userData, password: undefined, confirmPassword: undefined };
 
-		updateUserMutation.mutate(payload);
+		updateUserMutate({
+			userId: currentUser?._id as number,
+			userData: payload,
+		});
 	}
+
+	useEffect(() => {
+		async function fetchUserInfo() {
+			try {
+				const response = await axiosInstance.get(`/users/${currentUser?._id}`);
+				if (response.data.ok) {
+					const fetchedData = {
+						...userData,
+						...response.data.item,
+						extra: {
+							...userData.extra,
+							...response.data.item.extra,
+							terms: {
+								...userData.extra.terms,
+								...response.data.item.extra?.terms,
+							},
+						},
+						password: "",
+						confirmPassword: "",
+					};
+					setConfirmAge(response.data.item.extra.terms.confirmAge);
+					setUserData(fetchedData);
+					setIsLoading(false);
+				}
+			} catch (error) {
+				console.error("Error fetching user info:", error);
+				toast.error("회원 정보를 불러오는데 실패했습니다.", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
+			}
+		}
+
+		fetchUserInfo();
+	}, [currentUser]);
 
 	useRequireAuth();
 
 	if (isLoading) {
 		return <LoadingSpinner width="100vw" height="100vh" />;
-	}
-
-	if (error) {
-		toast.error("회원 정보를 불러오는데 실패했습니다.", {
-			ariaProps: {
-				role: "status",
-				"aria-live": "polite",
-			},
-		});
-		navigate("/mypage");
-		return null;
 	}
 
 	return (
