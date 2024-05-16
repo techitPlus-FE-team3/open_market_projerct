@@ -1,25 +1,16 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateUser } from "@/apis/user/auth";
-import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { useRecoilState } from "recoil";
-import { currentUserState } from "@/states/authState";
+import { useNavigate } from "react-router-dom";
 
 export function useUpdateUserMutation() {
-	const queryClient = useQueryClient();
 	const navigate = useNavigate();
-	const [currentUser, setCurrentUser] = useRecoilState(currentUserState);
+	const queryClient = useQueryClient();
 
-	const mutationFn = async (newUserData) => {
-		if (currentUser?._id) {
-			return await updateUser(currentUser._id, newUserData);
-		} else {
-			throw new Error("Invalid user ID");
-		}
-	};
-
-	const mutationOptions = {
-		onSuccess: (_data, variables) => {
+	return useMutation({
+		mutationFn: (data: { userId: number; userData: UpdateUserRequest }) =>
+			updateUser(data.userId, data.userData),
+		onSuccess: () => {
 			toast.success("회원 정보가 수정되었습니다.", {
 				ariaProps: {
 					role: "status",
@@ -27,17 +18,9 @@ export function useUpdateUserMutation() {
 				},
 			});
 			queryClient.invalidateQueries({ queryKey: ["userData"] });
-			setCurrentUser((prev) =>
-				prev
-					? {
-							...prev,
-							profileImage: variables.extra.profileImage ?? prev.profileImage,
-						}
-					: null,
-			);
 			navigate("/mypage");
 		},
-		onError: (error) => {
+		onError: (error: any) => {
 			console.error("Error updating user info:", error);
 			toast.error("회원 정보 수정에 실패했습니다.", {
 				ariaProps: {
@@ -46,7 +29,5 @@ export function useUpdateUserMutation() {
 				},
 			});
 		},
-	};
-
-	return useMutation(mutationFn, mutationOptions);
+	});
 }
