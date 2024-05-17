@@ -9,6 +9,7 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CheckIcon from "@mui/icons-material/Check";
 import DownloadIcon from "@mui/icons-material/Download";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 const API_KEY = import.meta.env.VITE_API_SERVER;
 
@@ -116,6 +117,9 @@ function ProductDetailExtraLink({
 
 	const { mutate: deleteBookmark } = useDeleteBookmarkMutation();
 	const { mutate: postBookmark } = usePostBookmarkMutation();
+	const [bookmarkCount, setBookmarkCount] = useState(
+		product?.bookmarks?.length || 0,
+	);
 
 	const navigate = useNavigate();
 
@@ -128,8 +132,10 @@ function ProductDetailExtraLink({
 	function handleScrap() {
 		if (bookMarkData) {
 			deleteBookmark({ bookmarkId: bookMarkData._id, productId: product!._id });
+			setBookmarkCount((prevCount) => prevCount - 1);
 		} else if (bookMarkData === undefined && currentUser) {
 			postBookmark({ currentUserId: currentUser._id, productId: product!._id });
+			setBookmarkCount((prevCount) => prevCount + 1);
 		}
 	}
 
@@ -146,7 +152,7 @@ function ProductDetailExtraLink({
 						<BookmarkBorderIcon sx={{ color: `primary.light` }} />
 					)}
 					북마크
-					{product?.bookmarks?.length}
+					{bookmarkCount}
 				</BookmarkButton>
 				{!currentUser ? (
 					<NoUserPurchaseButton
