@@ -22,7 +22,7 @@ interface Product {
 		soundFile: ProductFiles;
 	};
 	replies?: Reply[];
-	bookmarks?: number | Bookmark[];
+	bookmarks?: Bookmark[];
 }
 
 interface ProductResponse {
@@ -59,6 +59,16 @@ interface Reply {
 	};
 }
 
+interface PostReply {
+	order_id: number;
+	product_id: number;
+	rating: number;
+	content: string;
+	extra?: {
+		profileImage: string | null | undefined;
+	};
+}
+
 interface ReplyProduct {
 	_id: number;
 	name: string;
@@ -72,6 +82,11 @@ interface ReplyProduct {
 interface ReplyResponse {
 	ok: number;
 	item: Reply;
+}
+
+interface PostReplyResponse {
+	ok: number;
+	item: PostReply;
 }
 
 interface ReplyListResponse {
