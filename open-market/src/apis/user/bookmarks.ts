@@ -1,8 +1,12 @@
 import { axiosInstance } from "@/utils";
 
 export async function getUserBookmarks() {
-	const response = await axiosInstance.get(`/bookmarks`);
-	return response.data.item;
+	try {
+		const response = await axiosInstance.get(`/bookmarks`);
+		return response.data.item;
+	} catch (error) {
+		console.error(error);
+	}
 }
 
 export async function deleteUserBookmark(bookmarkId: string | number) {
