@@ -10,18 +10,26 @@ export async function getUserBookmarks() {
 }
 
 export async function deleteUserBookmark(bookmarkId: string | number) {
-	const response = await axiosInstance.delete(`/bookmarks/${bookmarkId}`);
-	return response.data;
+	try {
+		const response = await axiosInstance.delete(`/bookmarks/${bookmarkId}`);
+		return response.data;
+	} catch (error) {
+		console.error(error);
+	}
 }
 
 export async function postUserBookmark(
 	currentUserId: string | number,
 	productId: string | number,
 ) {
-	const response = await axiosInstance.post(`/bookmarks/`, {
-		user_id: currentUserId,
-		product_id: productId,
-		memo: "",
-	});
-	return response.data;
+	try {
+		const response = await axiosInstance.post(`/bookmarks/`, {
+			user_id: currentUserId,
+			product_id: productId,
+			memo: "",
+		});
+		return response.data;
+	} catch (error) {
+		console.error(error);
+	}
 }
