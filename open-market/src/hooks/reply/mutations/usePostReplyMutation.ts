@@ -7,6 +7,7 @@ export function usePostReplyMutation() {
 
 	const mutation = useMutation({
 		mutationFn: postProductReply,
+
 		onMutate: async (newReply: PostReply) => {
 			await queryClient.cancelQueries({ queryKey: ["productReplies"] });
 			const previousReplies = queryClient.getQueryData<Reply>([
@@ -14,13 +15,12 @@ export function usePostReplyMutation() {
 			]);
 			queryClient.setQueryData<PostReply[]>(
 				["productReplies"],
-				(prevReplies) => [...prevReplies!, newReply],
+				// undefined일 때는 빈배열 반환
+				(prevReplies = []) => [...prevReplies, newReply],
 			);
 			return previousReplies;
 		},
-		onError: (_error, _newReply, context: Reply | undefined) => {
-			queryClient.setQueryData(["productReplies"], context);
-		},
+
 		onSuccess: () => {
 			toast.success("댓글을 작성했습니다.", {
 				ariaProps: {
@@ -29,6 +29,11 @@ export function usePostReplyMutation() {
 				},
 			});
 			queryClient.invalidateQueries({ queryKey: ["productReplies"] });
+		},
+
+		onError: (error, _newReply, context: Reply | undefined) => {
+			console.error(error);
+			queryClient.setQueryData(["productReplies"], context);
 		},
 	});
 
