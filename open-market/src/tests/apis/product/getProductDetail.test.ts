@@ -74,12 +74,10 @@ describe("getProductDetail", () => {
 	});
 
 	it("상품 상세 정보를 불러오지 못했을 때 에러가 발생한다.", async () => {
-		const mockError = new Error("product id is undefined");
+		const mockError = new Error("Network Error");
 		axiosInstance.get = vi.fn().mockRejectedValue(mockError);
 
-		await expect(getProductDetail(undefined)).rejects.toThrow(
-			"product id is undefined",
-		);
-		expect(axiosInstance.get).toHaveBeenCalledWith(`/products/${undefined}`);
+		await expect(getProductDetail(productId)).rejects.toThrow("Network Error");
+		expect(axiosInstance.get).toHaveBeenCalledWith(`/products/${productId}`);
 	});
 });
