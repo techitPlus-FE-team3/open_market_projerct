@@ -2,19 +2,26 @@ import { postProductReply } from "@/apis/product/replies";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-export function usePostReplyMutation() {
+type TParams = {
+	productId?: string;
+};
+
+export function usePostReplyMutation({ productId }: TParams) {
 	const queryClient = useQueryClient();
 
 	const mutation = useMutation({
 		mutationFn: postProductReply,
 
 		onMutate: async (newReply: PostReply) => {
-			await queryClient.cancelQueries({ queryKey: ["productReplies"] });
+			await queryClient.cancelQueries({
+				queryKey: ["productReplies", productId],
+			});
 			const previousReplies = queryClient.getQueryData<Reply>([
 				"productReplies",
+				productId,
 			]);
 			queryClient.setQueryData<PostReply[]>(
-				["productReplies"],
+				["productReplies", productId],
 				// undefined일 때는 빈배열 반환
 				(prevReplies = []) => [...prevReplies, newReply],
 			);
@@ -28,7 +35,9 @@ export function usePostReplyMutation() {
 					"aria-live": "polite",
 				},
 			});
-			queryClient.invalidateQueries({ queryKey: ["productReplies"] });
+			queryClient.invalidateQueries({
+				queryKey: ["productReplies", productId],
+			});
 		},
 
 		onError: (error, _newReply, context: Reply | undefined) => {
