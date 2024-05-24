@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { HelmetProvider } from "react-helmet-async";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const mockedNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {
@@ -16,6 +17,7 @@ vi.mock("react-router-dom", async () => {
 
 describe("로그인 페이지 입력 창 렌더링 테스트", async () => {
 	const mockedPost = vi.fn();
+	const queryClient = new QueryClient();
 
 	beforeEach(() => {
 		vi.mock("@/utils/axiosInstance", () => ({
@@ -37,7 +39,9 @@ describe("로그인 페이지 입력 창 렌더링 테스트", async () => {
 	it("로그인 페이지 렌더링 테스트", () => {
 		render(
 			<HelmetProvider>
-				<SignIn />
+				<QueryClientProvider client={queryClient}>
+					<SignIn />
+				</QueryClientProvider>
 			</HelmetProvider>,
 		);
 
@@ -54,7 +58,9 @@ describe("로그인 페이지 입력 창 렌더링 테스트", async () => {
 	it("로그인 페이지 값 입력 테스트", async () => {
 		render(
 			<HelmetProvider>
-				<SignIn />
+				<QueryClientProvider client={queryClient}>
+					<SignIn />
+				</QueryClientProvider>
 			</HelmetProvider>,
 		);
 		const emailInput = screen.getByLabelText("이메일");
