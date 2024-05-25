@@ -20,7 +20,7 @@ export const usePostProductMutation = () => {
 
 			const productId = response._id;
 
-			navigate(`/productmanage/${productId}`);
+			navigate(`/product/manage/${productId}`);
 
 			localStorage.removeItem("userProductsInfo");
 		},

@@ -169,7 +169,7 @@ function ProductDetail() {
 			<HelmetSetup
 				title="Product Detail"
 				description="음원 상세 페이지"
-				url={`productdetail/${productId}`}
+				url={`product/${productId}`}
 			/>
 			<Heading>상세 페이지</Heading>
 			{productDetailLoading || productDetailData === undefined ? (

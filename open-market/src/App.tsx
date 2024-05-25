@@ -64,19 +64,16 @@ function App() {
 						<Route index element={<Index />} />
 						{/* sell */}
 						<Route
-							path="productregistration"
+							path="product/registration"
 							element={<ProductRegistration />}
 						/>
-						<Route path="productedit/:productId" element={<ProductEdit />} />
+						<Route path="product/edit/:productId" element={<ProductEdit />} />
 						<Route
-							path="productmanage/:productId"
+							path="product/manage/:productId"
 							element={<ProductManage />}
 						/>
 						{/* buy */}
-						<Route
-							path="productdetail/:productId"
-							element={<ProductDetail />}
-						/>
+						<Route path="product/:productId" element={<ProductDetail />} />
 						<Route
 							path="productpurchase/:productId"
 							element={<ProductPurchase />}

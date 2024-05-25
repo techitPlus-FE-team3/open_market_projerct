@@ -70,7 +70,7 @@ describe("usePostProductMutation", () => {
 		);
 
 		expect(mockNavigate).toHaveBeenCalledWith(
-			`/productmanage/${mockResponse._id}`,
+			`/product/manage/${mockResponse._id}`,
 		);
 	});
 

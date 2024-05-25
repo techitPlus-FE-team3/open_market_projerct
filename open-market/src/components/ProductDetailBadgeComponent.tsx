@@ -166,7 +166,7 @@ function ProductDetailExtraLink({
 					</NoUserPurchaseButton>
 				) : currentUser && currentUser._id === product?.seller_id ? (
 					<ProductExtraLink
-						to={`/productmanage/${product?._id}`}
+						to={`/product/manage/${product?._id}`}
 						aria-label="판매 음원 관리 페이지로 이동"
 					>
 						<CheckIcon />

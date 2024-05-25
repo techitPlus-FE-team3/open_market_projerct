@@ -237,7 +237,7 @@ function ProductManage() {
 			<HelmetSetup
 				title="Manage Product"
 				description="판매 음원 관리"
-				url={`productmanage/${productId}`}
+				url={`product/manage/${productId}`}
 			/>
 			<h2 className="a11yHidden">상품 관리</h2>
 			{userProductDetailLoading ? (
@@ -327,7 +327,7 @@ function ProductManage() {
 							text="삭제"
 						/>
 						<LinkedEditButton
-							to={`/productedit/${userProductDetail?._id}`}
+							to={`/product/edit/${userProductDetail?._id}`}
 							title="수정하러 가기"
 						>
 							수정
