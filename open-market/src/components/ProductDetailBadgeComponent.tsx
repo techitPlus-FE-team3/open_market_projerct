@@ -1,6 +1,6 @@
 import { useDeleteBookmarkMutation } from "@/hooks/bookmark/mutations/useDeleteBookmarkMutation";
 import { usePostBookmarkMutation } from "@/hooks/bookmark/mutations/usePostBookmarkMutation";
-import { useBookMarksSuspenseQuery } from "@/hooks/bookmark/queris/useBookMarksSuspenseQuery";
+import { useBookMarksSuspenseQuery } from "@/hooks/bookmark/queries/useBookMarksSuspenseQuery";
 
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";

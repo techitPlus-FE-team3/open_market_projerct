@@ -1,7 +1,7 @@
 import HelmetSetup from "@/components/HelmetSetup";
 import { ProductListSkeleton } from "@/components/SkeletonUI";
 import { useDeleteBookmarkMutation } from "@/hooks/bookmark/mutations/useDeleteBookmarkMutation";
-import { useUserBookmarksQuery } from "@/hooks/bookmark/queris/useUserBookmarksQuery";
+import { useUserBookmarksQuery } from "@/hooks/bookmark/queries/useUserBookmarksQuery";
 import {
 	Heading,
 	ProductContainer,
