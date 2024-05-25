@@ -5,7 +5,6 @@ import Textarea from "@/components/Textarea";
 import { useDeleteProductMutation } from "@/hooks/product/mutations/delete";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useUserProductDetailSuspenseQuery } from "@/hooks/user/queries/detail";
-import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";
 import { Common } from "@/styles/common";
 import { numberWithComma } from "@/utils";
