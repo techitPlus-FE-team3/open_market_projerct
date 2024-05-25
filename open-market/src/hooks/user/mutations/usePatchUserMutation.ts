@@ -1,15 +1,15 @@
-import { updateUser } from "@/apis/user/auth";
+import { patchUserData } from "@/apis/user/patch";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-export function useUpdateUserMutation() {
+export function usePatchUserDataMutation() {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: (data: { userId: number; userData: UpdateUserRequest }) =>
-			updateUser(data.userId, data.userData),
+		mutationFn: (data: { userId: number; userData: patchUserDataRequest }) =>
+			patchUserData(data.userId, data.userData),
 		onSuccess: () => {
 			toast.success("회원 정보가 수정되었습니다.", {
 				ariaProps: {

@@ -6,7 +6,7 @@ import { useUserOrdersQuery } from "@/hooks/order/queries/useUserOrdersQuery";
 import { useUserProductsQuery } from "@/hooks/product/queries/useUserProductsQueries";
 import { useUserRepliesQuery } from "@/hooks/reply/queries/useUserRepliesQuery";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
-import { useUserDataQuery } from "@/hooks/user/queries/user";
+import { useUserDataQuery } from "@/hooks/user/queries/useUserDataQuery";
 import { currentUserState } from "@/states/authState";
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
