@@ -11,8 +11,8 @@ vi.mock("react-router-dom", () => ({
 	useNavigate: vi.fn(),
 }));
 
-vi.mock("@/apis/product/product", () => ({
-	...vi.importActual("@/apis/product/product"),
+vi.mock("@/apis/product/patch", () => ({
+	...vi.importActual("@/apis/product/patch"),
 	patchProductDetail: vi.fn(),
 }));
 
