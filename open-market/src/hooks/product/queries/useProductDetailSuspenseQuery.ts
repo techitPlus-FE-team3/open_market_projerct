@@ -7,7 +7,7 @@ type TParams = {
 
 export const useProductDetailSuspenseQuery = ({ productId }: TParams) => {
 	const { data, error, isLoading, refetch } = useQuery({
-		queryKey: ["productdetail", productId],
+		queryKey: ["productDetail", productId],
 		queryFn: () => getProductDetail(productId),
 		enabled: productId !== undefined,
 	});

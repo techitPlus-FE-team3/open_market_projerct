@@ -20,7 +20,7 @@ export const usePatchProductMutation = () => {
 		onMutate: async ({ productId, newProduct }) => {
 			// 현재 상태를 저장하여 에러 시 롤백할 수 있게 합니다.
 			await queryClient.cancelQueries({
-				queryKey: ["userproductdetail", productId],
+				queryKey: ["userProductDetail", productId],
 			});
 			const previousProduct = queryClient.getQueryData<ProductEditForm>([
 				"productDetail",
@@ -29,7 +29,7 @@ export const usePatchProductMutation = () => {
 
 			// 낙관적 업데이트를 적용합니다.
 			if (newProduct && productId) {
-				queryClient.setQueryData(["userproductdetail", productId], {
+				queryClient.setQueryData(["userProductDetail", productId], {
 					...previousProduct,
 					...newProduct,
 				});
