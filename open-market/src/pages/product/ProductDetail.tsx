@@ -35,9 +35,6 @@ function ProductDetail() {
 
 	const { productId } = useParams();
 
-	const { data: allReplies, isLoading: isLoadingProductReplies } =
-		useProductRepliesQuery({ productId });
-
 	const currentUser = useRecoilValue(currentUserState);
 	const category = useRecoilValue(codeState);
 
@@ -66,6 +63,9 @@ function ProductDetail() {
 		currentUser,
 		productDetailData,
 	});
+
+	const { data: allReplies, isLoading: isLoadingProductReplies } =
+		useProductRepliesQuery({ productId });
 
 	const {
 		mutate: submitReply,
