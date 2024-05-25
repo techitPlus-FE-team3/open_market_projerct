@@ -192,7 +192,6 @@ function ProductManage() {
 
 	const { productId } = useParams();
 
-	const currentUser = useRecoilValue(currentUserState);
 	const category = useRecoilValue(codeState);
 
 	const [genre, setGenre] = useState<string>();
