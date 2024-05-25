@@ -1,7 +1,7 @@
 import {
 	getUserProducts,
 	getUserProductsWithPageParam,
-} from "@/apis/user/products";
+} from "@/apis/product/get";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export function useUserProductsQuery() {

@@ -4,7 +4,7 @@ import { ProductOrderSkeleton } from "@/components/SkeletonUI";
 import Textarea from "@/components/Textarea";
 import { usePostProductOrderMutation } from "@/hooks/order/mutations/usePostProductOrderMutation";
 import { useProductOrderSuspenseQuery } from "@/hooks/order/queries/useProductOrderSuspenseQuery";
-import { useProductDetailSuspenseQuery } from "@/hooks/product/queries/detail";
+import { useProductDetailSuspenseQuery } from "@/hooks/product/queries/useProductDetailSuspenseQuery";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { currentUserState } from "@/states/authState";
 import { codeState } from "@/states/categoryState";

@@ -13,7 +13,7 @@ import {
 	ProductRepliesSkeleton,
 } from "@/components/SkeletonUI";
 import { useProductOrderSuspenseQuery } from "@/hooks/order/queries/useProductOrderSuspenseQuery";
-import { useProductDetailSuspenseQuery } from "@/hooks/product/queries/detail";
+import { useProductDetailSuspenseQuery } from "@/hooks/product/queries/useProductDetailSuspenseQuery";
 import { usePostReplyMutation } from "@/hooks/reply/mutations/usePostReplyMutation";
 import { useProductRepliesQuery } from "@/hooks/reply/queries/useProductRepliesQuery";
 import { currentUserState } from "@/states/authState";

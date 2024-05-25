@@ -3,8 +3,8 @@ import HelmetSetup from "@/components/HelmetSetup";
 import { UserProductListItem } from "@/components/ProductListComponent";
 import SearchBar from "@/components/SearchBar";
 import { ProductListSkeleton } from "@/components/SkeletonUI";
+import { useUserProductsInfiniteQuery } from "@/hooks/product/queries/useUserProductsQueries";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
-import { useUserProductsInfiniteQuery } from "@/hooks/user/queries/products";
 import {
 	Heading,
 	MoreButton,

@@ -1,5 +1,4 @@
-import { patchProductDetail } from "@/apis/product/product";
-import { ProductEditForm } from "@/pages/product/ProductEdit";
+import { patchProductDetail } from "@/apis/product/patch";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";

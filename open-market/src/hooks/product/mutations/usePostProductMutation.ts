@@ -1,4 +1,4 @@
-import { ProductRegisterForm, postProductDetail } from "@/apis/product/product";
+import { postProductDetail } from "@/apis/product/post";
 import { useMutation } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";

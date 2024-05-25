@@ -2,7 +2,7 @@ import FunctionalButton from "@/components/FunctionalButton";
 import HelmetSetup from "@/components/HelmetSetup";
 import { ProductManagementSkeleton } from "@/components/SkeletonUI";
 import Textarea from "@/components/Textarea";
-import { useDeleteProductMutation } from "@/hooks/product/mutations/delete";
+import { useDeleteProductMutation } from "@/hooks/product/mutations/useDeleteProductMutation";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useUserProductDetailSuspenseQuery } from "@/hooks/user/queries/detail";
 import { codeState } from "@/states/categoryState";
@@ -274,7 +274,9 @@ function ProductManage() {
 								<ProductItemWrapper wide>
 									<ProductLabel bar>해시태그</ProductLabel>
 									<ProductValue>
-										{userProductDetail?.extra?.tags?.map((i) => `#${i} `)}
+										{userProductDetail?.extra?.tags?.map(
+											(i: string) => `#${i} `,
+										)}
 									</ProductValue>
 								</ProductItemWrapper>
 							</FlexLayout>

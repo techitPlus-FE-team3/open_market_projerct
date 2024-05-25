@@ -5,7 +5,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import SelectGenre from "@/components/SelectGenre";
 import { ProductEditSkeleton } from "@/components/SkeletonUI";
 import Textarea from "@/components/Textarea";
-import { usePatchProductMutation } from "@/hooks/product/mutations/edit";
+import { usePatchProductMutation } from "@/hooks/product/mutations/usePatchProductMutation";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useUserProductDetailSuspenseQuery } from "@/hooks/user/queries/detail";
 import { codeState } from "@/states/categoryState";
@@ -27,21 +27,6 @@ interface FlexLayoutProps {
 	right?: boolean;
 }
 
-export interface ProductEditForm {
-	show: boolean;
-	name: string;
-	mainImages: ProductFiles[];
-	content: string;
-	price: number;
-	shippingFees: number;
-	buyQuantity: number;
-	extra: {
-		category: string;
-		tags: string[];
-		soundFile: ProductFiles;
-		sellerName: string;
-	};
-}
 const ProductEditSection = styled.section`
 	background-color: ${Common.colors.white};
 	padding-top: 100px;

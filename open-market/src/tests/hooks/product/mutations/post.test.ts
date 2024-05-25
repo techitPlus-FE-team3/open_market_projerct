@@ -1,5 +1,5 @@
-import { postProductDetail } from "@/apis/product/product";
-import { usePostProductMutation } from "@/hooks/product/mutations/registration";
+import { postProductDetail } from "@/apis/product/post";
+import { usePostProductMutation } from "@/hooks/product/mutations/usePostProductMutation";
 import TestWrapper from "@/tests/Wrapper";
 import { renderHook, waitFor } from "@testing-library/react";
 import toast from "react-hot-toast";

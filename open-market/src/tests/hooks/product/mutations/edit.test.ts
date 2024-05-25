@@ -1,5 +1,5 @@
-import { patchProductDetail } from "@/apis/product/product";
-import { usePatchProductMutation } from "@/hooks/product/mutations/edit";
+import { patchProductDetail } from "@/apis/product/patch";
+import { usePatchProductMutation } from "@/hooks/product/mutations/usePatchProductMutation";
 import TestWrapper from "@/tests/Wrapper";
 import { renderHook, waitFor } from "@testing-library/react";
 import toast from "react-hot-toast";
