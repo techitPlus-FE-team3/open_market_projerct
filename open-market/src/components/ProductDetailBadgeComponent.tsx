@@ -1,8 +1,7 @@
-import { useBookMarksSuspenseQuery } from "@/hooks/product/queries/bookmark";
-import {
-	useDeleteBookmarkMutation,
-	usePostBookmarkMutation,
-} from "@/hooks/user/mutations/bookmark";
+import { useDeleteBookmarkMutation } from "@/hooks/bookmark/mutations/useDeleteBookmarkMutation";
+import { usePostBookmarkMutation } from "@/hooks/bookmark/mutations/usePostBookmarkMutation";
+import { useBookMarksSuspenseQuery } from "@/hooks/bookmark/queris/useBookMarksSuspenseQuery";
+
 import { Common } from "@/styles/common";
 import styled from "@emotion/styled";
 import BookmarkIcon from "@mui/icons-material/Bookmark";

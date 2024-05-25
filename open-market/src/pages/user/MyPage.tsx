@@ -1,8 +1,8 @@
 import HelmetSetup from "@/components/HelmetSetup";
 import MyPageList from "@/components/MyPageList";
 import { MyPageListSkeleton, UserDataSkeleton } from "@/components/SkeletonUI";
+import { useUserBookmarksQuery } from "@/hooks/bookmark/queris/useUserBookmarksQuery";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
-import { useUserBookmarksQuery } from "@/hooks/user/queries/bookmarks";
 import { useUserOrdersQuery } from "@/hooks/user/queries/orders";
 import { useUserProductsQuery } from "@/hooks/user/queries/products";
 import { useUserRepliesQuery } from "@/hooks/user/queries/replies";

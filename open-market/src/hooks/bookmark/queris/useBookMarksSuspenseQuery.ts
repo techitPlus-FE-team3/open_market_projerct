@@ -1,4 +1,5 @@
-import { getProductBookmark } from "@/apis/product/bookmark";
+
+import { getProductBookmark } from "@/apis/bookmark/get";
 import { useQuery } from "@tanstack/react-query";
 
 type TParams = {

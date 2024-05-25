@@ -1,4 +1,4 @@
-import { getUserBookmarks } from "@/apis/user/bookmarks";
+import { getUserBookmarks } from "@/apis/bookmark/get";
 import { useQuery } from "@tanstack/react-query";
 
 export function useUserBookmarksQuery() {

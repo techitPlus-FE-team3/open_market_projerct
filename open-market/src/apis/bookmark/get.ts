@@ -13,3 +13,8 @@ export async function getProductBookmark(
 		console.error(error);
 	}
 }
+
+export async function getUserBookmarks() {
+	const response = await axiosInstance.get(`/bookmarks`);
+	return response.data.item;
+}
