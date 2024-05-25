@@ -19,7 +19,7 @@ export function usePostProductOrderMutation() {
 						"aria-live": "polite",
 					},
 				});
-				navigate(`/orders`);
+				navigate(`/user/orders`);
 			} else {
 				toast.error("구매하지 못했습니다.", {
 					ariaProps: {
