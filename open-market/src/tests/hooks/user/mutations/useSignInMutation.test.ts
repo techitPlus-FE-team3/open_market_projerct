@@ -6,20 +6,29 @@ import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { vi, describe, it, expect, beforeEach, MockInstance } from "vitest";
 
-vi.mock("react-router-dom", () => ({
-	...vi.importActual("react-router-dom"),
-	useNavigate: vi.fn(),
-}));
+vi.mock("react-router-dom", async () => {
+	const actual = await vi.importActual("react-router-dom");
+	return {
+		...actual,
+		useNavigate: vi.fn(),
+	};
+});
 
-vi.mock("@/apis/user/auth", () => ({
-	...vi.importActual("@/apis/user/auth"),
-	signIn: vi.fn(),
-}));
+vi.mock("@/apis/user/auth", async () => {
+	const actual = await vi.importActual("@/apis/user/auth");
+	return {
+		...actual,
+		signIn: vi.fn(),
+	};
+});
 
-vi.mock("recoil", () => ({
-	...vi.importActual("recoil"),
-	useSetRecoilState: vi.fn(),
-}));
+vi.mock("recoil", async () => {
+	const actual = await vi.importActual("recoil");
+	return {
+		...actual,
+		useSetRecoilState: vi.fn(),
+	};
+});
 
 const mockSignIn = signIn as unknown as MockInstance;
 
@@ -56,6 +65,10 @@ describe("useSignInMutation 훅 테스트", () => {
 		Object.defineProperty(window, "localStorage", {
 			value: localStorageMock,
 		});
+	});
+
+	afterEach(() => {
+		vi.clearAllMocks();
 	});
 
 	it("성공적인 로그인", async () => {
