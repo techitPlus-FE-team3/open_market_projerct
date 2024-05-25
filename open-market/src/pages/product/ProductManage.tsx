@@ -211,7 +211,7 @@ function ProductManage() {
 
 		deleteProduct(productId, {
 			onSuccess: () => {
-				navigate(`/user/${currentUser?._id}/products`);
+				navigate(`/user/products`);
 			},
 			onError: (error) => {
 				console.error("상품 삭제 중 오류 발생", error);
@@ -245,7 +245,7 @@ function ProductManage() {
 			) : (
 				<ProductInfoWrapper>
 					<UserProductListLink
-						to={`/user/${currentUser!._id}/products`}
+						to={`/user/products`}
 						aria-label="판매 상품 목록으로 이동"
 					>
 						&gt; 판매 상품 목록

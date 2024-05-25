@@ -43,7 +43,7 @@ export default function UserReplies() {
 			<HelmetSetup
 				title="My Replies"
 				description="작성한 댓글 목록"
-				url="replies"
+				url="user/replies"
 			/>
 			<Heading>내가 쓴 댓글</Heading>
 			{isLoadingUserReplies ? (

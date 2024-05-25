@@ -303,7 +303,7 @@ function UserEdit() {
 			<HelmetSetup
 				title="Edit User"
 				description="회원 정보 수정"
-				url={`useredit/${currentUser!._id}`}
+				url={`user/edit`}
 			/>
 			<Title>회원정보 수정</Title>
 			<Form onSubmit={handleSubmit}>

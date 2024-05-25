@@ -80,11 +80,11 @@ function App() {
 						/>
 						{/* user */}
 						<Route path="mypage" element={<MyPage />} />
-						<Route path="useredit/:userId" element={<UserEdit />} />
-						<Route path="userbookmarks" element={<UserBookmarks />} />
-						<Route path="user/:userId/products" element={<UserProducts />} />
-						<Route path="orders" element={<UserOrders />} />
-						<Route path="replies" element={<UserReplies />} />
+						<Route path="user/edit" element={<UserEdit />} />
+						<Route path="user/bookmarks" element={<UserBookmarks />} />
+						<Route path="user/products" element={<UserProducts />} />
+						<Route path="user/orders" element={<UserOrders />} />
+						<Route path="user/replies" element={<UserReplies />} />
 						{/* signin, signup */}
 						<Route path="signin" element={<SignIn />} />
 						<Route path="signup" element={<SignUp />} />

@@ -107,7 +107,7 @@ function UserProducts() {
 			<HelmetSetup
 				title="My Products"
 				description="판매 음원 목록"
-				url="orders"
+				url="user/orders"
 			/>
 			<Heading>상품관리</Heading>
 			{userProductsInfo ? (

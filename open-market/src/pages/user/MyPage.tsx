@@ -239,9 +239,7 @@ function MyPage() {
 										<p>{formatPhoneNumber(userData.phone)}</p>
 									</div>
 								</PersonalInfoItem>
-								<StyledLink to={`/useredit/${currentUser!._id}`}>
-									회원정보 수정
-								</StyledLink>
+								<StyledLink to={`/user/edit`}>회원정보 수정</StyledLink>
 							</PersonalInfo>
 							<Comment>
 								<Title>내가 쓴 댓글</Title>
@@ -261,7 +259,10 @@ function MyPage() {
 										<span>작성한 댓글이 없습니다.</span>
 									)}
 								</CommentInfo>
-								<StyledLink to={"/replies"} aria-label="내가 쓴 댓글 전체보기">
+								<StyledLink
+									to={"user/replies"}
+									aria-label="내가 쓴 댓글 전체보기"
+								>
 									전체보기
 								</StyledLink>
 							</Comment>
@@ -286,7 +287,7 @@ function MyPage() {
 						</Link>
 					)}
 					linkText="전체보기"
-					linkUrl="/userbookmarks"
+					linkUrl="/user/bookmarks"
 				/>
 			)}
 			<MyPageList
@@ -320,7 +321,7 @@ function MyPage() {
 						</Link>
 					)}
 					linkText="전체보기"
-					linkUrl="/orders"
+					linkUrl="user/orders"
 				/>
 			)}
 			{isLoadingProducts ? (
@@ -340,7 +341,7 @@ function MyPage() {
 						</Link>
 					)}
 					linkText="전체보기"
-					linkUrl={`/user/${currentUser!._id}/products`}
+					linkUrl={`/user/products`}
 				/>
 			)}
 		</Section>
