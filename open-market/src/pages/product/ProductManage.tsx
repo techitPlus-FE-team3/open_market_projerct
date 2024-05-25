@@ -261,9 +261,7 @@ function ProductManage() {
 								<ProductLabel bar>제목</ProductLabel>
 								<ProductValue>{userProductDetail?.name}</ProductValue>
 								{userProductDetail?.show ? (
-									<ProductDetailLink
-										to={`/productdetail/${userProductDetail?._id}`}
-									>
+									<ProductDetailLink to={`/product/${userProductDetail?._id}`}>
 										상세 페이지 확인
 									</ProductDetailLink>
 								) : (

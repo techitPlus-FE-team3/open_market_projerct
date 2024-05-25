@@ -278,7 +278,7 @@ function MyPage() {
 					data={isLoadingBookmarks ? [] : (bookmarkDetails || []).slice(0, 5)}
 					emptyMessage="북마크가 없습니다."
 					renderItem={(item) => (
-						<Link to={`/productdetail/${item.product_id}`}>
+						<Link to={`/product/${item.product_id}`}>
 							<Image
 								src={`${item.product.image.path}`}
 								alt={`${item.product.name}의 앨범 아트`}
@@ -295,7 +295,7 @@ function MyPage() {
 				data={historyList ? historyList.slice(0, 5) : []}
 				emptyMessage="히스토리가 없습니다."
 				renderItem={(item) => (
-					<Link to={`/productdetail/${item._id}`}>
+					<Link to={`/product/${item._id}`}>
 						<Image
 							src={`${item.mainImages[0].path}`}
 							alt={`${item.name}의 앨범 아트`}
@@ -312,7 +312,7 @@ function MyPage() {
 					data={isLoadingOrders ? [] : (userOrders || []).slice(0, 5)}
 					emptyMessage="구매내역이 없습니다."
 					renderItem={(item) => (
-						<Link to={`/productdetail/${item.products[0]._id}`}>
+						<Link to={`/product/${item.products[0]._id}`}>
 							<Image
 								src={item.products[0].image.path}
 								alt={`${item.products[0].name}의 앨범 아트`}

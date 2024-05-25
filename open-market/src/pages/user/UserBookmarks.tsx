@@ -148,7 +148,7 @@ function UserBookmarks() {
 							bookmarkList.map((bookmark: Bookmark) => (
 								<ListItem key={bookmark.product_id}>
 									<StyledLink
-										to={`/productdetail/${bookmark.product_id}`}
+										to={`/product/${bookmark.product_id}`}
 										aria-label={`${bookmark.product.name}의 상세페이지로 이동`}
 									>
 										<img
