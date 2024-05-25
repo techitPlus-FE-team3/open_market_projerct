@@ -16,7 +16,7 @@ import Error404 from "./pages/error/Error404";
 import ProductDetail from "./pages/product/ProductDetail";
 import ProductEdit from "./pages/product/ProductEdit";
 import ProductManage from "./pages/product/ProductManage";
-import ProductPurchase from "./pages/product/ProductPurchase";
+import ProductOrder from "./pages/product/ProductOrder";
 import ProductRegistration from "./pages/product/ProductRegistration";
 import MyPage from "./pages/user/MyPage";
 import SignIn from "./pages/user/SignIn";
@@ -74,10 +74,7 @@ function App() {
 						/>
 						{/* buy */}
 						<Route path="product/:productId" element={<ProductDetail />} />
-						<Route
-							path="productpurchase/:productId"
-							element={<ProductPurchase />}
-						/>
+						<Route path="product/order/:productId" element={<ProductOrder />} />
 						{/* user */}
 						<Route path="mypage" element={<MyPage />} />
 						<Route path="user/edit" element={<UserEdit />} />

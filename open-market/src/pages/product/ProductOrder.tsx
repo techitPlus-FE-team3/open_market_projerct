@@ -1,6 +1,6 @@
 import FunctionalButton from "@/components/FunctionalButton";
 import HelmetSetup from "@/components/HelmetSetup";
-import { ProductPurchaseSkeleton } from "@/components/SkeletonUI";
+import { ProductOrderSkeleton } from "@/components/SkeletonUI";
 import Textarea from "@/components/Textarea";
 import { usePostProductOrderMutation } from "@/hooks/product/mutations/order";
 import { useProductDetailSuspenseQuery } from "@/hooks/product/queries/detail";
@@ -31,7 +31,7 @@ interface LabelProps {
 	large?: boolean;
 }
 
-const ProductPurchaseSection = styled.section`
+const ProductOrderSection = styled.section`
 	background-color: ${Common.colors.white};
 	padding-top: 100px;
 	padding-bottom: 20px;
@@ -133,7 +133,7 @@ const ContentWrapper = styled.div`
 	}
 `;
 
-function ProductPurchase() {
+function ProductOrder() {
 	const navigate = useNavigate();
 
 	const { productId } = useParams();
@@ -196,15 +196,15 @@ function ProductPurchase() {
 	}, [productDetailData, category]);
 
 	return (
-		<ProductPurchaseSection>
+		<ProductOrderSection>
 			<HelmetSetup
 				title="Order Product"
 				description="음원 구매 페이지"
-				url={`productpurchase/${productId}`}
+				url={`product/order/${productId}`}
 			/>
 			<h2 className="a11yHidden">상품 구매</h2>
 			{productDetailLoading ? (
-				<ProductPurchaseSkeleton />
+				<ProductOrderSkeleton />
 			) : (
 				<ProductInfoWrapper>
 					<FormTopLayout>
@@ -269,8 +269,8 @@ function ProductPurchase() {
 					</FlexLayout>
 				</ProductInfoWrapper>
 			)}
-		</ProductPurchaseSection>
+		</ProductOrderSection>
 	);
 }
 
-export default ProductPurchase;
+export default ProductOrder;

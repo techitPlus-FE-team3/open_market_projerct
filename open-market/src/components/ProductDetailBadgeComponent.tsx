@@ -174,7 +174,7 @@ function ProductDetailExtraLink({
 					</ProductExtraLink>
 				) : (currentUser && !order) || order === undefined ? (
 					<ProductExtraLink
-						to={`/productpurchase/${product?._id}`}
+						to={`/product/order/${product?._id}`}
 						aria-label="음원 상품 구매하기 버튼"
 					>
 						<CheckIcon />
