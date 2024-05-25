@@ -252,7 +252,7 @@ function ProductEdit() {
 			<HelmetSetup
 				title="Edit Product"
 				description="음원 게시물 수정 페이지"
-				url={`product/edit/${productId}`}
+				url={`/product/edit/${productId}`}
 			/>
 			<h2 className="a11yHidden">상품 수정</h2>
 			{userProductDetailLoading ? (

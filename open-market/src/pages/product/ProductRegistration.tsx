@@ -210,7 +210,7 @@ function ProductRegistration() {
 			<HelmetSetup
 				title="Register Product"
 				description="음원 등록"
-				url="product/registration"
+				url="/product/registration"
 			/>
 			<h2 className="a11yHidden">상품 등록</h2>
 			<form encType="multipart/form-data" className="PostFormWrapper">

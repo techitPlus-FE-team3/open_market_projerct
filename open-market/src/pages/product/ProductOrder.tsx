@@ -200,7 +200,7 @@ function ProductOrder() {
 			<HelmetSetup
 				title="Order Product"
 				description="음원 구매 페이지"
-				url={`product/order/${productId}`}
+				url={`/product/order/${productId}`}
 			/>
 			<h2 className="a11yHidden">상품 구매</h2>
 			{productDetailLoading ? (

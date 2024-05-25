@@ -260,7 +260,7 @@ function MyPage() {
 									)}
 								</CommentInfo>
 								<StyledLink
-									to={"user/replies"}
+									to={"/user/replies"}
 									aria-label="내가 쓴 댓글 전체보기"
 								>
 									전체보기
@@ -321,7 +321,7 @@ function MyPage() {
 						</Link>
 					)}
 					linkText="전체보기"
-					linkUrl="user/orders"
+					linkUrl="/user/orders"
 				/>
 			)}
 			{isLoadingProducts ? (

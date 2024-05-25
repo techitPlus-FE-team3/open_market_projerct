@@ -66,7 +66,7 @@ function UserOrders() {
 			<HelmetSetup
 				title="My Orders"
 				description="주문 내역 조회"
-				url="user/orders"
+				url="/user/orders"
 			/>
 			<Heading>구매내역</Heading>
 			<SearchBar onClick={handleSearchKeyword} searchRef={searchRef} showable />
