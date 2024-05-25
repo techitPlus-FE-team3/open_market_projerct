@@ -12,7 +12,7 @@ export function usePostProductOrderMutation() {
 
 		onSuccess: (data) => {
 			if (data?.ok) {
-				queryClient.invalidateQueries({ queryKey: ["productorder"] });
+				queryClient.invalidateQueries({ queryKey: ["productOrder"] });
 				toast.success("구매 완료!", {
 					ariaProps: {
 						role: "status",
