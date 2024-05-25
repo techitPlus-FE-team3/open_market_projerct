@@ -12,8 +12,8 @@ import {
 	ProductDetailSkeleton,
 	ProductRepliesSkeleton,
 } from "@/components/SkeletonUI";
+import { useProductOrderSuspenseQuery } from "@/hooks/order/queries/useProductOrderSuspenseQuery";
 import { useProductDetailSuspenseQuery } from "@/hooks/product/queries/detail";
-import { useProductOrderSuspenseQuery } from "@/hooks/product/queries/order";
 import { useProductRepliesQuery } from "@/hooks/product/queries/reply";
 import { usePostReplyMutation } from "@/hooks/reply/mutations/usePostReplyMutation";
 import { currentUserState } from "@/states/authState";

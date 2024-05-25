@@ -1,4 +1,4 @@
-import { getUserOrders, getUserOrdersWithPageParam } from "@/apis/user/orders";
+import { getUserOrders, getUserOrdersWithPageParam } from "@/apis/order/get";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export function useUserOrdersQuery() {

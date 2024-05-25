@@ -1,4 +1,4 @@
-import { getProductOrder } from "@/apis/product/order";
+import { getProductOrder } from "@/apis/order/get";
 import { useQuery } from "@tanstack/react-query";
 
 type TParams = {

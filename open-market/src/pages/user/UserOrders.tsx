@@ -2,8 +2,8 @@ import HelmetSetup from "@/components/HelmetSetup";
 import { ProductListItem } from "@/components/ProductListComponent";
 import SearchBar from "@/components/SearchBar";
 import { ProductListSkeleton } from "@/components/SkeletonUI";
+import { useUserOrdersInfiniteQuery } from "@/hooks/order/queries/useUserOrdersQuery";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
-import { useUserOrdersInfiniteQuery } from "@/hooks/user/queries/orders";
 import {
 	Heading,
 	MoreButton,

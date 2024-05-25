@@ -17,17 +17,18 @@ export async function getProductOrder(productId?: string) {
 	}
 }
 
-export async function postProductOrder(productId: string) {
+export async function getUserOrders(): Promise<Order[] | undefined> {
+	const response = await axiosInstance.get(`/orders`);
+	return response.data.item;
+}
+
+export async function getUserOrdersWithPageParam({ pageParam = 1 }) {
 	try {
-		const response = await axiosInstance.post<OrderResponse>("/orders", {
-			products: [
-				{
-					_id: parseInt(productId),
-					quantity: 1,
-				},
-			],
-		});
-		return response.data;
+		const { data } = await axiosInstance.get(
+			`/orders?page=${pageParam}&limit=8`,
+		);
+
+		return data;
 	} catch (error) {
 		console.error(error);
 	}
