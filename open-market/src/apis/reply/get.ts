@@ -12,15 +12,9 @@ export async function getProductReplies(
 	}
 }
 
-export async function postProductReply(
-	replyData: PostReply,
-): Promise<PostReply | undefined> {
+export async function getUserReplies(): Promise<Reply[] | undefined> {
 	try {
-		const response = await axiosInstance.post<PostReplyResponse>(
-			`/replies`,
-			replyData,
-		);
-
+		const response = await axiosInstance.get(`/replies`);
 		return response.data.item;
 	} catch (error) {
 		console.error(error);

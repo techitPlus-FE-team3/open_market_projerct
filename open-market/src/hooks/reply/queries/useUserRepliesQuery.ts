@@ -1,4 +1,4 @@
-import { getUserReplies } from "@/apis/user/replies";
+import { getUserReplies } from "@/apis/reply/get";
 import { useQuery } from "@tanstack/react-query";
 
 export function useUserRepliesQuery() {
