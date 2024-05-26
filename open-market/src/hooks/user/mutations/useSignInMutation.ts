@@ -19,7 +19,12 @@ export function useSignInMutation() {
 				localStorage.setItem("accessToken", userInfo.token.accessToken);
 				localStorage.setItem("refreshToken", userInfo.token.refreshToken);
 
-				toast.success("로그인 성공!");
+				toast.success("로그인 성공!", {
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				});
 				setCurrentUser({
 					_id: userInfo._id,
 					name: userInfo.name,
@@ -31,7 +36,12 @@ export function useSignInMutation() {
 		onError: (error: any) => {
 			const errorMessage =
 				error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
-			toast.error(errorMessage);
+			toast.error(errorMessage, {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
 		},
 	});
 }
