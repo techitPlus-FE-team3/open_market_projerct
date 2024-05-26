@@ -109,7 +109,12 @@ describe("useSignInMutation", () => {
 				"refreshToken",
 				"refreshToken",
 			);
-			expect(toastSuccessSpy).toHaveBeenCalledWith("로그인 성공!");
+			expect(toastSuccessSpy).toHaveBeenCalledWith("로그인 성공!", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
 			expect(setCurrentUser).toHaveBeenCalledWith({
 				_id: "userId",
 				name: "userName",
@@ -143,7 +148,12 @@ describe("useSignInMutation", () => {
 		});
 
 		await waitFor(() => {
-			expect(toastErrorSpy).toHaveBeenCalledWith("Invalid credentials");
+			expect(toastErrorSpy).toHaveBeenCalledWith("Invalid credentials", {
+				ariaProps: {
+					role: "status",
+					"aria-live": "polite",
+				},
+			});
 		});
 	});
 
@@ -167,6 +177,12 @@ describe("useSignInMutation", () => {
 		await waitFor(() => {
 			expect(toastErrorSpy).toHaveBeenCalledWith(
 				"알 수 없는 오류가 발생했습니다.",
+				{
+					ariaProps: {
+						role: "status",
+						"aria-live": "polite",
+					},
+				},
 			);
 		});
 	});
