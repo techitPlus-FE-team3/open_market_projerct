@@ -1,10 +1,11 @@
-import { renderHook, act, waitFor } from "@testing-library/react";
-import { useSignInMutation } from "@/hooks/user/mutations/useSignInMutation";
 import { signIn } from "@/apis/user/auth";
+import { useSignInMutation } from "@/hooks/user/mutations/useSignInMutation";
+import TestWrapper from "@/tests/Wrapper";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { vi, describe, it, expect, beforeEach, MockInstance } from "vitest";
+import { MockInstance, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("react-router-dom", async () => {
 	const actual = await vi.importActual("react-router-dom");
@@ -32,7 +33,7 @@ vi.mock("recoil", async () => {
 
 const mockSignIn = signIn as unknown as MockInstance;
 
-describe("useSignInMutation 훅 테스트", () => {
+describe("useSignInMutation", () => {
 	const navigate = vi.fn();
 	const setCurrentUser = vi.fn();
 
@@ -65,13 +66,16 @@ describe("useSignInMutation 훅 테스트", () => {
 		Object.defineProperty(window, "localStorage", {
 			value: localStorageMock,
 		});
+
+		vi.spyOn(window.localStorage, "setItem");
 	});
 
 	afterEach(() => {
 		vi.clearAllMocks();
+		window.localStorage.clear();
 	});
 
-	it("성공적인 로그인", async () => {
+	it("로그인 성공시 localStorage에 값을 저장하고 로그인 성공 알림과 함께 메인 페이지로 이동한다.", async () => {
 		const mockResponse = {
 			ok: 1,
 			item: {
@@ -85,12 +89,14 @@ describe("useSignInMutation 훅 테스트", () => {
 		mockSignIn.mockResolvedValueOnce(mockResponse);
 		const toastSuccessSpy = vi.spyOn(toast, "success");
 
-		const { result } = renderHook(() => useSignInMutation());
+		const { result } = renderHook(() => useSignInMutation(), {
+			wrapper: TestWrapper,
+		});
 
 		await act(async () => {
 			result.current.mutate({
-				email: "test@example.com",
-				password: "password123",
+				email: "test@test.com",
+				password: "password",
 			});
 		});
 
@@ -113,7 +119,7 @@ describe("useSignInMutation 훅 테스트", () => {
 		});
 	});
 
-	it("로그인 실패", async () => {
+	it("로그인 실패시 토스트 알림을 호출한다.", async () => {
 		const mockError = {
 			response: {
 				data: {
@@ -125,7 +131,9 @@ describe("useSignInMutation 훅 테스트", () => {
 		mockSignIn.mockRejectedValueOnce(mockError);
 		const toastErrorSpy = vi.spyOn(toast, "error");
 
-		const { result } = renderHook(() => useSignInMutation());
+		const { result } = renderHook(() => useSignInMutation(), {
+			wrapper: TestWrapper,
+		});
 
 		await act(async () => {
 			result.current.mutate({
@@ -139,13 +147,15 @@ describe("useSignInMutation 훅 테스트", () => {
 		});
 	});
 
-	it("알 수 없는 오류 발생 시", async () => {
+	it("알 수 없는 오류 발생 시 토스트 알림을 호출한다.", async () => {
 		const mockError = {};
 
 		mockSignIn.mockRejectedValueOnce(mockError);
 		const toastErrorSpy = vi.spyOn(toast, "error");
 
-		const { result } = renderHook(() => useSignInMutation());
+		const { result } = renderHook(() => useSignInMutation(), {
+			wrapper: TestWrapper,
+		});
 
 		await act(async () => {
 			result.current.mutate({
