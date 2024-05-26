@@ -1,4 +1,5 @@
-import { signIn, signUp, updateUser } from "@/apis/user/auth";
+import { signIn, signUp } from "@/apis/user/auth";
+import { patchUserData } from "@/apis/user/patch";
 import { axiosInstance } from "@/utils";
 import { describe, it, expect, vi, Mock } from "vitest";
 import { AxiosResponse } from "axios";
@@ -41,7 +42,7 @@ describe("API 호출 함수 테스트", () => {
 			data: { success: true },
 		} as AxiosResponse);
 
-		const response = await updateUser(1, {
+		const response = await patchUserData(1, {
 			name: "newName",
 			email: "newEmail@example.com",
 			phone: "123-456-7890",

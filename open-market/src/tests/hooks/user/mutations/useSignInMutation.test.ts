@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
-import { useSignInMutation } from "@/hooks/user/queries/useSignInMutation";
+import { useSignInMutation } from "@/hooks/user/mutations/useSignInMutation";
 import { signIn } from "@/apis/user/auth";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
