@@ -1,4 +1,4 @@
-import { postUserBookmark } from "@/apis/user/bookmarks";
+import { postUserBookmark } from "@/apis/bookmark/post";
 import { axiosInstance } from "@/utils";
 
 // axiosInstance.post 메소드를 가짜 함수로 대체

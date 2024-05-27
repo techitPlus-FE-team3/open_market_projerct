@@ -1,4 +1,4 @@
-import { getProductBookmark } from "@/apis/product/bookmark";
+import { getProductBookmark } from "@/apis/bookmark/get";
 import { axiosInstance } from "@/utils";
 
 // axiosInstance를 모킹합니다.
