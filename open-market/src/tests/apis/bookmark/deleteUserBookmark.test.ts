@@ -1,4 +1,4 @@
-import { deleteUserBookmark } from "@/apis/user/bookmarks";
+import { deleteUserBookmark } from "@/apis/bookmark/delete";
 import { axiosInstance } from "@/utils";
 
 vi.mock("@/utils", () => ({
