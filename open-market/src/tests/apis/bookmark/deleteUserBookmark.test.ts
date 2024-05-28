@@ -12,7 +12,7 @@ describe("deleteUserBookmark", () => {
 		vi.clearAllMocks();
 	});
 
-	it("successfully deletes a bookmark and returns response data", async () => {
+	it("북마크를 성공적으로 삭제하고 응답 데이터를 반환한다", async () => {
 		const mockResponse = { message: "Bookmark deleted successfully" };
 		const bookmarkId = 1;
 
@@ -28,7 +28,7 @@ describe("deleteUserBookmark", () => {
 		expect(result).toEqual(mockResponse);
 	});
 
-	it("logs error and returns undefined when an error occurs", async () => {
+	it("에러가 발생했을 때 에러를 로그하고 undefined를 반환한다", async () => {
 		const bookmarkId = 1;
 
 		axiosInstance.delete = vi

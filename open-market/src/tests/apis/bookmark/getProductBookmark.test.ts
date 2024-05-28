@@ -1,7 +1,6 @@
 import { getProductBookmark } from "@/apis/bookmark/get";
 import { axiosInstance } from "@/utils";
 
-// axiosInstance를 모킹합니다.
 vi.mock("@/utils", () => ({
 	axiosInstance: {
 		get: vi.fn(),
@@ -27,7 +26,6 @@ describe("getProductBookmark", () => {
 			createdAt: "",
 		};
 
-		// axiosInstance.get이 성공적으로 호출될 경우를 모킹합니다.
 		axiosInstance.get = vi.fn().mockResolvedValueOnce({
 			data: { item: mockBookmark },
 		});

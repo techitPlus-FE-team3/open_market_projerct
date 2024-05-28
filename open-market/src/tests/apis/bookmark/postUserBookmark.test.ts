@@ -1,7 +1,6 @@
 import { postUserBookmark } from "@/apis/bookmark/post";
 import { axiosInstance } from "@/utils";
 
-// axiosInstance.post 메소드를 가짜 함수로 대체
 vi.mock("@/utils", () => ({
 	axiosInstance: {
 		post: vi.fn(),
@@ -26,17 +25,14 @@ describe("postUserBookmark", () => {
 		};
 		axiosInstance.post = vi.fn().mockResolvedValueOnce({ data: mockData });
 
-		// 함수를 호출하고 결과를 확인
 		const result = await postUserBookmark(currentUserId, productId);
 
-		// axios.post가 예상대로 호출되었는지 검증
 		expect(axiosInstance.post).toHaveBeenCalledWith(`/bookmarks/`, {
 			user_id: currentUserId,
 			product_id: productId,
 			memo: "",
 		});
 
-		// 반환된 데이터가 예상과 일치하는지 검증
 		expect(result).toEqual(mockData);
 	});
 
