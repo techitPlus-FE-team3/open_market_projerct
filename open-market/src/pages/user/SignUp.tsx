@@ -220,6 +220,24 @@ function SignUp() {
 		} else {
 			setForm({ ...form, [name]: value });
 		}
+
+		// 유효성 검사 메시지 설정
+		if (name === "email") {
+			const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailPattern.test(value)) {
+				setEmailCheck({
+					checked: true,
+					valid: false,
+					message: "잘못된 입력값이 있습니다.",
+				});
+			} else {
+				setEmailCheck({
+					checked: true,
+					valid: true,
+					message: "",
+				});
+			}
+		}
 	}
 
 	function handleAgreeAllChange(e: React.ChangeEvent<HTMLInputElement>) {

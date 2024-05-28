@@ -15,7 +15,7 @@ vi.mock("react-router-dom", async () => {
 	};
 });
 
-describe("로그인 페이지 입력 창 렌더링 테스트", async () => {
+describe("로그인 페이지 렌더링 테스트", async () => {
 	const mockedPost = vi.fn();
 	const queryClient = new QueryClient();
 
@@ -36,7 +36,7 @@ describe("로그인 페이지 입력 창 렌더링 테스트", async () => {
 		vi.restoreAllMocks();
 	});
 
-	it("로그인 페이지 렌더링 테스트", () => {
+	it("로그인 페이지 입력 창 렌더링 테스트", () => {
 		render(
 			<HelmetProvider>
 				<QueryClientProvider client={queryClient}>
