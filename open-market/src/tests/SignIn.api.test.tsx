@@ -81,6 +81,10 @@ describe("로그인 페이지 기능 테스트", () => {
 		);
 	});
 
+	afterEach(() => {
+		vi.clearAllMocks();
+	});
+
 	it("로그인 시 API 호출, 리디렉션 및 토스트 알림 출력 테스트", async () => {
 		const toastSuccessSpy = vi.spyOn(toast, "success");
 
