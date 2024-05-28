@@ -313,6 +313,8 @@ function SignUp() {
 	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		if (form.password !== form.confirmPassword) {
+			console.log("비밀번호 불일치 확인");
+
 			toast.error("비밀번호가 일치하지 않습니다.", {
 				ariaProps: {
 					role: "status",

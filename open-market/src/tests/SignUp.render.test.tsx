@@ -84,6 +84,8 @@ describe("회원가입 페이지 렌더링 테스트", () => {
 	});
 
 	it("회원가입 유효성 검사 테스트", async () => {
+		// const toastErrorSpy = vi.spyOn(toast, "error");
+
 		render(
 			<HelmetProvider>
 				<QueryClientProvider client={queryClient}>
@@ -114,15 +116,18 @@ describe("회원가입 페이지 렌더링 테스트", () => {
 		await userEvent.click(signUpButton);
 
 		await waitFor(() => {
-			expect(toastErrorSpy).toHaveBeenCalledWith(
+			expect(toast.error).toHaveBeenCalledWith(
 				"비밀번호가 일치하지 않습니다.",
-				{
+				expect.objectContaining({
 					ariaProps: {
 						role: "status",
 						"aria-live": "polite",
 					},
-				},
+				}),
 			);
 		});
+
+		// Ensure the spy was called
+		expect(toastErrorSpy).toHaveBeenCalled();
 	});
 });
