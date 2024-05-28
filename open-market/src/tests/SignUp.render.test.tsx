@@ -1,10 +1,11 @@
 import SignUp from "@/pages/user/SignUp";
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { HelmetProvider } from "react-helmet-async";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 const mockedNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {
@@ -20,25 +21,28 @@ vi.mock("react-hot-toast");
 
 describe("회원가입 페이지 렌더링 테스트", () => {
 	const queryClient = new QueryClient();
-	let toastErrorSpy: any;
 
 	beforeEach(() => {
 		vi.clearAllMocks();
-		toastErrorSpy = vi.spyOn(toast, "error");
 	});
 
 	afterEach(() => {
-		vi.restoreAllMocks();
+		vi.clearAllMocks();
 	});
 
-	it("회원가입 페이지 입력 창 렌더링 테스트", () => {
+	const renderSignUp = () => {
 		render(
 			<HelmetProvider>
 				<QueryClientProvider client={queryClient}>
 					<SignUp />
+					<Toaster />
 				</QueryClientProvider>
 			</HelmetProvider>,
 		);
+	};
+
+	it("회원가입 페이지 입력 창 렌더링 테스트", () => {
+		renderSignUp();
 
 		const emailInput = screen.getByLabelText("이메일");
 		const passwordInput = screen.getByLabelText("비밀번호");
@@ -56,13 +60,7 @@ describe("회원가입 페이지 렌더링 테스트", () => {
 	});
 
 	it("회원가입 페이지 값 입력 테스트", async () => {
-		render(
-			<HelmetProvider>
-				<QueryClientProvider client={queryClient}>
-					<SignUp />
-				</QueryClientProvider>
-			</HelmetProvider>,
-		);
+		renderSignUp();
 
 		const emailInput = screen.getByLabelText("이메일");
 		const passwordInput = screen.getByLabelText("비밀번호");
@@ -83,20 +81,10 @@ describe("회원가입 페이지 렌더링 테스트", () => {
 		expect(phoneInput).toHaveValue("01012345678");
 	});
 
-	it("회원가입 유효성 검사 테스트", async () => {
-		// const toastErrorSpy = vi.spyOn(toast, "error");
-
-		render(
-			<HelmetProvider>
-				<QueryClientProvider client={queryClient}>
-					<SignUp />
-				</QueryClientProvider>
-			</HelmetProvider>,
-		);
+	it("이메일 유효성 검사 테스트", async () => {
+		renderSignUp();
 
 		const emailInput = screen.getByLabelText("이메일");
-		const passwordInput = screen.getByLabelText("비밀번호");
-		const confirmPasswordInput = screen.getByLabelText("비밀번호 확인");
 		const signUpButton = screen.getByRole("button", { name: "회원가입" });
 
 		// Test for invalid email
@@ -107,27 +95,38 @@ describe("회원가입 페이지 렌더링 테스트", () => {
 		const emailErrorMessage =
 			await screen.findByText("잘못된 입력값이 있습니다.");
 		expect(emailErrorMessage).toBeInTheDocument();
+	});
 
-		// Test for mismatched passwords
-		await userEvent.clear(emailInput);
+	it("비밀번호 확인 칸 일치 검사 테스트", async () => {
+		const toastErrorSpy = vi.spyOn(toast, "error");
+
+		renderSignUp();
+
+		const emailInput = screen.getByLabelText("이메일");
+		const passwordInput = screen.getByLabelText("비밀번호");
+		const confirmPasswordInput = screen.getByLabelText("비밀번호 확인");
+		const signUpButton = screen.getByRole("button", { name: "회원가입" });
+
 		await userEvent.type(emailInput, "test@example.com");
 		await userEvent.type(passwordInput, "password123");
 		await userEvent.type(confirmPasswordInput, "password321");
-		await userEvent.click(signUpButton);
+
+		await act(async () => {
+			await userEvent.click(signUpButton);
+		});
 
 		await waitFor(() => {
-			expect(toast.error).toHaveBeenCalledWith(
+			expect(toastErrorSpy).toHaveBeenCalledWith(
 				"비밀번호가 일치하지 않습니다.",
-				expect.objectContaining({
+				{
 					ariaProps: {
 						role: "status",
 						"aria-live": "polite",
 					},
-				}),
+				},
 			);
 		});
 
-		// Ensure the spy was called
-		expect(toastErrorSpy).toHaveBeenCalled();
+		// expect(toastErrorSpy).toHaveBeenCalled();
 	});
 });
