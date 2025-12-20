@@ -16,6 +16,8 @@ export function useSignInMutation() {
 			if (data.ok === 1 && data.item.token) {
 				const userInfo = data.item;
 
+				// SECURITY: localStorage에 토큰 저장 (XSS 취약성 있음)
+				// 향후 httpOnly Cookie 사용 권장
 				localStorage.setItem("accessToken", userInfo.token.accessToken);
 				localStorage.setItem("refreshToken", userInfo.token.refreshToken);
 

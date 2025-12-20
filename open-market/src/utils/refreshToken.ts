@@ -2,6 +2,22 @@ import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { jwtDecode } from "jwt-decode";
 
+/**
+ * SECURITY NOTE: Token Storage
+ * 
+ * 현재 구현은 localStorage에 토큰을 저장하고 있습니다.
+ * 이는 XSS(Cross-Site Scripting) 공격에 취약할 수 있습니다.
+ * 
+ * 보안 개선 권장사항:
+ * 1. httpOnly Cookie 사용 (백엔드 협업 필요) - 가장 권장
+ * 2. Secure, SameSite 속성을 가진 Cookie 사용
+ * 3. 토큰 만료 시간을 짧게 설정
+ * 4. Content Security Policy (CSP) 헤더 설정
+ * 
+ * 참고: React는 JSX 렌더링 시 자동으로 XSS를 방지하지만,
+ * localStorage에 저장된 데이터는 JavaScript로 접근 가능하므로 주의가 필요합니다.
+ */
+
 const API_KEY = import.meta.env.VITE_API_SERVER;
 
 export const axiosInstance = axios.create({
@@ -72,6 +88,8 @@ async function refreshAccessToken(): Promise<string> {
 		if (!response.data.ok || !newAccessToken) {
 			throw new Error("Failed to refresh token");
 		}
+		// SECURITY: localStorage에 토큰 저장 (XSS 취약성 있음)
+		// 향후 httpOnly Cookie 사용 권장
 		localStorage.setItem("accessToken", newAccessToken);
 		axiosInstance.defaults.headers.common["Authorization"] =
 			`Bearer ${newAccessToken}`;

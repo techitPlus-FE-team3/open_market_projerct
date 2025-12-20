@@ -149,6 +149,15 @@ export function ShowStarRating({ rating }: { rating: number }) {
 	);
 }
 
+/**
+ * ReplyListItem Component
+ * 
+ * SECURITY NOTE: XSS Protection
+ * React는 JSX에서 중괄호 안의 값들을 자동으로 이스케이프 처리하여
+ * XSS 공격을 방지합니다. reply.user.name과 reply.content는
+ * 서버에서 검증된 데이터라고 가정하지만, 서버 측에서도
+ * 입력 검증과 sanitization을 수행하는 것이 권장됩니다.
+ */
 function ReplyListItem({ reply }: { reply: Reply }) {
 	return (
 		<StyledReplyListItem key={reply._id}>
