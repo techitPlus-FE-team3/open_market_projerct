@@ -191,14 +191,21 @@ function Index() {
 
 	useEffect(() => {
 		if (category) {
+			// "all"이거나 "none"일 때는 빈 문자열로 설정하여 쿼리 비활성화
+			if (categoryValue === "all" || categoryValue === "none") {
+				setSelectedCode("");
+				return;
+			}
 			const selectedCategory = category.find(
 				(item: { value: string }) => item.value === categoryValue,
 			);
 			if (selectedCategory) {
 				setSelectedCode(selectedCategory.code);
+			} else {
+				setSelectedCode("");
 			}
 		}
-	}, [categoryValue]);
+	}, [categoryValue, category]);
 
 	useEffect(() => {
 		setSortedFilteredProductList([]);
@@ -206,6 +213,11 @@ function Index() {
 
 	useEffect(() => {
 		async function fetchSearchResult() {
+			// searchKeyword가 빈 문자열이면 검색하지 않음
+			if (!searchKeyword || searchKeyword.trim() === "") {
+				setSearchedProductList(undefined);
+				return;
+			}
 			const searchResult = await searchProductList({
 				resource: "products",
 				searchKeyword,

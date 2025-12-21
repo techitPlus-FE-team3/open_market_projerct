@@ -27,5 +27,8 @@ export function useCategoryFilterProductList({
 	return useQuery({
 		queryKey: ["products", { resource, category }],
 		queryFn: () => fetchFilterCategoryProductList({ resource, category }),
+		enabled: !!category && category.trim() !== "", // category가 유효할 때만 쿼리 실행
+		retry: 1, // 에러 발생 시 1번만 재시도 (기본값 3번에서 감소)
+		retryOnMount: false, // 마운트 시 자동 재시도 비활성화
 	});
 }
